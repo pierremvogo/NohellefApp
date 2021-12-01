@@ -1,0 +1,27 @@
+.action .menu{
+	position: relative;
+	top: 50%;
+	right: 60px;
+	padding: 10px 20px;
+	background: #fff;
+	width: 150px;
+	box-sizing: 0 5px 25px rgba(0,0,0,0.1);
+	border-radius: 15px;
+	transition: 0.5s;
+	visibility: hidden;
+	opacity: 0;
+}
+.action .menu::before{
+	content: '';
+	
+	top: -5;
+	right: 25;
+	width: 20px;
+	height: 20px;
+	background: #fff;
+	transform: rotate(45deg);
+}
+.action .menu.active{
+	visibility: visible;
+	opacity: 1;
+}

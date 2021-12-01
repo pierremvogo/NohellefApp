@@ -1,0 +1,27 @@
+.input_content{
+	border-bottom: 2px solid #002495;
+	border-top: none;
+	border-right: none;
+	border-left: none;
+	width: 40%;
+	background: #EEEEEE;
+}
+fieldset{
+  border: 10px solid #4d6bf4; 
+  border-top-color: black; 
+  box-sizing: border-box; 
+  grid-area: 1 / 2; 
+  padding: 20px; 
+  width: 100%; 
+  border-radius: 10px;
+}
+
+legend{
+  font: 12pt/2px 'Averia Serif Libre'; 
+  background: transparent;
+  padding: 0 2px;
+  margin: 0% 15% 0% 5%;
+} 
+input:focus{
+    outline: none;
+}

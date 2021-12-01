@@ -1,0 +1,45 @@
+.navbar{
+    z-index: 1000;
+    height: 50px;
+    width: 100%;
+    top: 0px;
+    position: fixed;
+    margin-bottom: 20px;}
+    .active{
+        background-color: black;
+        color: black;
+    }
+    .navbar-nav{
+        color: #000;
+        align-items: center;
+        font-family:"Grand Hotel", serif;
+        width: 100%;}
+
+        .dark-blue-text{
+            color: #0A38F5;
+        }
+        .nav-menu{
+            margin: 2%;
+            cursor: pointer;
+            font-size: 1vw;}
+            
+            .nav-menu:hover{
+                border:"2px solid red";
+                text-align:'center';
+                width:'20%';
+                border-radius:"5px 5px 5px 5px";
+            }
+
+            .nav-menu:last-child{
+                margin-left: auto;
+            }  
+            .active1{
+                color: blue;
+                margin: 50%;
+            }
+    
+        
+    
+
+
+

@@ -1,0 +1,50 @@
+
+.topbar{
+    height: 10vh;
+}
+.dashboard-container__button {
+    width: 100%;
+    margin: 10px auto;
+    background-color: green;
+    padding: 5px 70px;
+    color: 'white;';
+    font-family: "Poppins Medium", sans-serif;
+    font-size: 20px;
+    border: 5;
+    border-radius: 100px 50px 50px 50px;
+    cursor: pointer;
+    text-align: center;
+}
+.custom-modal-style{
+    width: 150px;
+}
+
+.action .menu{
+    position: absolute;
+ 
+    top: 100%;
+    right: 60px;
+    padding: 10px 20px;
+    font-size: 1vw;
+    background: #F8DB52;
+    width: 150px;
+    box-sizing: 0 5px 25px rgba(0,0,0,0.1);
+    border-radius: 15px;
+    transition: 0.5s;
+    visibility: hidden;
+    opacity: 0;
+}
+.action .menu::before{
+    content: '';
+    
+    top: -5;
+    right: 25;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    transform: rotate(45deg);
+}
+.action .menu.active{
+    visibility: visible;
+    opacity: 1;
+}

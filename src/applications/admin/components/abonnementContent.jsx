@@ -1,0 +1,239 @@
+import react from 'react';
+import GridItem from "../../../app/components/Grid/GridItem.js";
+import GridContainer from "../../../app/components/Grid/GridContainer.js";
+import Card from "../../../app/components/Card/Card.js";
+import CardHeader from "../../../app/components/Card/CardHeader.js";
+import CardBody from "../../../app/components/Card/CardBody.js";
+import React,{useState,useEffect} from 'react';
+import CardAvatar from "../../../app/components/Card/CardAvatar.js";
+import CardFooter from "../../../app/components/Card/CardFooter.js";
+import { Dropdown } from 'react-bootstrap';
+import smile from '../../../assets/images/main/smile.png';
+import eye from '../../../assets/icons/eye.png';
+import download from '../../../assets/icons/download.png';
+import ReactSearchBox from "react-search-box";
+import Avatar   from 'react-avatar';
+import Pagination from './pagination.jsx';
+
+const AbonnementContent = () => {
+	const [posts, setPosts] = useState([]);
+	const [currentPage, setCurrentPage] = useState(2);
+	const [postPerPage] = useState(4);
+
+	useEffect(()=>{
+		setPosts(data);
+	},[])
+
+    let data = [
+    {
+      id: 1,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'PDF',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+    {
+      id: 2,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'Video',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+    {
+      id: 3,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'PDF',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+    {
+      id: 4,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'Video',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+    {
+      id: 5,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'PDF',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+    {
+      id: 6,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'PDF',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+    
+    {
+      id: 7,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'PDF',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+    
+    {
+      id: 8,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'PDF',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+    
+    {
+      id: 9,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'PDF',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+    
+    {
+      id: 10,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'PDF',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+    {
+      id: 11,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'Video',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+    {
+      id: 12,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'PDF',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+    {
+      id: 13,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'PDF',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+    {
+      id: 14,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'Video',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+    {
+      id: 15,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'PDF',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+    {
+      id: 16,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'Video',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+    {
+      id: 17,
+      courseName: "Algèbre Linéaire",
+      courseTitle: "Cours de mathématiques",
+      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
+      courseFormat:'PDF',
+      courseLevel:'Niveau 8',
+      courseSubjet:'Mathématiques'
+    },
+  ];
+  // Get current posts
+  const indexOfLastPost = currentPage * postPerPage;
+  const indexOfFirstPost = indexOfLastPost - postPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost,indexOfLastPost);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+	return(
+			<div className="container">
+			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                            <div style={{display:'inline-block',color:'red',margin:'2%'}}>
+                                Formulaire d'abonnement
+                            </div>
+                            
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                            
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                            
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                            
+                        </GridItem>
+                    </GridContainer>
+             
+			 <GridContainer style={{backgroundColor:'#eeeeee'}}>
+			 			{currentPosts.map((post,index)=>{
+			 				console.log("my post")
+			 				console.log(post)
+			 				return(
+			 					<GridItem xs={12} sm={12} md={3} key={post.id}>
+                        
+                               
+                            
+                        </GridItem>
+			 					)
+			 				
+			 			})}
+                    </GridContainer>
+                    <GridContainer style={{backgroundColor:'#eeeeee'}}>
+                    	<GridItem xs={12} sm={12} md={12}>
+                    		<Pagination 
+	                    		postsPerPage={postPerPage} 
+	                    		totalPosts={posts.length} 
+	                    		paginate={paginate}
+                    		/>
+                    	</GridItem>
+                    </GridContainer>
+                    </div>
+		)
+}
+export default AbonnementContent
+
+

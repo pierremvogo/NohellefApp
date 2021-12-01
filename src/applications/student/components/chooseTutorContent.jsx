@@ -1,0 +1,329 @@
+import react from 'react';
+import GridItem from "../../../app/components/Grid/GridItem.js";
+import GridContainer from "../../../app/components/Grid/GridContainer.js";
+import Card from "../../../app/components/Card/Card.js";
+import CardHeader from "../../../app/components/Card/CardHeader.js";
+import CardBody from "../../../app/components/Card/CardBody.js";
+import React,{useState,useEffect} from 'react';
+import CardAvatar from "../../../app/components/Card/CardAvatar.js";
+import CardFooter from "../../../app/components/Card/CardFooter.js";
+import { Dropdown } from 'react-bootstrap';
+import t1 from '../../../assets/images/dashboard/t1.png';
+import profilepic from '../../../assets/images/im5.png';
+import chat1 from '../../../assets/images/dashboard/chat1.png';
+import smile2 from '../../../assets/images/dashboard/smile2.png';
+import choisir from '../../../assets/images/dashboard/choisir.png';
+import ReactSearchBox from "react-search-box";
+import Avatar   from 'react-avatar';
+
+import Pagination from './pagination.jsx';
+
+
+const ChooseTutorContent = () => {
+	const [posts, setPosts] = useState([]);
+  const [posts1, setPosts1] = useState([]);
+	const [loading, serLoading] = useState(false);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [postPerPage, setPostPerPage] = useState(2);
+
+  const [currentPage1, setCurrentPage1] = useState(1);
+  const [postPerPage1, setPostPerPage1] = useState(1);
+  const [date, setDate] = useState();
+
+	useEffect(()=>{
+		setPosts(data,setPosts1(data1));
+	},[])
+
+  let data1 = [
+      {
+      id: 1,
+      tutorName: "Mme Ngono Marthe",
+      tutorPicture: profilepic,
+      tutorSpeciality: "mathématiques",
+    },
+    {
+      id: 2,
+      tutorName: "Mme Ngono Marthe",
+      tutorPicture: profilepic,
+      tutorSpeciality: "mathématiques",
+    },
+    {
+      id: 3,
+      tutorName: "Mme Ngono Marthe",
+      tutorPicture: profilepic,
+      tutorSpeciality: "mathématiques",
+    },
+    {
+      id: 4,
+      tutorName: "Mme Ngono Marthe",
+      tutorPicture: profilepic,
+      tutorSpeciality: "mathématiques",
+    },
+    {
+      id: 5,
+      tutorName: "Mme Ngono Marthe",
+      tutorPicture: profilepic,
+      tutorSpeciality: "mathématiques",
+    },
+   
+
+  ];
+
+    let data = [
+    {
+      id: 1,
+      tutorName: "Pirate bay",
+      tutorPicture: profilepic,
+      tutorSpeciality: "mathématiques",
+    },
+    {
+      id: 2,
+      tutorName: "Pirate bay",
+      tutorPicture: profilepic,
+      tutorSpeciality: "mathématiques",
+    },
+    {
+      id: 3,
+      tutorName: "Pirate bay",
+      tutorPicture: profilepic,
+      tutorSpeciality: "mathématiques",
+    },
+    {
+      id: 4,
+      tutorName: "Pirate bay",
+      tutorPicture: profilepic,
+      tutorSpeciality: "mathématiques",
+    },
+    {
+      id: 5,
+      tutorName: "Pirate bay",
+      tutorPicture: profilepic,
+      tutorSpeciality: "mathématiques",
+    },
+    {
+      id: 6,
+      tutorName: "Pirate bay",
+      tutorPicture: profilepic,
+      tutorSpeciality: "mathématiques",
+    },
+  ];
+  // Get current posts
+  const indexOfLastPost = currentPage * postPerPage;
+  const indexOfFirstPost = indexOfLastPost - postPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost,indexOfLastPost);
+
+  const indexOfLastPost1 = currentPage1 * postPerPage1;
+  const indexOfFirstPost1 = indexOfLastPost1 - postPerPage1;
+  const currentPosts1 = posts1.slice(indexOfFirstPost1,indexOfLastPost1);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+   const paginate1 = (pageNumber) => setCurrentPage1(pageNumber);
+	return(
+			<div className="container">
+
+
+
+			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
+                            <div style={{display:'inline-block',color:'red',margin:'2%'}}>
+                                Vos Tuteurs
+                            </div>
+                            <Avatar 
+                                size="40"
+                                round={true}
+                                src={t1}
+                                name='logo'
+                            />
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                            
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                            
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                            
+                        </GridItem>
+                    </GridContainer>
+                 {currentPosts1.map((value,index)=> {
+                  return(
+                      <GridContainer key={value.id}>
+                            <GridItem xs={12} sm={12} md={12}>
+                              <div style={{
+                              marginBottom: '0%',
+                              backgroundColor: '#273941',
+                              borderRadius: '15px',
+                              borderBottom: '3px solid #9aa7b2',
+                              borderRight:  '3px solid #9aa7b2',
+                              height: '90px',
+                              marginTop:'1%',
+                              width: '100%',
+                              cursor: 'pointer'
+
+                              }}>
+                              <GridContainer>
+                                <GridItem xs={12} sm={12} md={4}>
+                                <div style={{margin:'6%'}}>
+                                  <Avatar 
+                                        size="50"
+                                        round={true}
+                                        src={value.tutorPicture}
+                                        name='logo'
+                                    />
+
+                                  </div>
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={4}>
+                                        <div style={{margin:'4%',float:'left'}}>
+                                          <div style={{color:'white',fontSize:'1.2vw'}}>{value.id}-Nom: {value.tutorName}</div>
+                                          <div style={{color:'white',fontSize:'1.2vw'}}>Spécialité: {value.tutorSpeciality}</div>
+                                        </div>
+                                </GridItem>
+
+                                <GridItem xs={12} sm={12} md={4}>
+                                <div style={{margin:'5%'}}>
+                                      <img src={chat1} width='90%'/>
+                                </div>
+                                </GridItem>
+                              </GridContainer>
+
+                              </div>
+                            </GridItem>
+
+                      </GridContainer>
+                    )
+                      })}
+                   <GridContainer>
+                      <GridItem xs={12} sm={12} md={12}>
+                        <Pagination 
+                          postsPerPage={postPerPage1} 
+                          totalPosts={posts1.length} 
+                          paginate={paginate1}
+                        />
+                      </GridItem>
+                    </GridContainer>
+
+                  <GridContainer>
+                    <GridItem xs={12} sm={12} md={12}>
+                      <div style={{border:'2px solid #002495',width:'100%'}}></div>
+                      <div style={{color:'#002495'}}>Avez-vous besoin d'un autre tuteur?</div>
+                    </GridItem>
+                  </GridContainer>
+
+                   <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                            <div style={{display:'inline-block',color:'red',margin:'2%'}}>
+                                Rechercher un tuteur
+                            </div>
+                            <Avatar 
+                                size="40"
+                                round={true}
+                                src={smile2}
+                                name='logo'
+                            />
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                           <div style={{width:'100%',fontSize:'1vw'}}>
+                               <input type='date' onChange={e=>setDate(e.target.value)} style={{
+                                width:'100%',
+                                height:'45px'
+                               }}/>
+                            </div>
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+
+                             <div style={{border:'2px solid #0069D9', width:'110%'}}>
+                                 <ReactSearchBox
+                                    placeholder="Rechercher"
+                                    value="Doe"
+                                    data={data}
+                                    callback={(record) => console.log(record)}
+                                  />
+                            </div>
+
+                           
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                             <div style={{fontSize:'1vw'}}>
+                                <Dropdown>
+                                  <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                                    Spécialités
+                                  </Dropdown.Toggle>
+
+                                  <Dropdown.Menu>
+                                    <Dropdown.Item href="#/action-1">Français</Dropdown.Item>
+                                    <Dropdown.Item href="#/action-2">Anglais</Dropdown.Item>
+                                    <Dropdown.Item href="#/action-3">Mathématiques</Dropdown.Item>
+                                    <Dropdown.Item href="#/action-3">Physiques</Dropdown.Item>
+                                    <Dropdown.Item href="#/action-3">Informatique</Dropdown.Item>
+                                    <Dropdown.Item href="#/action-3">Science de l'ingénieur</Dropdown.Item>
+                                  </Dropdown.Menu>
+                                </Dropdown>
+                            </div>
+                        </GridItem>
+                    </GridContainer>
+
+                    {currentPosts.map((value,index) => {
+                      return(
+                          <GridContainer key={value.id}>
+                             <GridItem xs={12} sm={12} md={12}>
+                              <div style={{
+                              
+                              backgroundColor: '#4b9960',
+                              borderRadius: '15px',
+                              borderBottom: '3px solid #9aa7b2',
+                              borderRight:  '3px solid #9aa7b2',
+                              height: '90px',
+                              marginTop:'2%',
+                              width: '100%',
+                              cursor: 'pointer'
+
+                              }}>
+                              <GridContainer>
+                                <GridItem xs={12} sm={12} md={4}>
+                                <div style={{margin:'10%'}}>
+                                  <Avatar 
+                                        size="50"
+                                        round={true}
+                                        src={value.tutorPicture}
+                                        name='logo'
+                                    />
+
+                                  </div>
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={4}>
+                                  <div style={{margin:'4%',float:'left'}}>
+                                    <div style={{color:'white',fontSize:'1.2vw'}}>{value.id}-Nom: {value.tutorName}</div>
+                                    <div style={{color:'white',fontSize:'1.2vw'}}>Spécialité: {value.tutorSpeciality}</div>
+                                  </div>
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={4}>
+                                 
+                                <div style={{margin:'6%'}}>
+                                      <img src={choisir} width='90%'/>
+                                </div>
+                                  
+                                </GridItem>
+                              </GridContainer>
+
+                              </div>
+                            </GridItem>
+                          </GridContainer>
+                        )
+                    })}
+                     <GridContainer style={{backgroundColor:'#eeeeee'}}>
+                      <GridItem xs={12} sm={12} md={12}>
+                        <Pagination 
+                          postsPerPage={postPerPage} 
+                          totalPosts={posts.length} 
+                          paginate={paginate}
+                        />
+                      </GridItem>
+                    </GridContainer>
+                    
+                    </div>
+		)
+}
+export default ChooseTutorContent;
+
+
+

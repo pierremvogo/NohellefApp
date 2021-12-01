@@ -1,0 +1,257 @@
+import React, { useEffect, useState } from 'react';
+import {connect, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
+import { Link, Redirect, useHistory } from 'react-router-dom';
+import Button from '../../../../app/components/buttons/button';
+import Card from "../../../../app/components/Card/Card.js";
+import CardHeader from "../../../../app/components/Card/CardHeader.js";
+import CardBody from "../../../../app/components/Card/CardBody.js";
+import CardAvatar from "../../../../app/components/Card/CardAvatar.js";
+import CardFooter from "../../../../app/components/Card/CardFooter.js";
+import GridItem from "../../../../app/components/Grid/GridItem.js";
+import smileauth from '../../../../assets/images/dashboard/smileauth.png';
+import logoImage from '../../../../assets/images/im10.png';
+import mpay from '../../../../assets/images/dashboard/mpay.png';
+import divid from '../../../../assets/images/dashboard/divid.png';
+
+import ask1 from '../../../../assets/images/home/ask1.png';
+import ask2 from '../../../../assets/images/home/ask2.png';
+import ask3 from '../../../../assets/images/home/ask3.png';
+
+import GridContainer from "../../../../app/components/Grid/GridContainer.js";
+import Footer from "../../../../app/components/footer/footer.jsx";
+import Avatar   from 'react-avatar';
+
+import RegisterStudent from './registerStudent.jsx';
+import RegisterParent from './registerParent.jsx';
+import RegisterTutor from './registerTutor.jsx';
+
+
+const AskRegister = ({error,onChildClickRegister,isUser}) => {
+    const [showPassword, setPassword] = useState(false);
+    const [submited, setSubmited] = useState(false);
+    const [loginForm, setLoginForm] = useState({username: "", password: "", remember: false})
+    const [isLoginForm, setIsLoginForm] = useState(true);
+    const [formError, setformError] = useState(null);
+    const [isForgotPassword, setIsForgotPassword] = useState(false);
+    const [resetPasswordForm,setResetPasswordForm] = useState({email: ""});
+    const [tooltipOpen, setTooltipOpen] = useState(false)
+    const history = useHistory()
+    const dispatch= useDispatch()
+
+    const [selectUserId, setSelectUserId] = useState('');
+
+    const [showRegisterStudent, setShowRegisterStudent] = useState(false);
+    const [showRegisterParent, setShowRegisterParent] = useState(false);
+    const [showRegisterTutor, setShowRegisterTutor] = useState(false);
+    const [showAskRegister, setShowAskRegister] = useState(true);
+
+
+
+    const outPutCloseModal=(e)=> {
+        setShowAskRegister(true,setShowRegisterStudent(false));
+    }
+
+    const onChangeLogin = (e) => {
+        setLoginForm({...loginForm,  [e.target.name]: e.target.value })}
+
+    const onChangeResetPassword = (e) => {
+        setResetPasswordForm({...resetPasswordForm,  [e.target.name]: e.target.value })
+        setformError(null)
+    }
+
+
+     const clickHandlerRegister=(e)=>{
+            onChildClickRegister(e.target.name);
+    }
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        if (submited) { return } 
+        if(isLoginForm) {
+            if(loginForm.username.trim()=='admin'&&loginForm.password.trim()=='admin'){
+              
+                history.push('/admin/dashboard');
+            }else if(loginForm.username.trim()=='stud'&&loginForm.password.trim()=='stud'){
+             
+                history.push('/student/dashboard');
+            }else if(loginForm.username.trim()=='tutor'&&loginForm.password.trim()=='tutor'){
+               
+                history.push('/tutor/dashboard');
+            }
+               
+             //dispatch(authSignIn({...loginForm, redirect: history.location.state?.pathname || 'dashboard'}));
+        } 
+        setSubmited(true);
+    }
+    useEffect(()=>{
+        /*var element1 = document.getElementById("myDiv1");
+        if(element1){
+              element1.style.backgroundColor = "#DD1B16";
+             let tab1 = [
+                document.getElementById('myDiv2'),
+                document.getElementById('myDiv3'),
+            ];
+            for(var i of tab1){
+                i.style.backgroundColor = ""
+            }
+        }*/
+      
+    },[])
+
+    function openRegisterUser(){
+        if(selectUserId == "myDiv1"){
+            setShowRegisterStudent(true,
+                setShowRegisterParent(false),
+                setShowAskRegister(false),
+                setShowRegisterTutor(false))
+        }else if(selectUserId == "myDiv2"){
+            setShowRegisterStudent(false,
+                setShowRegisterParent(false),
+                setShowAskRegister(false),
+                setShowRegisterTutor(true))
+        }else if(selectUserId == "myDiv3"){
+            setShowRegisterStudent(false,
+                setShowRegisterParent(true),
+                setShowAskRegister(false),
+                setShowRegisterTutor(false))
+    }}
+
+     function changeStyle(id){
+        let element = document.getElementById(id);
+        if(id=="myDiv1"){
+            element.style.backgroundColor = "#dd1b16";
+            setSelectUserId(id);
+            let tab = [
+                document.getElementById('myDiv2'),
+                document.getElementById('myDiv3'),
+            ];
+            for(var i of tab){
+                i.style.backgroundColor = ""
+            }
+            
+        }
+        else if(id=="myDiv2"){
+            element.style.backgroundColor = "#dd1b16";
+            setSelectUserId(id);
+             let tab = [
+                document.getElementById('myDiv1'),
+                document.getElementById('myDiv3'),
+            
+            ]
+            for(var i of tab){
+                i.style.backgroundColor = ""
+            }
+        }
+        else if(id=="myDiv3"){
+            element.style.backgroundColor = "#dd1b16";
+            setSelectUserId(id);
+             let tab = [
+                document.getElementById('myDiv1'),
+                document.getElementById('myDiv2'),
+               
+            ]
+            for(var i of tab){
+                i.style.backgroundColor = ""
+            }
+        }
+        
+    }
+    return(
+
+    <div style={{
+                backgroundColor:'#ffce52',
+                borderRadius:'25px 25px 25px 25px',
+                margin:'0% 0% 0% 10%',}}>
+                    {showAskRegister?
+                    <GridContainer>
+                     <GridItem xs={12} sm={12} md={12}>
+                        <GridContainer>
+                          <GridItem xs={12} sm={12} md={12}>
+                              <div style={{
+                                
+                                borderRadius:'25px 25px 25px 25px',
+                                width:'100%',
+                                height:'350px',
+                                backgroundColor:'#ffce52',
+                                margin:'0%',
+                                padding:'2%'
+                              }}>
+                                <GridContainer>
+                                    <GridItem xs={12} sm={12} md={12}>
+                                      
+                                     <div style={{margin:'2% 0% 5% 0%',cursor:'pointer'}}>
+                                         <span onClick={()=>history.push('/auth/login')} style={{float:'left',marginRight:'5%'}}>Se connecter</span>
+                                         <span onClick={()=>openRegisterUser()} style={{color:'blue'}}><u>S'inscrire</u></span>
+                                     </div>
+                                    </GridItem>
+                                  </GridContainer>
+
+                                  <GridContainer>
+                                    <GridItem xs={12} sm={12} md={12}>
+                                       <div style={{margin:'0% 0% 5% 0%'}}>
+                                      Qui êtes vous ?
+                                      </div>
+                                    </GridItem>
+                                  </GridContainer>
+
+                                  <GridContainer>
+                                    <GridItem xs={12} sm={12} md={12}>
+                                      <div className="side-content" id="myDiv1" onClick={()=>changeStyle('myDiv1')}>
+                                            <div style={{padding:'3%',display:'inline-block'}}>
+                                                <img src={ask1} width='15%' />
+                                                <span className="text" style={{marginLeft:'25%'}}>Je suis Apprenant</span>
+                                            </div>
+                                           
+                                          </div>
+                                    </GridItem>
+                                  </GridContainer>
+
+
+                                  <GridContainer>
+                                    <GridItem xs={12} sm={12} md={12}>
+                                     <div className="side-content" id="myDiv2" onClick={()=>changeStyle('myDiv2')}>
+                                            <div style={{padding:'3%',display:'inline-block'}}>
+                                                
+                                                <img src={ask2} width='15%' />
+                                                <span className="text" style={{marginLeft:'25%'}}>Je suis Tuteur</span>
+                                            </div>
+                                            
+                                    </div>
+                                       
+                                    </GridItem>
+                                  </GridContainer>
+
+                                  <GridContainer>
+                                    <GridItem xs={12} sm={12} md={12}>
+                                    
+                                     <div className="side-content" id="myDiv3" onClick={()=>changeStyle('myDiv3')}>
+                                            <div style={{padding:'3%',display:'inline-block'}}>
+                                               <img src={ask3} width='15%' />
+                                               <span className="text" style={{marginLeft:'30%'}}>Je suis Parent</span>
+                                            </div>
+                                            
+                                     </div>
+                                      
+                                    </GridItem>
+                                  </GridContainer>
+
+                    
+                              </div>
+
+
+                          </GridItem>
+                        </GridContainer>
+                      </GridItem>
+
+
+                    </GridContainer>
+                     : showRegisterParent?<RegisterParent onChildCloseModal={outPutCloseModal}/>
+                     : showRegisterStudent?<RegisterStudent onChildCloseModal={outPutCloseModal}/>
+                     : showRegisterTutor?<RegisterTutor />:''}
+             </div>
+           
+        
+        )
+}
+export default AskRegister;
