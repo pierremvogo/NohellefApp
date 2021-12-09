@@ -20,35 +20,6 @@ const MainRoute = ({user,isRestricted}) =>{
     
     return(
         <Switch> 
-           
-            <PrivateRoute  
-                exact user={user}>
-                <Route
-                    exact
-                    component={StudentPage}
-                    path={ROUTES.STUDENT}
-                />
-                <Route
-                    exact
-                    component={AdminPage}
-                    path={ROUTES.ADMIN}
-                />
-                <Route
-                    exact
-                    component={SupAdminPage}
-                    path={ROUTES.SUP_ADMIN}
-                />
-                <Route
-                    exact
-                    component={ParentPage}
-                    path={ROUTES.PARENT}
-                />
-                <Route
-                    exact
-                    component={TutorPage}
-                    path={ROUTES.TUTOR}
-                />
-            </PrivateRoute>
 
             <PublicRoute exact>
                 <Route 
@@ -72,6 +43,31 @@ const MainRoute = ({user,isRestricted}) =>{
                     exact
                     component={ResetPassword}
                     path={ROUTES.RESET_PASSWORD} 
+                />
+                 <Route
+                    exact
+                    component={StudentPage}
+                    path={ROUTES.STUDENT}
+                />
+                <Route
+                    exact
+                    component={AdminPage}
+                    path={ROUTES.ADMIN}
+                />
+                <Route
+                    exact
+                    component={SupAdminPage}
+                    path={ROUTES.SUP_ADMIN}
+                />
+                <Route
+                    exact
+                    component={ParentPage}
+                    path={ROUTES.PARENT}
+                />
+                <Route
+                    exact
+                    component={TutorPage}
+                    path={ROUTES.TUTOR}
                 />
 
             </PublicRoute>

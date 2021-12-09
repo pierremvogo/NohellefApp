@@ -13,7 +13,7 @@ import DownloadLink from "react-download-link";
 import Loader from 'react-loader-spinner';
 //import Modals from '../../../../app/components/modals/modals';
 //import PayPal from '../../../../app/components/paypal/paypal'
-import slogan from '../../../../assets/images/main/sloagan.png';
+import slogan from '../../../../assets/images/main/slogan.png';
 import fiche1 from '../../../../assets/images/main/fiche1.png';
 import mise1 from '../../../../assets/images/main/mise1.png';
 import offre1 from '../../../../assets/images/main/offre1.png';
@@ -47,14 +47,44 @@ import { ReactComponent as Eye } from '../../../../assets/css/icons/eye.svg';
 import { ReactComponent as Uneye } from '../../../../assets//css/icons/uneye.svg';
 import Modals from '../../../../app/components/modals/modal';
 import AskRegister from '../../../auth/pages/auth.screen/askRegister.jsx';
+import Login from '../../../auth/pages/auth.screen/login.screen.jsx';
+import RegisterStudent from '../../../auth/pages/auth.screen/registerStudent.jsx';
+import RegisterParent from '../../../auth/pages/auth.screen/registerParent.jsx';
 
 //#273941
 const Home = ({error}) => {
 
     const [showAskModal,setShowAskModal] = useState(false);
+
+    const [showInscriptionModal, setShowInscriptionModal] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [showRegisterStudentModal, setShowRegisterStudentModal] = useState(false);
+    const [showRegisterParentModal, setShowRegisterParentModal] = useState(false);
+
     const handleConnexionClose = () =>{setShowAskModal(false)};
     const [displayAsk, setDisplayAsk] = useState("flex");
     const history = useHistory()
+
+   const outPutStudentRegister=(e)=> {
+        setShowRegisterStudentModal(true,
+            setShowLoginModal(false),
+            setShowAskModal(false),
+            setShowRegisterParentModal(false),setDisplayAsk("flex"))
+    }
+
+  const outPutParentRegister=(e)=> {
+    setShowRegisterStudentModal(false,
+            setShowLoginModal(false),
+            setShowAskModal(false),
+            setShowRegisterParentModal(true),setDisplayAsk("flex"))
+    }
+
+    const outPutLogin=(e)=> {
+        setShowRegisterStudentModal(false,
+            setShowLoginModal(true),
+            setShowAskModal(false),
+            setShowRegisterParentModal(false),setDisplayAsk("flex"))
+    }
 
     const ModalAskInscription = () => {
     return(
@@ -74,28 +104,151 @@ const Home = ({error}) => {
             left:"0px",
             }}
       >
-            <div className="contain" id='myContain'>
-                <div style={{display:'inline-block', fontSize:'1.5vw'}}>
+            <div className="containask" id='myContain'>
+                <div style={{display:'inline-block',cursor:'pointer', fontSize:'1.5vw'}}>
                    
-                </div><span className='close' onClick={()=>closeModal()}>&times;</span>
-                <AskRegister /> 
+                </div><span className='close' onClick={()=>closeMod('other')}>&times;</span>
+                <AskRegister onChildClickStudentRegister={outPutStudentRegister}
+                             onChildClickParentRegister={outPutParentRegister}
+                             onChildClickLogin={outPutLogin}
+                             onChildCloseModal={closeMod} /> 
             </div>
           
       </div>
     )
   };
+  const ModalLogin = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "4000px",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+            <div className="containlog" id='myContain'>
+                <div style={{display:'inline-block', fontSize:'1.5vw'}}>
+                   
+                </div><span className='close' onClick={()=>closeModal('home')}>&times;</span>
+                <Login onChildClick={openAskRegister} /> 
+            </div>
+          
+      </div>
+    )
+  };
+  
+
+  const ModalInscriptionStudent = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "4000px",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+            <div className="containregs" id='myContain'>
+            <span className='close' onClick={()=>closeModal('other')}>&times;</span>
+                <div style={{display:'inline-block', fontSize:'1vw'}}>
+                   <RegisterStudent onChildCloseModal={closeModal} onChildClickLogin={openLogin} /> 
+                </div>
+                
+            </div>
+          
+      </div>
+    )
+  };
+  const ModalInscriptionParent = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "4000px",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+            <div className="containregp" id='myContain'>
+                <div style={{display:'inline-block', fontSize:'1.5vw'}}>
+                   
+                </div><span className='close' onClick={()=>closeModal('other')}>&times;</span>
+                <RegisterParent onChildCloseModal={closeModal} onChildClickLogin={openLogin} /> 
+            </div>
+          
+      </div>
+    )
+  };
+  function closeMod(){
+     setShowRegisterStudentModal(false,
+            setShowLoginModal(false),
+            setShowAskModal(false),
+            setShowRegisterParentModal(false))
+  }
+  function openAskRegister(){
+     setShowRegisterStudentModal(false,
+            setShowLoginModal(false),
+            setShowAskModal(true),
+            setShowRegisterParentModal(false))
+  }
+  function openLogin(){
+    setShowRegisterStudentModal(false,
+            setShowLoginModal(true),
+            setShowAskModal(false),
+            setShowRegisterParentModal(false))
+  }
    
   /*{showConnexionModal&&document.getElementById('cont').addEventListener("click", function(event){
     if(!event.target.closest("contain")){
         closeModal();
     }
   })}*/
-   function closeModal(){
-    setDisplayAsk("none",setShowAskModal(false))
+   function closeModal(content){
+    if(content == 'home'){
+    setShowRegisterStudentModal(false,
+            setShowLoginModal(false),
+            setShowAskModal(false),
+            setShowRegisterParentModal(false))
+    }else{
+        setShowRegisterStudentModal(false,
+            setShowLoginModal(false),
+            setShowAskModal(true),
+            setShowRegisterParentModal(false))
+    }
+    
+    
   }
 
     const outPutEventConnexion=(e)=> {
-        history.push('/auth/login')
+        setShowRegisterStudentModal(false,
+            setShowLoginModal(true),
+            setShowAskModal(false),
+            setShowRegisterParentModal(false))
     }
 
   const outPutEventRegister=(e)=> {
@@ -106,7 +259,16 @@ const Home = ({error}) => {
     return(
         <div>
         {showAskModal? <ModalAskInscription /> :'' } 
-        <Header onChildClickConnexion={outPutEventConnexion} onChildClickRegister={outPutEventRegister} />
+        {showRegisterStudentModal? <ModalInscriptionStudent /> :'' } 
+        {showRegisterParentModal? <ModalInscriptionParent /> :'' } 
+        {showLoginModal? <ModalLogin /> :'' }
+       
+      
+          <Header
+            isHme={true} 
+            onChildClickConnexion={outPutEventConnexion} 
+            onChildClickRegister={outPutEventRegister} />
+      
          
        <div className="container-fluid" >
          

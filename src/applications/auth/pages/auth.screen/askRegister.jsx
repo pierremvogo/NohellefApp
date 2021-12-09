@@ -27,7 +27,11 @@ import RegisterParent from './registerParent.jsx';
 import RegisterTutor from './registerTutor.jsx';
 
 
-const AskRegister = ({error,onChildClickRegister,isUser}) => {
+const AskRegister = ({error,
+   onChildClickStudentRegister,
+   onChildClickParentRegister,
+   onChildClickLogin,
+   }) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     const [loginForm, setLoginForm] = useState({username: "", password: "", remember: false})
@@ -46,6 +50,8 @@ const AskRegister = ({error,onChildClickRegister,isUser}) => {
     const [showRegisterTutor, setShowRegisterTutor] = useState(false);
     const [showAskRegister, setShowAskRegister] = useState(true);
 
+    const [isTutor, setIsTutor] = useState(false);
+
 
 
     const outPutCloseModal=(e)=> {
@@ -61,8 +67,15 @@ const AskRegister = ({error,onChildClickRegister,isUser}) => {
     }
 
 
-     const clickHandlerRegister=(e)=>{
-            onChildClickRegister(e.target.name);
+     const clickHandlerStudentRegister=(e)=>{
+            onChildClickStudentRegister(e.target.name);
+    }
+    const clickHandlerParentRegister=(e)=>{
+            onChildClickParentRegister(e.target.name);
+    }
+
+    const clickHandlerLogin=(e)=>{
+            onChildClickLogin(e.target.name);
     }
 
     const onSubmit = (e) => {
@@ -99,22 +112,11 @@ const AskRegister = ({error,onChildClickRegister,isUser}) => {
       
     },[])
 
-    function openRegisterUser(){
+    function openRegisterUser(e){
         if(selectUserId == "myDiv1"){
-            setShowRegisterStudent(true,
-                setShowRegisterParent(false),
-                setShowAskRegister(false),
-                setShowRegisterTutor(false))
-        }else if(selectUserId == "myDiv2"){
-            setShowRegisterStudent(false,
-                setShowRegisterParent(false),
-                setShowAskRegister(false),
-                setShowRegisterTutor(true))
+            clickHandlerStudentRegister(e);
         }else if(selectUserId == "myDiv3"){
-            setShowRegisterStudent(false,
-                setShowRegisterParent(true),
-                setShowAskRegister(false),
-                setShowRegisterTutor(false))
+            clickHandlerParentRegister(e);
     }}
 
      function changeStyle(id){
@@ -134,6 +136,7 @@ const AskRegister = ({error,onChildClickRegister,isUser}) => {
         else if(id=="myDiv2"){
             element.style.backgroundColor = "#dd1b16";
             setSelectUserId(id);
+            setIsTutor(true);
              let tab = [
                 document.getElementById('myDiv1'),
                 document.getElementById('myDiv3'),
@@ -163,7 +166,7 @@ const AskRegister = ({error,onChildClickRegister,isUser}) => {
                 backgroundColor:'#ffce52',
                 borderRadius:'25px 25px 25px 25px',
                 margin:'0% 0% 0% 10%',}}>
-                    {showAskRegister?
+                   
                     <GridContainer>
                      <GridItem xs={12} sm={12} md={12}>
                         <GridContainer>
@@ -172,7 +175,7 @@ const AskRegister = ({error,onChildClickRegister,isUser}) => {
                                 
                                 borderRadius:'25px 25px 25px 25px',
                                 width:'100%',
-                                height:'350px',
+                                height:'300px',
                                 backgroundColor:'#ffce52',
                                 margin:'0%',
                                 padding:'2%'
@@ -181,8 +184,9 @@ const AskRegister = ({error,onChildClickRegister,isUser}) => {
                                     <GridItem xs={12} sm={12} md={12}>
                                       
                                      <div style={{margin:'2% 0% 5% 0%',cursor:'pointer'}}>
-                                         <span onClick={()=>history.push('/auth/login')} style={{float:'left',marginRight:'5%'}}>Se connecter</span>
-                                         <span onClick={()=>openRegisterUser()} style={{color:'blue'}}><u>S'inscrire</u></span>
+                                         <span onClick={(e)=>clickHandlerLogin(e)} style={{float:'left',marginRight:'5%'}}>Se connecter</span>
+                                         <span onClick={(e)=>openRegisterUser(e)} style={{color:'blue'}}><u>S'inscrire</u></span>
+                                        
                                      </div>
                                     </GridItem>
                                   </GridContainer>
@@ -210,12 +214,8 @@ const AskRegister = ({error,onChildClickRegister,isUser}) => {
 
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
-                                     <div className="side-content" id="myDiv2" onClick={()=>changeStyle('myDiv2')}>
-                                            <div style={{padding:'3%',display:'inline-block'}}>
-                                                
-                                                <img src={ask2} width='15%' />
-                                                <span className="text" style={{marginLeft:'25%'}}>Je suis Tuteur</span>
-                                            </div>
+                                     <div id="myDiv2">
+                                           
                                             
                                     </div>
                                        
@@ -246,9 +246,7 @@ const AskRegister = ({error,onChildClickRegister,isUser}) => {
 
 
                     </GridContainer>
-                     : showRegisterParent?<RegisterParent onChildCloseModal={outPutCloseModal}/>
-                     : showRegisterStudent?<RegisterStudent onChildCloseModal={outPutCloseModal}/>
-                     : showRegisterTutor?<RegisterTutor />:''}
+                     
              </div>
            
         

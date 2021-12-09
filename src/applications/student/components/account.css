@@ -25,3 +25,70 @@ legend{
 input:focus{
     outline: none;
 }
+select {
+    font-size: .9rem;
+    padding: 2px 5px;
+    width: 100%;
+    height: 44px;
+}
+
+.joinChatContainer {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  background: #FFCE52;
+  border-radius: 15px;
+}
+
+.joinChatContainer h3 {
+  font-size: 1.5vw;
+  margin-bottom: 1rem;
+}
+.joinChatContainer input {
+  width: 210px;
+  height: 40px;
+  margin: 7px 7px 7px 20px;
+  border: 2px solid #43a047;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 16px;
+}
+
+.joinChatContainer button {
+  width: 225px;
+  height: 50px;
+  margin: 7px 7px 7px 12px;
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 16px;
+  background: #43a047;
+  color: #fff;
+  cursor: pointer;
+}
+
+.joinChatContainer button:hover {
+  background: #2e7d32;
+}
+
+.onlinetutor{
+  background-color: green;
+  position: relative;
+  bottom: 15px;
+  left: 30px;
+  height: 20px;
+  width: 20px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+}
+
+.offlinetutor{
+  background-color: #ce1515;
+  position: relative;
+  bottom: 15px;
+  left: 30px;
+  height: 20px;
+  width: 20px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+}

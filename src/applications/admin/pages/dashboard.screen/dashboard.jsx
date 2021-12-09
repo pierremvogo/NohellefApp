@@ -17,7 +17,7 @@ import d5 from '../../../../assets/images/dashboard/d5.png';
 import d6 from '../../../../assets/images/dashboard/d6.png';
 import d7 from '../../../../assets/images/dashboard/d7.png';
 import d8 from '../../../../assets/images/dashboard/d8.png';
-
+import adm1 from '../../../../assets/images/dashboard/adm1.png';
 import im5 from '../../../../assets/images/im5.png';
 import ReactPaginate from 'react-paginate';
 import GridItem from "../../../../app/components/Grid/GridItem.js";
@@ -47,6 +47,9 @@ import ad6 from '../../../../assets/images/admin/ad6.png';
 import dic from '../../../../assets/images/admin/dic.png';
 import acc from '../../../../assets/images/admin/acc.png';
 import './dashboard.css';
+import adm2 from '../../../../assets/images/dashboard/adm2.png';
+import adm3 from '../../../../assets/images/dashboard/adm3.png';
+import adm4 from '../../../../assets/images/dashboard/adm4.png';
 
 //5271ff 
 //ffce52 
@@ -71,7 +74,7 @@ const DashboardAdmin = () => {
                 document.getElementById('myDiv3'),
                 document.getElementById('myDiv4'),
                 document.getElementById('myDiv5'),
-                document.getElementById('myDiv6'),
+               
             ];
             for(var i of tab1){
                 i.style.backgroundColor = ""
@@ -155,7 +158,7 @@ function menuToggle(){
                 document.getElementById('myDiv3'),
                 document.getElementById('myDiv4'),
                 document.getElementById('myDiv5'),
-                document.getElementById('myDiv6'),
+                
 
             ];
             for(var i of tab){
@@ -176,7 +179,7 @@ function menuToggle(){
                 document.getElementById('myDiv3'),
                 document.getElementById('myDiv4'),
                 document.getElementById('myDiv5'),
-                document.getElementById('myDiv6'),
+                
             ]
             for(var i of tab){
                 i.style.backgroundColor = ""
@@ -195,7 +198,7 @@ function menuToggle(){
                 document.getElementById('myDiv2'),
                 document.getElementById('myDiv4'),
                 document.getElementById('myDiv5'),
-                document.getElementById('myDiv6'),
+               
             ]
             for(var i of tab){
                 i.style.backgroundColor = ""
@@ -214,7 +217,7 @@ function menuToggle(){
                 document.getElementById('myDiv2'),
                 document.getElementById('myDiv3'),
                 document.getElementById('myDiv5'),
-                document.getElementById('myDiv6'),
+                
             ]
             for(var i of tab){
                 i.style.backgroundColor = ""
@@ -233,31 +236,13 @@ function menuToggle(){
                 document.getElementById('myDiv2'),
                 document.getElementById('myDiv3'),
                 document.getElementById('myDiv4'),
-                document.getElementById('myDiv6'),
+               
             ]
             for(var i of tab){
                 i.style.backgroundColor = ""
             }
         }
-        else if(id=="myDiv6"){
-            element.style.backgroundColor = "#dd1b16";
-            setIsTuteurContent(false,
-                    setIsAbonnementContent(false),
-                    setIsAchatContent(true),
-                    setIsAdminContent(false),
-                    setIsApprenantContent(false),
-                    setIsPublicityContent(false),)
-            let tab = [
-                document.getElementById('myDiv1'),
-                document.getElementById('myDiv2'),
-                document.getElementById('myDiv3'),
-                document.getElementById('myDiv4'),
-                document.getElementById('myDiv5'),
-            ]
-            for(var i of tab){
-                i.style.backgroundColor = ""
-            }
-        }
+        
             
     }
 
@@ -375,11 +360,11 @@ function menuToggle(){
                                     <Avatar 
                                         size="45"
                                         round={false}
-                                        src={ad1}
+                                        src={adm1}
                                         name='logo'
                                     />
                                 </div>
-                               <span className="text">Tuteurs</span>
+                               <span className="text">Cours</span>
 
                               </div>
 
@@ -394,11 +379,11 @@ function menuToggle(){
                                     <Avatar 
                                         size="45"
                                         round={false}
-                                        src={ad2}
+                                        src={adm2}
                                         name='logo'
                                     />
                                 </div>
-                                <span className="text">Administrateur</span>
+                                <span className="text">Questions Technique</span>
                               </div>
                             </GridItem>
 
@@ -411,11 +396,11 @@ function menuToggle(){
                                     <Avatar 
                                         size="45"
                                         round={false}
-                                        src={ad3}
+                                        src={adm3}
                                         name='logo'
                                     />
                                 </div>
-                                <span className="text">Apprenants</span>
+                                <span className="text">Tuteurs</span>
                               </div>
                             </GridItem>
                                     
@@ -423,16 +408,16 @@ function menuToggle(){
 
                       <GridContainer>
                             <GridItem xs={12} sm={12} md={12}>
-                               <div className="side-content" id="myDiv4" onClick={()=>changeStyle('myDiv4')}>
+                              <div className="side-content" id="myDiv4" onClick={()=>changeStyle('myDiv4')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
                                         size="45"
                                         round={false}
-                                        src={ad4}
+                                        src={d7}
                                         name='logo'
                                     />
                                 </div>
-                                <span className="text">Formulaire d'abonnement</span>
+                                <span className="text">Mon compte</span>
                               </div>
                             </GridItem>
 
@@ -440,33 +425,16 @@ function menuToggle(){
 
                       <GridContainer>
                             <GridItem xs={12} sm={12} md={12}>
-                               <div className="side-content" id="myDiv5" onClick={()=>changeStyle('myDiv5')}>
+                              <div className="side-content" id="myDiv5" onClick={()=>changeStyle('myDiv5')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
                                         size="45"
                                         round={false}
-                                        src={ad5}
+                                        src={d8}
                                         name='logo'
                                     />
                                 </div>
-                                <span className="text">Publicité</span>
-                              </div>
-                            </GridItem>
-
-                      </GridContainer>
-
-                      <GridContainer>
-                            <GridItem xs={12} sm={12} md={12}>
-                               <div className="side-content" id="myDiv6" onClick={()=>changeStyle('myDiv6')}>
-                                <div style={{padding:'3%',display:'inline-block'}}>
-                                    <Avatar 
-                                        size="45"
-                                        round={false}
-                                        src={ad6}
-                                        name='logo'
-                                    />
-                                </div>
-                                <span className="text">Les achats</span>
+                                <span className="text">Historiques</span>
                               </div>
                             </GridItem>
 

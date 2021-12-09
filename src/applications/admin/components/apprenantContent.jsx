@@ -18,6 +18,10 @@ import ReactSearchBox from "react-search-box";
 import Avatar   from 'react-avatar';
 import Pagination from './pagination.jsx';
 import Switch from "react-switch";
+import chat2 from '../../../assets/images/dashboard/chat2.png';
+import edit from '../../../assets/images/dashboard/edit.png';
+import affect from '../../../assets/images/dashboard/affect.png';
+import {Table} from 'react-bootstrap';
 import './admin.css';
 
 const ApprenantContent = () => {
@@ -82,61 +86,63 @@ const ApprenantContent = () => {
     setDisplay("flex",setShowEditModal(true));
     }
 
+
     let data = [
     {
       id: 1,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userCity:"Yaoundé",
-      userAddress: "Rue 5874",
-      userCode: '125635'
+      tutorProfile: im5,
+      tutorName: "pirate",
+      tutorSurname:"mvogo",
+      tutorSpeciality:"Science de l'ingénieur",
+      tutorModeConnect:"Email",
+      tutorAffect: affect,
+      tutorChat: chat2,
+      tutorEdit: edit,
+
     },
     {
       id: 2,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userCity:"Yaoundé",
-      userAddress: "Rue 5874",
-      userCode: '125635'
+      tutorProfile: im5,
+      tutorName: "pirate",
+      tutorSurname:"mvogo",
+      tutorSpeciality:"Science de l'ingénieur",
+      tutorModeConnect:"Email",
+      tutorAffect: affect,
+      tutorChat: chat2,
+      tutorEdit: edit,
     },
     {
       id: 3,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userCity:"Yaoundé",
-      userAddress: "Rue 5874",
-      userCode: '125635'
+     tutorProfile: im5,
+      tutorName: "pirate",
+      tutorSurname:"mvogo",
+      tutorSpeciality:"Science de l'ingénieur",
+      tutorModeConnect:"Email",
+      tutorAffect: affect,
+      tutorChat: chat2,
+      tutorEdit: edit,
     },
     {
       id: 4,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userCity:"Yaoundé",
-      userAddress: "Rue 5874",
-      userCode: '125635'
+      tutorProfile: im5,
+      tutorName: "pirate",
+      tutorSurname:"mvogo",
+      tutorSpeciality:"Science de l'ingénieur",
+      tutorModeConnect:"Email",
+      tutorAffect: affect,
+      tutorChat: chat2,
+      tutorEdit: edit,
     },
     {
       id: 5,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userCity:"Yaoundé",
-      userAddress: "Rue 5874",
-      userCode: '125635'
+      tutorProfile: im5,
+      tutorName: "pirate",
+      tutorSurname:"mvogo",
+      tutorSpeciality:"Science de l'ingénieur",
+      tutorModeConnect:"Email",
+      tutorAffect: affect,
+      tutorChat: chat2,
+      tutorEdit: edit,
     },
     
     
@@ -155,7 +161,7 @@ const ApprenantContent = () => {
 
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             <div style={{display:'inline-block',color:'#5271ff',margin:'2%'}}>
-                                Tous les Apprenants
+                                Tous les Tuteurs
                             </div>
                             
                         </GridItem>
@@ -174,20 +180,15 @@ const ApprenantContent = () => {
                         </GridItem>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             <div style={{width:'100%',fontSize:'1vw'}}>
-                                <Dropdown>
-                                  <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                                    Spécialité
-                                  </Dropdown.Toggle>
-
-                                  <Dropdown.Menu>
-                                    <Dropdown.Item href="#/action-1">Français</Dropdown.Item>
-                                    <Dropdown.Item href="#/action-2">Anglais</Dropdown.Item>
-                                    <Dropdown.Item href="#/action-3">Mathématiques</Dropdown.Item>
-                                    <Dropdown.Item href="#/action-1">Physiques</Dropdown.Item>
-                                    <Dropdown.Item href="#/action-2">Informatique</Dropdown.Item>
-                                    <Dropdown.Item href="#/action-3">Science de l'ingénieur</Dropdown.Item>
-                                  </Dropdown.Menu>
-                                </Dropdown>
+                               <select name="pets" id="pet-select">
+                                    <option value="">Spécialité</option>
+                                    <option value="dog">Français</option>
+                                    <option value="cat">Anglais</option>
+                                    <option value="hamster">Mathématiques</option>
+                                    <option value="parrot">Physiques</option>
+                                    <option value="spider">Informatique</option>
+                                    <option value="goldfish">Science de l'ingénieur</option>
+                                </select>
                             </div>
                         </GridItem>
                     </GridContainer>
@@ -203,129 +204,44 @@ const ApprenantContent = () => {
                       </GridItem>
                     </GridContainer>
 
-                    <GridContainer style={{backgroundColor:'#c7d0d8',width:'95%'}}>
-                      <GridItem xs={12} sm={12} md={12}>
-                        <div style={{margin:'1%',fontSize:'1vw',textAlign:'center'}}>
-                          <GridContainer>
-                            <GridItem xs={12} sm={12} md={1}>
-                              <strong> Picture</strong>
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={1}>
-                            <div style={{marginLeft:'100%'}}>
-                              <strong> Nom</strong>
-                            </div>
-                              
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={1}>
-                            <div style={{marginLeft:'100%'}}>
-                              <strong>Prénom</strong>
-                            </div>
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={1}>
-                            <div style={{marginLeft:'220%'}}>
-                              <strong>Email</strong>
-                            </div>
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={1}>
-                              <div style={{marginLeft:'360%'}}>
-                              <strong>Téléphone</strong>
-                              </div>
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={1}>
-                            <div style={{marginLeft:'480%'}}>
-                              <strong>Ville</strong>
-                            </div>
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={1}>
-                            <div style={{marginLeft:'540%'}}>
-                              <strong>Adresse</strong>
-                            </div>
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={2}>
-                            <div style={{marginLeft:'225%'}}>
-                              <strong>Code</strong>
-                            </div>
-                            </GridItem>
-                          </GridContainer>
-                        </div>
-                      </GridItem>
-                    </GridContainer>
-
-       <GridContainer style={{backgroundColor:'#c7d0d8',width:'95%'}}> 
-          <GridItem xs={12} sm={12} md={12}>
-            {currentPosts.map((post,index)=>{
-              console.log("my post")
-              console.log(post)
-              return(
-                 
-                    <GridContainer key={post.id}>
-                      <GridItem xs={12} sm={12} md={12}>
-                        <div style={{margin:'1%',fontSize:'1vw',textAlign:'center'}}>
-                          <GridContainer>
-                            <GridItem xs={12} sm={12} md={1}>
-                              <Avatar 
-                                                size="45"
-                                                round={true}
-                                                src={post.userProfile}
-                                                name='logo'
-                                            />
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={1}>
-                            <div style={{marginLeft:'100%'}}>
-                            {post.userName}
-                          </div>
-                      </GridItem>
-                      
-                      <GridItem xs={12} sm={12} md={1}>
-                      <div style={{marginLeft:'100%'}}>
-                        {post.userSurname}
-                      </div>
-                      </GridItem>
-                      
-                      <GridItem xs={12} sm={12} md={1}>
-                      <div style={{marginLeft:'100%'}}>
-                        {post.userEmail}
-                      </div>
-                      </GridItem>
-                      
-                      <GridItem xs={12} sm={12} md={1}>
-                      <div style={{marginLeft:'360%'}}>
-                      {post.userPhone}
-                      </div>
-                      </GridItem>
-                  
-                      <GridItem xs={12} sm={12} md={1} style={{textAlign:'center'}}>
-                      <div style={{marginLeft:'460%'}}>
-                        {post.userCity}
-                      </div>
-              
-                      </GridItem>
-
-                      <GridItem xs={12} sm={12} md={1}>
-                      <div style={{marginLeft:'565%'}}>
-                        {post.userAddress}
-                      </div>
-                      </GridItem>
-
-                      <GridItem xs={12} sm={12} md={1}>
-                      <div style={{marginLeft:'600%',cursor:'pointer'}}>
-                         {post.userCode}
-                        
-                       </div>
-                      </GridItem>
-                          </GridContainer>
-                        </div>
-                      
-                      </GridItem>
-
-                      
-                    </GridContainer>
-                              
-                )
-              
-            })}
-            </GridItem>
-                    </GridContainer>
+                     <GridContainer style={{backgroundColor:'#eeeeee',width:'95%'}}> 
+        <Table striped bordered hover variant="secondary">
+              <thead>
+                <tr>
+                  <th>Profile</th>
+                  <th>Nom</th>
+                  <th>prenom</th>
+                  <th>Spécialité</th>
+                  <th>Mode de connexion</th>
+                  <th>Affecter ce tuteur</th>
+                  <th>lancer un Chat</th>
+                  <th>Editer</th>
+                </tr>
+              </thead>
+              <tbody>
+              {currentPosts.map((post,index)=>{
+                return(
+                  <tr>
+                    <td>
+                    <Avatar 
+                      size="45"
+                      round={true}
+                      src={post.tutorProfile}
+                      name='logo'
+                      /></td>
+                    <td>{post.tutorName}</td>
+                    <td>{post.tutorSurname}</td>
+                    <td>{post.tutorSpeciality}</td>
+                    <td>{post.tutorModeConnect}</td>
+                    <td><img src={post.tutorAffect} width='25%' style={{cursor:'pointer'}}/></td>
+                    <td><img src={post.tutorChat} width='25%' style={{cursor:'pointer'}}/></td>
+                    <td><img src={post.tutorEdit} width='30%' style={{cursor:'pointer'}}/></td>
+                  </tr>
+                  )
+              })}
+              </tbody>
+            </Table>
+          </GridContainer>
                     <GridContainer style={{backgroundColor:'#eeeeee',width:'95%'}}>
                       <GridItem xs={12} sm={12} md={12}>
                         <Pagination 

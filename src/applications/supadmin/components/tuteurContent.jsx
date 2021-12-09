@@ -9,7 +9,7 @@ import CardAvatar from "../../../app/components/Card/CardAvatar.js";
 import CardFooter from "../../../app/components/Card/CardFooter.js";
 import { Dropdown } from 'react-bootstrap';
 import smile from '../../../assets/images/main/smile.png';
-import im5 from '../../../assets/images/im5.png';
+
 import setting from '../../../assets/images/admin/setting.png';
 import eye from '../../../assets/icons/eye.png';
 import AddTutor from './addTutor.jsx';
@@ -19,6 +19,10 @@ import Avatar   from 'react-avatar';
 import Pagination from './pagination.jsx';
 import Switch from "react-switch";
 import edit from '../../../assets/images/dashboard/edit.png';
+import affect from '../../../assets/images/dashboard/affect.png';
+import im5 from '../../../assets/images/im5.png';
+import chat from '../../../assets/images/dashboard/chat2.png';
+import {Table} from 'react-bootstrap';
 import Select from 'react-select';
 import './admin.css';
 
@@ -103,195 +107,179 @@ const TuteurContent = () => {
     {
       id: 1,
       userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate: '',
-      userSetting: edit
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
     {
       id: 2,
       userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:'',
-      userSetting: edit
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
     {
       id: 3,
       userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
     {
       id: 4,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+     userProfile: im5,
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
     {
       id: 5,
       userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
     {
       id: 6,
       userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
     
     {
       id: 7,
       userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
     
     {
       id: 8,
       userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
     
     {
       id: 9,
       userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
     
     {
       id: 10,
       userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
     {
       id: 11,
       userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
     {
       id: 12,
       userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
     {
       id: 13,
-     userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+      userProfile: im5,
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
     {
       id: 14,
       userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
     {
       id: 15,
       userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
     {
       id: 16,
       userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
     {
       id: 17,
       userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+      adminName:"mvogo",
+      adminEmail:"mvogopierre129@gmail.com",
+      adminRights:"Tous les droits",
+      adminActivate: <input type='checkbox' />,
+      adminAffect: affect,
+      adminChat: chat
     },
   ];
+
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
@@ -305,15 +293,12 @@ const TuteurContent = () => {
 
                         <GridItem xs={12} sm={12} md={3}>
                             <div style={{display:'inline-block',color:'#5271ff',margin:'2%'}}>
-                                Tous les tuteurs
+                                Tous les Administrateurs
                             </div>
                             
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
-                           
-                        </GridItem>
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
-                             <div style={{border:'2px solid #0069D9', width:'110%'}}>
+                        <GridItem xs={12} sm={12} md={4} style={{marginTop:'0%'}}>
+                           <div style={{border:'2px solid #0069D9', width:'110%'}}>
                                  <ReactSearchBox
                                     placeholder="Rechercher"
                                     value="Doe"
@@ -322,9 +307,12 @@ const TuteurContent = () => {
                                   />
                             </div>
                         </GridItem>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%',width:'25%'}}>
+                             
+                        </GridItem>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
                             <div style={{width:'100%',fontSize:'1vw'}}>
-                                <Select options={options} />
+                                
                             </div>
                         </GridItem>
                     </GridContainer>
@@ -356,144 +344,45 @@ const TuteurContent = () => {
                     	</GridItem>
                     </GridContainer>
 
-                    <GridContainer style={{backgroundColor:'#c7d0d8',width:'95%'}}>
-                    	<GridItem xs={12} sm={12} md={12}>
-                    		<div style={{margin:'1%',fontSize:'1vw',textAlign:'center'}}>
-                    			<GridContainer>
-                    				<GridItem xs={12} sm={12} md={1}>
-                    					<strong> Picture</strong>
-                    				</GridItem>
-                    				<GridItem xs={12} sm={12} md={1}>
-                    				<div style={{marginLeft:'100%'}}>
-                    					<strong> Nom</strong>
-                    				</div>
-                    					
-                    				</GridItem>
-                    				<GridItem xs={12} sm={12} md={1}>
-                    				<div style={{marginLeft:'100%'}}>
-		                    			<strong>Prénom</strong>
-		                    		</div>
-			                    	</GridItem>
-			                    	<GridItem xs={12} sm={12} md={1}>
-			                    	<div style={{marginLeft:'220%'}}>
-			                    		<strong>Email</strong>
-			                    	</div>
-			                    	</GridItem>
-			                    	<GridItem xs={12} sm={12} md={1}>
-			                    	  <div style={{marginLeft:'360%'}}>
-			                    		<strong>Téléphone</strong>
-			                    	  </div>
-			                    	</GridItem>
-			                    	<GridItem xs={12} sm={12} md={1}>
-			                    	<div style={{marginLeft:'480%'}}>
-			                    		<strong>Spécialité</strong>
-			                    	</div>
-			                    	</GridItem>
-			                    	<GridItem xs={12} sm={12} md={1}>
-			                    	<div style={{marginLeft:'540%'}}>
-			                    		<strong>Activé</strong>
-			                    	</div>
-			                    	</GridItem>
-			                    	<GridItem xs={12} sm={12} md={2}>
-			                    	<div style={{marginLeft:'220%'}}>
-			                    		<strong>Editer</strong>
-			                    	</div>
-			                    	</GridItem>
-                    			</GridContainer>
-                    		</div>
-                    	</GridItem>
-                    </GridContainer>
+      <GridContainer style={{backgroundColor:'#eeeeee',width:'95%'}}> 
+        <Table striped bordered hover variant="secondary">
+              <thead>
+                <tr>
+                  <th>Picture</th>
+                  <th>Nom</th>
+                  <th>Adresse Mail</th>
+                  <th>Droits</th>
+                  <th>Activer / Desactiver</th>
+                  <th>Affecter un droit</th>
+                  <th>Chat</th>
+                </tr>
+              </thead>
+              <tbody>
 
-			 <GridContainer style={{backgroundColor:'#c7d0d8',width:'95%'}}> 
-					<GridItem xs={12} sm={12} md={12}>
-			 			{currentPosts.map((post,index)=>{
-			 				console.log("my post")
-			 				console.log(post)
-			 				return(
-			 					 
-			 					  	<GridContainer key={post.id}>
-			 					  		<GridItem xs={12} sm={12} md={12}>
-			 					  		  <div style={{margin:'1%',fontSize:'1vw',textAlign:'center'}}>
-			 					  		  	<GridContainer>
-			 					  		  		<GridItem xs={12} sm={12} md={1}>
-				 					  		  		<Avatar 
-				                                        size="45"
-				                                        round={true}
-				                                        src={post.userProfile}
-				                                        name='logo'
-			                                    	/>
-			 					  		  		</GridItem>
-			 					  		  		<GridItem xs={12} sm={12} md={1}>
-			 					  		  		<div style={{marginLeft:'100%'}}>
-			 					  					{post.id}{post.userName}
-			 					  				</div>
-			 					  		</GridItem>
-			 					  		
-			 					  		<GridItem xs={12} sm={12} md={1}>
-			 					  		<div style={{marginLeft:'100%'}}>
-			 					  			{post.userSurname}
-			 					  		</div>
-			 					  		</GridItem>
-			 					  		
-			 					  		<GridItem xs={12} sm={12} md={1}>
-			 					  		<div style={{marginLeft:'100%'}}>
-			 					  			{post.userEmail}
-			 					  		</div>
-			 					  		</GridItem>
-			 					  		
-			 					  		<GridItem xs={12} sm={12} md={1}>
-			 					  		<div style={{marginLeft:'360%'}}>
-			 					  		{post.userPhone}
-			 					  		</div>
-			 					  		</GridItem>
-									
-			 					  		<GridItem xs={12} sm={12} md={1} style={{textAlign:'center'}}>
-			 					  		<div style={{marginLeft:'490%'}}>
-			 					  		  {post.userSpeciality}
-			 					  		</div>
-			 				
-			 					  		</GridItem>
+              {currentPosts.map((post,index)=>{
+                return(
+                  <tr>
+                    
+                    <td><Avatar 
+                            size="45"
+                            round={true}
+                            src={post.userProfile}
+                            name='logo'
+                          /></td>
+                    <td>{post.adminName}</td>
+                    <td>{post.adminEmail}</td>
+                    <td>{post.adminRights}</td>
+                    <td>{post.adminActivate}</td>
+                    <td><img style={{cursor:'pointer'}} src={post.adminAffect} width='20%'/></td>  
+                    <td><img style={{cursor:'pointer'}} src={post.adminChat} width='50%'/></td>
+                  </tr>
+                  )
+              })}
+              </tbody>
+          </Table>
+          </GridContainer>
 
-			 					  		<GridItem xs={12} sm={12} md={1}>
-			 					  		<div style={{marginLeft:'550%'}}>
-			 					  			{post.userIsActivate}
-                       <input type='checkbox' onChange={()=>checkUser(post.id)}  id="userC"  />
-			 					  		</div>
-			 					  		</GridItem>
-
-			 					  		<GridItem xs={12} sm={12} md={1}>
-			 					  		<div style={{marginLeft:'600%',cursor:'pointer'}}>
-				 					  		<div className="action">
-				 					  			<div className='profile'>
-				 					  				<Avatar 
-							                             size="25"
-							                             round={true}
-							                             src={post.userSetting}
-							                             name='logo'
-						                             />
-				 					  			</div>
-				 					  			<div className="menu">
-				 					  				<div><u>Modifier le compte</u></div>
-				 					  				<div><u>Consulter l activité</u></div>
-				 					  			</div>
-				 					  		</div>
-				 					  		
-			                             </div>
-			 					  		</GridItem>
-			 					  		  	</GridContainer>
-			 					  		  </div>
-			 					  		
-			 					  		</GridItem>
-
-			 					  		
-			 					  	</GridContainer>
-                       			  
-			 					)
-			 				
-			 			})}
-			 			</GridItem>
-                    </GridContainer>
-                    <GridContainer style={{backgroundColor:'#eeeeee'}}>
+                    <GridContainer >
                     	<GridItem xs={12} sm={12} md={12}>
                     		<Pagination 
 	                    		postsPerPage={postPerPage} 

@@ -291,7 +291,7 @@ const HistoryContent = () => {
                                     <CardFooter color="secondary">
                                         <div style={{backgroundColor:'#ffce52',width:'100%',fontSize:'1vw',padding:'2%'}}>
                                             <div><strong>Titre:</strong> {post.courseTitle}</div>
-                                            <div><strong>Description:</strong> {post.courseDescription}</div>
+                                            
                                             <div><strong>Type:</strong> {post.courseFormat}</div>
                                             <div><strong>Niveau:</strong> {post.courseLevel}</div>
                                             <div><strong>Sujet:</strong> {post.courseSubjet}</div>
@@ -359,7 +359,7 @@ const HistoryContent = () => {
                                     <CardFooter color="secondary">
                                         <div style={{backgroundColor:'#ffce52',width:'100%',fontSize:'1vw',padding:'2%'}}>
                                             <div><strong>Titre:</strong> {post.courseTitle}</div>
-                                            <div><strong>Description:</strong> {post.courseDescription}</div>
+                                          
                                             <div><strong>Type:</strong> {post.courseFormat}</div>
                                             <div><strong>Niveau:</strong> {post.courseLevel}</div>
                                             <div><strong>Sujet:</strong> {post.courseSubjet}</div>

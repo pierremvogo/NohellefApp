@@ -14,6 +14,8 @@ import download from '../../../assets/icons/download.png';
 import ReactSearchBox from "react-search-box";
 import Avatar   from 'react-avatar';
 import Pagination from './pagination.jsx';
+import {Table} from 'react-bootstrap';
+import './admin.css';
 
 const  PublicityContent = () => {
 	const [posts, setPosts] = useState([]);
@@ -27,161 +29,105 @@ const  PublicityContent = () => {
     let data = [
     {
       id: 1,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      name: "Jean pierre",
+      cathegorie: "Parent",
+      heureConnect: "10h30",
+      heureDisconnect: "15h00",
+      operations:'listing des résultats',
     },
     {
       id: 2,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      name: "Jean pierre",
+      cathegorie: "Tuteur",
+      heureConnect: "10h30",
+      heureDisconnect: "15h00",
+      operations:'commenter un cours',
     },
     {
       id: 3,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      name: "Jean pierre",
+      cathegorie: "Apprenant",
+      heureConnect: "10h30",
+      heureDisconnect: "15h00",
+      operations:'lire un cours pdf',
     },
     {
       id: 4,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      name: "Jean pierre",
+      cathegorie: "Apprenant",
+      heureConnect: "10h30",
+      heureDisconnect: "15h00",
+      operations:'lire un cours pdf',
     },
     {
       id: 5,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      name: "Jean pierre",
+      cathegorie: "Apprenant",
+      heureConnect: "10h30",
+      heureDisconnect: "15h00",
+      operations:'lire un cours pdf',
     },
     {
       id: 6,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      name: "Jean pierre",
+      cathegorie: "Apprenant",
+      heureConnect: "10h30",
+      heureDisconnect: "15h00",
+      operations:'lire un cours pdf',
     },
     
     {
       id: 7,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      name: "Jean pierre",
+      cathegorie: "Apprenant",
+      heureConnect: "10h30",
+      heureDisconnect: "15h00",
+      operations:'lire un cours pdf',
     },
     
     {
       id: 8,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      name: "Jean pierre",
+      cathegorie: "Apprenant",
+      heureConnect: "10h30",
+      heureDisconnect: "15h00",
+      operations:'lire un cours pdf',
     },
     
     {
       id: 9,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+     name: "Jean pierre",
+      cathegorie: "Apprenant",
+      heureConnect: "10h30",
+      heureDisconnect: "15h00",
+      operations:'lire un cours pdf',
     },
     
     {
       id: 10,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      name: "Jean pierre",
+      cathegorie: "Apprenant",
+      heureConnect: "10h30",
+      heureDisconnect: "15h00",
+      operations:'lire un cours pdf',
     },
     {
       id: 11,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      name: "Jean pierre",
+      cathegorie: "Apprenant",
+      heureConnect: "10h30",
+      heureDisconnect: "15h00",
+      operations:'lire un cours pdf',
     },
     {
       id: 12,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      name: "Jean pierre",
+      cathegorie: "Apprenant",
+      heureConnect: "10h30",
+      heureDisconnect: "15h00",
+      operations:'lire un cours pdf',
     },
-    {
-      id: 13,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 14,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 15,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 16,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 17,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
+   
   ];
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
@@ -193,14 +139,9 @@ const  PublicityContent = () => {
 			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             <div style={{display:'inline-block',color:'red',margin:'2%'}}>
-                                Publicité
+                                Historiques 
                             </div>
-                            <Avatar 
-                                size="40"
-                                round={true}
-                                src={smile}
-                                name='logo'
-                            />
+                            
                         </GridItem>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             
@@ -212,21 +153,34 @@ const  PublicityContent = () => {
                            
                         </GridItem>
                     </GridContainer>
+
+                             <GridContainer style={{backgroundColor:'#eeeeee',width:'95%'}}> 
+        <Table striped bordered hover variant="secondary">
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Cathégorie</th>
+                  <th>Heure Connexion</th>
+                  <th>Heure Deconnexion</th>
+                  <th>Opérations</th>
+                </tr>
+              </thead>
+              <tbody>
+              {currentPosts.map((post,index)=>{
+                return(
+                  <tr>
+                    <td>{post.name}</td>
+                    <td>{post.cathegorie}</td>
+                    <td>{post.heureConnect}</td>
+                    <td>{post.heureDisconnect}</td>
+                    <td>{post.operations}</td>
+                  </tr>
+                  )
+              })}
+              </tbody>
+            </Table>
+          </GridContainer>
              
-			 <GridContainer style={{backgroundColor:'#eeeeee'}}>
-			 			{currentPosts.map((post,index)=>{
-			 				console.log("my post")
-			 				console.log(post)
-			 				return(
-			 					<GridItem xs={12} sm={12} md={3} key={post.id}>
-                        
-                              
-                            
-                        </GridItem>
-			 					)
-			 				
-			 			})}
-                    </GridContainer>
                     <GridContainer style={{backgroundColor:'#eeeeee'}}>
                     	<GridItem xs={12} sm={12} md={12}>
                     		<Pagination 

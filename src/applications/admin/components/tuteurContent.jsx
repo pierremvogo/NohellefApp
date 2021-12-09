@@ -22,6 +22,7 @@ import Switch from "react-switch";
 import edit from '../../../assets/images/dashboard/edit.png';
 import Select from 'react-select';
 import './admin.css';
+import {Table} from 'react-bootstrap';
 
 const TuteurContent = () => {
 	const [posts, setPosts] = useState([]);
@@ -92,198 +93,71 @@ const TuteurContent = () => {
     setDisplay("flex",setShowEditModal(true));
     }
 
+    const checkbox =()=>{
+      return(
+        <input type="checkbox" />);
+    }
+
+
     let data = [
     {
       id: 1,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate: '',
-      userSetting: edit
+      courseName: 'Algèbre linéaire',
+      tutorName:"mvogo",
+      speciality:"Mathematiques",
+      activate: <input type="checkbox" />,
+      edit: edit,
     },
     {
       id: 2,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:'',
-      userSetting: edit
+      courseName: 'Algèbre linéaire',
+      tutorName:"mvogo",
+      speciality:"Mathematiques",
+      activate:<input type="checkbox" />,
+      edit: edit,
     },
     {
       id: 3,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+     courseName: 'Algèbre linéaire',
+      tutorName:"mvogo",
+      speciality:"Mathematiques",
+      activate:<input type="checkbox" />,
+      edit: edit,
     },
     {
       id: 4,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+     courseName: 'Algèbre linéaire',
+      tutorName:"mvogo",
+      speciality:"Mathematiques",
+      activate:<input type="checkbox" />,
+      edit: edit,
     },
     {
       id: 5,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+     courseName: 'Algèbre linéaire',
+      tutorName:"mvogo",
+      speciality:"Mathematiques",
+      activate:<input type="checkbox" />,
+      edit: edit,
     },
     {
       id: 6,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+      courseName: 'Algèbre linéaire',
+      tutorName:"mvogo",
+      speciality:"Mathematiques",
+      activate:<input type="checkbox" />,
+      edit: edit,
     },
     
     {
       id: 7,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
+      courseName: 'Algèbre linéaire',
+      tutorName:"mvogo",
+      speciality:"Mathematiques",
+      activate:<input type="checkbox" />,
+      edit: edit,
     },
-    
-    {
-      id: 8,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
-    },
-    
-    {
-      id: 9,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
-    },
-    
-    {
-      id: 10,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
-    },
-    {
-      id: 11,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
-    },
-    {
-      id: 12,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
-    },
-    {
-      id: 13,
-     userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
-    },
-    {
-      id: 14,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
-    },
-    {
-      id: 15,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
-    },
-    {
-      id: 16,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
-    },
-    {
-      id: 17,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userSpeciality:"Maths",
-      userIsActivate:true,
-      userSetting: edit
-    },
+  
   ];
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
@@ -306,7 +180,7 @@ const TuteurContent = () => {
 
                         <GridItem xs={12} sm={12} md={3}>
                             <div style={{display:'inline-block',color:'#5271ff',margin:'2%'}}>
-                                Tous les tuteurs
+                                Tous les Cours
                             </div>
                             
                         </GridItem>
@@ -325,7 +199,15 @@ const TuteurContent = () => {
                         </GridItem>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
                             <div style={{width:'100%',fontSize:'1vw'}}>
-                              <Select options={options} />
+                               <select name="pets" id="pet-select">
+                                    <option value="">Spécialité</option>
+                                    <option value="dog">Français</option>
+                                    <option value="cat">Anglais</option>
+                                    <option value="hamster">Mathématiques</option>
+                                    <option value="parrot">Physiques</option>
+                                    <option value="spider">Informatique</option>
+                                    <option value="goldfish">Science de l'ingénieur</option>
+                                </select>
                             </div>
                         </GridItem>
                     </GridContainer>
@@ -357,153 +239,49 @@ const TuteurContent = () => {
                     	</GridItem>
                     </GridContainer>
 
-                    <GridContainer style={{backgroundColor:'#c7d0d8',width:'95%'}}>
+			 <GridContainer style={{backgroundColor:'#eeeeee',width:'95%'}}> 
+        <Table striped bordered hover variant="secondary">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Nom du cours</th>
+                   <th>Spécialité</th>
+                   <th>Nom du Tuteur</th>
+                  <th>Activé</th>
+                  <th>Editer</th>
+                </tr>
+              </thead>
+              <tbody>
+              {currentPosts.map((post,index)=>{
+                return(
+                  <tr>
+                    <td>{post.id}</td>
+                    <td>{post.courseName}</td>
+                     <td>{post.speciality}</td>
+                    <td>{post.tutorName}</td>
+                   
+                    <td>{post.activate}</td>
+                    <td><img src={post.edit} width='25%'/></td>
+                  </tr>
+                  )
+              })}
+              </tbody>
+            </Table>
+          </GridContainer>
+
+                 
+                    <GridContainer>
                     	<GridItem xs={12} sm={12} md={12}>
-                    		<div style={{margin:'1%',fontSize:'1vw',textAlign:'center'}}>
-                    			<GridContainer>
-                    				<GridItem xs={12} sm={12} md={1}>
-                    					<strong> Picture</strong>
-                    				</GridItem>
-                    				<GridItem xs={12} sm={12} md={1}>
-                    				<div style={{marginLeft:'100%'}}>
-                    					<strong> Nom</strong>
-                    				</div>
-                    					
-                    				</GridItem>
-                    				<GridItem xs={12} sm={12} md={1}>
-                    				<div style={{marginLeft:'100%'}}>
-		                    			<strong>Prénom</strong>
-		                    		</div>
-			                    	</GridItem>
-			                    	<GridItem xs={12} sm={12} md={1}>
-			                    	<div style={{marginLeft:'220%'}}>
-			                    		<strong>Email</strong>
-			                    	</div>
-			                    	</GridItem>
-			                    	<GridItem xs={12} sm={12} md={1}>
-			                    	  <div style={{marginLeft:'360%'}}>
-			                    		<strong>Téléphone</strong>
-			                    	  </div>
-			                    	</GridItem>
-			                    	<GridItem xs={12} sm={12} md={1}>
-			                    	<div style={{marginLeft:'480%'}}>
-			                    		<strong>Spécialité</strong>
-			                    	</div>
-			                    	</GridItem>
-			                    	<GridItem xs={12} sm={12} md={1}>
-			                    	<div style={{marginLeft:'540%'}}>
-			                    		<strong>Activé</strong>
-			                    	</div>
-			                    	</GridItem>
-			                    	<GridItem xs={12} sm={12} md={2}>
-			                    	<div style={{marginLeft:'220%'}}>
-			                    		<strong>Editer</strong>
-			                    	</div>
-			                    	</GridItem>
-                    			</GridContainer>
-                    		</div>
+                    		<div style={{ height: 150, width: '100%' }}>
+                          <Pagination 
+                          postsPerPage={postPerPage} 
+                          totalPosts={posts.length} 
+                          paginate={paginate}
+                        />
+                        </div>
                     	</GridItem>
                     </GridContainer>
-
-			 <GridContainer style={{backgroundColor:'#c7d0d8',width:'95%'}}> 
-					<GridItem xs={12} sm={12} md={12}>
-			 			{currentPosts.map((post,index)=>{
-			 				console.log("my post")
-			 				console.log(post)
-			 				return(
-			 					 
-			 					  	<GridContainer key={post.id}>
-			 					  		<GridItem xs={12} sm={12} md={12}>
-			 					  		  <div style={{margin:'1%',fontSize:'1vw',textAlign:'center'}}>
-			 					  		  	<GridContainer>
-			 					  		  		<GridItem xs={12} sm={12} md={1}>
-				 					  		  		<Avatar 
-				                                        size="45"
-				                                        round={true}
-				                                        src={post.userProfile}
-				                                        name='logo'
-			                                    	/>
-			 					  		  		</GridItem>
-			 					  		  		<GridItem xs={12} sm={12} md={1}>
-			 					  		  		<div style={{marginLeft:'100%'}}>
-			 					  					{post.id}{post.userName}
-			 					  				</div>
-			 					  		</GridItem>
-			 					  		
-			 					  		<GridItem xs={12} sm={12} md={1}>
-			 					  		<div style={{marginLeft:'100%'}}>
-			 					  			{post.userSurname}
-			 					  		</div>
-			 					  		</GridItem>
-			 					  		
-			 					  		<GridItem xs={12} sm={12} md={1}>
-			 					  		<div style={{marginLeft:'100%'}}>
-			 					  			{post.userEmail}
-			 					  		</div>
-			 					  		</GridItem>
-			 					  		
-			 					  		<GridItem xs={12} sm={12} md={1}>
-			 					  		<div style={{marginLeft:'360%'}}>
-			 					  		{post.userPhone}
-			 					  		</div>
-			 					  		</GridItem>
-									
-			 					  		<GridItem xs={12} sm={12} md={1} style={{textAlign:'center'}}>
-			 					  		<div style={{marginLeft:'490%'}}>
-			 					  		  {post.userSpeciality}
-			 					  		</div>
-			 				
-			 					  		</GridItem>
-
-			 					  		<GridItem xs={12} sm={12} md={1}>
-			 					  		<div style={{marginLeft:'550%'}}>
-			 					  			{post.userIsActivate}
-                       <input type='checkbox' onChange={()=>checkUser(post.id)}  id="userC"  />
-			 					  		</div>
-			 					  		</GridItem>
-
-			 					  		<GridItem xs={12} sm={12} md={1}>
-			 					  		<div style={{marginLeft:'600%',cursor:'pointer'}}>
-				 					  		<div className="action">
-				 					  			<div className='profile'>
-				 					  				<Avatar 
-							                             size="25"
-							                             round={true}
-							                             src={post.userSetting}
-							                             name='logo'
-						                             />
-				 					  			</div>
-				 					  			<div className="menu">
-				 					  				<div><u>Modifier le compte</u></div>
-				 					  				<div><u>Consulter l activité</u></div>
-				 					  			</div>
-				 					  		</div>
-				 					  		
-			                             </div>
-			 					  		</GridItem>
-			 					  		  	</GridContainer>
-			 					  		  </div>
-			 					  		
-			 					  		</GridItem>
-
-			 					  		
-			 					  	</GridContainer>
-                       			  
-			 					)
-			 				
-			 			})}
-			 			</GridItem>
-                    </GridContainer>
-                    <GridContainer style={{backgroundColor:'#eeeeee'}}>
-                    	<GridItem xs={12} sm={12} md={12}>
-                    		<Pagination 
-	                    		postsPerPage={postPerPage} 
-	                    		totalPosts={posts.length} 
-	                    		paginate={paginate}
-                    		/>
-                    	</GridItem>
-                    </GridContainer>
-                    </div>
+        </div>
 		)
 }
 export default TuteurContent

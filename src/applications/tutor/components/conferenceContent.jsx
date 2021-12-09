@@ -27,7 +27,9 @@ import {
 import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";*/
 import Pagination from './pagination.jsx';
 
-
+import AgendaCalender from 'react-agenda-calendar'
+import styles from 'react-agenda-calendar/dist/index.css'
+import Agenda from './agenda';
 const ConferenceContent = () => {
 	const [posts, setPosts] = useState([]);
 	const [loading, serLoading] = useState(false);
@@ -207,7 +209,7 @@ const ConferenceContent = () => {
 			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
-                                Vidéothèque
+                               Votre programme de conférence Web
                             </div>
                            
                         </GridItem>
@@ -221,80 +223,12 @@ const ConferenceContent = () => {
                             
                         </GridItem>
                     </GridContainer>
-             
-			         <GridContainer>
 
-			 					  <GridItem xs={12} sm={12} md={12} style={{backgroundColor:'#eeeeee',margin:'0% 0% 0% 0%'}}>
-                    
-                    <GridContainer>
-                     {currentPosts.map((value,index)=>{
-                          return(
-                        <GridItem xs={12} sm={12} md={3} style={{margin:'2% 0% 0% 0%'}}>
-                          <GridContainer>
-                             <GridItem xs={12} sm={12} md={12} >
-                               <div style={{
-                                    display:'inline-block',
-                                    width:'50%',
-                                    height:'95px',
-                                    backgroundColor:'white',
-                                    fontSize:'1vw',
-                                    cursor:'pointer'
-                                    }}>
-                                      <VideoContent videoLink={videoLink} vWidth={120} vHeight={100} />
-                                    </div>
-                             </GridItem>
-                          </GridContainer>
-                          <GridContainer>
-                            <GridItem xs={12} sm={12} md={12}>
-                               <p>Web Conférence-{value.id}</p>
-                             </GridItem>
-                          </GridContainer>
-                        </GridItem>
-                        )})}
-                    </GridContainer>
+			 					  
 
-
-                    <GridContainer>
-                      <GridItem xs={12} sm={12} md={12}>
-                        
-                        <Pagination 
-                          postsPerPage={postPerPage} 
-                          totalPosts={posts.length} 
-                          paginate={paginate}
-                        />
-                      </GridItem>
-                    </GridContainer>
-                    <GridContainer>
-                      <GridItem xs={12} sm={12} md={12}>
-                        
-                        
-                      </GridItem>
-                    </GridContainer>
-                  </GridItem>
-
-
-
-			 			      <GridItem xs={12} sm={12} md={4} style={{backgroundColor:'#eeeeee',padding:'0% 0% 0% 5%'}}>
-                    <GridContainer>
-                      <GridItem xs={12} sm={12} md={12}>
-                        
-                        
-                      </GridItem>
-                    </GridContainer>
-
-                    <GridContainer>
-                      <GridItem xs={12} sm={12} md={12}>
-                      
-                      </GridItem>
-                    </GridContainer>
-                  </GridItem>
-
-
-                </GridContainer>
-
-                    <GridContainer>
+                    <GridContainer style={{backgroundColor:'#eeeeee'}}>
                     	<GridItem xs={12} sm={12} md={12}>
-                    		
+                    		<Agenda />
 
                     	</GridItem>
                     </GridContainer>

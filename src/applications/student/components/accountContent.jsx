@@ -13,6 +13,8 @@ import profilepic from '../../../assets/images/im5.png';
 import ReactSearchBox from "react-search-box";
 import Avatar   from 'react-avatar';
 import Pagination from './pagination.jsx';
+import checkok from '../../../assets/images/dashboard/checkok.png';
+import checknone from '../../../assets/images/dashboard/checknone.png';
 import './account.css';
 
 
@@ -21,6 +23,11 @@ const AccountContent = () => {
 	const [loading, serLoading] = useState(false);
 	const [currentPage, setCurrentPage] = useState(2);
 	const [postPerPage, setPostPerPage] = useState(4);
+
+
+const [isBasic,setIsBasic] = useState(false);
+const [isChat,setIsChat] = useState(false);
+const [isWebConf,setIsWebConf] = useState(false);
 
 	useEffect(()=>{
 		setPosts(data);
@@ -250,7 +257,7 @@ const AccountContent = () => {
                         <GridContainer>
                             <GridItem xs={12} sm={12} md={12}>
                                 <fieldset style={{border:'2px solid #4d6bf4'}}>
-                                  <legend>Informations Personnelle</legend>
+                                  <legend style={{width:'45%'}}>Informations Personnelle</legend>
                                    <GridContainer>
                                      <GridItem xs={12} sm={12} md={12}>
                                       <div style={{margin:'3%'}}>
@@ -289,7 +296,10 @@ const AccountContent = () => {
                         <GridContainer>
                             <GridItem xs={12} sm={12} md={12}>
                                <fieldset style={{border:'2px solid #4d6bf4',marginTop:'2%'}}>
-                                  <legend>Informations Abonnement</legend>
+                                  <legend style={{width:'45%'}}>Informations Abonnement</legend>
+                                
+
+
                                   <div style={{
                                     backgroundColor:'#9aa7b2',
                                     margin:'3%',
@@ -297,34 +307,42 @@ const AccountContent = () => {
                                     height:'140px',
                                     border:'1px solid #9aa7b2'}}>
 
-                                    <GridContainer>
-                                     <GridItem xs={12} sm={12} md={12}>
-                                     <div style={{margin:'2%'}}>
-                                       <span><strong>Basique</strong></span>
-                                       <span style={{float:'right'}}><input type='checkbox'/></span>
-                                      </div>
-                                     </GridItem>
-                                   </GridContainer>
-
                                    <GridContainer>
-                                     <GridItem xs={12} sm={12} md={12}>
-                                     <div style={{margin:'2%'}}>
-                                       <span><strong>Chat</strong></span>
-                                       <span style={{float:'right'}}><input type='checkbox'/></span>
-                                      </div>
-                                     </GridItem>
-                                   </GridContainer>
+                                <GridItem xs={12} sm={12} md={12}>
+                                  <div style={{
+                                    width:'90%',
+                                    backgroundColor:'#9AA7B2',
+                                    height:'100px',
+                                    margin:'0% 10% 2% 5%',
+                                    fontSize:'1.2vw',
+                                    padding:'5% 5% 0% 0%'
+                                  }}>
+                                    <ul>
+                                      <li>Accès aux cours<span style={{float:'right'}}>
 
-                                   <GridContainer>
-                                     <GridItem xs={12} sm={12} md={12}>
-                                     <div style={{margin:'2%'}}>
-                                       <span><strong>Web-Conférence</strong></span>
-                                       <span style={{float:'right'}}><input type='checkbox'/></span>
-                                      </div>
-                                     </GridItem>
-                                   </GridContainer>
+                                      {isBasic?<img src={checkok} width='20px'/>:
+                                               <img src={checknone} width='20px'/>}</span></li>
+                                      <li>Accès aux vidéos<span style={{float:'right'}}>
+
+                                      {isBasic?<img src={checkok} width='20px'/>:
+                                               <img src={checknone} width='20px'/>}</span></li>
+                                      <li>Accès aux chat<span style={{float:'right'}}>
+
+                                      {isChat?<img src={checkok} width='20px'/>:
+                                             <img src={checknone} width='20px'/>}</span></li>
+                                      <li>Web-Conférence<span style={{float:'right'}}>
+
+                                      {isWebConf?<img src={checkok} width='20px'/>:
+                                                 <img src={checknone} width='20px'/>}</span></li>
+                                    </ul>
+                                  </div>
+                                </GridItem>
+                              </GridContainer>
                                     
                                   </div>
+
+
+
                                 </fieldset>
                             </GridItem>
                         </GridContainer>

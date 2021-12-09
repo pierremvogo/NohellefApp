@@ -9,231 +9,247 @@ import CardAvatar from "../../../app/components/Card/CardAvatar.js";
 import CardFooter from "../../../app/components/Card/CardFooter.js";
 import { Dropdown } from 'react-bootstrap';
 import smile from '../../../assets/images/main/smile.png';
+import im5 from '../../../assets/images/im5.png';
+import setting from '../../../assets/images/admin/setting.png';
 import eye from '../../../assets/icons/eye.png';
+import AddTutor from './addTutor.jsx';
 import download from '../../../assets/icons/download.png';
 import ReactSearchBox from "react-search-box";
 import Avatar   from 'react-avatar';
 import Pagination from './pagination.jsx';
+import Switch from "react-switch";
+import './admin.css';
+import {Table} from 'react-bootstrap';
+import chat from '../../../assets/images/dashboard/chat2.png';
+
 
 const AbonnementContent = () => {
-	const [posts, setPosts] = useState([]);
-	const [currentPage, setCurrentPage] = useState(2);
-	const [postPerPage] = useState(4);
+  const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postPerPage] = useState(3);
+  const [display, setDisplay] = useState("flex");
+  const [showEditModal,setShowEditModal] = useState(false);
+  const [checked, setChecked] = useState(false);
 
-	useEffect(()=>{
-		setPosts(data);
-	},[])
+  useEffect(()=>{
+    setPosts(data);
+  },[])
+
+  const handleChange = (checked) => {
+    setChecked(checked)
+  }
+
+  function menuToggle(){
+    const toggleMenu = document.querySelector('.menu');
+    toggleMenu.classList.toggle('active')
+  }
+
+   const ModalContentEdit  = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "4000px",
+            justifyContent: "center",
+            display: display,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+           <div className="contain" id='myContain'>
+                <div style={{display:'inline-block', margin:'3%', fontSize:'1.5vw'}}>
+                    
+                </div><span className='close' onClick={()=>closeModal()}>&times;</span>
+                <AddTutor /> 
+            </div>
+          
+      </div>
+    )
+  };
+  const CheckBox =()=> {
+    return(
+        <input type='checkbox' />
+      )
+  };
+  function closeModal(){
+    setDisplay("none",setShowEditModal(false));
+  }
+
+  const openModal=()=> {
+    setDisplay("flex",setShowEditModal(true));
+    }
 
     let data = [
     {
       id: 1,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      userProfile: im5,
+      userName:"mvogo",
+      userSurname:"pierre",
+      userEmail:"mvogopierre129@gmail.com",
+      userPhone:"698114902",
+      userCity:"Yaoundé",
+      userAddress: "Rue 5874",
+      userCode: '125635',
+      userChat: chat
     },
     {
       id: 2,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      userProfile: im5,
+      userName:"mvogo",
+      userSurname:"pierre",
+      userEmail:"mvogopierre129@gmail.com",
+      userPhone:"698114902",
+      userCity:"Yaoundé",
+      userAddress: "Rue 5874",
+      userCode: '125635',
+      userChat: chat
     },
     {
       id: 3,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      userProfile: im5,
+      userName:"mvogo",
+      userSurname:"pierre",
+      userEmail:"mvogopierre129@gmail.com",
+      userPhone:"698114902",
+      userCity:"Yaoundé",
+      userAddress: "Rue 5874",
+      userCode: '125635',
+      userChat: chat
     },
     {
       id: 4,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      userProfile: im5,
+      userName:"mvogo",
+      userSurname:"pierre",
+      userEmail:"mvogopierre129@gmail.com",
+      userPhone:"698114902",
+      userCity:"Yaoundé",
+      userAddress: "Rue 5874",
+      userCode: '125635',
+      userChat: chat
     },
     {
       id: 5,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 6,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      userProfile: im5,
+      userName:"mvogo",
+      userSurname:"pierre",
+      userEmail:"mvogopierre129@gmail.com",
+      userPhone:"698114902",
+      userCity:"Yaoundé",
+      userAddress: "Rue 5874",
+      userCode: '125635',
+      userChat: chat
     },
     
-    {
-      id: 7,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
     
-    {
-      id: 8,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    
-    {
-      id: 9,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    
-    {
-      id: 10,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 11,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 12,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 13,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 14,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 15,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 16,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 17,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
+   
   ];
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
   const currentPosts = posts.slice(indexOfFirstPost,indexOfLastPost);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-	return(
-			<div className="container">
-			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
+  return(
+      <div className="container" style={{margin:'5% 0% 0% 0%'}}>
+
+      {showEditModal? <ModalContentEdit /> :'' } 
+       <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
+
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
-                            <div style={{display:'inline-block',color:'red',margin:'2%'}}>
-                                Formulaire d'abonnement
+                            <div style={{display:'inline-block',color:'#5271ff',margin:'2%'}}>
+                                Tous les Parents
                             </div>
                             
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
-                            
+                        <GridItem xs={12} sm={12} md={4} style={{marginTop:'2%'}}>
+                           <div style={{border:'2px solid #0069D9', width:'110%'}}>
+                                 <ReactSearchBox
+                                    placeholder="Rechercher"
+                                    value="Doe"
+                                    data={data}
+                                    callback={(record) => console.log(record)}
+                                  />
+                            </div>
                         </GridItem>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
-                            
+                             
                         </GridItem>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
-                            
+                           
                         </GridItem>
                     </GridContainer>
-             
-			 <GridContainer style={{backgroundColor:'#eeeeee'}}>
-			 			{currentPosts.map((post,index)=>{
-			 				console.log("my post")
-			 				console.log(post)
-			 				return(
-			 					<GridItem xs={12} sm={12} md={3} key={post.id}>
-                        
-                               
-                            
-                        </GridItem>
-			 					)
-			 				
-			 			})}
+
+                    <GridContainer>
+                      <GridItem xs={12} sm={12} md={12}>
+
+                        <div style={{cursor:'pointer',
+                                          margin:'1% 0% 1% 80%',
+                                          textAlign:'center'}}>
+                                 
+                                    </div>
+                      </GridItem>
                     </GridContainer>
-                    <GridContainer style={{backgroundColor:'#eeeeee'}}>
-                    	<GridItem xs={12} sm={12} md={12}>
-                    		<Pagination 
-	                    		postsPerPage={postPerPage} 
-	                    		totalPosts={posts.length} 
-	                    		paginate={paginate}
-                    		/>
-                    	</GridItem>
+
+                    <GridContainer style={{backgroundColor:'#eeeeee',width:'95%'}}> 
+        <Table striped bordered hover variant="secondary">
+              <thead>
+                <tr>
+                  <th>Picture</th>
+                  <th>Nom</th>
+                  <th>Prénom</th>
+                  <th>Email</th>
+                  <th>Téléphone</th>
+                  <th>Ville</th>
+                  <th>Adresse</th>
+                  <th>Chat</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              {currentPosts.map((post,index)=>{
+                return(
+                  <tr>
+                    
+                    <td><Avatar 
+                                                size="45"
+                                                round={true}
+                                                src={post.userProfile}
+                                                name='logo'
+                                            /></td>
+                    <td>{post.userName}</td>
+                    <td>{post.userSurname}</td>
+                    <td>{post.userEmail}</td>
+                    <td>{post.userPhone}</td>
+                    <td>{post.userCity}</td>
+                    <td>{post.userAddress}</td> 
+                    <td><img src={post.userChat} width='45%'/></td>  
+                  
+                  </tr>
+                  )
+              })}
+              </tbody>
+          </Table>
+          </GridContainer>
+
+      
+                    <GridContainer style={{backgroundColor:'#eeeeee',width:'95%'}}>
+                      <GridItem xs={12} sm={12} md={12}>
+                        <Pagination 
+                          postsPerPage={postPerPage} 
+                          totalPosts={posts.length} 
+                          paginate={paginate}
+                        />
+                      </GridItem>
                     </GridContainer>
                     </div>
-		)
+    )
 }
-export default AbonnementContent
+export default  AbonnementContent
 
 

@@ -19,6 +19,7 @@ import Pagination from './pagination.jsx';
 import Switch from "react-switch";
 import edit from '../../../assets/images/dashboard/edit.png';
 import './admin.css';
+import {Table} from 'react-bootstrap';
 
 const CourseContent = () => {
   const [posts, setPosts] = useState([]);
@@ -95,6 +96,43 @@ const CourseContent = () => {
        userNote:15,
       userStatus: "validée"
     }
+    ,
+    {
+      id: 4,
+      userProfile: im5,
+      userName:"mvogo",
+      userSurname:"pierre",
+      userEmail:"mvogopierre129@gmail.com",
+      userPhone:"698114902",
+      userSpeciality:"Maths",
+       userNote:15,
+      userStatus: "validée"
+    }
+    ,
+    {
+      id: 5,
+      userProfile: im5,
+      userName:"mvogo",
+      userSurname:"pierre",
+      userEmail:"mvogopierre129@gmail.com",
+      userPhone:"698114902",
+      userSpeciality:"Maths",
+       userNote:15,
+      userStatus: "validée"
+    }
+    ,
+    {
+      id: 6,
+      userProfile: im5,
+      userName:"mvogo",
+      userSurname:"pierre",
+      userEmail:"mvogopierre129@gmail.com",
+      userPhone:"698114902",
+      userSpeciality:"Maths",
+       userNote:15,
+      userStatus: "validée"
+    }
+
     
   ];
   // Get current posts
@@ -110,7 +148,7 @@ const CourseContent = () => {
 
                         <GridItem xs={12} sm={12} md={6}>
                             <div style={{display:'inline-block',color:'#5271ff',margin:'0% 0% 5% 0%'}}>
-                                Consulter les travaux de votre enfant
+                                Consulter les travaux de vos enfants
                             </div>
                             
                         </GridItem>
@@ -130,126 +168,45 @@ const CourseContent = () => {
                       </GridItem>
                     </GridContainer>
 
-                    <GridContainer style={{backgroundColor:'#c7d0d8',width:'95%'}}>
-                      <GridItem xs={12} sm={12} md={12}>
-                        <div style={{margin:'1%',fontSize:'1vw',textAlign:'center'}}>
-                          <GridContainer>
-                            <GridItem xs={12} sm={12} md={1}>
-                              <strong> Picture</strong>
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={1}>
-                            <div style={{marginLeft:'100%'}}>
-                              <strong> Nom</strong>
-                            </div>
-                              
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={1}>
-                            <div style={{marginLeft:'100%'}}>
-                              <strong>Prénom</strong>
-                            </div>
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={1}>
-                            <div style={{marginLeft:'220%'}}>
-                              <strong>Email</strong>
-                            </div>
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={1}>
-                              <div style={{marginLeft:'360%'}}>
-                              <strong>Téléphone</strong>
-                              </div>
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={1}>
-                            <div style={{marginLeft:'480%'}}>
-                              <strong>Spécialité</strong>
-                            </div>
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={1}>
-                            <div style={{marginLeft:'540%'}}>
-                              <strong>Note/20</strong>
-                            </div>
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={2}>
-                            <div style={{marginLeft:'220%'}}>
-                              <strong>Décision</strong>
-                            </div>
-                            </GridItem>
-                          </GridContainer>
-                        </div>
-                      </GridItem>
-                    </GridContainer>
 
-       <GridContainer style={{backgroundColor:'#c7d0d8',width:'95%'}}> 
-          <GridItem xs={12} sm={12} md={12}>
-            {currentPosts.map((post,index)=>{
-              console.log("my post")
-              console.log(post)
-              return(
-                 
-                    <GridContainer key={post.id}>
-                      <GridItem xs={12} sm={12} md={12}>
-                        <div style={{margin:'1%',fontSize:'1vw',textAlign:'center'}}>
-                          <GridContainer>
-                            <GridItem xs={12} sm={12} md={1}>
-                              <Avatar 
+       <GridContainer style={{backgroundColor:'#eeeeee',width:'95%'}}> 
+        <Table striped bordered hover variant="secondary">
+              <thead>
+                <tr>
+                  <th>Picture</th>
+                  <th>Nom</th>
+                   <th>Prénom</th>
+                   <th>Email</th>
+                  <th>Téléphone</th>
+                  <th>Spécialité</th>
+                   <th>Note / 20</th>
+                   <th>Décision</th>
+                </tr>
+              </thead>
+              <tbody>
+              {currentPosts.map((post,index)=>{
+                return(
+                  <tr>
+                    <td><Avatar 
                                                 size="45"
                                                 round={true}
                                                 src={post.userProfile}
                                                 name='logo'
-                                            />
-                            </GridItem>
-                            <GridItem xs={12} sm={12} md={1}>
-                            <div style={{marginLeft:'100%'}}>
-                            {post.id}{post.userName}
-                          </div>
-                      </GridItem>
-                      
-                      <GridItem xs={12} sm={12} md={1}>
-                      <div style={{marginLeft:'100%'}}>
-                        {post.userSurname}
-                      </div>
-                      </GridItem>
-                      
-                      <GridItem xs={12} sm={12} md={1}>
-                      <div style={{marginLeft:'100%'}}>
-                        {post.userEmail}
-                      </div>
-                      </GridItem>
-                      
-                      <GridItem xs={12} sm={12} md={1}>
-                      <div style={{marginLeft:'360%'}}>
-                      {post.userPhone}
-                      </div>
-                      </GridItem>
-                  
-                      <GridItem xs={12} sm={12} md={1} style={{textAlign:'center'}}>
-                      <div style={{marginLeft:'490%'}}>
-                        {post.userSpeciality}
-                      </div>
-              
-                      </GridItem>
-                       <GridItem xs={12} sm={12} md={1}>
-                      <div style={{marginLeft:'600%',cursor:'pointer'}}>
-                        {post.userNote}</div>
-                      </GridItem>
-
-                      <GridItem xs={12} sm={12} md={1}>
-                      <div style={{marginLeft:'600%',cursor:'pointer'}}>
-                        {post.userStatus}</div>
-                      </GridItem>
-                          </GridContainer>
-                        </div>
-                      
-                      </GridItem>
-
-                      
-                    </GridContainer>
-                              
-                )
-              
-            })}
-            </GridItem>
-                    </GridContainer>
-                    <GridContainer style={{backgroundColor:'#eeeeee'}}>
+                                            /></td>
+                    <td>{post.id}{post.userName}</td>
+                    <td>{post.userSurname}</td>
+                   <td>{post.userEmail}</td>
+                   <td>{post.userPhone}</td>
+                   <td>{post.userSpeciality}</td>
+                    <td>{post.userNote}</td>
+                    <td>{post.userStatus}</td>
+                  </tr>
+                  )
+              })}
+              </tbody>
+            </Table>
+          </GridContainer>
+                    <GridContainer >
                       <GridItem xs={12} sm={12} md={12}>
                         <Pagination 
                           postsPerPage={postPerPage} 

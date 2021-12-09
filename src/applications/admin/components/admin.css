@@ -25,3 +25,9 @@
 	visibility: visible;
 	opacity: 1;
 }
+th, td{
+	font-size: 75%;
+}
+legend{
+	background-color: red;
+}

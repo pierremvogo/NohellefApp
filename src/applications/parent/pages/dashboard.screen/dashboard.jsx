@@ -65,6 +65,31 @@ const DashboardStudent = () => {
         const toggleMenu = document.querySelector('.menu');
         toggleMenu.classList.toggle('active')
     }
+    const outPutClickHandlerPay = (e) => {
+        setIsPaymentResourceContent(true,
+            setIsCourseContent(false),
+            setIsAccountContent(false),
+            setIsHistoryContent(false),
+            setIsPaymentContent(false),
+            setIsConferenceContent(false),
+            setIsChooseTutorContent(false),
+            setIsContactHelpContent(false))
+
+        let element = document.getElementById("myDiv6");
+            element.style.backgroundColor = "#dd1b16";
+            let tab = [
+                document.getElementById('myDiv1'),
+                document.getElementById('myDiv2'),
+                document.getElementById('myDiv3'),
+                document.getElementById('myDiv4'),
+                document.getElementById('myDiv5'),
+                document.getElementById('myDiv7'),
+                document.getElementById('myDiv8')
+            ]
+            for(var i of tab){
+                i.style.backgroundColor = ""
+            }
+    }
 
     useEffect(()=>{
         var element1 = document.getElementById("myDiv1");
@@ -457,7 +482,7 @@ const DashboardStudent = () => {
                                         name='logo'
                                     />
                                 </div>
-                               <span className="text">les Travaux de votre enfant</span>
+                               <span className="text">les Travaux de vos enfants</span>
 
                               </div>
 
@@ -625,7 +650,7 @@ const DashboardStudent = () => {
                           {isConferenceContent?<ConferenceContent />:''}
                           {isContactHelpContent?<ContactHelpContent />:''}
                           {isHistoryContent?<HistoryContent />:''}
-                          {isPaymentContent?<PaymentContent />:''}
+                          {isPaymentContent?<PaymentContent onChildClickHandlerPay={outPutClickHandlerPay} />:''}
                           {isChooseTutor?<ChooseTutorContent />:''}
                           {isPaymentResourceContent?<PaymentResourceContent />:''}
 

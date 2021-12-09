@@ -256,7 +256,7 @@ const ConferenceContent = () => {
     console.log('ready open')
   }
 	return(
-			<div className="container" style={{margin:'0% 10% 5% 0%'}}>
+			<div className="container" style={{margin:'0% 10% 0% 0%'}}>
 			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
@@ -374,7 +374,7 @@ const ConferenceContent = () => {
 
                     <GridContainer>
                       <GridItem xs={12} sm={12} md={12}>
-                      <div style={{margin:'5% 0% 0% 0%', cursor:'pointer'}}>
+                      <div style={{margin:'5% 0% 0% 0%', cursor:'pointer',overflow:'scroll'}}>
                         {currentPosts.map((value,index)=>{
                           return(
                             <GridContainer>

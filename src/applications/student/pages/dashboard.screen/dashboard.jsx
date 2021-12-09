@@ -17,7 +17,7 @@ import d5 from '../../../../assets/images/dashboard/d5.png';
 import d6 from '../../../../assets/images/dashboard/d6.png';
 import d7 from '../../../../assets/images/dashboard/d7.png';
 import d8 from '../../../../assets/images/dashboard/d8.png';
-
+import Select from "@material-ui/core/Select";
 import im5 from '../../../../assets/images/im5.png';
 import ReactPaginate from 'react-paginate';
 import GridItem from "../../../../app/components/Grid/GridItem.js";
@@ -42,9 +42,14 @@ import PaymentContent from '../../components/paymentContent.jsx';
 import PaymentResourceContent from '../../components/paymentResourceContent.jsx';
 import AccountContent from '../../components/accountContent.jsx';
 import { Player, ControlBar } from 'video-react';
-
+import badge from '../../../../assets/images/dashboard/badge.png';
+import Chat from "../../../../app/components/chat/chat.jsx";
+import ScrollToBottom from "react-scroll-to-bottom";
+import {NotificationManager,NotificationContainer} from 'react-notifications';
+import io from 'socket.io-client';
 //5271ff 
 //ffce52 
+ const socket = io.connect("http://localhost:3001");
 const DashboardStudent = () => {
 
     const [isAccountContent, setIsAccountContent] = useState(false);
@@ -55,14 +60,32 @@ const DashboardStudent = () => {
     const [isHistoryContent, setIsHistoryContent] = useState(false);
     const [isPaymentContent, setIsPaymentContent] = useState(false);
     const [isPaymentResourceContent, setIsPaymentResourceContent] = useState(false);
+    const [room, setRoom] = useState("123");
+    const [username, setUsername] = useState("pirateBay");
+    const [showChatModal, setShowChatModal] = useState(false);
+    const [displayAsk, setDisplayAsk] = useState("none");
+    const [remoteUsername, setRemoteUsername] = useState("Mme Ngono");
+    const [countBadge, setCountBadge] = useState(0);
+    const [showBadge, setShowBadge] = useState(false);
+    const [messageList, setMessageList] = useState({});
+    const [studentId, setStudentId] = useState(123);
+    const [tutorId, setTutorId] = useState(12345);
+    let dataList = [];
 
 
-    function menuToggle(){
-        const toggleMenu = document.querySelector('.menu');
-        toggleMenu.classList.toggle('active')
+    const joinRoom = () => {
+       const userData = {
+            author : username,
+            room : room
+        };
+        console.log("MY DATA-------",userData);
+        if(userData.author !== "" && userData.room !== ""){
+           socket.emit("join_room", userData); 
+        }
+        
     }
-
-    useEffect(()=>{
+   
+      useEffect(()=>{
         var element1 = document.getElementById("myDiv1");
         var element2 = document.getElementById("dash1");
         element2.style.borderRadius = "3px 3px 3px 3px";
@@ -85,7 +108,7 @@ const DashboardStudent = () => {
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
-                document.getElementById('dash5')
+                
             ]
             for(var i of tab2){
                 i.style.borderRadius = ""
@@ -96,6 +119,152 @@ const DashboardStudent = () => {
     },[])
 
 
+    function menuToggle(){
+        const toggleMenu = document.querySelector('.menu');
+        toggleMenu.classList.toggle('active')
+    }
+    const styles = {
+                      root: {
+                        width: "120px"
+                      },
+                      input: {
+                        padding: "10px 14px"
+                      }
+                };
+
+    const  createNotification = (type) => {
+            console.log(type);
+            if(countBadge == 0){
+                return;
+            }else{
+               return () => {
+              switch (type) {
+                case 'info':
+                  NotificationManager.info(
+                    <div>
+                    <Avatar 
+                        size="30"
+                        round={true}
+                        src={im5}
+                        name='logo'
+                    />
+                    <span style={{margin:'0% 0% 0% 5%'}}>{remoteUsername}</span>
+                    </div>,
+
+                    'Nouveau Message',3000,() =>{
+                            openModal('badge');
+                          });
+                  break;
+                case 'success':
+                  NotificationManager.success('Success message', 'Title here');
+                  break;
+                case 'warning':
+                  NotificationManager.warning('Warning message', 'Close after 3000ms', 3000);
+                  break;
+                case 'error':
+                  NotificationManager.error('Error message', 'Click me!', 5000, () => {
+                    alert('callback');
+                  });
+                  break;
+              }
+            };  
+            }
+           
+  };
+
+   const callbackFunction = (childData) => {
+        console.log("Data from child", childData);
+    }
+
+  const ModalChat = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "30%",
+            height: "80%",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            backgroundColor: "transparent",
+            border:'none',
+            top:"10%",
+            left:"70%",
+            }}
+      >
+      <GridContainer>
+          <GridItem xs={12} sm={12} md={12} style={{
+                                        backgroundColor:'#FFCE52',
+                                        borderRadius:'20px',
+                                        height:'105%',
+                                         }}>
+              <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                      <span className='close' onClick={()=>closeModal()}>&times;</span>
+                  </GridItem>
+              </GridContainer>
+              <GridContainer>
+                  <GridItem xs={4} sm={4} md={4}>
+                      <Avatar style={{margin:'0% 0% 0% 50%'}}
+                            size="30"
+                            round={true}
+                            src={im5}
+                            name='logo'
+                        />
+                  </GridItem>
+                  <GridItem xs={4} sm={4} md={5}>
+                      {remoteUsername}
+                  </GridItem>
+                  <GridItem xs={4} sm={4} md={3}>
+                      <div className="online"></div>
+                  </GridItem>
+              </GridContainer>
+              <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                      <Chat 
+                        socket={socket} 
+                        username={username} 
+                        room={room} 
+                        messageListd={messageList} 
+                        studentId={studentId}
+                        tutorId={tutorId} 
+                        isRole={'student'}  />
+                  </GridItem>
+              </GridContainer>
+          </GridItem>
+      </GridContainer>
+      </div>
+    )
+  };
+
+    
+
+    const outPutClickHandlerPay = (e) => {
+        setIsPaymentResourceContent(true,
+            setIsCourseContent(false),
+            setIsAccountContent(false),
+            setIsHistoryContent(false),
+            setIsPaymentContent(false),
+            setIsConferenceContent(false),
+            setIsChooseTutorContent(false),
+            setIsContactHelpContent(false))
+        let element = document.getElementById("myDiv6");
+            element.style.backgroundColor = "#dd1b16";
+            let tab = [
+                document.getElementById('myDiv1'),
+                document.getElementById('myDiv2'),
+                document.getElementById('myDiv3'),
+                document.getElementById('myDiv4'),
+                document.getElementById('myDiv5'),
+                document.getElementById('myDiv7'),
+                document.getElementById('myDiv8')
+            ]
+            for(var i of tab){
+                i.style.backgroundColor = ""
+            }
+
+    }
 
     const onChange = () =>{
         console.log("has change")
@@ -334,6 +503,19 @@ const DashboardStudent = () => {
             
           
     }
+        function closeModal(){
+          setShowChatModal(false,setDisplayAsk("none"));
+     
+          }
+
+          function openModal(type){
+             if(type=="badge"){
+                setShowBadge(false);
+                setShowChatModal(true,setDisplayAsk("flex"));
+             }
+            
+             setShowChatModal(true,setDisplayAsk("flex"));
+          }
 
     function changeStyle1(id) {
         let element = document.getElementById(id);
@@ -345,7 +527,7 @@ const DashboardStudent = () => {
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
-                document.getElementById('dash5')
+                
             ]
             for(var i of tab){
                 i.style.borderRadius = ""
@@ -361,7 +543,7 @@ const DashboardStudent = () => {
                 document.getElementById('dash1'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
-                document.getElementById('dash5')
+                
             ]
             for(var i of tab){
                 i.style.borderRadius = ""
@@ -377,7 +559,7 @@ const DashboardStudent = () => {
                 document.getElementById('dash1'),
                 document.getElementById('dash2'),
                 document.getElementById('dash4'),
-                document.getElementById('dash5')
+                
             ]
             for(var i of tab){
                 i.style.borderRadius = ""
@@ -393,7 +575,7 @@ const DashboardStudent = () => {
                 document.getElementById('dash1'),
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
-                document.getElementById('dash5')
+                
             ]
             for(var i of tab){
                 i.style.borderRadius = ""
@@ -401,26 +583,12 @@ const DashboardStudent = () => {
                 i.style.border = ""
             }
         }
-        else if(id=="dash5"){
-            element.style.borderRadius = "3px 3px 3px 3px";
-            element.style.width = "100%";
-            element.style.border = "2px solid #DD1B16";
-            let tab = [
-                document.getElementById('dash1'),
-                document.getElementById('dash2'),
-                document.getElementById('dash3'),
-                document.getElementById('dash4')
-            ]
-            for(var i of tab){
-                i.style.borderRadius = ""
-                i.style.width = ""
-                i.style.border = ""
-            }
-        }
+        
 
     }
         return(
             <div style={{overflow:'hidden'}}>
+            {showChatModal? <ModalChat />  : ''}
             <GridContainer>
                 <GridItem xs={12} sm={12} md={3}>
                     <ProSidebar style={{width:'100%'}}>
@@ -540,7 +708,7 @@ const DashboardStudent = () => {
                                         name='logo'
                                     />
                                 </div>
-                                <span className="text">Ajouter un moyen de payement</span>
+                                <span className="text">Ajouter un moyen de paiement</span>
                               </div>
                             </GridItem>
 
@@ -589,36 +757,64 @@ const DashboardStudent = () => {
 
                 <GridItem xs={12} sm={12} md={9} style={{marginTop:'2%'}}>
 
-                     <GridContainer>
+                    <GridContainer>
                         <GridItem xs={12} sm={12} md={2}>
                             <div id="dash1" className='dash-navitem dashn1' onClick={()=>changeStyle1('dash1')}>Dashboard</div>
                         </GridItem>
+                       
                         <GridItem xs={12} sm={12} md={2}>
-                             <div id="dash2" className='dash-navitem' onClick={()=>changeStyle1('dash2')}>Qui sommes-nous?</div>
+                             <div id="dash2" className='dash-navitem' onClick={()=>changeStyle1('dash2')}>Nos offres</div>
                         </GridItem>
                         <GridItem xs={12} sm={12} md={2}>
-                             <div id="dash3" className='dash-navitem' onClick={()=>changeStyle1('dash3')}>Nos offres</div>
+                             <div id="dash3" className='dash-navitem' onClick={()=>changeStyle1('dash3')}>Nos classes</div>
                         </GridItem>
                         <GridItem xs={12} sm={12} md={2}>
-                             <div id="dash4" className='dash-navitem' onClick={()=>changeStyle1('dash4')}>Nos classes</div>
+                             <div id="dash4" className='dash-navitem' onClick={()=>changeStyle1('dash4')}>Nos Enseignants</div>
                         </GridItem>
                         <GridItem xs={12} sm={12} md={2}>
-                             <div id="dash5" className='dash-navitem' onClick={()=>changeStyle1('dash5')}>Nos Enseignants</div>
-                        </GridItem>
-                        <GridItem xs={12} sm={12} md={2}>
-                             <div style={{position:'relative',top:'-15px',cursor:'pointer'}}>    
-                                    
-
-                                  <div className="action">
-                                                <div className='profile' onClick={(e)=>menuToggle(e)}>
-                                                    <img src={im5} width='30%'/> 
-                                                </div>
-                                                <div className="menu">
-                                                    <div style={{marginBottom:'5%'}}><img src={acc} width='15%'/><u>Mon compte</u></div>
-                                                    <div><img src={dic} width='15%'/><u>Se déconnecter</u></div>
-                                                </div>
-                                </div>                                               
+                             <div style={{margin:'0% 0% 0% 25%'}}>
+                                        <button  onClick={createNotification('info')} type="button" class="icon-button" style={{float:'left'}}>
+                                            <span class="material-icons"><img src={badge} width='100%' /></span>
+                                           {showBadge?<span class="icon-button__badge">{countBadge}</span> :''} 
+                                        </button>
+                                       
+                                            
                              </div>
+                        </GridItem>
+                         <GridItem xs={12} sm={12} md={2}>
+                                        <Dropdown style={{top:'-15px'}}>
+                                                    <Dropdown.Toggle
+                                                    variant="secondary btn-sm"
+                                                    style={{
+                                                        width:'0%',
+
+                                                        borderColor:'#fff',
+                                                        backgroundColor:'#fff',
+                                                        borderRadius:'20%'}}>
+                                                    
+                                                        <Avatar 
+                                                            size="50"
+                                                            round={true}
+                                                            src={im5}
+                                                            name='logo'
+                                                        />
+                                                    </Dropdown.Toggle>
+
+                                                    <Dropdown.Menu style={{backgroundColor:'#F8D04E',borderRadius:'10%'}}>
+                                                        <Dropdown.Item href="#" >
+                                                            <div style={{marginBottom:'5%'}}>
+                                                                    <img src={acc} width='15%'/>
+                                                                    <u>Mon compte</u>
+                                                            </div>
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item href="#">
+                                                            <div>
+                                                                <img src={dic} width='15%'/>
+                                                                <u>Se déconnecter</u>
+                                                            </div>
+                                                        </Dropdown.Item>
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
                         </GridItem>
                        
                     </GridContainer>
@@ -628,8 +824,8 @@ const DashboardStudent = () => {
                           {isConferenceContent?<ConferenceContent />:''}
                           {isContactHelpContent?<ContactHelpContent />:''}
                           {isHistoryContent?<HistoryContent />:''}
-                          {isPaymentContent?<PaymentContent />:''}
-                          {isChooseTutor?<ChooseTutorContent />:''}
+                          {isPaymentContent?<PaymentContent onChildClickHandlerPay={outPutClickHandlerPay} />:''}
+                          {isChooseTutor?<ChooseTutorContent onChildOpenModal={openModal} />:''}
                           {isPaymentResourceContent?<PaymentResourceContent />:''}
 
 

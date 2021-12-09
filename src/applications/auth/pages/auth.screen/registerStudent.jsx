@@ -20,7 +20,7 @@ import Footer from "../../../../app/components/footer/footer.jsx";
 import Avatar   from 'react-avatar';
 import Select from 'react-select';
 
-const RegisterStudent = ({error,onChildCloseModal}) => {
+const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     const [loginForm, setLoginForm] = useState({username: "", password: "", remember: false})
@@ -34,6 +34,9 @@ const RegisterStudent = ({error,onChildCloseModal}) => {
 
     const clickHandlerCloseModal=(e)=>{
             onChildCloseModal(e.target.name);
+    }
+    const clickHandlerConnectModal=(e)=>{
+        onChildClickLogin(e.target.name);
     }
 
     const onChangeLogin = (e) => {
@@ -71,12 +74,12 @@ const RegisterStudent = ({error,onChildCloseModal}) => {
     }
     return(
 
-        <div style={{backgroundColor:'#ffce52',
+        <div style={{backgroundColor:'#FBAB0D',
                      borderRadius:'25px 25px 25px 25px',
-                     marginBottom:'5%',
-                     position:'fixed',
-                     top:'1%',
-                     left:'12%'
+                     position:'absolute',
+                     width:'110%',
+                     top:'-295px'
+                     
                      }}>
                     <GridContainer>
                      <GridItem xs={12} sm={12} md={12}>
@@ -99,16 +102,16 @@ const RegisterStudent = ({error,onChildCloseModal}) => {
                                 
                                 borderRadius:'25px 25px 25px 25px',
                                 width:'100%',
-                                height:'660px',
+                                height:'640px',
                                 backgroundColor:'#FBAB0D',
-                                padding:'1% 5% 5% 5%'
+                                padding:'1% 5% 2% 5%'
                                 
                               }}>
                                 <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                       
                                      <div style={{margin:'0% 0% 1% 0%',cursor:'pointer'}}>
-                                         <span style={{float:'left',marginRight:'2%'}}>Se connecter</span>
+                                         <span style={{float:'left',marginRight:'2%'}} onClick={(e)=>clickHandlerConnectModal(e)}>Se connecter</span>
                                          <span style={{color:'blue'}}><u>S'inscrire</u></span>
                                          <span className='close' style={{float:'right'}} onClick={(e)=>clickHandlerCloseModal(e)}>&times;</span>
                                      </div>
@@ -146,7 +149,15 @@ const RegisterStudent = ({error,onChildCloseModal}) => {
                                     <GridItem xs={12} sm={12} md={6}>
                                       
                                      <div>
-                                         <Select options={options} />
+                                          <select name="pets" id="pet-select">
+                                                <option value="">Niveau</option>
+                                                <option value="dog">Niveau 1</option>
+                                                <option value="cat">Niveau 2</option>
+                                                <option value="hamster">Niveau 3</option>
+                                                <option value="parrot">Niveau 3</option>
+                                                <option value="spider">Niveau 4</option>
+                                                <option value="goldfish">Niveau 5</option>
+                                        </select>
                                         
                                      </div>
                                     </GridItem>
@@ -362,7 +373,7 @@ conditions d'utilisation de Online Nohellef</span>
                                     <GridItem xs={12} sm={12} md={12}>
                                     
                                     <div style={{cursor:'pointer',
-                                          margin:'1% 5% 0% 30%',
+                                          margin:'2% 20% 0% 20%',
                                           textAlign:'center'}}>
                                       <div style={{
                                           backgroundColor: '#5271ff',
@@ -372,7 +383,7 @@ conditions d'utilisation de Online Nohellef</span>
                                           borderTop: '1px solid #002495',
                                           borderLeft:  '1px solid #002495',
                                           height: '55px',
-                                          width: '60%',
+                                          width: '100%',
                                           cursor: 'pointer',
                                           textAlign:'center',
                                           paddingTop:'2%'

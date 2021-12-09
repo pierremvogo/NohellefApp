@@ -17,7 +17,9 @@ import videoLink from '../../../assets/video/testvideo2.mp4';
 import Avatar   from 'react-avatar';
 import Pagination from './pagination.jsx';
 import Select from 'react-select';
+import SimpleSelect from './select';
 import VideoContent from './videoContent';
+import './account.css';
 
 const CourseContent = () => {
 	const [posts, setPosts] = useState([]);
@@ -251,12 +253,28 @@ const CourseContent = () => {
                         </GridItem>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             <div style={{fontSize:'1vw',marginBottom:'2%'}}>
-                               <Select options={options}/>
+                               <select name="pets" id="pet-select">
+                                    <option value="">Spécialité</option>
+                                    <option value="dog">Français</option>
+                                    <option value="cat">Anglais</option>
+                                    <option value="hamster">Mathématiques</option>
+                                    <option value="parrot">Physiques</option>
+                                    <option value="spider">Informatique</option>
+                                    <option value="goldfish">Science de l'ingénieur</option>
+                                </select>
                             </div>
                         </GridItem>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             <div style={{width:'100%',fontSize:'1vw'}}>
-                                <Select options={options1}/>
+                                <select name="pets" id="pet-select">
+                                    <option value="">Types</option>
+                                    <option value="dog">type 1</option>
+                                    <option value="cat">type 2</option>
+                                    <option value="hamster">type 3</option>
+                                    <option value="parrot">type 3</option>
+                                    <option value="spider">type 4</option>
+                                    <option value="goldfish">type 4</option>
+                                </select>
                             </div>
                         </GridItem>
                     </GridContainer>
@@ -273,14 +291,11 @@ const CourseContent = () => {
                                         {post.id}-{post.courseName}
                                     </CardHeader>
                                     <CardBody style={{width:'100%'}}>
-                                        {post.courseFormat == 'Video'? <VideoContent
-                                                                          videoLink={post.courseLink} 
-                                                                          vWidth={210} 
-                                                                          vHeight={90} /> : 
-                                         post.courseFormat == 'PDF'?   <img src={post.courseLink} width='50%' /> :''}
+                                        {post.courseFormat == 'Video'?"Video" : 
+                                         post.courseFormat == 'PDF'?   "PDF":''}
                                     </CardBody>
                                     <CardFooter style={{width:'100%'}}>
-                                        <div style={{backgroundColor:'#ffce52',width:'100%',fontSize:'1vw',padding:'3%'}}>
+                                        <div style={{backgroundColor:'#ffce52',width:'100%',fontSize:'70%',padding:'3%'}}>
                                             <div><strong>Titre:</strong> {post.courseTitle}</div>
                                             <div><strong>Description:</strong> {post.courseDescription}</div>
                                             <div><strong>Type:</strong> {post.courseFormat}</div>
@@ -292,10 +307,7 @@ const CourseContent = () => {
                                                 <div><img src={eye} width='80%'/></div>
                                                 <div>voir</div>
                                             </span>
-                                            {post.courseFormat != 'Video'?<span style={{float:'right',cursor:'pointer',textAlign:'center'}}>
-                                                <div><img src={download} width='35%'/></div>
-                                                <div>Télécharger</div>
-                                            </span>:''}
+                                           
                                         </div> 
                                         </div>
                                     </CardFooter>

@@ -14,13 +14,14 @@ import ReactSearchBox from "react-search-box";
 import Avatar   from 'react-avatar';
 import im5 from '../../../assets/images/im5.png';
 import Pagination from './pagination.jsx';
+import {Table} from 'react-bootstrap';
 
 
 const ContactHelpContent = () => {
 	const [posts, setPosts] = useState([]);
 	const [loading, serLoading] = useState(false);
-	const [currentPage, setCurrentPage] = useState(2);
-	const [postPerPage, setPostPerPage] = useState(4);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [postPerPage, setPostPerPage] = useState(5);
 
 	useEffect(()=>{
 		setPosts(data);
@@ -29,14 +30,72 @@ const ContactHelpContent = () => {
     let data = [
     {
       id: 1,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      matiere: "Algèbre Linéaire",
+      specialite: "Mathematiques",
+      seq1: '10.5 / 20',
+      seq2:'10.5 / 20',
+      seq3:'15 / 20',
+      seq4:'15 / 20',
+      seq5:'15 / 20',
+      seq6:'15 / 20',
+    },
+    {
+      id: 2,
+      matiere: "Algèbre Linéaire",
+      specialite: "Mathematiques",
+      seq1: '10.5 / 20',
+      seq2:'10.5 / 20',
+      seq3:'15 / 20',
+      seq4:'15 / 20',
+      seq5:'15 / 20',
+      seq6:'15 / 20',
+    },
+    {
+      id: 3,
+      matiere: "Algèbre Linéaire",
+      specialite: "Mathematiques",
+      seq1: '10.5 / 20',
+      seq2:'10.5 / 20',
+      seq3:'15 / 20',
+      seq4:'15 / 20',
+      seq5:'15 / 20',
+      seq6:'15 / 20',
+    },
+    {
+      id: 4,
+      matiere: "Algèbre Linéaire",
+      specialite: "Mathematiques",
+      seq1: '10.5 / 20',
+      seq2:'10.5 / 20',
+      seq3:'15 / 20',
+      seq4:'15 / 20',
+      seq5:'15 / 20',
+      seq6:'15 / 20',
+    },
+    {
+      id: 5,
+      matiere: "Algèbre Linéaire",
+      specialite: "Mathematiques",
+      seq1: '10.5 / 20',
+      seq2:'10.5 / 20',
+      seq3:'15 / 20',
+      seq4:'15 / 20',
+      seq5:'15 / 20',
+      seq6:'15 / 20',
+    },
+    {
+      id: 6,
+      matiere: "Algèbre Linéaire",
+      specialite: "Mathematiques",
+      seq1: '10.5 / 20',
+      seq2:'10.5 / 20',
+      seq3:'15 / 20',
+      seq4:'15 / 20',
+      seq5:'15 / 20',
+      seq6:'15 / 20',
     },
   ];
+  
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
@@ -61,12 +120,48 @@ const ContactHelpContent = () => {
                            
                         </GridItem>
                     </GridContainer>
-             
+             <GridContainer style={{backgroundColor:'#eeeeee',width:'95%'}}> 
+        <Table striped bordered hover variant="secondary">
+              <thead>
+                <tr>
+                  <th>Matière</th>
+                  <th>Spécialité</th>
+                   <th>Note Seq1</th>
+                   <th>Note Seq2</th>
+                   <th>Note Seq3</th>
+                   <th>Note Seq4</th>
+                   <th>Note Seq5</th>
+                   <th>Note Seq6</th>
+                </tr>
+              </thead>
+              <tbody>
+              {currentPosts.map((post,index)=>{
+                return(
+                  <tr>
+                
+                    <td>{post.id}{post.matiere}</td>
+                    <td>{post.specialite}</td>
+                    <td>{post.seq1}</td>
+                    <td>{post.seq2}</td>
+                    <td>{post.seq3}</td>
+                    <td>{post.seq4}</td>
+                    <td>{post.seq5}</td>
+                    <td>{post.seq6}</td>
+                  </tr>
+                  )
+              })}
+              </tbody>
+            </Table>
+          </GridContainer>
 			            
 
                     <GridContainer>
                     	<GridItem xs={12} sm={12} md={12}>
-                    		
+                    		<Pagination 
+                          postsPerPage={postPerPage} 
+                          totalPosts={posts.length} 
+                          paginate={paginate}
+                        />
                     	</GridItem>
                     </GridContainer>
                     </div>

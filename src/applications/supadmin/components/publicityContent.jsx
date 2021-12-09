@@ -14,11 +14,16 @@ import download from '../../../assets/icons/download.png';
 import ReactSearchBox from "react-search-box";
 import Avatar   from 'react-avatar';
 import Pagination from './pagination.jsx';
+import {Table} from 'react-bootstrap';
+import AddTutor from './addTutor.jsx';
 
 const  PublicityContent = () => {
 	const [posts, setPosts] = useState([]);
 	const [currentPage, setCurrentPage] = useState(2);
 	const [postPerPage] = useState(4);
+
+  const [display, setDisplay] = useState("flex");
+  const [showEditModal,setShowEditModal] = useState(false);
 
 	useEffect(()=>{
 		setPosts(data);
@@ -27,162 +32,72 @@ const  PublicityContent = () => {
     let data = [
     {
       id: 1,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      publicityTitle:"first application Nohellef ",
+      publicityAction: <input type="checkbox" width="50%" />
     },
     {
       id: 2,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      publicityTitle:"first application Nohellef ",
+      publicityAction: <input type="checkbox" width="50%" />
     },
     {
       id: 3,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      publicityTitle:"first application Nohellef ",
+      publicityAction: <input type="checkbox" width="50%" />
     },
     {
       id: 4,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      publicityTitle:"first application Nohellef ",
+      publicityAction: <input type="checkbox" width="50%" />
     },
     {
       id: 5,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      publicityTitle:"first application Nohellef ",
+      publicityAction: <input type="checkbox" width="50%" />
     },
     {
       id: 6,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      publicityTitle:"first application Nohellef ",
+      publicityAction: <input type="checkbox" width="50%" />
     },
     
-    {
-      id: 7,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    
-    {
-      id: 8,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    
-    {
-      id: 9,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    
-    {
-      id: 10,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 11,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 12,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 13,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 14,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 15,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 16,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
-    {
-      id: 17,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
-    },
   ];
+  function closeModal(){
+    setDisplay("none",setShowEditModal(false));
+  }
+   const openModal=()=> {
+    setDisplay("flex",setShowEditModal(true));
+    }
+
+   const ModalContentEdit  = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "4000px",
+            justifyContent: "center",
+            display: display,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+           <div className="contain" id='myContain'>
+                <div style={{display:'inline-block', margin:'3%', fontSize:'1.5vw'}}>
+                    
+                </div><span className='close' onClick={()=>closeModal()}>&times;</span>
+                <AddTutor /> 
+            </div>
+          
+      </div>
+    )
+  };
+
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
@@ -192,15 +107,10 @@ const  PublicityContent = () => {
 			<div className="container">
 			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
-                            <div style={{display:'inline-block',color:'red',margin:'2%'}}>
-                                Publicité
+                            <div style={{display:'inline-block',color:'blue',margin:'2%'}}>
+                               Toute vos Publicités
                             </div>
-                            <Avatar 
-                                size="40"
-                                round={true}
-                                src={smile}
-                                name='logo'
-                            />
+                            
                         </GridItem>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             
@@ -212,21 +122,51 @@ const  PublicityContent = () => {
                            
                         </GridItem>
                     </GridContainer>
-             
-			 <GridContainer style={{backgroundColor:'#eeeeee'}}>
-			 			{currentPosts.map((post,index)=>{
-			 				console.log("my post")
-			 				console.log(post)
-			 				return(
-			 					<GridItem xs={12} sm={12} md={3} key={post.id}>
-                        
-                              
-                            
-                        </GridItem>
-			 					)
-			 				
-			 			})}
-                    </GridContainer>
+                    <GridItem xs={12} sm={12} md={12}>
+                          <div style={{cursor:'pointer',
+                                          margin:'1% 0% 1% 78%',
+                                          
+                                          textAlign:'center'}}>
+                                      <div style={{
+                                          backgroundColor: '#4b9960',
+                                          borderRadius: '10px',
+                                          borderBottom: '3px solid #002495',
+                                          borderRight:  '3px solid #002495',
+                                          borderTop: '1px solid #002495',
+                                          borderLeft:  '1px solid #002495',
+                                          height: '50px',
+                                          width: '70%',
+                                          cursor: 'pointer',
+                                          textAlign:'center',
+                                          paddingTop:'5%'
+                                        }} onClick={()=> openModal()}>
+                                
+                                <span className="text" style={{fontSize:'1.2vw',color:'white'}}>Ajouter</span>
+                              </div>
+                                    </div>
+                          
+                      </GridItem>
+          <GridContainer style={{backgroundColor:'#eeeeee',width:'95%'}}> 
+        <Table striped bordered hover variant="secondary">
+              <thead>
+                <tr>
+                  <th>Titre de la publicité</th>
+                  <th>Activer / Désactiver</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              {currentPosts.map((post,index)=>{
+                return(
+                  <tr>
+                    <td>{post.publicityTitle}</td>
+                    <td>{post.publicityAction}</td>
+                  </tr>
+                  )
+              })}
+              </tbody>
+          </Table>
+          </GridContainer>
                     <GridContainer style={{backgroundColor:'#eeeeee'}}>
                     	<GridItem xs={12} sm={12} md={12}>
                     		<Pagination 

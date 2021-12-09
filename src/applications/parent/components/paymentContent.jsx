@@ -21,21 +21,50 @@ import visa from '../../../assets/images/dashboard/visa.png';
 import Pagination from './pagination.jsx';
 
 
-const PaymentContent = () => {
-	const [posts, setPosts] = useState([]);
-	const [loading, serLoading] = useState(false);
-	const [currentPage, setCurrentPage] = useState(2);
-	const [postPerPage, setPostPerPage] = useState(4);
+const PaymentContent = ({onChildClickHandlerPay}) => {
+  const [posts, setPosts] = useState([]);
+  const [loading, serLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(2);
+  const [postPerPage, setPostPerPage] = useState(4);
 
-  const options = [
-    { value: 'chocolate', label: <span><img src={masterc} width='15%'/>**-**-**-6528</span> },
-    { value: 'strawberry', label: <span><img src={masterc} width='15%'/>**-**-**-6528</span> },
-    { value: 'vanilla', label: <span><img src={masterc} width='15%'/>**-**-**-6528</span> }
-  ]
+ 
 
-	useEffect(()=>{
-		setPosts(data);
-	},[])
+const [isBasic,setIsBasic] = useState(false);
+const [isChat,setIsChat] = useState(false);
+const [isWebConf,setIsWebConf] = useState(false);
+
+
+
+const clickHandlerPay = (e) => {
+  onChildClickHandlerPay(e.target.name);
+}
+  var check1 = document.getElementById("check1");
+  var check2 = document.getElementById("check2");
+  var check3 = document.getElementById("check3");
+
+function handleCheck(id){
+  if(check1.checked){
+    setIsBasic(true);
+  }else{
+    setIsBasic(false)
+  }
+  if(check2.checked){
+    setIsChat(true);
+  }else{
+    setIsChat(false);
+  }
+  if(check3.checked){
+    setIsWebConf(true);
+  }else{
+    setIsWebConf(false);
+  }
+}
+
+
+
+  useEffect(()=>{
+    setPosts(data);
+  },[])
 
     let data = [
     {
@@ -71,9 +100,9 @@ const PaymentContent = () => {
   const indexOfFirstPost = indexOfLastPost - postPerPage;
   const currentPosts = posts.slice(indexOfFirstPost,indexOfLastPost);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-	return(
-			<div className="container" style={{backgroundColor:'#eeeeee', paddingBottom:'5%'}}>
-			              <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
+  return(
+      <div className="container" style={{backgroundColor:'#eeeeee', paddingBottom:'5%'}}>
+                    <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
                                 Payer un abonnement
@@ -91,11 +120,11 @@ const PaymentContent = () => {
                         </GridItem>
                     </GridContainer>
              
-			 <GridContainer>
-			 					  <GridItem xs={12} sm={12} md={12} style={{textAlign:'center'}}>
+       <GridContainer>
+                  <GridItem xs={12} sm={12} md={12} style={{textAlign:'center'}}>
                     <div>
-                      <div><img src={pay} width='10%'/></div>
-                      <div><p style={{fontSize:'1.3vw'}}>Effectuez vos paiements <br/> en toute sécurité ?</p></div>
+                      <div><img src={pay} width='5%'/></div>
+                      <div><p style={{fontSize:'100%'}}>Effectuez vos paiements <br/> en toute sécurité ?</p></div>
                     </div>
                       
                   </GridItem>
@@ -134,7 +163,7 @@ const PaymentContent = () => {
                                      <GridItem xs={12} sm={12} md={12}>
                                      <div style={{margin:'2%'}}>
                                        <span style={{float:'left'}}><strong>Basique</strong></span>
-                                       <span style={{float:'right'}}><input type='checkbox'/></span>
+                                       <span style={{float:'right'}}><input type='checkbox' id='check1' onClick={()=>handleCheck('check1')}/></span>
                                       </div>
                                      </GridItem>
                                    </GridContainer>
@@ -143,7 +172,7 @@ const PaymentContent = () => {
                                      <GridItem xs={12} sm={12} md={12}>
                                      <div style={{margin:'2%'}}>
                                        <span style={{float:'left'}}><strong>Chat</strong></span>
-                                       <span style={{float:'right'}}><input type='checkbox'/></span>
+                                       <span style={{float:'right'}}><input type='checkbox' id='check2' onClick={()=>handleCheck('check2')}/></span>
                                       </div>
                                      </GridItem>
                                    </GridContainer>
@@ -152,7 +181,7 @@ const PaymentContent = () => {
                                      <GridItem xs={12} sm={12} md={12}>
                                      <div style={{margin:'2%'}}>
                                        <span style={{float:'left'}}><strong>Web-Conférence</strong></span>
-                                       <span style={{float:'right'}}><input type='checkbox'/></span>
+                                       <span style={{float:'right'}}><input type='checkbox' id='check3'onClick={()=>handleCheck('check3')}/></span>
                                       </div>
                                      </GridItem>
                                    </GridContainer>
@@ -171,7 +200,7 @@ const PaymentContent = () => {
                                 <GridItem xs={12} sm={12} md={12} >
                                 <div style={{margin:'0% 5% 2% 5%',fontSize:'1vw'}}>
                                   <span>Payer par</span>
-                                  <span style={{float:'right',color:'#002495'}}><strong>Ajouter un moyen de paiement</strong></span>
+                                  <span style={{float:'right',color:'#002495',cursor:'pointer'}} onClick={(e)=>clickHandlerPay(e)}><strong>Ajouter un moyen de paiement</strong></span>
                                 </div>
                                 </GridItem>
                               </GridContainer>
@@ -179,7 +208,14 @@ const PaymentContent = () => {
                               <GridContainer>
                                 <GridItem xs={12} sm={12} md={12} >
                                 <div style={{margin:'0% 5% 2% 5%',fontSize:'1vw'}}>
-                                  <Select options={options} />
+                                  <select name="pets" id="pet-select">
+                                    <option value="">Moyen de paiement</option>
+                                    <option value="dog">VISA</option>
+                                    <option value="cat">MASTERCARD</option>
+                                    <option value="hamster">VISA</option>
+                                    <option value="parrot">MASTERCARD</option>
+                                    
+                                </select>
                                 </div>
                                   
                                 </GridItem>
@@ -232,10 +268,22 @@ const PaymentContent = () => {
                                     padding:'5% 5% 0% 0%'
                                   }}>
                                     <ul>
-                                      <li>Accès aux cours<span style={{float:'right'}}><img src={checkok} width='20px'/></span></li>
-                                      <li>Accès aux vidéos<span style={{float:'right'}}><img src={checknone} width='20px'/></span></li>
-                                      <li>Accès aux chat<span style={{float:'right'}}><img src={checkok} width='20px'/></span></li>
-                                      <li>Web-Conférence<span style={{float:'right'}}><img src={checkok} width='20px'/></span></li>
+                                      <li>Accès aux cours<span style={{float:'right'}}>
+
+                                      {isBasic?<img src={checkok} width='20px'/>:
+                                               <img src={checknone} width='20px'/>}</span></li>
+                                      <li>Accès aux vidéos<span style={{float:'right'}}>
+
+                                      {isBasic?<img src={checkok} width='20px'/>:
+                                               <img src={checknone} width='20px'/>}</span></li>
+                                      <li>Accès aux chat<span style={{float:'right'}}>
+
+                                      {isChat?<img src={checkok} width='20px'/>:
+                                             <img src={checknone} width='20px'/>}</span></li>
+                                      <li>Web-Conférence<span style={{float:'right'}}>
+
+                                      {isWebConf?<img src={checkok} width='20px'/>:
+                                                 <img src={checknone} width='20px'/>}</span></li>
                                     </ul>
                                   </div>
                                 </GridItem>
@@ -249,7 +297,7 @@ const PaymentContent = () => {
                       </GridItem>
                     </GridContainer>
             </div>
-		)
+    )
 }
 export default PaymentContent;
 

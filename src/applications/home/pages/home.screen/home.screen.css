@@ -20,10 +20,32 @@
   width: 100%;
   height: 100%;
 }
-.contain{
+.containlog{
     border-radius: 25px 25px 25px 25px;
     width: 35%;
     background-color: #ffce52;
+    position: relative;
+    top: -42%;
+}
+
+.containask{
+    border-radius: 25px 25px 25px 25px;
+    width: 35%;
+    background-color: #ffce52;
+    position: relative;
+    top: -42%;
+}
+.containregs{
+    border-radius: 25px 25px 25px 25px;
+    width: 50%;
+    position: relative;
+    top: -42%;
+    font-size: 20%;
+}
+.containregp{
+    border-radius: 25px 25px 25px 25px;
+    width: 50%;
+   
     position: relative;
     top: -42%;
 }
@@ -33,6 +55,7 @@
   font-size: 2vw;
   font-weight: bold;
   margin: 3%;
+  cursor: pointer;
 }
 
 .main_content{

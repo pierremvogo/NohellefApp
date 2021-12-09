@@ -14,6 +14,7 @@ import download from '../../../assets/icons/download.png';
 import ReactSearchBox from "react-search-box";
 import Avatar   from 'react-avatar';
 import Pagination from './pagination.jsx';
+import profilepic from '../../../assets/images/im5.png';
 
 const AbonnementContent = () => {
 	const [posts, setPosts] = useState([]);
@@ -189,11 +190,11 @@ const AbonnementContent = () => {
   const currentPosts = posts.slice(indexOfFirstPost,indexOfLastPost);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 	return(
-			<div className="container">
-			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
-                            <div style={{display:'inline-block',color:'red',margin:'2%'}}>
-                                Formulaire d'abonnement
+			<div className="container" style={{backgroundColor:'#eeeeee'}}>
+       <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
+                            <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
+                                Mon compte
                             </div>
                             
                         </GridItem>
@@ -208,28 +209,88 @@ const AbonnementContent = () => {
                         </GridItem>
                     </GridContainer>
              
-			 <GridContainer style={{backgroundColor:'#eeeeee'}}>
-			 			{currentPosts.map((post,index)=>{
-			 				console.log("my post")
-			 				console.log(post)
-			 				return(
-			 					<GridItem xs={12} sm={12} md={3} key={post.id}>
-                        
-                               
-                            
-                        </GridItem>
-			 					)
-			 				
-			 			})}
+                    <GridContainer>
+                       <GridItem xs={12} sm={12} md={12}>
+                          <div style={{
+                            float:'right',
+                            marginBottom: '2%',
+                            backgroundColor: '#f8db52',
+                            borderRadius: '25px',
+                            borderBottom: '4px solid #002495',
+                            borderRight:  '4px solid #002495',
+                            borderTop: '1px solid #002495',
+                            borderLeft:  '1px solid #002495',
+                            height: '60px',
+                            width: '25%',
+                            cursor: 'pointer',
+                            textAlign:'center',
+                            paddingTop:'1.2%'
+                          }}>
+                                
+                                <span className="text" style={{fontSize:'1.1vw'}}>Modifier votre compte</span>
+                              </div>
+                          
+                      </GridItem>
                     </GridContainer>
-                    <GridContainer style={{backgroundColor:'#eeeeee'}}>
-                    	<GridItem xs={12} sm={12} md={12}>
-                    		<Pagination 
-	                    		postsPerPage={postPerPage} 
-	                    		totalPosts={posts.length} 
-	                    		paginate={paginate}
-                    		/>
-                    	</GridItem>
+
+                    <GridContainer>
+                      <GridItem xs={12} sm={12} md={4}>
+                        <div style={{margin:'2%',textAlign:'center'}}>
+                            <Avatar 
+                              size="150"
+                              round={true}
+                              src={profilepic}
+                              name='logo'
+                          /><div>Modifier la photo</div>
+                          </div>
+                      </GridItem>
+
+                      <GridItem xs={12} sm={12} md={8}>
+                        <GridContainer>
+                            <GridItem xs={12} sm={12} md={12}>
+                                <fieldset style={{border:'2px solid #4d6bf4'}}>
+                                  <legend style={{width:'45%'}}>Informations Personnelle</legend>
+                                   <GridContainer>
+                                     <GridItem xs={12} sm={12} md={12}>
+                                      <div style={{margin:'3%'}}>
+                                        <span style={{marginRight:'0%'}}><strong>
+                                        Nom:</strong><input className='input_content' type='text' placeholder="Entrer votre Nom" value='Bekono'/></span>
+                                       <span><strong>Prenom:</strong><input className='input_content' type='text' placeholder="Enter Votre prénom" value='Roland'/></span>
+                                      </div>
+                                       
+                                     </GridItem>
+                                   </GridContainer>
+
+                                   <GridContainer>
+                                     <GridItem xs={12} sm={12} md={12}>
+                                     <div style={{margin:'3%'}}>
+                                         <span style={{marginRight:'5%'}}><strong>
+                                         Email:</strong><input className='input_content' type='email' placeholder="Entrer votre adresse email" value='mvogopierre129@gmail.com'/></span>
+                                       <span><strong>Tel:</strong><input className='input_content' type='text' placeholder="Entrer votre Numéro" value='698114902'/></span>
+                                      </div>
+                                      
+                                     </GridItem>
+                                   </GridContainer>
+
+                                   <GridContainer>
+                                     
+                                     <GridItem xs={12} sm={12} md={12}>
+                                     <div style={{margin:'3%'}}>
+                                        <span><strong>Niveau:</strong> niveau 7</span>
+                                      </div>
+                                       
+                                     </GridItem>
+                                   </GridContainer>
+                                </fieldset>
+                            </GridItem>
+                        </GridContainer>
+
+                        <GridContainer>
+                            <GridItem xs={12} sm={12} md={12}>
+                               <div style={{marginTop:'5%'}}></div>
+                            </GridItem>
+                        </GridContainer>
+                      </GridItem>
                     </GridContainer>
                     </div>
 		)

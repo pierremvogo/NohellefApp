@@ -195,7 +195,7 @@ const AdminContent = () => {
        <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
                             <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
-                                Mon compte
+                                Questions Techniques
                             </div>
                             
                         </GridItem>
@@ -210,87 +210,40 @@ const AdminContent = () => {
                         </GridItem>
                     </GridContainer>
              
+                    
+
+                    <GridContainer>
+                      <GridItem xs={12} sm={12} md={12}>
+                          <div style={{margin:'2%',
+                                textAlign:'justify',
+                                width:'97%',
+                                backgroundColor:'white'}}>
+                           Half the challenge of going for a job interview is not knowing what to expect. Many otherwise highly qualified candidates may be caught off-guard by questions they don't know how to answer
+                          </div>
+                      </GridItem>
+
+                    </GridContainer>
                     <GridContainer>
                        <GridItem xs={12} sm={12} md={12}>
                           <div style={{
                             float:'right',
                             marginBottom: '2%',
                             backgroundColor: '#f8db52',
-                            borderRadius: '25px',
-                            borderBottom: '4px solid #002495',
-                            borderRight:  '4px solid #002495',
+                            borderRadius: '10px',
+                            borderBottom: '2px solid #002495',
+                            borderRight:  '2px solid #002495',
                             borderTop: '1px solid #002495',
                             borderLeft:  '1px solid #002495',
-                            height: '60px',
-                            width: '25%',
+                            height: '40px',
+                            width: '15%',
                             cursor: 'pointer',
                             textAlign:'center',
-                            paddingTop:'1.2%'
+                            paddingTop:'3px'
                           }}>
-                                
-                                <span className="text" style={{fontSize:'1.1vw'}}>Modifier votre compte</span>
+     
+                                <span className="text" style={{fontSize:'1.1vw'}}>Repondre</span>
                               </div>
                           
-                      </GridItem>
-                    </GridContainer>
-
-                    <GridContainer>
-                      <GridItem xs={12} sm={12} md={4}>
-                        <div style={{margin:'2%',textAlign:'center'}}>
-                            <Avatar 
-                              size="150"
-                              round={true}
-                              src={profilepic}
-                              name='logo'
-                          /><div>Modifier la photo</div>
-                          </div>
-                      </GridItem>
-
-                      <GridItem xs={12} sm={12} md={8}>
-                        <GridContainer>
-                            <GridItem xs={12} sm={12} md={12}>
-                                <fieldset style={{border:'2px solid #4d6bf4'}}>
-                                  <legend>Informations Personnelle</legend>
-                                   <GridContainer>
-                                     <GridItem xs={12} sm={12} md={12}>
-                                      <div style={{margin:'3%'}}>
-                                        <span style={{marginRight:'0%'}}><strong>
-                                        Nom:</strong><input className='input_content' type='text' placeholder="Entrer votre Nom" value='Bekono'/></span>
-                                       <span><strong>Prenom:</strong><input className='input_content' type='text' placeholder="Enter Votre prénom" value='Roland'/></span>
-                                      </div>
-                                       
-                                     </GridItem>
-                                   </GridContainer>
-
-                                   <GridContainer>
-                                     <GridItem xs={12} sm={12} md={12}>
-                                     <div style={{margin:'3%'}}>
-                                         <span style={{marginRight:'5%'}}><strong>
-                                         Email:</strong><input className='input_content' type='email' placeholder="Entrer votre adresse email" value='mvogopierre129@gmail.com'/></span>
-                                       <span><strong>Tel:</strong><input className='input_content' type='text' placeholder="Entrer votre Numéro" value='698114902'/></span>
-                                      </div>
-                                      
-                                     </GridItem>
-                                   </GridContainer>
-
-                                   <GridContainer>
-                                     
-                                     <GridItem xs={12} sm={12} md={12}>
-                                     <div style={{margin:'3%'}}>
-                                        <span><strong>Niveau:</strong> niveau 7</span>
-                                      </div>
-                                       
-                                     </GridItem>
-                                   </GridContainer>
-                                </fieldset>
-                            </GridItem>
-                        </GridContainer>
-
-                        <GridContainer>
-                            <GridItem xs={12} sm={12} md={12}>
-                               <div style={{marginTop:'5%'}}></div>
-                            </GridItem>
-                        </GridContainer>
                       </GridItem>
                     </GridContainer>
                     </div>

@@ -17,7 +17,7 @@ import Avatar   from 'react-avatar';
 import './login.screen.css';
 import AskRegister from '../../../auth/pages/auth.screen/askRegister.jsx';
 
-const Login = ({error}) => {
+const Login = ({error,onChildClick}) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     const [loginForm, setLoginForm] = useState({username: "", password: "", remember: false})
@@ -32,7 +32,9 @@ const Login = ({error}) => {
     const [displayAsk, setDisplayAsk] = useState("flex");
 
     
-
+  const handlerChildClick =(e)=> {
+        onChildClick(e.target.name);
+  }
     const onChangeLogin = (e) => {
         setLoginForm({...loginForm,  [e.target.name]: e.target.value })}
 
@@ -102,65 +104,23 @@ const Login = ({error}) => {
     }
 	return(
 
-        <div style={{backgroundColor:'#eeeeee'}}>
-        {showAskModal? <ModalAskInscription /> :''}
-                    <GridContainer>
-                     <GridItem xs={12} sm={12} md={4} style={{textAlign:'center'}}>
-                        <div style={{margin:'10% 0% 0% 0%'}}>
-                           <Avatar 
-                                        size="150"
-                                        round={true}
-                                        src={logoImage}
-                                        name='logo'
-                                    />
-                        </div>
-                     </GridItem>
-
-                     <GridItem xs={12} sm={12} md={8}>
-                        <GridContainer>
-                          <GridItem xs={12} sm={12} md={12}>
-                            <div style={{
-                                margin:'5% 0% 2% 25%'
-                            }}>
-                                 <img src={smileauth} width='10%' />
-
-                            </div>
-                           
-                          </GridItem>
-                        </GridContainer>
-
-                        <GridContainer>
-                          <GridItem xs={12} sm={12} md={12}>
-                            <div style={{
-                                fontSize:'1.6vw',
-                                margin:'0% 0% 0% 18%'
-                                }}>Continuons l'aventure</div>
-                          </GridItem>
-                        </GridContainer>
-
-                        <GridContainer>
-                          <GridItem xs={12} sm={12} md={12}>
-                              <div style={{
-                                border:'1px solid #ffce52',
-                                borderRadius:'25px 25px 25px 25px',
-                                width:'50%',
-                                height:'420px',
-                                backgroundColor:'#ffce52',
-                                margin:'5%',
-                                padding:'2%'
-                              }}>
-                                <GridContainer>
+        <div style={{
+                backgroundColor:'#ffce52',
+                borderRadius:'25px 25px 25px 25px',
+                }}>
+                   
+                     <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                       
-                                     <div style={{margin:'2% 0% 15% 2%'}} onClick={()=>history.push('/auth/register')}>
-                                         <span style={{color:'blue',float:'left'}}><strong><u>Se Connecter</u></strong></span>
+                                     <div style={{margin:'2% 0% 15% 2%'}}>
+                                         <span style={{color:'blue',float:'left'}}><strong><u>Connexion</u></strong></span>
                                      </div>
                                     </GridItem>
                                   </GridContainer>
 
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
-                                       <div style={{margin:'0% 0% 5% 0%'}}>
+                                       <div style={{margin:'0% 20% 5% 20%'}}>
                                       <input type='text' placeholder="Votre nom d'utilisateur" style={{
                                         borderRadius:'10px',
                                         border:'2px solid #002495',
@@ -172,7 +132,7 @@ const Login = ({error}) => {
 
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
-                                       <div style={{margin:'0% 0% 5% 0%'}}>
+                                       <div style={{margin:'0% 20% 5% 20%'}}>
                                       <input type='text' placeholder="Votre mot de passe"  style={{
                                         borderRadius:'10px',
                                         border:'2px solid #002495',
@@ -186,32 +146,31 @@ const Login = ({error}) => {
                                     <GridItem xs={12} sm={12} md={12}>
                                     
                                     <div style={{cursor:'pointer',
-                                          margin:'10% 0% 5% 0%',
+                                          margin:'10% 20% 5% 20%',
                                           textAlign:'center'}}>
                                       <div style={{
                                           backgroundColor: '#4b9960',
                                           borderRadius: '15px',
-                                          borderBottom: '5px solid #002495',
-                                          borderRight:  '5px solid #002495',
+                                          borderBottom: '3px solid #002495',
+                                          borderRight:  '3px solid #002495',
                                           borderTop: '1px solid #002495',
                                           borderLeft:  '1px solid #002495',
                                           height: '55px',
                                           width: '100%',
                                           cursor: 'pointer',
                                           textAlign:'center',
-                                          paddingTop:'3%'
+                                          paddingTop:'4%'
                                         }}>
                                 
-                                <span className="text" style={{fontSize:'1.2vw',color:'white'}}>Se connecter</span>
+                                <span className="text" style={{fontSize:'1.2vw',color:'white'}}><strong>Se connecter</strong></span>
                               </div>
                                     </div>
                                       
                                     </GridItem>
                                   </GridContainer>
-
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
-                                      <div>
+                                      <div style={{margin:'0% 5% 15% 5%'}}>
                                           <span style={{
                                             color:'blue',
                                             float:'left',
@@ -221,23 +180,12 @@ const Login = ({error}) => {
                                             color:'green',
                                             float:'right',
                                             cursor:'pointer'
-                                        }} onClick={(e)=>outPutEventRegister(e)}>Pas de compte?</span>
+                                        }} onClick={(e)=>handlerChildClick(e)}>Pas de compte?</span>
                                       </div>
                                     </GridItem>
                                   </GridContainer>
-                              </div>
-
-
-                          </GridItem>
-                        </GridContainer>
-                      </GridItem>
-
-
-                    </GridContainer>
-                    <div className="row">
-                        <Footer />
-                    </div>
-			 </div>
+                     
+             </div>
 		)
 }
 export default Login;

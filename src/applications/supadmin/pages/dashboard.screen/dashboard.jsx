@@ -37,6 +37,8 @@ import AbonnementContent from '../../components/abonnementContent.jsx';
 import AchatContent from '../../components/achatContent.jsx';
 import ApprenantContent from '../../components/apprenantContent.jsx';
 import TuteurContent from '../../components/tuteurContent.jsx';
+import AchatC from '../../components/achatC.jsx';
+import FormuleAbonnement from '../../components/formuleAbonnement.jsx';
 import PublicityContent from '../../components/publicityContent.jsx';
 import ad1 from '../../../../assets/images/admin/ad1.png';
 import ad2 from '../../../../assets/images/admin/ad2.png';
@@ -46,6 +48,11 @@ import ad5 from '../../../../assets/images/admin/ad5.png';
 import ad6 from '../../../../assets/images/admin/ad6.png';
 import dic from '../../../../assets/images/admin/dic.png';
 import acc from '../../../../assets/images/admin/acc.png';
+import supadm1 from '../../../../assets/images/dashboard/supadm1.png';
+import adm3 from '../../../../assets/images/dashboard/adm3.png';
+import supadm2 from '../../../../assets/images/dashboard/tut2.png';
+import supadm3 from '../../../../assets/images/dashboard/supadm3.png';
+import supadm4 from '../../../../assets/images/dashboard/supadm4.png';
 import './dashboard.css';
 
 //5271ff 
@@ -58,6 +65,10 @@ const DashboardSupAdmin = () => {
     const [isApprenantContent, setIsApprenantContent] = useState(false);
     const [isTuteurContent, setIsTuteurContent] = useState(true);
     const [isPublicityContent, setIsPublicityContent] = useState(false);
+    const [isAchatC, setIsAchatC] = useState(false);
+
+    const [isFormule, setIsFormule] = useState(false);
+
 
     useEffect(()=>{
         var element1 = document.getElementById("myDiv1");
@@ -72,6 +83,8 @@ const DashboardSupAdmin = () => {
                 document.getElementById('myDiv4'),
                 document.getElementById('myDiv5'),
                 document.getElementById('myDiv6'),
+                document.getElementById('myDiv7'),
+                document.getElementById('myDiv8'),
             ];
             for(var i of tab1){
                 i.style.backgroundColor = ""
@@ -149,13 +162,18 @@ function menuToggle(){
                     setIsAchatContent(false),
                     setIsAdminContent(false),
                     setIsApprenantContent(false),
-                    setIsPublicityContent(false),)
+                    setIsPublicityContent(false),
+                     setIsAchatC(false),
+                      setIsFormule(false),)
             let tab = [
                 document.getElementById('myDiv2'),
                 document.getElementById('myDiv3'),
                 document.getElementById('myDiv4'),
                 document.getElementById('myDiv5'),
                 document.getElementById('myDiv6'),
+                document.getElementById('myDiv7'),
+                document.getElementById('myDiv8'),
+
 
             ];
             for(var i of tab){
@@ -170,13 +188,17 @@ function menuToggle(){
                     setIsAchatContent(false),
                     setIsAdminContent(true),
                     setIsApprenantContent(false),
-                    setIsPublicityContent(false),)
+                    setIsPublicityContent(false),
+                    setIsAchatC(false),
+                      setIsFormule(false),)
              let tab = [
                 document.getElementById('myDiv1'),
                 document.getElementById('myDiv3'),
                 document.getElementById('myDiv4'),
                 document.getElementById('myDiv5'),
                 document.getElementById('myDiv6'),
+                document.getElementById('myDiv7'),
+                document.getElementById('myDiv8'),
             ]
             for(var i of tab){
                 i.style.backgroundColor = ""
@@ -189,13 +211,17 @@ function menuToggle(){
                     setIsAchatContent(false),
                     setIsAdminContent(false),
                     setIsApprenantContent(true),
-                    setIsPublicityContent(false),)
+                    setIsPublicityContent(false),
+                    setIsAchatC(false),
+                      setIsFormule(false),)
              let tab = [
                 document.getElementById('myDiv1'),
                 document.getElementById('myDiv2'),
                 document.getElementById('myDiv4'),
                 document.getElementById('myDiv5'),
                 document.getElementById('myDiv6'),
+                document.getElementById('myDiv7'),
+                document.getElementById('myDiv8'),
             ]
             for(var i of tab){
                 i.style.backgroundColor = ""
@@ -208,13 +234,17 @@ function menuToggle(){
                     setIsAchatContent(false),
                     setIsAdminContent(false),
                     setIsApprenantContent(false),
-                    setIsPublicityContent(false),)
+                    setIsPublicityContent(false),
+                    setIsAchatC(false),
+                      setIsFormule(false),)
             let tab = [
                 document.getElementById('myDiv1'),
                 document.getElementById('myDiv2'),
                 document.getElementById('myDiv3'),
                 document.getElementById('myDiv5'),
                 document.getElementById('myDiv6'),
+                document.getElementById('myDiv7'),
+                document.getElementById('myDiv8'),
             ]
             for(var i of tab){
                 i.style.backgroundColor = ""
@@ -227,13 +257,17 @@ function menuToggle(){
                     setIsAchatContent(false),
                     setIsAdminContent(false),
                     setIsApprenantContent(false),
-                    setIsPublicityContent(true),)
+                    setIsPublicityContent(true),
+                    setIsAchatC(false),
+                      setIsFormule(false),)
             let tab = [
                 document.getElementById('myDiv1'),
                 document.getElementById('myDiv2'),
                 document.getElementById('myDiv3'),
                 document.getElementById('myDiv4'),
                 document.getElementById('myDiv6'),
+                document.getElementById('myDiv7'),
+                document.getElementById('myDiv8'),
             ]
             for(var i of tab){
                 i.style.backgroundColor = ""
@@ -243,16 +277,64 @@ function menuToggle(){
             element.style.backgroundColor = "#dd1b16";
             setIsTuteurContent(false,
                     setIsAbonnementContent(false),
-                    setIsAchatContent(true),
+                    setIsAchatContent(false),
                     setIsAdminContent(false),
                     setIsApprenantContent(false),
-                    setIsPublicityContent(false),)
+                    setIsPublicityContent(false),
+                    setIsAchatC(false),
+                      setIsFormule(true),)
             let tab = [
                 document.getElementById('myDiv1'),
                 document.getElementById('myDiv2'),
                 document.getElementById('myDiv3'),
                 document.getElementById('myDiv4'),
                 document.getElementById('myDiv5'),
+                document.getElementById('myDiv7'),
+                document.getElementById('myDiv8'),
+            ]
+            for(var i of tab){
+                i.style.backgroundColor = ""
+            }
+        }else if(id=="myDiv7"){
+            element.style.backgroundColor = "#dd1b16";
+            setIsTuteurContent(false,
+                    setIsAbonnementContent(false),
+                    setIsAchatContent(false),
+                    setIsAdminContent(false),
+                    setIsApprenantContent(false),
+                    setIsPublicityContent(false),
+                    setIsAchatC(true),
+                      setIsFormule(false),)
+            let tab = [
+                document.getElementById('myDiv1'),
+                document.getElementById('myDiv2'),
+                document.getElementById('myDiv3'),
+                document.getElementById('myDiv4'),
+                document.getElementById('myDiv5'),
+                document.getElementById('myDiv6'),
+                document.getElementById('myDiv8'),
+            ]
+            for(var i of tab){
+                i.style.backgroundColor = ""
+            }
+        }else if(id=="myDiv8"){
+            element.style.backgroundColor = "#dd1b16";
+            setIsTuteurContent(false,
+                    setIsAbonnementContent(false),
+                    setIsAchatContent(true),
+                    setIsAdminContent(false),
+                    setIsApprenantContent(false),
+                    setIsPublicityContent(false),
+                    setIsAchatC(false),
+                      setIsFormule(false),)
+            let tab = [
+                document.getElementById('myDiv1'),
+                document.getElementById('myDiv2'),
+                document.getElementById('myDiv3'),
+                document.getElementById('myDiv4'),
+                document.getElementById('myDiv5'),
+                document.getElementById('myDiv6'),
+                document.getElementById('myDiv7'),
             ]
             for(var i of tab){
                 i.style.backgroundColor = ""
@@ -375,11 +457,11 @@ function menuToggle(){
                                     <Avatar 
                                         size="45"
                                         round={false}
-                                        src={ad1}
+                                        src={supadm1}
                                         name='logo'
                                     />
                                 </div>
-                               <span className="text">Tuteurs</span>
+                               <span className="text">Administrateurs </span>
 
                               </div>
 
@@ -394,11 +476,11 @@ function menuToggle(){
                                     <Avatar 
                                         size="45"
                                         round={false}
-                                        src={ad2}
+                                        src={adm3}
                                         name='logo'
                                     />
                                 </div>
-                                <span className="text">Administrateur</span>
+                                <span className="text">Tuteurs</span>
                               </div>
                             </GridItem>
 
@@ -411,7 +493,7 @@ function menuToggle(){
                                     <Avatar 
                                         size="45"
                                         round={false}
-                                        src={ad3}
+                                        src={supadm2}
                                         name='logo'
                                     />
                                 </div>
@@ -428,11 +510,11 @@ function menuToggle(){
                                     <Avatar 
                                         size="45"
                                         round={false}
-                                        src={ad4}
+                                        src={supadm3}
                                         name='logo'
                                     />
                                 </div>
-                                <span className="text">Formulaire d'abonnement</span>
+                                <span className="text">Parents</span>
                               </div>
                             </GridItem>
 
@@ -449,7 +531,23 @@ function menuToggle(){
                                         name='logo'
                                     />
                                 </div>
-                                <span className="text">Publicité</span>
+                                <span className="text">Publicités</span>
+                              </div>
+                            </GridItem>
+
+                      </GridContainer>
+                      <GridContainer>
+                            <GridItem xs={12} sm={12} md={12}>
+                               <div className="side-content" id="myDiv6" onClick={()=>changeStyle('myDiv6')}>
+                                <div style={{padding:'3%',display:'inline-block'}}>
+                                    <Avatar 
+                                        size="45"
+                                        round={false}
+                                        src={supadm4}
+                                        name='logo'
+                                    />
+                                </div>
+                                <span className="text">Formules d'abonnement</span>
                               </div>
                             </GridItem>
 
@@ -457,7 +555,7 @@ function menuToggle(){
 
                       <GridContainer>
                             <GridItem xs={12} sm={12} md={12}>
-                               <div className="side-content" id="myDiv6" onClick={()=>changeStyle('myDiv6')}>
+                               <div className="side-content" id="myDiv7" onClick={()=>changeStyle('myDiv7')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
                                         size="45"
@@ -467,6 +565,22 @@ function menuToggle(){
                                     />
                                 </div>
                                 <span className="text">Les achats</span>
+                              </div>
+                            </GridItem>
+
+                      </GridContainer>
+                      <GridContainer>
+                            <GridItem xs={12} sm={12} md={12}>
+                               <div className="side-content" id="myDiv8" onClick={()=>changeStyle('myDiv8')}>
+                                <div style={{padding:'3%',display:'inline-block'}}>
+                                    <Avatar 
+                                        size="45"
+                                        round={false}
+                                        src={d7}
+                                        name='logo'
+                                    />
+                                </div>
+                                <span className="text">Mon Compte</span>
                               </div>
                             </GridItem>
 
@@ -522,6 +636,8 @@ function menuToggle(){
                           {isApprenantContent?<ApprenantContent />:''}
                           {isTuteurContent?<TuteurContent />:''}
                           {isPublicityContent?<PublicityContent />:''}
+                          {isAchatC?<AchatC />:''}
+                          {isFormule?<FormuleAbonnement />:''}
                          
 
 
