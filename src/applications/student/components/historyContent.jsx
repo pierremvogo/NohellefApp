@@ -15,11 +15,16 @@ import stickheart from '../../../assets/images/dashboard/stickheart.png';
 import Pagination from './pagination.jsx';
 import eye from '../../../assets/icons/eye.png';
 import download from '../../../assets/icons/download.png';
+import vidio from '../../../assets/images/dashboard/vidio.png';
+import imgpdf from '../../../assets/images/imgpdf.png';
+import videoLink from '../../../assets/video/testvideo2.mp4';
+import pdf1 from '../../../assets/pdf/PHP.pdf';
+import pdf2 from '../../../assets/pdf/seq.pdf';
+import {Table} from 'react-bootstrap';
 
 
 
-
-const HistoryContent = () => {
+const HistoryContent = ({onChildClickHandlerVideo}) => {
 	const [posts, setPosts] = useState([]);
   const [posts1, setPosts1] = useState([]);
 	const [loading, serLoading] = useState(false);
@@ -33,100 +38,94 @@ const HistoryContent = () => {
 		setPosts(data,setPosts1(data1));
 	},[])
 
+  const openVideoTheque = (e) => {
+        onChildClickHandlerVideo(e.target.name);
+    }
+
     let data = [
     {
       id: 1,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      activity: "Consultation des cours pdf",
+      heureConnexion: "10h25",
+      heureDeconnexion: "15h50",
+      date:'14/12/2014',
+      appareil:'Lenovo windoww 10',
     },
     {
       id: 2,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      activity: "Consultation des cours pdf",
+      heureConnexion: "10h25",
+      heureDeconnexion: "15h50",
+      date:'14/12/2014',
+      appareil:'Lenovo windoww 10',
     },
     {
       id: 3,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      activity: "Consultation des cours pdf",
+      heureConnexion: "10h25",
+      heureDeconnexion: "15h50",
+      date:'14/12/2014',
+      appareil:'Lenovo windoww 10',
     },
     {
       id: 4,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      activity: "Consultation des cours pdf",
+      heureConnexion: "10h25",
+      heureDeconnexion: "15h50",
+      date:'14/12/2014',
+      appareil:'Lenovo windoww 10',
     },
     {
       id: 5,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      activity: "Consultation des cours pdf",
+      heureConnexion: "10h25",
+      heureDeconnexion: "15h50",
+      date:'14/12/2014',
+      appareil:'Lenovo windoww 10',
     },
     {
       id: 6,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      activity: "Consultation des cours pdf",
+      heureConnexion: "10h25",
+      heureDeconnexion: "15h50",
+      date:'14/12/2014',
+      appareil:'Lenovo windoww 10',
     },
     
     {
       id: 7,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      activity: "Consultation des cours pdf",
+      heureConnexion: "10h25",
+      heureDeconnexion: "15h50",
+      date:'14/12/2014',
+      appareil:'Lenovo windoww 10',
     },
     
     {
       id: 8,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      activity: "Consultation des cours pdf",
+      heureConnexion: "10h25",
+      heureDeconnexion: "15h50",
+      date:'14/12/2014',
+      appareil:'Lenovo windoww 10',
     },
     
     {
       id: 9,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      activity: "Consultation des cours pdf",
+      heureConnexion: "10h25",
+      heureDeconnexion: "15h50",
+      date:'14/12/2014',
+      appareil:'Lenovo windoww 10',
     },
     
     {
       id: 10,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      activity: "Consultation des cours pdf",
+      heureConnexion: "10h25",
+      heureDeconnexion: "15h50",
+      date:'14/12/2014',
+      appareil:'Lenovo windoww 10',
     },
     
   ];
@@ -140,7 +139,8 @@ const HistoryContent = () => {
       courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
       courseFormat:'Video',
       courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      courseSubjet:'Mathématiques',
+      courseLink: pdf1
     },
     {
       id: 2,
@@ -149,7 +149,8 @@ const HistoryContent = () => {
       courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
       courseFormat:'Video',
       courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      courseSubjet:'Mathématiques',
+      courseLink: videoLink
     },
     {
       id: 3,
@@ -158,7 +159,8 @@ const HistoryContent = () => {
       courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
       courseFormat:'Video',
       courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      courseSubjet:'Mathématiques',
+      courseLink: videoLink
     },
     {
       id: 4,
@@ -167,7 +169,8 @@ const HistoryContent = () => {
       courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
       courseFormat:'Video',
       courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      courseSubjet:'Mathématiques',
+      courseLink: pdf1
     },
     {
       id: 5,
@@ -176,7 +179,8 @@ const HistoryContent = () => {
       courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
       courseFormat:'Video',
       courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      courseSubjet:'Mathématiques',
+      courseLink: pdf1
     },
     {
       id: 6,
@@ -185,7 +189,8 @@ const HistoryContent = () => {
       courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
       courseFormat:'Video',
       courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      courseSubjet:'Mathématiques',
+      courseLink: pdf1
     },
     
     {
@@ -195,7 +200,8 @@ const HistoryContent = () => {
       courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
       courseFormat:'Video',
       courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      courseSubjet:'Mathématiques',
+      courseLink: pdf1
     },
     
     {
@@ -205,7 +211,8 @@ const HistoryContent = () => {
       courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
       courseFormat:'Video',
       courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      courseSubjet:'Mathématiques',
+      courseLink: videoLink
     },
     
     {
@@ -215,7 +222,8 @@ const HistoryContent = () => {
       courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
       courseFormat:'Video',
       courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      courseSubjet:'Mathématiques',
+      courseLink: videoLink
     },
     
     {
@@ -225,10 +233,14 @@ const HistoryContent = () => {
       courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
       courseFormat:'Video',
       courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques'
+      courseSubjet:'Mathématiques',
+      courseLink: pdf1
     },
     
   ];
+   const openPdf = (pdfLink) => {
+            window.open(pdfLink);
+        }
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
@@ -244,7 +256,7 @@ const HistoryContent = () => {
 			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
-                               Historiques
+                              Historique de vos Activitées
                             </div>
                             
                         </GridItem>
@@ -261,140 +273,44 @@ const HistoryContent = () => {
 
                     <GridContainer>
 
-                      <GridItem xs={12} sm={12} md={6}>
-                        
-                        <div style={{padding:'5%', backgroundColor:'#eeeeee'}}>
-                          <GridContainer>
-                            <GridItem xs={12} sm={12} md={12}>
-                              <div>
-                                <span>Vous récemment avez regardé</span>
-                                <span style={{marginLeft:'3%'}}><img src={stickheart} width='5%'/></span>
-                              </div>
-                            </GridItem>
-                          </GridContainer>
+                      <GridItem xs={12} sm={12} md={12}>
+                            <GridContainer style={{backgroundColor:'#eeeeee',width:'95%'}}> 
+                                <Table striped bordered hover variant="secondary">
+                                      <thead>
+                                        <tr>
+                                          <th>Activités Effectuées</th>
+                                          <th>Heure de connexion</th>
+                                          <th>Heure de deconnexion</th>
+                                          <th>Date</th>
+                                          <th>Appareil</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                      {currentPosts.map((post,index)=>{
+                                        return(
+                                          <tr>
+                                            <td>{post.id}-{post.activity}</td>
+                                            <td>{post.heureConnexion}</td>
+                                            <td>{post.heureDeconnexion}</td>
+                                            <td>{post.date}</td>
+                                            <td>{post.appareil}</td>
+                                          </tr>
+                                          )
+                                      })}
+                                      </tbody>
+                                    </Table>
+                              </GridContainer>
 
-
-                          <GridContainer>
-                            {currentPosts1.map((post,index)=>{
-                                console.log("my post")
-                                console.log(post)
-                                return(
-                                  <GridItem xs={12} sm={12} md={6} key={post.id}>
-                        
-                                    <Card style={{border:"2px solid #5271ff"}}>
-                                    <CardHeader style={{backgroundColor:'#5271ff'}}>
-                                        {post.id}-{post.courseName}
-                                    </CardHeader>
-                                    <CardBody>
-                                        {post.courseFormat}
-                                    </CardBody>
-                                    <CardFooter color="secondary">
-                                        <div style={{backgroundColor:'#ffce52',width:'100%',fontSize:'1vw',padding:'2%'}}>
-                                            <div><strong>Titre:</strong> {post.courseTitle}</div>
-                                            
-                                            <div><strong>Type:</strong> {post.courseFormat}</div>
-                                            <div><strong>Niveau:</strong> {post.courseLevel}</div>
-                                            <div><strong>Sujet:</strong> {post.courseSubjet}</div>
-
-                                            <div style={{marginTop:'10%'}}>
-                                               <span style={{float:'left',cursor:'pointer'}}>
-                                                    <div><img src={eye} width='80%'/></div>
-                                                    <div>voir</div>
-                                                </span>
-                                                {post.courseFormat != 'Video'?<span style={{float:'right',cursor:'pointer',textAlign:'center'}}>
-                                                    <div><img src={download} width='35%'/></div>
-                                                    <div>Télécharger</div>
-                                                </span>:''}
-                                        </div>
-                                        </div>
-                                        
-                                    </CardFooter>
-                                </Card>
-                            
-                        </GridItem>
-                )
-              
-            })}
-                          </GridContainer>
-
-
-
-                          <GridContainer>
-                            <GridItem xs={12} sm={12} md={12}>
-                              <Pagination 
-                                postsPerPage={postPerPage1} 
-                                totalPosts={posts1.length} 
-                                paginate={paginate1}
-                              />
-                            </GridItem>
-                          </GridContainer>
-                        </div>
-                      </GridItem>
-
-                      <GridItem xs={12} sm={12} md={6}>
-                       <div style={{backgroundColor:'#eeeeee',padding:'5%'}}>
-                          <GridContainer>
-                            <GridItem xs={12} sm={12} md={12}>
-                              <div>
-                                <span>Vous récemment avez lu</span>
-                                <span style={{marginLeft:'3%'}}><img src={stickheart} width='5%'/></span>
-                              </div>
-                            </GridItem>
-                          </GridContainer>
-                          <GridContainer>
-                            
-                              {currentPosts.map((post,index)=>{
-                                    console.log("my post")
-                                    console.log(post)
-                                    return(
-                              <GridItem xs={12} sm={12} md={6} key={post.id}>
-                                      
-                                <Card style={{border:"2px solid #5271ff"}}>
-                                    <CardHeader style={{backgroundColor:'#5271ff'}}>
-                                        {post.id}-{post.courseName}
-                                    </CardHeader>
-                                    <CardBody>
-                                        {post.courseFormat}
-                                    </CardBody>
-                                    <CardFooter color="secondary">
-                                        <div style={{backgroundColor:'#ffce52',width:'100%',fontSize:'1vw',padding:'2%'}}>
-                                            <div><strong>Titre:</strong> {post.courseTitle}</div>
-                                          
-                                            <div><strong>Type:</strong> {post.courseFormat}</div>
-                                            <div><strong>Niveau:</strong> {post.courseLevel}</div>
-                                            <div><strong>Sujet:</strong> {post.courseSubjet}</div>
-
-                                            <div style={{marginTop:'10%'}}>
-                                           <span style={{float:'left',cursor:'pointer'}}>
-                                                <div><img src={eye} width='80%'/></div>
-                                                <div>voir</div>
-                                            </span>
-                                            {post.courseFormat != 'Video'?<span style={{float:'right',cursor:'pointer',textAlign:'center'}}>
-                                                <div><img src={download} width='35%'/></div>
-                                                <div>Télécharger</div>
-                                            </span>:''}
-                                        </div>
-                                        </div>
-                                        
-                                    </CardFooter>
-                                </Card>
-                            
-                        </GridItem>
-                )
-              
-            })}
-                           
-                          </GridContainer>
-                          <GridContainer>
-                            <GridItem xs={12} sm={12} md={12}>
-                              <Pagination 
-                                postsPerPage={postPerPage} 
-                                totalPosts={posts.length} 
-                                paginate={paginate}
-                              />
-                            </GridItem>
-                          </GridContainer>
-                        </div>
+                            <GridContainer style={{backgroundColor:'#eeeeee',margin:'15%',width:'95%'}}>
+                              <GridItem xs={12} sm={12} md={12}>
+                                <Pagination 
+                                  postsPerPage={postPerPage} 
+                                  totalPosts={posts.length} 
+                                  paginate={paginate}
+                                />
+                              </GridItem>
+                            </GridContainer>
+                  
                       </GridItem>
 
                     </GridContainer>

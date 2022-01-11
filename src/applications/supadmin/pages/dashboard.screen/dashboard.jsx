@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useContext, useState, useEffect } from 'react';
 
 import Avatar   from 'react-avatar';
 import Button from '../../../../app/components/buttons/button';
@@ -54,11 +54,16 @@ import supadm2 from '../../../../assets/images/dashboard/tut2.png';
 import supadm3 from '../../../../assets/images/dashboard/supadm3.png';
 import supadm4 from '../../../../assets/images/dashboard/supadm4.png';
 import './dashboard.css';
-
+import {NotificationManager,NotificationContainer} from 'react-notifications';
+import io from 'socket.io-client';
+import Chat from "../../../../app/components/chat/chat.jsx";
+import badge from '../../../../assets/images/dashboard/badge.png';
+import ScrollToBottom from "react-scroll-to-bottom";
+import { SocketContext } from '../../../../SocketContext.js';
+import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessionId.jsx";
 //5271ff 
 //ffce52 
 const DashboardSupAdmin = () => {
-
     const [isAdminContent, setIsAdminContent] = useState(false);
     const [isAbonnementContent, setIsAbonnementContent] = useState(false);
     const [isAchatContent, setIsAchatContent] = useState(false);
@@ -66,6 +71,8 @@ const DashboardSupAdmin = () => {
     const [isTuteurContent, setIsTuteurContent] = useState(true);
     const [isPublicityContent, setIsPublicityContent] = useState(false);
     const [isAchatC, setIsAchatC] = useState(false);
+    const [countBadge, setCountBadge] = useState(1);
+    const [showBadge, setShowBadge] = useState(false);
 
     const [isFormule, setIsFormule] = useState(false);
 
@@ -93,15 +100,17 @@ const DashboardSupAdmin = () => {
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
-                document.getElementById('dash5')
             ]
             for(var i of tab2){
                 i.style.borderRadius = ""
                 i.style.width = ""
                 i.style.border = ""
             }
-
+        return function cleanup () {
+            return;
+        }
     },[])
+
 
 function menuToggle(){
         const toggleMenu = document.querySelector('.menu');
@@ -353,7 +362,7 @@ function menuToggle(){
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
-                document.getElementById('dash5')
+                
             ]
             for(var i of tab){
                 i.style.borderRadius = ""
@@ -369,7 +378,7 @@ function menuToggle(){
                 document.getElementById('dash1'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
-                document.getElementById('dash5')
+                
             ]
             for(var i of tab){
                 i.style.borderRadius = ""
@@ -385,7 +394,7 @@ function menuToggle(){
                 document.getElementById('dash1'),
                 document.getElementById('dash2'),
                 document.getElementById('dash4'),
-                document.getElementById('dash5')
+                
             ]
             for(var i of tab){
                 i.style.borderRadius = ""
@@ -401,7 +410,7 @@ function menuToggle(){
                 document.getElementById('dash1'),
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
-                document.getElementById('dash5')
+               
             ]
             for(var i of tab){
                 i.style.borderRadius = ""
@@ -409,22 +418,7 @@ function menuToggle(){
                 i.style.border = ""
             }
         }
-        else if(id=="dash5"){
-            element.style.borderRadius = "3px 3px 3px 3px";
-            element.style.width = "100%";
-            element.style.border = "2px solid #DD1B16";
-            let tab = [
-                document.getElementById('dash1'),
-                document.getElementById('dash2'),
-                document.getElementById('dash3'),
-                document.getElementById('dash4')
-            ]
-            for(var i of tab){
-                i.style.borderRadius = ""
-                i.style.width = ""
-                i.style.border = ""
-            }
-        }
+        
 
     }
         return(
@@ -455,7 +449,7 @@ function menuToggle(){
                               <div className="side-content siden1" id="myDiv1" onClick={()=>changeStyle('myDiv1')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={supadm1}
                                         name='logo'
@@ -474,7 +468,7 @@ function menuToggle(){
                                 <div className="side-content" id="myDiv2" onClick={()=>changeStyle('myDiv2')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={adm3}
                                         name='logo'
@@ -491,7 +485,7 @@ function menuToggle(){
                                <div className="side-content" id="myDiv3" onClick={()=>changeStyle('myDiv3')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={supadm2}
                                         name='logo'
@@ -508,7 +502,7 @@ function menuToggle(){
                                <div className="side-content" id="myDiv4" onClick={()=>changeStyle('myDiv4')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={supadm3}
                                         name='logo'
@@ -525,7 +519,7 @@ function menuToggle(){
                                <div className="side-content" id="myDiv5" onClick={()=>changeStyle('myDiv5')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={ad5}
                                         name='logo'
@@ -541,7 +535,7 @@ function menuToggle(){
                                <div className="side-content" id="myDiv6" onClick={()=>changeStyle('myDiv6')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={supadm4}
                                         name='logo'
@@ -558,7 +552,7 @@ function menuToggle(){
                                <div className="side-content" id="myDiv7" onClick={()=>changeStyle('myDiv7')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={ad6}
                                         name='logo'
@@ -574,7 +568,7 @@ function menuToggle(){
                                <div className="side-content" id="myDiv8" onClick={()=>changeStyle('myDiv8')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={d7}
                                         name='logo'
@@ -612,26 +606,46 @@ function menuToggle(){
                         <GridItem xs={12} sm={12} md={2}>
                              <div id="dash5" className='dash-navitem' onClick={()=>changeStyle1('dash5')}>Nos Enseignants</div>
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={2}>
-                             <div style={{position:'relative',top:'-15px',cursor:'pointer'}}>    
-                                   
+                         <GridItem xs={12} sm={12} md={2}>
+                                        <Dropdown style={{top:'-15px'}}>
+                                                    <Dropdown.Toggle
+                                                    variant="secondary btn-sm"
+                                                    style={{
+                                                        width:'0%',
 
-                                  <div className="action">
-                                                <div className='profile' onClick={(e)=>menuToggle(e)}>
-                                                    <img src={im5} width='30%'/> 
-                                                </div>
-                                                <div className="menu">
-                                                    <div style={{marginBottom:'0%'}}><img src={acc} width='15%'/><u>Mon compte</u></div>
-                                                    <div><img src={dic} width='15%'/><u>Se déconnecter</u></div>
-                                                </div>
-                                            </div>                                                 
-                             </div>
+                                                        borderColor:'#fff',
+                                                        backgroundColor:'#fff',
+                                                        borderRadius:'20%'}}>
+                                                    
+                                                        <Avatar 
+                                                            size="50"
+                                                            round={true}
+                                                            src={im5}
+                                                            name='logo'
+                                                        />
+                                                    </Dropdown.Toggle>
+
+                                                    <Dropdown.Menu style={{backgroundColor:'#F8D04E',borderRadius:'10%'}}>
+                                                        <Dropdown.Item href="#" >
+                                                            <div style={{marginBottom:'5%'}}>
+                                                                    <img src={acc} width='15%'/>
+                                                                    <u>Mon compte</u>
+                                                            </div>
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item href="#">
+                                                            <div>
+                                                                <img src={dic} width='15%'/>
+                                                                <u>Se déconnecter</u>
+                                                            </div>
+                                                        </Dropdown.Item>
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
                         </GridItem>
                        
                     </GridContainer>
 
-                          {isAdminContent?<AdminContent />:''}
-                          {isAbonnementContent?<AbonnementContent />:''}
+                          {isAdminContent?<AdminContent  />:''}
+                          {isAbonnementContent?<AbonnementContent  />:''}
                           {isAchatContent?<AchatContent />:''}
                           {isApprenantContent?<ApprenantContent />:''}
                           {isTuteurContent?<TuteurContent />:''}

@@ -21,8 +21,12 @@ import Switch from "react-switch";
 import './admin.css';
 import {Table} from 'react-bootstrap';
 import chat from '../../../assets/images/dashboard/chat2.png';
+import {NotificationManager,NotificationContainer} from 'react-notifications';
+import io from 'socket.io-client';
+import Chat from "../../../app/components/chat/chat.jsx"
 
 
+const socket = io.connect("http://localhost:3001");
 const AbonnementContent = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,9 +34,28 @@ const AbonnementContent = () => {
   const [display, setDisplay] = useState("flex");
   const [showEditModal,setShowEditModal] = useState(false);
   const [checked, setChecked] = useState(false);
+   const [username, setUsername] = useState("Alain");
+    const [showChatModal, setShowChatModal] = useState(false);
+    const [displayAsk, setDisplayAsk] = useState("none");
+    const [remoteUsername, setRemoteUsername] = useState("Mme Ngono");
+    const [remoteImage, setRemoteImage] = useState(im5);
+    const [countBadge, setCountBadge] = useState(1);
+    const [showBadge, setShowBadge] = useState(false);
+    const [messageList, setMessageList] = useState([]);
+    const [parentId, setParentId] = useState("parent");
+    const [supAdminId, setSupAdminId] = useState("supadmin");
+    const [room, setRoom] = useState(parentId+supAdminId);
+     const [statusConnection,setStatusConnection] = useState(false);
 
   useEffect(()=>{
-    setPosts(data);
+    socket.on('id', (status)=>{
+            setStatusConnection(status);
+            console.log("MYid",status);
+        })
+     setPosts(data);
+     return function cleanup () {
+            return;
+        }
   },[])
 
   const handleChange = (checked) => {
@@ -43,6 +66,8 @@ const AbonnementContent = () => {
     const toggleMenu = document.querySelector('.menu');
     toggleMenu.classList.toggle('active')
   }
+
+  
 
    const ModalContentEdit  = () => {
     return(
@@ -72,24 +97,75 @@ const AbonnementContent = () => {
       </div>
     )
   };
+  const handleCallback = (childData) =>{
+           
+         }
+   const ModalChat = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "30%",
+            height: "80%",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            backgroundColor: "transparent",
+            border:'none',
+            top:"10%",
+            left:"70%",
+            }}
+      >
+      <GridContainer>
+          <GridItem xs={12} sm={12} md={12} style={{
+                                        backgroundColor:'#FFCE52',
+                                        borderRadius:'20px',
+                                        height:'105%',
+                                         }}>
+              <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                      <span className='close' onClick={()=>closeModal()}>&times;</span>
+                  </GridItem>
+              </GridContainer>
+              
+              <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                      <Chat 
+                        socket={socket} 
+                        username={username} 
+                        room={room}
+                        callBackParent={handleCallback}
+                        remoteImage={remoteImage}
+                        remoteUsername={remoteUsername}
+                        isConnected={statusConnection}
+                     />
+                  </GridItem>
+              </GridContainer>
+          </GridItem>
+      </GridContainer>
+      </div>
+    )
+  };
   const CheckBox =()=> {
     return(
         <input type='checkbox' />
       )
   };
   function closeModal(){
-    setDisplay("none",setShowEditModal(false));
-  }
+      setShowChatModal(false,setDisplayAsk("none"));
+    }
+    
 
-  const openModal=()=> {
-    setDisplay("flex",setShowEditModal(true));
+  const openModal=(nameUser)=> {
+      setDisplayAsk("flex",setRemoteUsername(nameUser),setShowChatModal(true));
     }
 
     let data = [
     {
       id: 1,
       userProfile: im5,
-      userName:"mvogo",
+      userName:"pirate",
       userSurname:"pierre",
       userEmail:"mvogopierre129@gmail.com",
       userPhone:"698114902",
@@ -101,7 +177,7 @@ const AbonnementContent = () => {
     {
       id: 2,
       userProfile: im5,
-      userName:"mvogo",
+      userName:"Jean",
       userSurname:"pierre",
       userEmail:"mvogopierre129@gmail.com",
       userPhone:"698114902",
@@ -113,7 +189,7 @@ const AbonnementContent = () => {
     {
       id: 3,
       userProfile: im5,
-      userName:"mvogo",
+      userName:"Pierre",
       userSurname:"pierre",
       userEmail:"mvogopierre129@gmail.com",
       userPhone:"698114902",
@@ -126,7 +202,7 @@ const AbonnementContent = () => {
       id: 4,
       userProfile: im5,
       userName:"mvogo",
-      userSurname:"pierre",
+      userSurname:"Andre",
       userEmail:"mvogopierre129@gmail.com",
       userPhone:"698114902",
       userCity:"Yaoundé",
@@ -137,7 +213,7 @@ const AbonnementContent = () => {
     {
       id: 5,
       userProfile: im5,
-      userName:"mvogo",
+      userName:"appolinaire",
       userSurname:"pierre",
       userEmail:"mvogopierre129@gmail.com",
       userPhone:"698114902",
@@ -157,8 +233,7 @@ const AbonnementContent = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   return(
       <div className="container" style={{margin:'5% 0% 0% 0%'}}>
-
-      {showEditModal? <ModalContentEdit /> :'' } 
+      {showChatModal? <ModalChat />  : ''}
        <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
 
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
@@ -228,7 +303,7 @@ const AbonnementContent = () => {
                     <td>{post.userPhone}</td>
                     <td>{post.userCity}</td>
                     <td>{post.userAddress}</td> 
-                    <td><img src={post.userChat} width='45%'/></td>  
+                    <td style={{cursor:'pointer'}} onClick={()=>openModal(post.userName)}><img src={post.userChat} width='45%'/></td>  
                   
                   </tr>
                   )

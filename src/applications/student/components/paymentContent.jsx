@@ -102,7 +102,7 @@ function handleCheck(id){
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 	return(
 			<div className="container" style={{backgroundColor:'#eeeeee', paddingBottom:'5%'}}>
-			              <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
+			              <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
                                 Payer un abonnement
@@ -156,7 +156,7 @@ function handleCheck(id){
                                     margin:'0% 0% 0% 5%',
                                     width:'90%',
                                     height:'100px',
-                                    fontSize:'1vw',
+                                    fontSize:'100%',
                                     border:'1px solid #9aa7b2'}}>
 
                                     <GridContainer>
@@ -198,7 +198,7 @@ function handleCheck(id){
 
                               <GridContainer>
                                 <GridItem xs={12} sm={12} md={12} >
-                                <div style={{margin:'0% 5% 2% 5%',fontSize:'1vw'}}>
+                                <div style={{margin:'0% 5% 2% 5%',fontSize:'100%'}}>
                                   <span>Payer par</span>
                                   <span style={{float:'right',color:'#002495',cursor:'pointer'}} onClick={(e)=>clickHandlerPay(e)}><strong>Ajouter un moyen de paiement</strong></span>
                                 </div>
@@ -207,7 +207,7 @@ function handleCheck(id){
 
                               <GridContainer>
                                 <GridItem xs={12} sm={12} md={12} >
-                                <div style={{margin:'0% 5% 2% 5%',fontSize:'1vw'}}>
+                                <div style={{margin:'0% 5% 2% 5%',fontSize:'100%'}}>
                                   <select name="pets" id="pet-select">
                                     <option value="">Moyen de paiement</option>
                                     <option value="dog">VISA</option>
@@ -224,7 +224,7 @@ function handleCheck(id){
                               <GridContainer>
                                 <GridItem xs={12} sm={12} md={12} >
                                    <div style={{cursor:'pointer',
-                                          margin:'8% 5% 5% 5%',
+                                          margin:'2% 5% 5% 5%',
                                           textAlign:'center'}}>
                                       <div style={{
                                           backgroundColor: '#4b9960',
@@ -240,7 +240,7 @@ function handleCheck(id){
                                           paddingTop:'3%'
                                         }}>
                                 
-                                <span className="text" style={{fontSize:'1.2vw',color:'white'}}>Payer</span>
+                                <span className="text" style={{fontSize:'100%',color:'white'}}>Payer</span>
                               </div>
                                     </div>
                                 </GridItem>
@@ -264,7 +264,7 @@ function handleCheck(id){
                                     backgroundColor:'white',
                                     height:'260px',
                                     margin:'0% 10% 2% 5%',
-                                    fontSize:'1.2vw',
+                                    fontSize:'100%',
                                     padding:'5% 5% 0% 0%'
                                   }}>
                                     <ul>

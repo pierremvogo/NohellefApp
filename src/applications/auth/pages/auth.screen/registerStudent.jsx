@@ -19,6 +19,7 @@ import GridContainer from "../../../../app/components/Grid/GridContainer.js";
 import Footer from "../../../../app/components/footer/footer.jsx";
 import Avatar   from 'react-avatar';
 import Select from 'react-select';
+import ReCAPTCHA from "react-google-recaptcha";
 
 const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
     const [showPassword, setPassword] = useState(false);
@@ -46,12 +47,15 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
         setResetPasswordForm({...resetPasswordForm,  [e.target.name]: e.target.value })
         setformError(null)
     }
+    function onChange(value) {
+       console.log("Captcha value:", value);
+    }
 
     const options = [
     { value: 'chocolate', label: 'Niveau1' },
     { value: 'strawberry', label: 'Niveau2' },
     { value: 'vanilla', label:  'Niveau3'}
-  ]
+    ]
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -110,7 +114,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                 <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                       
-                                     <div style={{margin:'0% 0% 1% 0%',cursor:'pointer'}}>
+                                     <div style={{margin:'0% 0% 1% 0%',cursor:'pointer', fontSize:'1.2vw'}}>
                                          <span style={{float:'left',marginRight:'2%'}} onClick={(e)=>clickHandlerConnectModal(e)}>Se connecter</span>
                                          <span style={{color:'blue'}}><u>S'inscrire</u></span>
                                          <span className='close' style={{float:'right'}} onClick={(e)=>clickHandlerCloseModal(e)}>&times;</span>
@@ -119,15 +123,15 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                   </GridContainer>
 
                                   <GridContainer>
-                                    <GridItem xs={12} sm={12} md={6}>
+                                    <GridItem xs={12} sm={6} md={6}>
                                        <div style={{margin:'0% 0% 0% 0%',color:'blue'}}>
-                                          <span style={{marginRight:'5%',fontSize:'1.2vw'}}>Avez-vous 18 ans?</span>
+                                          <span style={{marginRight:'5%',fontSize:'100%'}}>Avez-vous 18 ans?</span>
                                           <img src={ins1} width='12%' />
                                       </div>
                                     </GridItem>
 
-                                    <GridItem xs={12} sm={12} md={6}>
-                                       <div style={{margin:'0% 0% 5% 0%',fontSize:'1.2vw'}}>
+                                    <GridItem xs={12} sm={6} md={6}>
+                                       <div style={{margin:'0% 0% 5% 0%',fontSize:'100%'}}>
                                             <span style={{color:'blue'}}>Quel est votre niveau?</span>
                                           
                                       </div>
@@ -135,28 +139,29 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                   </GridContainer>
 
                                   <GridContainer>
-                                    <GridItem xs={12} sm={12} md={6}>
+                                    <GridItem xs={12} sm={6} md={6}>
                                       
                                      <div>
                                          <input type='checkbox' style={{
                                                 border:'2px solid #002495',
                                                 width:'10%',
                                                 height:'15px'}} />
-                                         <span style={{color:'blue',fontSize:'1.2vw'}}>Je confirme avoir plus de 18 ans</span>
+                                         <span style={{color:'blue',fontSize:'100%'}}>Je confirme avoir plus de 18 ans</span>
                                         
                                      </div>
                                     </GridItem>
-                                    <GridItem xs={12} sm={12} md={6}>
+                                    <GridItem xs={12} sm={6} md={6}>
                                       
                                      <div>
                                           <select name="pets" id="pet-select">
-                                                <option value="">Niveau</option>
-                                                <option value="dog">Niveau 1</option>
-                                                <option value="cat">Niveau 2</option>
-                                                <option value="hamster">Niveau 3</option>
-                                                <option value="parrot">Niveau 3</option>
-                                                <option value="spider">Niveau 4</option>
-                                                <option value="goldfish">Niveau 5</option>
+                                               
+                                                <option value="dog">6ieme</option>
+                                                <option value="cat">5ieme</option>
+                                                <option value="hamster">4ieme</option>
+                                                <option value="parrot">3ieme</option>
+                                                <option value="spider">2nd</option>
+                                                <option value="goldfish">1ere</option>
+                                                <option value="goldfish">Tle</option>
                                         </select>
                                         
                                      </div>
@@ -170,7 +175,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                             <div style={{
                                                 margin:'2% 2% 0% 0%',
                                                 color:'blue',
-                                                fontSize:'1.5vw'}}><strong style={{marginRight:'2%'}}>Informations personnelles</strong> 
+                                                fontSize:'100%'}}><strong style={{marginRight:'2%'}}>Informations personnelles</strong> 
                                                 <img src={ins2} width='5%'/>
                                             </div>
                                         
@@ -182,7 +187,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
 
 
                                   <GridContainer>
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={4} md={4}>
                                       
                                      <div style={{width:'100%',cursor:'pointer'}}>
                                             Nom
@@ -195,7 +200,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                      </div>
                                     </GridItem>
                                      
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={4} md={4}>
                                      <div style={{width:'100%',cursor:'pointer'}}>
                                         Prénom
                                          <input type='text' placeholder="" style={{
@@ -206,7 +211,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                          
                                      </div>
                                     </GridItem>
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={4} md={4}>
                                      
                                      <div style={{width:'100%',cursor:'pointer'}}>
                                         Email
@@ -221,7 +226,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                   </GridContainer>
 
                                   <GridContainer>
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={4} md={4}>
                                       
                                      <div style={{width:'100%',cursor:'pointer'}}>
                                         Téléphone
@@ -233,7 +238,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                          
                                      </div>
                                     </GridItem>
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={4} md={4}>
                                      <div style={{width:'100%',cursor:'pointer'}}>
                                       Ville
                                          <input type='text'  style={{
@@ -244,7 +249,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                          
                                      </div>
                                     </GridItem>
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={4} md={4}>
                                      <div style={{width:'100%',cursor:'pointer'}}>
                                        Adresse
                                          <input type='text' style={{
@@ -258,7 +263,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                   </GridContainer>
 
                                    <GridContainer>
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={4} md={4}>
                                       
                                      <div style={{width:'100%',cursor:'pointer'}}>
                                      Mot de passe
@@ -270,7 +275,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                          
                                      </div>
                                     </GridItem>
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={4} md={4}>
                                      <div style={{width:'100%',cursor:'pointer'}}>
                                      Confirmer mot de passe
                                          <input type='text'  style={{
@@ -281,13 +286,16 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                          
                                      </div>
                                     </GridItem>
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={4} md={4}>
                                      <div style={{
                                                 margin:'9% 0% 0% 0%',
                                                 width:'100%',
                                                 height:'45px',
                                                 backgroundColor:'#c7d0d8'}}>
-                                            Recapchat
+                                          {/*  <ReCAPTCHA
+                                                sitekey="Your client site key"
+                                                onChange={onChange}
+                                            />*/}
                                       </div>
                                     </GridItem>
                                   </GridContainer>
@@ -319,7 +327,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                     <GridItem xs={12} sm={12} md={4}>
                                          Date d'expiration
                                       <GridContainer>
-                                          <GridItem xs={12} sm={12} md={6}>
+                                          <GridItem xs={12} sm={6} md={6}>
                                                <input type='text' placeholder="MM" style={{
                                                 border:'2px solid #002495',
                                                 width:'100%',
@@ -329,7 +337,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                          
                     
                                          
-                                          <GridItem xs={12} sm={12} md={6}>
+                                          <GridItem xs={12} sm={6} md={6}>
                                                <input type='text' placeholder="YY" style={{
                                                 border:'2px solid #002495',
                                                 width:'100%',
@@ -389,7 +397,7 @@ conditions d'utilisation de Online Nohellef</span>
                                           paddingTop:'2%'
                                         }}>
                                 
-                                <span className="text" style={{fontSize:'1.2vw',color:'white'}}>M'inscrire</span>
+                                <span className="text" style={{fontSize:'20px',color:'white'}}>M'inscrire</span>
                               </div>
                                     </div>
                                       

@@ -309,7 +309,7 @@ const AccountContent = () => {
                                     backgroundColor:'#9AA7B2',
                                     height:'100px',
                                     margin:'0% 10% 2% 5%',
-                                    fontSize:'1.2vw',
+                                    fontSize:'100%',
                                     padding:'5% 5% 0% 0%'
                                   }}>
                                     <ul>

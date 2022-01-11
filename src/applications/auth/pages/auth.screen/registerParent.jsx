@@ -124,7 +124,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                             <div style={{
                                                 margin:'2% 2% 0% 0%',
                                                 color:'blue',
-                                                fontSize:'1.5vw'}}><strong style={{marginRight:'2%'}}>Informations personnelles</strong> 
+                                                fontSize:'100%'}}><strong style={{marginRight:'2%'}}>Informations personnelles</strong> 
                                                 <img src={ins2} width='3%'/>
                                             </div>
                                         
@@ -136,7 +136,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
 
 
                                   <GridContainer>
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={4} md={4}>
                                       
                                      <div style={{width:'100%',cursor:'pointer'}}>
                                             Nom
@@ -149,7 +149,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                      </div>
                                     </GridItem>
                                      
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={4} md={4}>
                                      <div style={{width:'100%',cursor:'pointer'}}>
                                         Prénom
                                          <input type='text' placeholder="" style={{
@@ -160,7 +160,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                          
                                      </div>
                                     </GridItem>
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={4} md={4}>
                                      
                                      <div style={{width:'100%',cursor:'pointer'}}>
                                         Email
@@ -175,7 +175,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                   </GridContainer>
 
                                   <GridContainer>
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={4} md={4}>
                                       
                                      <div style={{width:'100%',cursor:'pointer'}}>
                                         Téléphone
@@ -187,7 +187,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                          
                                      </div>
                                     </GridItem>
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={4} md={4}>
                                      <div style={{width:'100%',cursor:'pointer'}}>
                                       Ville
                                          <input type='text'  style={{
@@ -198,7 +198,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                          
                                      </div>
                                     </GridItem>
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={4} md={4}>
                                      <div style={{width:'100%',cursor:'pointer'}}>
                                        Adresse
                                          <input type='text' style={{
@@ -212,7 +212,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                   </GridContainer>
 
                                    <GridContainer>
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={6} md={4}>
                                       
                                      <div style={{width:'100%',cursor:'pointer'}}>
                                      Mot de passe
@@ -224,7 +224,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                          
                                      </div>
                                     </GridItem>
-                                    <GridItem xs={12} sm={12} md={4}>
+                                    <GridItem xs={12} sm={6} md={4}>
                                      <div style={{width:'100%',cursor:'pointer'}}>
                                      Confirmer mot de passe
                                          <input type='text'  style={{
@@ -245,7 +245,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                        <div style={{
                                         margin:'2% 2% 0% 0%',
                                         color:'blue',
-                                        fontSize:'1.5vw'}}><strong style={{marginRight:'2%'}}>Informations bancaire</strong>
+                                        fontSize:'100%'}}><strong style={{marginRight:'2%'}}>Informations bancaire</strong>
                                          <img src={mpay} width='5%'/>
                                         </div>
                                             
@@ -265,7 +265,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                     <GridItem xs={12} sm={12} md={4}>
                                          Date d'expiration
                                       <GridContainer>
-                                          <GridItem xs={12} sm={12} md={6}>
+                                          <GridItem xs={12} sm={6} md={6}>
                                                <input type='text' placeholder="MM" style={{
                                                 border:'2px solid #002495',
                                                 width:'100%',
@@ -275,7 +275,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                          
                     
                                          
-                                          <GridItem xs={12} sm={12} md={6}>
+                                          <GridItem xs={12} sm={6} md={6}>
                                                <input type='text' placeholder="YY" style={{
                                                 border:'2px solid #002495',
                                                 width:'100%',
@@ -329,7 +329,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                           paddingTop:'2%'
                                         }}>
                                 
-                                <span className="text" style={{fontSize:'1.2vw',color:'white'}}>Continuer</span>
+                                <span className="text" style={{fontSize:'20px',color:'white'}}>Continuer</span>
                                 <span style={{marginLeft:'5%'}}><img src={go1} width='10%'/></span>
                               </div>
                                     </div>

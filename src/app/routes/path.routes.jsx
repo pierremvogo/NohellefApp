@@ -8,6 +8,7 @@ const ROUTES = {
     PARENT : "/parent/dashboard",
     ADMIN : "/admin/dashboard",
     SUP_ADMIN : "/admin/sup/dashboard",
+    VIDEO_CHAT: "/room/chat",
     CONTACT : "/contact",
     ABOUT : "/about",
     PAYMENT_PROCESS : "/process/payment",

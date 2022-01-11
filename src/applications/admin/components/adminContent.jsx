@@ -21,6 +21,7 @@ const AdminContent = () => {
   const [loading, serLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(2);
   const [postPerPage, setPostPerPage] = useState(4);
+  const [displayResponse, setDisplayResponse] = useState("none");
 
   useEffect(()=>{
     setPosts(data);
@@ -185,6 +186,9 @@ const AdminContent = () => {
       courseSubjet:'Mathématiques'
     },
   ];
+  const handleResponse = () => {
+    setDisplayResponse('flex');
+  }
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
@@ -225,9 +229,18 @@ const AdminContent = () => {
                     </GridContainer>
                     <GridContainer>
                        <GridItem xs={12} sm={12} md={12}>
-                          <div style={{
+                        <GridContainer style={{display:displayResponse}}>
+                          <GridItem xs={12} sm={12} md={12}>
+                            <input type="text" placeholder="Votre réponse" 
+                            style={{
+                                width:'100%',border:'1px solid blue',height:'40px',borderRadius:'10px'}} />
+                          </GridItem>
+                        </GridContainer>
+                        <GridContainer>
+                          <GridItem xs={12} sm={12} md={12}>
+                            <div style={{
                             float:'right',
-                            marginBottom: '2%',
+                            margin: '2% 0% 2% 0%',
                             backgroundColor: '#f8db52',
                             borderRadius: '10px',
                             borderBottom: '2px solid #002495',
@@ -239,10 +252,13 @@ const AdminContent = () => {
                             cursor: 'pointer',
                             textAlign:'center',
                             paddingTop:'3px'
-                          }}>
+                          }} onClick={handleResponse}>
      
-                                <span className="text" style={{fontSize:'1.1vw'}}>Repondre</span>
+                                <span className="text" style={{fontSize:'100%'}}>Repondre</span>
                               </div>
+                          </GridItem>
+                        </GridContainer>
+                          
                           
                       </GridItem>
                     </GridContainer>

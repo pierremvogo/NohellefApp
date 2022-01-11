@@ -4,6 +4,9 @@ import GridItem from "../Grid/GridItem.js";
 import GridContainer from "../Grid/GridContainer.js";
 import Card from "../Card/Card.js";
 import CardHeader from "../Card/CardHeader.js";
+import faceb from '../../../assets/images/faceb.png';
+import insta from '../../../assets/images/insta.png';
+import tweet from '../../../assets/images/tweet.png';
 
 const Footer = () => {
     return (
@@ -32,11 +35,11 @@ const Footer = () => {
                                </div>
                             </GridItem>
                              <GridItem xs={4} sm={4} md={4}>
-                               <div style={{textAlign:'left'}}>
+                               <div style={{textAlign:'fleft'}}>
                                    <h7>Réseaux sociaux</h7>
-                                   <p>Facebook</p>
-                                   <p>Instagram</p>
-                                   <p>Tweeter</p>
+                                   <p>Facebook <img src={faceb} width='5%' style={{marginLeft:'2%'}} /></p>
+                                   <p>Instagram <img src={insta} width='5%' style={{marginLeft:'2%'}} /></p>
+                                   <p>Tweeter <img src={tweet} width='5%' style={{marginLeft:'5%'}} /></p>
                                </div>
                             </GridItem>
                         </GridContainer>

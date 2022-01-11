@@ -4,7 +4,7 @@
     border-radius: 15px;
     border-bottom: 2px solid blue;
     border-right:  2px solid blue;
-    height: 60px;
+    height: 53px;
     width: 100%;
     cursor: pointer;
 }
@@ -16,11 +16,11 @@
     margin-bottom: 5%;
 }
 .text{
-    font-size: 1vw;
+    font-size: 90%;
     color: black;
 }
 .dash-navitem{
-    font-size: 1vw;
+    font-size: 100%;
     text-align: center;
     cursor: pointer;
 }

@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import PrivateRoute from './private.routes';
 import PublicRoute from './public.routes';
 import ROUTES from './path.routes';
-
+import { ContextProvider } from '../../SocketContext.js';
 
 import Home from '../../applications/home/pages/home.screen/home';
 import StudentPage from '../../applications/student/pages/dashboard.screen/dashboard.jsx';
@@ -15,6 +15,7 @@ import TutorPage from '../../applications/tutor/pages/dashboard.screen/dashboard
 import Login from '../../applications/auth/pages/auth.screen/login.screen.jsx';
 import ForgotPassword from '../../applications/auth/pages/auth.screen/forgotPassword.screen.jsx';
 import ResetPassword from '../../applications/auth/pages/auth.screen/resetPassword.screen.jsx';
+import VideoChat from '../../applications/videoChat/pages/videoChat.screen/videoChat.screen.jsx';
 
 const MainRoute = ({user,isRestricted}) =>{
     
@@ -69,6 +70,13 @@ const MainRoute = ({user,isRestricted}) =>{
                     component={TutorPage}
                     path={ROUTES.TUTOR}
                 />
+                <ContextProvider>
+                    <Route 
+                        exact
+                        component={VideoChat}
+                        path={ROUTES.VIDEO_CHAT} 
+                    />
+                </ContextProvider>
 
             </PublicRoute>
         </Switch>

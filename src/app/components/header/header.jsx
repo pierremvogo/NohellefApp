@@ -23,6 +23,71 @@ const Header = ({error,onChildClickConnexion,onChildClickRegister,isDashboard,is
             onChildClickRegister(e.target.name);
     }
 
+    function changeStyle1(id) {
+        let element = document.getElementById(id);
+        if(id=="dash1"){
+            element.style.borderRadius = "3px 3px 3px 3px";
+            element.style.padding = "px";
+            element.style.border = "2px solid #DD1B16";
+            let tab = [
+                document.getElementById('dash2'),
+                document.getElementById('dash3'),
+                document.getElementById('dash4'),
+            ]
+            for(var i of tab){
+                i.style.borderRadius = ""
+                i.style.width = ""
+                i.style.border = ""
+            }
+        }
+        else if(id=="dash2"){
+            element.style.borderRadius = "3px 3px 3px 3px";
+            element.style.padding = "1px";
+            element.style.border = "2px solid #DD1B16";
+            let tab = [
+                document.getElementById('dash1'),
+                document.getElementById('dash3'),
+                document.getElementById('dash4'),
+            ]
+            for(var i of tab){
+                i.style.borderRadius = ""
+                i.style.width = ""
+                i.style.border = ""
+            }
+        }
+        else if(id=="dash3"){
+            element.style.borderRadius = "3px 3px 3px 3px";
+            element.style.padding = "1px";
+            element.style.border = "2px solid #DD1B16";
+            let tab = [
+                document.getElementById('dash1'),
+                document.getElementById('dash2'),
+                document.getElementById('dash4'),
+            ]
+            for(var i of tab){
+                i.style.borderRadius = ""
+                i.style.width = ""
+                i.style.border = ""
+            }
+        }
+        else if(id=="dash4"){
+            element.style.borderRadius = "3px 3px 3px 3px";
+            element.style.padding = "1px";
+            element.style.border = "2px solid #DD1B16";
+            let tab = [
+                document.getElementById('dash1'),
+                document.getElementById('dash2'),
+                document.getElementById('dash3'),
+            ]
+            for(var i of tab){
+                i.style.borderRadius = ""
+                i.style.width = ""
+                i.style.border = ""
+            }
+        }
+
+    }
+
     return(
 
        
@@ -47,13 +112,13 @@ const Header = ({error,onChildClickConnexion,onChildClickRegister,isDashboard,is
                             <div className="sidebar-brand-text mx-3"><sup></sup></div>
                         </div>
 
-                        <ul class="navbar-nav" style={{marginLeft:`${isDashboard? '35%' :'350px'}`, fontFamily:'sans-serif',fontSize:'15px'}}>
+                        <ul class="navbar-nav" style={{marginLeft:`${isDashboard? '35%' :'260px'}`, fontFamily:'sans-serif',fontSize:'90%'}}>
                             {isDashboard?<span className="nav-menu" onClick={()=>console.log('')}>Dashboard</span>  : ''}
-                            <span className="nav-menu" onClick={()=>console.log('')}>Qui sommes nous?</span>  
-                            <span className="nav-menu" onClick={()=>console.log('')}>Nos classes</span> 
-                            {isDashboard?<span className="nav-menu" onClick={()=>console.log('')}>Nos Enseignants</span>  : ''}
-                            {isDashboard?'':<span className="nav-menu" onClick={()=>console.log('')}>Nos matières</span>}
-                            <span className="nav-menu" onClick={()=>console.log('')}>Nos offres</span>
+                            <span id="dash1" className="nav-menu" onClick={()=>changeStyle1('dash1')}>Qui sommes nous?</span>  
+                            <span id="dash2" className="nav-menu" onClick={()=>changeStyle1('dash2')}>Nos classes</span> 
+                            {isDashboard?'':<span id="dash3" className="nav-menu" onClick={()=>changeStyle1('dash3')}>Nos Enseignants</span>}
+                            {!isDashboard?'':<span  className="nav-menu" onClick={()=>console.log('')}>Nos matières</span>}
+                            <span id="dash4" className="nav-menu" onClick={()=>changeStyle1('dash4')}>Nos offres</span>
                             {isDashboard?'': <span className="nav-menu" style={{
                                 borderRadius:"5px 5px 5px 5px",
                                 textAlign:'center',

@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect } from 'react';
+import React, {useContext, useRef, useState, useEffect } from 'react';
 import './dashboard.css';
 import Avatar   from 'react-avatar';
 import Button from '../../../../app/components/buttons/button';
@@ -51,14 +51,15 @@ import Notifications from "../../../../app/components/Notifications/notification
 import 'react-notifications/lib/notifications.css';
 import io from 'socket.io-client';
 import {NotificationManager,NotificationContainer} from 'react-notifications';
-import Chat from "../../../../app/components/chat/chat.jsx";
+import ChatTutor from "../../../../app/components/chatTutor/chatTutor.jsx";
 import ScrollToBottom from "react-scroll-to-bottom";
-
+import { SocketContext } from '../../../../SocketContext.js';
+import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessionId.jsx";
+import mychat from "../../../../assets/images/dashboard/mychat.png";
 //5271ff 
 //ffce52 
  const socket = io.connect("http://localhost:3001");
-const DashboardStudent = () => {
-   
+ const DashboardStudent = () => {
     const [isAccountContent, setIsAccountContent] = useState(false);
     const [isChooseTutor, setIsChooseTutorContent] = useState(false);
     const [isConferenceContent, setIsConferenceContent] = useState(false);
@@ -68,17 +69,20 @@ const DashboardStudent = () => {
     const [isPaymentContent, setIsPaymentContent] = useState(false);
     const [isPaymentResourceContent, setIsPaymentResourceContent] = useState(false);
     const [showModal,setShowModal] = useState(false);
-    const [remoteUsername, setRemoteUsername] = useState("pierre");
-    const [room, setRoom] = useState("123");
+    const [remoteUsername, setRemoteUsername] = useState("pierre mvogo");
+    const [remoteImage, setRemoteImage] = useState(im5);
     const [username, setUsername] = useState("ngono");
-    const [showChatModal, setShowChatModal] = useState(true);
-    const [displayAsk, setDisplayAsk] = useState("flex");
-    const [messageList, setMessageList] = useState({});
+    const [showChatModal, setShowChatModal] = useState(false);
+    const [displayAsk, setDisplayAsk] = useState("none");
+    const [messageList, setMessageList] = useState([]);
     const [countBadge, setCountBadge] = useState(0);
     const [showBadge,setShowBadge] = useState(false);
-    const [studentId, setStudentId] = useState(123);
-    const [tutorId, setTutorId] = useState(12345);
-    let dataList = [];
+    const [studentId, setStudentId] = useState("student");
+    const [tutorId, setTutorId] = useState("tutor");
+    const [room, setRoom] = useState(tutorId + studentId);
+    const [statusConnection,setStatusConnection] = useState(false);
+    const [me, setMe] = useState('');
+    const [dataList,setDataList] = useState([]);
 
     const joinRoom = () => {
     const userData = {
@@ -89,8 +93,40 @@ const DashboardStudent = () => {
              };
             }
 
+        const handleCallback = (childData) =>{
+           
+            
+         }
 
      useEffect(()=>{
+        socket.emit("username",username);
+        joinRoom();
+        socket.on('me', (id) => {
+            setMe(id);
+            setStatusConnection(true);
+            console.log('My ID',id);
+        });
+        socket.on("disconnectMe", ()=>{
+            setStatusConnection(false);
+        });
+
+        socket.on("notification", (data)=>{
+            if(data.role !== 'tutor' && !showChatModal){
+                dataList.push(dataList.concat(data));
+                setShowBadge(true,setCountBadge(dataList.length));
+                console.log("MY NOTIFICATION TUTOR", data);
+            }
+           
+            
+        });
+        
+            for(data of dataList){
+                if(data.message !== ""){
+                    setDataList(dataList);
+                    console.log("list message",dataList);
+                }
+            }
+       
         var element1 = document.getElementById("myDiv1");
         var element2 = document.getElementById("dash1");
         element2.style.borderRadius = "3px 3px 3px 3px";
@@ -113,6 +149,7 @@ const DashboardStudent = () => {
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
+                document.getElementById('dash5'),
                 
             ]
             for(var i of tab2){
@@ -120,8 +157,14 @@ const DashboardStudent = () => {
                 i.style.width = ""
                 i.style.border = ""
             }
+            return function cleanup () {
+            return;
+        } 
+    },[]);
 
-    },[])
+     const handleChat = () => {
+        setShowChatModal(true,setShowBadge(false),setDisplayAsk("flex"));
+     }
    
     function menuToggle(){
         const toggleMenu = document.querySelector('.menu');
@@ -135,7 +178,7 @@ const DashboardStudent = () => {
    const  createNotification = (type) => {
     console.log(type);
     if(showBadge){
-        return () => {
+            return () => {
       switch (type) {
         case 'info':
           NotificationManager.info(
@@ -143,11 +186,11 @@ const DashboardStudent = () => {
             <Avatar 
                 size="30"
                 round={true}
-                src={im5}
+                src={remoteImage}
                 name='logo'
             />
             <span style={{margin:'0% 0% 0% 5%'}}>{remoteUsername}</span></div>,'Nouveau Message',3000,() =>{
-                    openModal();
+                    openModal('badge');
                   });
           break;
         case 'success':
@@ -167,6 +210,7 @@ const DashboardStudent = () => {
     return;
 }
     
+    
   };
 
 
@@ -175,60 +219,45 @@ const DashboardStudent = () => {
 
 const ModalChat = () => {
     return(
-      <div draggable="true" className="modal-content" id='cont'
+      <div className="modal-content" id='cont'
         style={{
-            width: "30%",
-            height: "80%",
-            cursor:'move',
+            width: "100%",
+            height: "100%",
             justifyContent: "center",
             display: displayAsk,
             alignItems: "center",
             zIndex: "300000",
             position: "absolute",
-            backgroundColor: "transparent",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
             border:'none',
-            top:"10%",
-            left:"70%",
+            top:"0%",
+            left:"0%",
             }}
       >
       <GridContainer>
           <GridItem xs={12} sm={12} md={12} style={{
                                         backgroundColor:'#FFCE52',
                                         borderRadius:'20px',
-                                        height:'105%'}}>
+                                        height:'105%',
+                                        }}>
               <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
                       <span className='close' onClick={()=>closeModal()}>&times;</span>
+
                   </GridItem>
-              </GridContainer>
-              <GridContainer>
-                  <GridItem xs={4} sm={4} md={4}>
-                      <Avatar style={{margin:'0% 0% 0% 50%'}}
-                            size="30"
-                            round={true}
-                            src={im5}
-                            name='logo'
-                        />
-                  </GridItem>
-                  <GridItem xs={4} sm={4} md={4}>
-                      {remoteUsername}
-                  </GridItem>
-                  <GridItem xs={4} sm={4} md={4}>
-                      <div className="online"></div>
-                  </GridItem>
-              </GridContainer>
-              <GridContainer>
-                  <GridItem xs={12} sm={12} md={12}>
-                      <Chat 
+                  <ChatTutor 
+                        role={'tutor'}
                         socket={socket} 
+                        id={me}
+                        messageListd={dataList}
                         username={username} 
-                        room={room}  
-                        messageListd={messageList}  
-                        studentId={studentId}
-                        tutorId={tutorId}
-                        isRole={'tutor'}
+                        room={room}
+                        callBackParent={handleCallback}
+                        remoteImage={remoteImage}
+                        remoteUsername={remoteUsername}
+                        isConnected={statusConnection}                   
                       />
-                  </GridItem>
               </GridContainer>
           </GridItem>
       </GridContainer>
@@ -237,12 +266,14 @@ const ModalChat = () => {
   };
             
   function closeModal(){
-    setShowBadge(false)
+      setShowBadge(false);
       setShowChatModal(false,setDisplayAsk("none"));
      
   }
-  function openModal(){
-     setShowChatModal(true, setDisplayAsk("flex")); 
+  function openModal(type){
+    if(type=="badge"){
+        setShowBadge(false);
+    }setShowChatModal(true, setDisplayAsk("flex")); 
   }
 
    
@@ -500,6 +531,7 @@ const ModalChat = () => {
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
+                document.getElementById('dash5'),
                 
             ]
             for(var i of tab){
@@ -516,6 +548,7 @@ const ModalChat = () => {
                 document.getElementById('dash1'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
+                document.getElementById('dash5'),
               
             ]
             for(var i of tab){
@@ -532,6 +565,7 @@ const ModalChat = () => {
                 document.getElementById('dash1'),
                 document.getElementById('dash2'),
                 document.getElementById('dash4'),
+                document.getElementById('dash5'),
                
             ]
             for(var i of tab){
@@ -548,6 +582,23 @@ const ModalChat = () => {
                 document.getElementById('dash1'),
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
+                document.getElementById('dash5'),
+                
+            ]
+            for(var i of tab){
+                i.style.borderRadius = ""
+                i.style.width = ""
+                i.style.border = ""
+            }
+        }  else if(id=="dash5"){
+            element.style.borderRadius = "3px 3px 3px 3px";
+            element.style.width = "100%";
+            element.style.border = "2px solid #DD1B16";
+            let tab = [
+                document.getElementById('dash1'),
+                document.getElementById('dash2'),
+                document.getElementById('dash3'),
+                document.getElementById('dash4'),
                 
             ]
             for(var i of tab){
@@ -588,7 +639,7 @@ const ModalChat = () => {
                               <div className="side-content siden1" id="myDiv1" onClick={()=>changeStyle('myDiv1')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={tu1}
                                         name='logo'
@@ -607,7 +658,7 @@ const ModalChat = () => {
                                 <div className="side-content" id="myDiv2" onClick={()=>changeStyle('myDiv2')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={tut1}
                                         name='logo'
@@ -624,7 +675,7 @@ const ModalChat = () => {
                                <div className="side-content" id="myDiv3" onClick={()=>changeStyle('myDiv3')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={d3}
                                         name='logo'
@@ -641,7 +692,7 @@ const ModalChat = () => {
                                <div className="side-content" id="myDiv4" onClick={()=>changeStyle('myDiv4')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={d4}
                                         name='logo'
@@ -704,25 +755,17 @@ const ModalChat = () => {
                         <GridItem xs={12} sm={12} md={2}>
                             <div id="dash1" className='dash-navitem dashn1' onClick={()=>changeStyle1('dash1')}>Dashboard</div>
                         </GridItem>
-                       
                         <GridItem xs={12} sm={12} md={2}>
-                             <div id="dash2" className='dash-navitem' onClick={()=>changeStyle1('dash2')}>Nos offres</div>
+                             <div id="dash2" className='dash-navitem' onClick={()=>changeStyle1('dash2')}>Qui sommes-nous?</div>
                         </GridItem>
                         <GridItem xs={12} sm={12} md={2}>
-                             <div id="dash3" className='dash-navitem' onClick={()=>changeStyle1('dash3')}>Nos classes</div>
+                             <div id="dash3" className='dash-navitem' onClick={()=>changeStyle1('dash3')}>Nos offres</div>
                         </GridItem>
                         <GridItem xs={12} sm={12} md={2}>
-                             <div id="dash4" className='dash-navitem' onClick={()=>changeStyle1('dash4')}>Nos Enseignants</div>
+                             <div id="dash4" className='dash-navitem' onClick={()=>changeStyle1('dash4')}>Nos classes</div>
                         </GridItem>
                         <GridItem xs={12} sm={12} md={2}>
-                             <div style={{margin:'0% 0% 0% 25%'}}>
-                                        <button onClick={()=>openModal()} type="button" class="icon-button" style={{float:'left'}}>
-                                            <span class="material-icons"><img src={badge} width='100%' /></span>
-                                           {showBadge? <span class="icon-button__badge">{countBadge}</span> : ''}
-                                        </button>
-                                        <NotificationContainer />
-                                            
-                             </div>
+                             <div id="dash5" className='dash-navitem' onClick={()=>changeStyle1('dash5')}>Nos Enseignants</div>
                         </GridItem>
                          <GridItem xs={12} sm={12} md={2}>
                                         <Dropdown style={{top:'-15px'}}>
@@ -744,12 +787,7 @@ const ModalChat = () => {
                                                     </Dropdown.Toggle>
 
                                                     <Dropdown.Menu style={{backgroundColor:'#F8D04E',borderRadius:'10%'}}>
-                                                        <Dropdown.Item href="#" >
-                                                            <div style={{marginBottom:'5%'}}>
-                                                                    <img src={acc} width='15%'/>
-                                                                    <u>Mon compte</u>
-                                                            </div>
-                                                        </Dropdown.Item>
+                                                       
                                                         <Dropdown.Item href="#">
                                                             <div>
                                                                 <img src={dic} width='15%'/>
@@ -760,6 +798,26 @@ const ModalChat = () => {
                                                 </Dropdown>
                         </GridItem>
                        
+                    </GridContainer>
+
+                    <GridContainer>
+                        <GridItem xs={12} sm={12} md={3}>
+                            
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={3}>
+                            
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={3}>
+                            
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={3}>
+                        <div style={{margin:'0% 0% 0% 15%'}}>
+                            <div className="icon-button" onClick={handleChat}>
+                                <img src={mychat} width="50%" />
+                                {showBadge?<div className="icon-button__badge">{countBadge}</div>:""}
+                            </div>
+                        </div>
+                        </GridItem>
                     </GridContainer>
 
                           {isCourseContent?<CourseContent />:''}

@@ -23,6 +23,7 @@ import edit from '../../../assets/images/dashboard/edit.png';
 import Select from 'react-select';
 import './admin.css';
 import {Table} from 'react-bootstrap';
+import AddCourse from './addCourse.jsx';
 
 const TuteurContent = () => {
 	const [posts, setPosts] = useState([]);
@@ -31,6 +32,7 @@ const TuteurContent = () => {
 	const [display, setDisplay] = useState("flex");
 	const [showEditModal,setShowEditModal] = useState(false);
 	const [checked, setChecked] = useState(false);
+  const [lessonData, setLessonData] = useState([]);
 
 	useEffect(()=>{
 		setPosts(data);
@@ -50,7 +52,7 @@ const TuteurContent = () => {
       <div className="modal-content" id='cont'
         style={{
             width: "100%",
-            height: "4000px",
+            height: "100%",
             justifyContent: "center",
             display: display,
             alignItems: "center",
@@ -64,10 +66,11 @@ const TuteurContent = () => {
             }}
       >
            <div className="contain" id='myContain'>
-                <div style={{display:'inline-block', margin:'3%', fontSize:'1.5vw'}}>
-                    
-                </div><span className='close' onClick={()=>closeModal()}>&times;</span>
-                <AddTutor /> 
+                <div style={{display:'inline-block', margin:'3%', fontSize:'100%', width:'170%'}}>
+                    <span className='close' onClick={()=>closeModal()}>&times;</span>
+                    <AddCourse lessonData={lessonData} /> 
+                </div>
+               
             </div>
           
       </div>
@@ -89,7 +92,12 @@ const TuteurContent = () => {
     setDisplay("none",setShowEditModal(false));
   }
 
-  const openModal=()=> {
+  const openModal=(isUpdate,dataLesson)=> {
+    if(isUpdate=="yess"){
+      setLessonData(dataLesson);
+    }else{
+      setLessonData([]);
+    }
     setDisplay("flex",setShowEditModal(true));
     }
 
@@ -103,6 +111,7 @@ const TuteurContent = () => {
     {
       id: 1,
       courseName: 'Algèbre linéaire',
+      nbLesson:'10',
       tutorName:"mvogo",
       speciality:"Mathematiques",
       activate: <input type="checkbox" />,
@@ -111,6 +120,7 @@ const TuteurContent = () => {
     {
       id: 2,
       courseName: 'Algèbre linéaire',
+      nbLesson:'10',
       tutorName:"mvogo",
       speciality:"Mathematiques",
       activate:<input type="checkbox" />,
@@ -118,7 +128,8 @@ const TuteurContent = () => {
     },
     {
       id: 3,
-     courseName: 'Algèbre linéaire',
+      courseName: 'Algèbre linéaire',
+       nbLesson:'10',
       tutorName:"mvogo",
       speciality:"Mathematiques",
       activate:<input type="checkbox" />,
@@ -127,6 +138,7 @@ const TuteurContent = () => {
     {
       id: 4,
      courseName: 'Algèbre linéaire',
+      nbLesson:'10',
       tutorName:"mvogo",
       speciality:"Mathematiques",
       activate:<input type="checkbox" />,
@@ -135,6 +147,7 @@ const TuteurContent = () => {
     {
       id: 5,
      courseName: 'Algèbre linéaire',
+      nbLesson:'10',
       tutorName:"mvogo",
       speciality:"Mathematiques",
       activate:<input type="checkbox" />,
@@ -143,6 +156,7 @@ const TuteurContent = () => {
     {
       id: 6,
       courseName: 'Algèbre linéaire',
+       nbLesson:'10',
       tutorName:"mvogo",
       speciality:"Mathematiques",
       activate:<input type="checkbox" />,
@@ -152,6 +166,7 @@ const TuteurContent = () => {
     {
       id: 7,
       courseName: 'Algèbre linéaire',
+       nbLesson:'10',
       tutorName:"mvogo",
       speciality:"Mathematiques",
       activate:<input type="checkbox" />,
@@ -245,6 +260,7 @@ const TuteurContent = () => {
                 <tr>
                   <th>#</th>
                   <th>Nom du cours</th>
+                  <th>Unités d'apprentissage</th>
                    <th>Spécialité</th>
                    <th>Nom du Tuteur</th>
                   <th>Activé</th>
@@ -257,11 +273,12 @@ const TuteurContent = () => {
                   <tr>
                     <td>{post.id}</td>
                     <td>{post.courseName}</td>
+                    <td>{post.nbLesson}</td>
                      <td>{post.speciality}</td>
                     <td>{post.tutorName}</td>
                    
                     <td>{post.activate}</td>
-                    <td><img src={post.edit} width='25%'/></td>
+                    <td style={{cursor:'pointer'}} onClick={()=>openModal("yess",post)}><img src={post.edit} width='25%'/></td>
                   </tr>
                   )
               })}

@@ -21,9 +21,12 @@ import Switch from "react-switch";
 import './admin.css';
 import {Table} from 'react-bootstrap';
 import chat from '../../../assets/images/dashboard/chat2.png';
+import {NotificationManager,NotificationContainer} from 'react-notifications';
+import io from 'socket.io-client';
+import Chat from "../../../app/components/chat/chat.jsx"
 
 
-
+const socket = io.connect("http://localhost:3001");
 const ApprenantContent = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,11 +35,40 @@ const ApprenantContent = () => {
   const [showEditModal,setShowEditModal] = useState(false);
   const [checked, setChecked] = useState(false);
 
+  const [username, setUsername] = useState("Alain");
+    const [showChatModal, setShowChatModal] = useState(false);
+    const [displayAsk, setDisplayAsk] = useState("none");
+    const [remoteUsername, setRemoteUsername] = useState("Mme Ngono");
+    const [remoteImage, setRemoteImage] = useState(im5);
+    const [countBadge, setCountBadge] = useState(1);
+    const [showBadge, setShowBadge] = useState(false);
+    const [messageList, setMessageList] = useState([]);
+    const [studentId, setStudentId] = useState("student");
+    const [supAdminId, setSupAdminId] = useState("supadmin");
+    const [room, setRoom] = useState(studentId+supAdminId);
+     const [statusConnection,setStatusConnection] = useState(false);
+
   useEffect(()=>{
+    socket.on('id', (status)=>{
+            setStatusConnection(status);
+            console.log("MYid",status);
+        })
     setPosts(data);
+    return function cleanup () {
+            return;
+        }
   },[])
 
-  const handleChange = (checked) => {
+  function closeModal(){
+      setShowChatModal(false,setDisplayAsk("none")); 
+  }
+
+  const openModal=(nameUser)=> {
+      setDisplayAsk("flex",setShowChatModal(true),setRemoteUsername(nameUser));
+    }
+    
+
+const handleChange = (checked) => {
     setChecked(checked)
   }
 
@@ -45,46 +77,64 @@ const ApprenantContent = () => {
     toggleMenu.classList.toggle('active')
   }
 
-   const ModalContentEdit  = () => {
+  const handleCallback = (childData) =>{
+           
+         }
+
+  const ModalChat = () => {
     return(
       <div className="modal-content" id='cont'
         style={{
-            width: "100%",
-            height: "4000px",
+            width: "30%",
+            height: "80%",
             justifyContent: "center",
-            display: display,
+            display: displayAsk,
             alignItems: "center",
             zIndex: "300000",
             position: "absolute",
-            overflow: "hidden",
-            backgroundColor: "rgb(0, 0, 0)",
-            backgroundColor: "rgba(0, 0, 0, 0.6)",
-            top:"0px",
-            left:"0px",
+            backgroundColor: "transparent",
+            border:'none',
+            top:"10%",
+            left:"70%",
             }}
       >
-           <div className="contain" id='myContain'>
-                <div style={{display:'inline-block', margin:'3%', fontSize:'1.5vw'}}>
-                    
-                </div><span className='close' onClick={()=>closeModal()}>&times;</span>
-                <AddTutor /> 
-            </div>
-          
+      <GridContainer>
+          <GridItem xs={12} sm={12} md={12} style={{
+                                        backgroundColor:'#FFCE52',
+                                        borderRadius:'20px',
+                                        height:'105%',
+                                         }}>
+              <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                      <span className='close' onClick={()=>closeModal()}>&times;</span>
+                  </GridItem>
+              </GridContainer>
+              
+              <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                      <Chat 
+                        socket={socket} 
+                        username={username} 
+                        room={room}
+                        callBackParent={handleCallback}
+                        remoteImage={remoteImage}
+                        remoteUsername={remoteUsername}
+                        isConnected={statusConnection}
+                     />
+                  </GridItem>
+              </GridContainer>
+          </GridItem>
+      </GridContainer>
       </div>
     )
   };
+
   const CheckBox =()=> {
     return(
         <input type='checkbox' />
       )
   };
-  function closeModal(){
-    setDisplay("none",setShowEditModal(false));
-  }
-
-  const openModal=()=> {
-    setDisplay("flex",setShowEditModal(true));
-    }
+  
 
     let data = [
     {
@@ -158,8 +208,7 @@ const ApprenantContent = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   return(
       <div className="container" style={{margin:'5% 0% 0% 0%'}}>
-
-      {showEditModal? <ModalContentEdit /> :'' } 
+      {showChatModal? <ModalChat />  : ''}
        <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
 
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
@@ -231,7 +280,7 @@ const ApprenantContent = () => {
                     <td>{post.userCity}</td>
                     <td>{post.userAddress}</td>  
                     <td>{post.userCode}</td>
-                    <td><img style={{cursor:'pointer'}} src={post.userChat} width='45%' /></td>
+                    <td onClick={()=>{openModal(post.userName)}}><img style={{cursor:'pointer'}} src={post.userChat} width='45%' /></td>
                   </tr>
                   )
               })}

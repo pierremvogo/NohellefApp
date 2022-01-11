@@ -21,14 +21,8 @@
         .nav-menu{
             margin: 2%;
             cursor: pointer;
-            font-size: 1vw;}
-            
-            .nav-menu:hover{
-                border:"2px solid red";
-                text-align:'center';
-                width:'20%';
-                border-radius:"5px 5px 5px 5px";
-            }
+            font-size: 100%;}
+    
 
             .nav-menu:last-child{
                 margin-left: auto;
@@ -37,6 +31,12 @@
                 color: blue;
                 margin: 50%;
             }
+
+.dash-navitem:hover{
+    border-radius: 3px 3px 3px 3px;
+    border: 2px solid #DD1B16;
+    padding: '1px';
+}
     
         
     

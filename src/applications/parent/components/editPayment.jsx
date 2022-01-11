@@ -17,7 +17,7 @@ import GridContainer from "../../../app/components/Grid/GridContainer.js";
 import Footer from "../../../app/components/footer/footer.jsx";
 import Avatar   from 'react-avatar';
 
-const EditPayment = ({error}) => {
+const EditPayment = ({error,paymentData}) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     const [loginForm, setLoginForm] = useState({username: "", password: "", remember: false})
@@ -91,7 +91,7 @@ const EditPayment = ({error}) => {
                                     <GridItem xs={12} sm={12} md={12}>
                                       
                                      <div style={{margin:'2% 0% 1% 0%',cursor:'pointer'}}>
-                                         <span style={{float:'left',marginRight:'5%'}}>Numero de carte</span>
+                                         <span style={{float:'left',marginRight:'5%'}}>Numéro de carte</span>
                                          <span><img src={mpay} width='10%' /></span>
                                      </div>
                                     </GridItem>
@@ -100,7 +100,7 @@ const EditPayment = ({error}) => {
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                        <div style={{margin:'0% 0% 5% 0%'}}>
-                                      <input type='text' placeholder="" value='***-***-***-***-9875' style={{
+                                      <input type='text' placeholder="" value={paymentData.cardNumber} style={{
                                         border:'2px solid #002495',
                                         width:'100%',
                                         height:'40px'}}/>
@@ -124,7 +124,7 @@ const EditPayment = ({error}) => {
                                         <GridContainer>
                                             <GridItem xs={12} sm={12} md={5}>
                                                 <div style={{margin:'0% 0% 5% 0%',width:'100%'}}>
-                                          <input type='text' placeholder="MM"  style={{
+                                          <input type='text' placeholder="MM" value={paymentData.cardExpireMounth}  style={{
                                            
                                             border:'2px solid #002495',
                                             width:'100%',
@@ -136,7 +136,7 @@ const EditPayment = ({error}) => {
                                             </GridItem>
                                             <GridItem xs={12} sm={12} md={5}>
                                                 <div style={{margin:'0% 0% 5% 0%'}}>
-                                                    <input type='text' placeholder="YY"  style={{
+                                                    <input type='text' placeholder="YY" value={paymentData.cardExpireYear}  style={{
                                                     border:'2px solid #002495',
                                                     width:'100%',
                                                     height:'40px'}}/>
@@ -160,7 +160,7 @@ const EditPayment = ({error}) => {
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                        <div style={{margin:'0% 0% 5% 0%'}}>
-                                      <input type='text' placeholder="" style={{
+                                      <input type='text' placeholder="Code" value={paymentData.cardCode} style={{
                                         border:'2px solid #002495',
                                         width:'100%',
                                         height:'40px'}}/>

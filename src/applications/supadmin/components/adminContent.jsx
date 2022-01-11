@@ -19,10 +19,14 @@ import im5 from '../../../assets/images/im5.png';
 import chat from '../../../assets/images/dashboard/chat2.png';
 import ipa from '../../../assets/images/dashboard/ip.png';
 import AddTutor from './addTutor.jsx';
+import {NotificationManager,NotificationContainer} from 'react-notifications';
+import io from 'socket.io-client';
+import Chat from "../../../app/components/chat/chat.jsx"
+import Adress from './adress.jsx';
 
 
 
-
+const socket = io.connect("http://localhost:3001");
 const AdminContent = () => {
   const [posts, setPosts] = useState([]);
   const [loading, serLoading] = useState(false);
@@ -31,12 +35,100 @@ const AdminContent = () => {
   const [display, setDisplay] = useState("flex");
   const [showEditModal,setShowEditModal] = useState(false);
 
-  useEffect(()=>{
-    setPosts(data);
-  },[])
-function closeModal(){
-    setDisplay("none",setShowEditModal(false));
+  const [username, setUsername] = useState("Alain");
+    const [showChatModal, setShowChatModal] = useState(false);
+    const [displayAsk, setDisplayAsk] = useState("none");
+    const [remoteUsername, setRemoteUsername] = useState("Mme Ngono");
+    const [remoteImage, setRemoteImage] = useState(im5);
+    const [countBadge, setCountBadge] = useState(1);
+    const [showBadge, setShowBadge] = useState(false);
+    const [messageList, setMessageList] = useState([]);
+    const [tutorId, setTutorId] = useState("tutor");
+    const [supAdminId, setSupAdminId] = useState("supadmin");
+    const [room, setRoom] = useState(tutorId+supAdminId);
+    const [statusConnection,setStatusConnection] = useState(false);
+    const [tutorName,setTutorName] = useState("");
+    const [isAdress, setIsAdress] = useState(false);
+
+    useEffect(()=>{
+      socket.on('id', (status)=>{
+            setStatusConnection(status);
+            console.log("MYid",status);
+        })
+        setPosts(data);
+        return function cleanup () {
+            return;
+        }
+      
+    },[])
+
+    
+
+  function closeModal(){
+   
+      setDisplayAsk("none",setShowEditModal(false));
   }
+
+  const openModal=(isAdress,nameTutor)=> {
+     if(isAdress=="adress"){
+        setIsAdress(true)
+     }else{
+      setIsAdress(false, setTutorName(nameTutor));
+     }
+    setShowEditModal(true,setDisplayAsk("flex"));
+   
+}
+    const handleCallback = (childData) =>{
+           
+         }
+
+  const ModalChat = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "30%",
+            height: "80%",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            backgroundColor: "transparent",
+            border:'none',
+            top:"10%",
+            left:"70%",
+            }}
+      >
+      <GridContainer>
+          <GridItem xs={12} sm={12} md={12} style={{
+                                        backgroundColor:'#FFCE52',
+                                        borderRadius:'20px',
+                                        height:'105%',
+                                         }}>
+              <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                      <span className='close' onClick={()=>closeModal()}>&times;</span>
+                  </GridItem>
+              </GridContainer>
+              
+              <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                      <Chat 
+                        socket={socket} 
+                        username={username} 
+                        room={room}
+                        callBackParent={handleCallback}
+                        remoteImage={remoteImage}
+                        remoteUsername={remoteUsername}
+                        isConnected={statusConnection}
+                     />
+                  </GridItem>
+              </GridContainer>
+          </GridItem>
+      </GridContainer>
+      </div>
+    )
+  };
    let data = [
     {
       id: 1,
@@ -218,7 +310,7 @@ function closeModal(){
       <div className="modal-content" id='cont'
         style={{
             width: "100%",
-            height: "4000px",
+            height: "100%",
             justifyContent: "center",
             display: display,
             alignItems: "center",
@@ -232,18 +324,17 @@ function closeModal(){
             }}
       >
            <div className="contain" id='myContain'>
-                <div style={{display:'inline-block', margin:'3%', fontSize:'1.5vw'}}>
-                    
-                </div><span className='close' onClick={()=>closeModal()}>&times;</span>
-                <AddTutor /> 
+                <div style={{display:'inline-block', margin:'3%', fontSize:'100%',width:'100%'}}>
+                    <span className='close' onClick={()=>closeModal()}>&times;</span>
+                     {isAdress?<Adress tutorName={tutorName}/>: <AddTutor /> }
+                </div>
+               
             </div>
           
       </div>
     )
   };
-  const openModal=()=> {
-    setDisplay("flex",setShowEditModal(true));
-    }
+ 
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
@@ -252,6 +343,7 @@ function closeModal(){
   return(
       <div className="container" style={{backgroundColor:'#eeeeee'}}>
       {showEditModal? <ModalContentEdit /> :'' }
+      {showChatModal? <ModalChat />  : ''}
        <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'5%'}}>
                             <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
@@ -297,7 +389,7 @@ function closeModal(){
                                           paddingTop:'5%'
                                         }} onClick={()=> openModal()}>
                                 
-                                <span className="text" style={{fontSize:'1.2vw',color:'white'}}>Ajouter</span>
+                                <span className="text" style={{fontSize:'100%',color:'white'}}>Ajouter</span>
                               </div>
                                     </div>
                           
@@ -333,8 +425,8 @@ function closeModal(){
                     <td>{post.adminEmail}</td>
                     <td>{post.adminRights}</td>
                     <td>{post.adminActivate}</td>
-                    <td><img style={{cursor:'pointer'}} src={post.adminAffect} width='15%'/></td>  
-                    <td><img style={{cursor:'pointer'}} src={post.adminChat} width='60%'/></td>
+                    <td onClick={()=>{openModal('adress',post.adminName)}}><img style={{cursor:'pointer'}} src={post.adminAffect} width='15%'/></td>  
+                    <td onClick={()=>{openModal('chat',post.adminName)}}><img style={{cursor:'pointer'}} src={post.adminChat} width='60%'/></td>
                   </tr>
                   )
               })}

@@ -17,7 +17,7 @@ import masterc from '../../../assets/images/dashboard/masterc.png';
 import visa from '../../../assets/images/dashboard/visa.png';
 import ReactSearchBox from "react-search-box";
 import Avatar   from 'react-avatar';
-
+import { Table } from 'react-bootstrap';
 import Pagination from './pagination.jsx';
 
 
@@ -28,13 +28,14 @@ const PaymentResourseContent = () => {
 	const [postPerPage, setPostPerPage] = useState(5);
   const [display, setDisplay] = useState("flex");
   const [showEditModal,setShowEditModal] = useState(false);
+  const [paymentData,setPaymentData] = useState([]);
 
   const ModalContentEdit  = () => {
     return(
       <div className="modal-content" id='cont'
         style={{
             width: "100%",
-            height: "4000px",
+            height: "100%",
             justifyContent: "center",
             display: display,
             alignItems: "center",
@@ -48,10 +49,11 @@ const PaymentResourseContent = () => {
             }}
       >
            <div className="contain" id='myContain'>
-                <div style={{display:'inline-block', margin:'3%', fontSize:'1.5vw'}}>
-                    
-                </div><span className='close' onClick={()=>closeModal()}>&times;</span>
-                <EditPayment /> 
+                <div style={{display:'inline-block', margin:'3%', fontSize:'100%'}}>
+                    <span className='close' onClick={()=>closeModal()}>&times;</span>
+                     <EditPayment paymentData={paymentData}/> 
+                </div>
+               
             </div>
           
       </div>
@@ -62,8 +64,12 @@ const PaymentResourseContent = () => {
     setDisplay("none",setShowEditModal(false));
   }
 
-  const openModal=()=> {
+  const openModal=(isUpdate,dataPayment)=> {
     setDisplay("flex",setShowEditModal(true));
+    if(isUpdate=="yess"){
+      setPaymentData(dataPayment);
+    }else{
+      setPaymentData([])}
     }
 
 
@@ -77,62 +83,89 @@ const PaymentResourseContent = () => {
       id: 1,
       cardNumber: "***_***_***_***-7785",
       cardImage: visa,
+      cardExpireMounth: "10",
+      cardExpireYear: "2020",
+      cardCode:'45823',
       cardType: "VISA",
       
     },
     {
       id: 2,
-      cardNumber: "***_***_***_***-8497",
-      cardImage: masterc,
-      cardType: "MasterCard",
+      cardNumber: "***_***_***_***-7785",
+      cardImage: visa,
+      cardExpireMounth: "10",
+      cardExpireYear: "2020",
+      cardCode:'45823',
+      cardType: "VISA",
     },
     {
       id: 3,
-      cardNumber: "***_***_***_***-8497",
+      cardNumber: "***_***_***_***-7785",
       cardImage: visa,
+      cardExpireMounth: "10",
+      cardExpireYear: "2020",
+      cardCode:'45823',
       cardType: "VISA",
     }
     ,
     {
       id: 4,
-      cardNumber: "***_***_***_***-8497",
-      cardImage: masterc,
-      cardType: "MasterCard",
+      cardNumber: "***_***_***_***-7785",
+      cardImage: visa,
+      cardExpireMounth: "10",
+      cardExpireYear: "2020",
+      cardCode:'45823',
+      cardType: "VISA",
     }
     ,
     {
       id: 5,
-      cardNumber: "***_***_***_***-8497",
+      cardNumber: "***_***_***_***-7785",
       cardImage: visa,
+      cardExpireMounth: "10",
+      cardExpireYear: "2020",
+      cardCode:'45823',
       cardType: "VISA",
     }
     ,
     {
       id: 6,
-      cardNumber: "***_***_***_***-8497",
-      cardImage: masterc,
-      cardType: "MasterCard",
+      cardNumber: "***_***_***_***-7785",
+      cardImage: visa,
+      cardExpireMounth: "10",
+      cardExpireYear: "2020",
+      cardCode:'45823',
+      cardType: "VISA",
     }
     ,
     {
       id: 7,
-      cardNumber: "***_***_***_***-8497",
-      cardImage: masterc,
-      cardType: "MasterCard",
+      cardNumber: "***_***_***_***-7785",
+      cardImage: visa,
+      cardExpireMounth: "10",
+      cardExpireYear: "2020",
+      cardCode:'45823',
+      cardType: "VISA",
     }
     ,
     {
       id: 8,
-      cardNumber: "***_***_***_***-8497",
-      cardImage: masterc,
-      cardType: "MasterCard",
+      cardNumber: "***_***_***_***-7785",
+      cardImage: visa,
+      cardExpireMounth: "10",
+      cardExpireYear: "2020",
+      cardCode:'45823',
+      cardType: "VISA",
     }
     ,
     {
       id: 9,
-      cardNumber: "***_***_***_***-8497",
-      cardImage: masterc,
-      cardType: "MasterCard",
+      cardNumber: "***_***_***_***-7785",
+      cardImage: visa,
+      cardExpireMounth: "10",
+      cardExpireYear: "2020",
+      cardCode:'45823',
+      cardType: "VISA",
     }
   ];
   // Get current posts
@@ -176,49 +209,57 @@ const PaymentResourseContent = () => {
                                           paddingTop:'5%'
                                         }} onClick={()=>openModal()}>
                                 
-                                <span className="text" style={{fontSize:'1.2vw',color:'white'}}>Ajouter</span>
+                                <span className="text" style={{fontSize:'100%',color:'white'}}>Ajouter</span>
                               </div>
                                     </div>
                             
                         </GridItem>
                     </GridContainer>
-
-                    <GridContainer style={{backgroundColor:'#eeeeee'}}>
-                       <GridItem xs={12} sm={12} md={4}>
-                         <p style={{textAlign:'center'}}><strong>Numéro de Carte</strong></p>
-                       </GridItem>
-                       <GridItem xs={12} sm={12} md={4}>
-                         <p style={{textAlign:'center'}}><strong>Type</strong></p>
-                       </GridItem>
-                       <GridItem xs={12} sm={12} md={4}>
-                         <p style={{textAlign:'center'}}><strong>Action</strong></p>
-                       </GridItem>
-                    </GridContainer>
-      {currentPosts.map((post,index)=>{ 
-              console.log("my post")
-              console.log(post)
-              return(
-			 <GridContainer style={{backgroundColor:'#eeeeee',margin:'15%'}} key={post.id}>
-			 					<GridItem xs={12} sm={12} md={4}>
-                      <div style={{textAlign:'center',display:'inline-block'}}> 
-                         <img src={post.cardImage} width='15%'/><span>{post.cardNumber}</span>
-                       </div>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                        <div style={{textAlign:'center'}}> {post.cardType} </div>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                <div style={{textAlign:'center'}}>
-                         <div>
-                               <img src={trash} width='15%' style={{marginRight:'5%',cursor:'pointer'}}/>
-                               <img onClick={()=>openModal()} src={edit} width='10%' style={{marginRight:'5%', color:'red',cursor:'pointer'}}/>
-                          </div>
-                        
-                      
-                </div>
-                </GridItem>
-        </GridContainer>)
-                    })}
+      <GridContainer style={{backgroundColor:'#eeeeee',width:'95%',textAlign:'center'}}> 
+                            <Table striped bordered hover variant="secondary">
+                                  <thead>
+                                    <tr>
+                                      <th>Numéro de Carte</th>
+                                      <th>Type</th>
+                                       <th>expiration(MM)</th>
+                                       <th>expiration(YY)</th>
+                                       <th>Code</th>
+                                       <th>Editer</th>
+                                       <th>Supprimer</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                  {currentPosts.map((post,index)=>{
+                                    return(
+                                      <tr>
+                                    
+                                        <td><img src={post.cardImage} width='15%'/><span>{post.cardNumber}</span></td>
+                                        <td>{post.cardType}</td>
+                                        <td>{post.cardExpireMounth}</td>
+                                        <td>{post.cardExpireYear}</td>
+                                        <td>{post.cardCode}</td>
+                                        <td>
+                                          <img 
+                                              onClick={()=>openModal("yess",post)} 
+                                              src={edit} 
+                                              width='45%' 
+                                              style={{cursor:'pointer'}}
+                                          />
+                                        </td>
+                                        <td>
+                                          <img 
+                                              src={trash} 
+                                              width='15%' 
+                                              style={{cursor:'pointer'}}
+                                           />
+                                        </td>
+                                      
+                                      </tr>
+                                      )
+                                  })}
+                                  </tbody>
+                                </Table>
+                              </GridContainer>
 
 
                     <GridContainer style={{backgroundColor:'#eeeeee',margin:'15%'}}>

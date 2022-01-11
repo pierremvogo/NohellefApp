@@ -24,6 +24,8 @@ import chat from '../../../assets/images/dashboard/chat2.png';
 import checkok from '../../../assets/images/dashboard/checkok.png';
 import checknone from '../../../assets/images/dashboard/checknone.png';
 import edit from '../../../assets/images/dashboard/edit.png';
+import AddFormule from './addFormule.jsx';
+import EditOffre from './editOffre.jsx';
 
 
 
@@ -34,6 +36,8 @@ const  FormulaireAbonnement = () => {
   const [display, setDisplay] = useState("flex");
   const [showEditModal,setShowEditModal] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [offreData, setOffreData] = useState([]);
+  const [isEditOffre, setIsEditOffre] = useState(false);
 
   useEffect(()=>{
     setPosts(data);
@@ -53,7 +57,7 @@ const  FormulaireAbonnement = () => {
       <div className="modal-content" id='cont'
         style={{
             width: "100%",
-            height: "4000px",
+            height: "100%",
             justifyContent: "center",
             display: display,
             alignItems: "center",
@@ -67,10 +71,11 @@ const  FormulaireAbonnement = () => {
             }}
       >
            <div className="contain" id='myContain'>
-                <div style={{display:'inline-block', margin:'3%', fontSize:'1.5vw'}}>
-                    
-                </div><span className='close' onClick={()=>closeModal()}>&times;</span>
-                <AddTutor /> 
+                <div style={{display:'inline-block', margin:'3%', fontSize:'100%', width:'120%'}}>
+                    <span className='close' onClick={()=>closeModal()}>&times;</span>
+                   {isEditOffre?<EditOffre offreData={offreData} />:<AddFormule />} 
+                </div>
+                
             </div>
           
       </div>
@@ -85,52 +90,42 @@ const  FormulaireAbonnement = () => {
     setDisplay("none",setShowEditModal(false));
   }
 
-  const openModal=()=> {
+  const openModal=(type,dataOffre)=> {
+    if(type=="editOffre"){
+      setIsEditOffre(true,setOffreData(dataOffre));
+    }else{
+      setIsEditOffre(false)
+    }
     setDisplay("flex",setShowEditModal(true));
     }
 
     let data = [
     {
       id: 1,
-      userProfile: <img src={checknone} width='15%'/>,
-      userName: <img src={checknone} width='15%'/>,
-      userSurname: <img src={checkok} width='12%'/>,
+      offrePrix: '15.35$',
+      offreName: 'Offre Basique',
+      duree:'Annuel',
       userEmail:<input type='checkbox' />,
       userPhone:  <img src={edit} width='20%'/>,
    
     },
     {
       id: 2,
-      userProfile: <img src={checknone} width='15%'/>,
-      userName: <img src={checknone} width='15%'/>,
-      userSurname: <img src={checkok} width='12%'/>,
+      offrePrix: '25.99$',
+      offreName: 'Offre Chat',
+      duree:'Mensuel',
       userEmail:<input type='checkbox' />,
       userPhone:  <img src={edit} width='20%'/>,
     },
     {
       id: 3,
-      userProfile: <img src={checknone} width='15%'/>,
-      userName: <img src={checknone} width='15%'/>,
-      userSurname: <img src={checkok} width='12%'/>,
+      offrePrix: '75.99$',
+      offreName: 'Offre Web-Conference',
+      duree:'Annuel',
       userEmail:<input type='checkbox' />,
       userPhone:  <img src={edit} width='20%'/>,
     },
-    {
-      id: 4,
-      userProfile: <img src={checknone} width='15%'/>,
-      userName: <img src={checknone} width='15%'/>,
-      userSurname: <img src={checkok} width='12%'/>,
-      userEmail:<input type='checkbox' />,
-      userPhone:  <img src={edit} width='20%'/>,
-    },
-    {
-      id: 5,
-      userProfile: <img src={checknone} width='15%'/>,
-      userName: <img src={checknone} width='15%'/>,
-      userSurname: <img src={checkok} width='12%'/>,
-      userEmail:<input type='checkbox' />,
-      userPhone:  <img src={edit} width='20%'/>,
-    },
+   
     
     
    
@@ -146,9 +141,9 @@ const  FormulaireAbonnement = () => {
       {showEditModal? <ModalContentEdit /> :'' } 
        <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
 
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                        <GridItem xs={12} sm={12} md={5} style={{marginTop:'2%'}}>
                             <div style={{display:'inline-block',color:'#5271ff',margin:'2%'}}>
-                                Tous les Apprenants
+                                Toutes vos formules d'abonnement
                             </div>
                             
                         </GridItem>
@@ -199,7 +194,7 @@ const  FormulaireAbonnement = () => {
                                           paddingTop:'5%'
                                         }} onClick={()=> openModal()}>
                                 
-                                <span className="text" style={{fontSize:'1.2vw',color:'white'}}>Ajouter</span>
+                                <span className="text" style={{fontSize:'100%',color:'white'}}>Ajouter</span>
                               </div>
                                     </div>
                           
@@ -209,9 +204,9 @@ const  FormulaireAbonnement = () => {
         <Table striped bordered hover variant="secondary">
               <thead>
                 <tr>
-                  <th>Offre Basique</th>
-                  <th>Offre Chat</th>
-                  <th>Offre Web-Conference</th>
+                  <th>Prix</th>
+                  <th>Offres</th>
+                  <th>Type d'abonnement</th>
                   <th>Activer / Desactiver</th>
                   <th>Editer</th>
                 </tr>
@@ -221,11 +216,11 @@ const  FormulaireAbonnement = () => {
               {currentPosts.map((post,index)=>{
                 return(
                   <tr>
-                    <td>{post.userProfile}</td>
-                    <td>{post.userName}</td>
-                    <td>{post.userSurname}</td>
+                    <td>{post.offrePrix}</td>
+                    <td>{post.offreName}</td>
+                     <td>{post.duree}</td>
                     <td>{post.userEmail}</td>
-                    <td>{post.userPhone}</td>
+                    <td style={{cursor:'pointer'}} onClick={()=>openModal('editOffre',post)}>{post.userPhone}</td>
                    
                   </tr>
                   )

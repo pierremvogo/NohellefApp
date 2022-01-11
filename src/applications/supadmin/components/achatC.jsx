@@ -162,7 +162,7 @@ const AchatC = () => {
 
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             <div style={{display:'inline-block',color:'#5271ff',margin:'2%'}}>
-                                Tous les Apprenants
+                                Tous les Achats
                             </div>
                             
                         </GridItem>

@@ -195,7 +195,7 @@ const AchatContent = () => {
        <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
                             <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
-                                Vos Formules
+                                Mon Compte
                             </div>
                             
                         </GridItem>
@@ -228,7 +228,7 @@ const AchatContent = () => {
                             paddingTop:'1.2%'
                           }}>
                                 
-                                <span className="text" style={{fontSize:'1.1vw'}}>Modifier votre compte</span>
+                                <span className="text" style={{fontSize:'100%'}}>Modifier votre compte</span>
                               </div>
                           
                       </GridItem>

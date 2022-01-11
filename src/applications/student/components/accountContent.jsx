@@ -235,7 +235,7 @@ const [isWebConf,setIsWebConf] = useState(false);
                             paddingTop:'1.2%'
                           }}>
                                 
-                                <span className="text" style={{fontSize:'1.1vw'}}>Modifier votre compte</span>
+                                <span className="text" style={{fontSize:'100%'}}>Modifier votre compte</span>
                               </div>
                           
                       </GridItem>
@@ -314,7 +314,7 @@ const [isWebConf,setIsWebConf] = useState(false);
                                     backgroundColor:'#9AA7B2',
                                     height:'100px',
                                     margin:'0% 10% 2% 5%',
-                                    fontSize:'1.2vw',
+                                    fontSize:'100%',
                                     padding:'5% 5% 0% 0%'
                                   }}>
                                     <ul>

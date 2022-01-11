@@ -16,7 +16,7 @@ const Pagination = ({postsPerPage, totalPosts, paginate}) => {
 							margin:'1%',
 							cursor:'pointer',
 							marginTop:'1%',
-							fontSize:'1.2vw',
+							fontSize:'100%',
 							border:'1px solid #5271ff',
 							}}>
 							<a onClick={()=>paginate(number)} className="page-link">
