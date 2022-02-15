@@ -17,7 +17,7 @@ import Avatar   from 'react-avatar';
 import './login.screen.css';
 import AskRegister from '../../../auth/pages/auth.screen/askRegister.jsx';
 
-const Login = ({error}) => {
+const LoginOthers = ({error}) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     const [loginForm, setLoginForm] = useState({username: "", password: "", remember: false})
@@ -144,7 +144,7 @@ const Login = ({error}) => {
                                 border:'1px solid #ffce52',
                                 borderRadius:'25px 25px 25px 25px',
                                 width:'50%',
-                                height:'420px',
+                                height:'350px',
                                 backgroundColor:'#ffce52',
                                 margin:'5%',
                                 padding:'2%'
@@ -202,29 +202,14 @@ const Login = ({error}) => {
                                           paddingTop:'3%'
                                         }}>
                                 
-                                <span className="text" style={{fontSize:'1.2vw',color:'white'}}>Se connecter</span>
+                                <span className="text" style={{fontSize:'100%',color:'white'}}>Se connecter</span>
                               </div>
                                     </div>
                                       
                                     </GridItem>
                                   </GridContainer>
 
-                                  <GridContainer>
-                                    <GridItem xs={12} sm={12} md={12}>
-                                      <div>
-                                          <span style={{
-                                            color:'blue',
-                                            float:'left',
-                                            cursor:'pointer'
-                                        }} onClick={()=>history.push('/auth/forgot')}>Mot de passe oublié?</span>
-                                          <span style={{
-                                            color:'green',
-                                            float:'right',
-                                            cursor:'pointer'
-                                        }} onClick={(e)=>outPutEventRegister(e)}>Pas de compte?</span>
-                                      </div>
-                                    </GridItem>
-                                  </GridContainer>
+                                 
                               </div>
 
 
@@ -240,4 +225,4 @@ const Login = ({error}) => {
 			 </div>
 		)
 }
-export default Login;
+export default LoginOthers;

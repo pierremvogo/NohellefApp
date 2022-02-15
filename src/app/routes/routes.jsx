@@ -13,6 +13,7 @@ import SupAdminPage from '../../applications/supadmin/pages/dashboard.screen/das
 import ParentPage from '../../applications/parent/pages/dashboard.screen/dashboard.jsx';
 import TutorPage from '../../applications/tutor/pages/dashboard.screen/dashboard.jsx';
 import Login from '../../applications/auth/pages/auth.screen/login.screen.jsx';
+import LoginOthers from '../../applications/auth/pages/auth.screen/loginOthers.screen.jsx';
 import ForgotPassword from '../../applications/auth/pages/auth.screen/forgotPassword.screen.jsx';
 import ResetPassword from '../../applications/auth/pages/auth.screen/resetPassword.screen.jsx';
 import VideoChat from '../../applications/videoChat/pages/videoChat.screen/videoChat.screen.jsx';
@@ -34,6 +35,11 @@ const MainRoute = ({user,isRestricted}) =>{
                     component={Login}
                     path={ROUTES.LOGIN} 
                 /> 
+                <Route 
+                    exact
+                    component={LoginOthers}
+                    path={ROUTES.LOGIN_OTHERS} 
+                />
 
                 <Route 
                     exact

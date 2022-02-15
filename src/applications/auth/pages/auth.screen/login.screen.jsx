@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect,useRef,useState } from 'react';
 import {connect, useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import { Link, Redirect, useHistory } from 'react-router-dom';
@@ -16,13 +16,13 @@ import Footer from "../../../../app/components/footer/footer.jsx";
 import Avatar   from 'react-avatar';
 import './login.screen.css';
 import AskRegister from '../../../auth/pages/auth.screen/askRegister.jsx';
+import ReactTooltip from 'react-tooltip';
 
 const Login = ({error,onChildClick}) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
-    const [loginForm, setLoginForm] = useState({username: "", password: "", remember: false})
+    const [loginForm, setLoginForm] = useState({username: "", password: ""})
     const [isLoginForm, setIsLoginForm] = useState(true);
-    const [formError, setformError] = useState(null)
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [resetPasswordForm,setResetPasswordForm] = useState({email: ""});
     const [tooltipOpen, setTooltipOpen] = useState(false)
@@ -30,52 +30,98 @@ const Login = ({error,onChildClick}) => {
     const dispatch= useDispatch()
     const [showAskModal,setShowAskModal] = useState(false);
     const [displayAsk, setDisplayAsk] = useState("flex");
+    const [formErrors, setFormErrors] = useState({});
+    const [errorMessage, setErrorMessage] = useState(false);
+    const inputRef = useRef(null);
 
-    
-  const handlerChildClick =(e)=> {
+    useEffect(() => {
+    console.log(formErrors);
+    if(Object.keys(formErrors).length === 0 && submited){
+        console.log(loginForm);
+    }
+    }, [formErrors]);
+
+
+  const handlerChildClick =(e) => {
         onChildClick(e.target.name);
   }
-    const onChangeLogin = (e) => {
-        setLoginForm({...loginForm,  [e.target.name]: e.target.value })}
+  const validateForm = (values) => {
+    const errorsValidation = {};
+    const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const regexPassword = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
 
+    Object.keys(values).map((input,index)=>{
+        switch(input) {
+            case 'username':
+                if(!values[input]){
+                    errorsValidation.username = "Le Nom d'utilisateur est requis";
+
+                }else if(values[input].length < 4){
+                    errorsValidation.username = "Le nom d'utilisateur doit avoir au moins 4 lettres";
+                }else{
+                    
+                }
+               
+                break;
+            case 'password':
+                if(!values[input]){
+                    errorsValidation.password = "Le mot de passe est requis";
+                }else if(!regexPassword.test(values[input])){
+                    errorsValidation.password = "Le mot de passe doit avoir au moins 8 caractères,une majuscule,une minuscule et un chiffre";
+                }else{
+                    
+                }
+                break;
+                default:
+                    break;
+    }
+    
+    });
+
+       return errorsValidation;       
+  }
+
+  const onChangeLoginForm = (e) => {
+    setLoginForm({...loginForm, [e.target.name]: e.target.value});
+    console.log(loginForm);
+  };
+   
     const onChangeResetPassword = (e) => {
         setResetPasswordForm({...resetPasswordForm,  [e.target.name]: e.target.value })
-        setformError(null)
+        setFormErrors(null)
     }
+
+    const tooltipStyles = {
+        main:{
+            backgroundColor: "red",
+            color: "black",
+        }
+    }
+
 
     const onSubmit = (e) => {
         e.preventDefault();
-        if (submited) { return } 
-        if(isLoginForm) {
-            if(loginForm.username.trim()=='admin'&&loginForm.password.trim()=='admin'){
-              
-                history.push('/admin/dashboard');
-            }else if(loginForm.username.trim()=='stud'&&loginForm.password.trim()=='stud'){
-             
-                history.push('/student/dashboard');
-            }else if(loginForm.username.trim()=='tutor'&&loginForm.password.trim()=='tutor'){
-               
-                history.push('/tutor/dashboard');
-            }
-               
+        setFormErrors(validateForm(loginForm));
+        console.log("Login form text....");
+        if (submited) { return }       
              //dispatch(authSignIn({...loginForm, redirect: history.location.state?.pathname || 'dashboard'}));
-        } 
+       
         setSubmited(true);
     }
+
     const ModalAskInscription = () => {
     return(
       <div className="modal-content" id='cont'
         style={{
             width: "100%",
-            height: "4000px",
+            height: "100%",
             justifyContent: "center",
             display: displayAsk,
             alignItems: "center",
             zIndex: "300000",
             position: "absolute",
             overflow: "hidden",
-            backgroundColor: "rgb(0, 0, 0)",
-            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            backgroundColor: "transparent",
             top:"0px",
             left:"0px",
             }}
@@ -117,35 +163,66 @@ const Login = ({error,onChildClick}) => {
                                      </div>
                                     </GridItem>
                                   </GridContainer>
+                                  <form onSubmit={onSubmit}>
+                                  <>
+                                  {Object.keys(loginForm).map((input,index)=>{
+                                        let type, id, idTooltip, name, placeholder;                                     
+                                        if (input === "username") {
+                                            id = "username";
+                                            type = "text";
+                                            placeholder = "Votre nom d'utilisateur"
+                                          }else if (input === 'password') {
+                                            id = "password";
+                                            type = 'password';                             
+                                            placeholder = "Votre mot de passe";
+                                          } else { return }
+                                          return(
+                                            <GridContainer key={index}>
+                                                <GridItem xs={12} sm={12} md={12}>
+                                                   <div style={{margin:'0% 20% 5% 20%'}}>
+                                                    
+                                                  <input 
+                                                    name={input}
+                                                    id={id}
+                                                    type={type}
+                                                    onChange={onChangeLoginForm}
+                                                    value={loginForm[input]} 
+                                                    placeholder={placeholder}
+                                                    required
+
+                                                    style={{
+                                                    borderRadius:'10px',
+                                                    border:`${input==="username"&&formErrors.username?'2px solid #C84941':
+                                                            input==="password"&&formErrors.password?'2px solid #C84941':'2px solid #002495'}`,
+                                                    width:'100%',
+                                                    height:'40px'}}/>
+
+                                                    {errorMessage && error && (
+                                                        <div className="form-group">
+                                                              <div style={{color:"red"}}>
+                                                                  {error.message}
+                                                              </div>
+                                                        </div>
+                                                                )}
+                                                                {formErrors && (
+                                                                    <div>
+                                                                        <div style={{color:"red",fontSize:"12px"}}>
+                                                                         {input==="username"?formErrors.username:
+                                                                         input==="password"?formErrors.password:""}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                  </div>
+                                                </GridItem>
+                                            </GridContainer>
+                                        )
+                                  })}
+                                  </>
 
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
-                                       <div style={{margin:'0% 20% 5% 20%'}}>
-                                      <input type='text' placeholder="Votre nom d'utilisateur" style={{
-                                        borderRadius:'10px',
-                                        border:'2px solid #002495',
-                                        width:'100%',
-                                        height:'40px'}}/>
-                                      </div>
-                                    </GridItem>
-                                  </GridContainer>
-
-                                  <GridContainer>
-                                    <GridItem xs={12} sm={12} md={12}>
-                                       <div style={{margin:'0% 20% 5% 20%'}}>
-                                      <input type='text' placeholder="Votre mot de passe"  style={{
-                                        borderRadius:'10px',
-                                        border:'2px solid #002495',
-                                        width:'100%',
-                                        height:'40px'}}/>
-                                      </div>
-                                    </GridItem>
-                                  </GridContainer>
-
-                                  <GridContainer>
-                                    <GridItem xs={12} sm={12} md={12}>
-                                    
-                                    <div style={{cursor:'pointer',
+                
+                                    <div onClick={onSubmit} style={{cursor:'pointer',
                                           margin:'10% 20% 5% 20%',
                                           textAlign:'center'}}>
                                       <div style={{
@@ -162,12 +239,14 @@ const Login = ({error,onChildClick}) => {
                                           paddingTop:'4%'
                                         }}>
                                 
-                                <span className="text" style={{fontSize:'1.2vw',color:'white'}}><strong>Se connecter</strong></span>
-                              </div>
+                                <span className="text" style={{fontSize:'100%',color:'white'}} ><strong>Se connecter</strong></span>
+                                    </div>
                                     </div>
                                       
                                     </GridItem>
                                   </GridContainer>
+                                  </form>
+
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                       <div style={{margin:'0% 5% 15% 5%'}}>

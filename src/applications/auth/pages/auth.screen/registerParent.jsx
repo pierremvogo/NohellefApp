@@ -20,16 +20,33 @@ import GridContainer from "../../../../app/components/Grid/GridContainer.js";
 import Footer from "../../../../app/components/footer/footer.jsx";
 import Avatar   from 'react-avatar';
 import Select from 'react-select';
+import useForm from "../../../../hooks/useForm";
+import ReactTooltip from 'react-tooltip';
 
 const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
-    const [loginForm, setLoginForm] = useState({username: "", password: "", remember: false})
+    const [registerParent, setRegisterParent] = useState(
+           {name:"", 
+            surname:"",
+            email:"",
+            phone:"",
+            ville:"",
+            address:"",
+            password:"",
+            confirm_password:"",
+            numCardNumber:"",
+            cardExpireMonth:"1",
+            cardExpireYear:"",
+            cardCode:""})
     const [isLoginForm, setIsLoginForm] = useState(true);
-    const [formError, setformError] = useState(null);
+    const [formErrors, setFormErrors] = useState({});
+    const [errorMessage, setErrorMessage] = useState(false);
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [resetPasswordForm,setResetPasswordForm] = useState({email: ""});
-    const [tooltipOpen, setTooltipOpen] = useState(false)
+    const [tooltipOpen, setTooltipOpen] = useState(false);
+    const [sm,setSm] = useState(12);
+    const [md, setMd] = useState(4);
     const history = useHistory()
     const dispatch= useDispatch()
 
@@ -39,38 +56,120 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
     const clickHandlerConnectModal=(e)=>{
         onChildClickLogin(e.target.name);
     }
-
-    const onChangeLogin = (e) => {
-        setLoginForm({...loginForm,  [e.target.name]: e.target.value })}
-
-    const onChangeResetPassword = (e) => {
-        setResetPasswordForm({...resetPasswordForm,  [e.target.name]: e.target.value })
-        setformError(null)
-    }
-
     const options = [
     { value: 'chocolate', label: 'Niveau1' },
     { value: 'strawberry', label: 'Niveau2' },
     { value: 'vanilla', label:  'Niveau3'}
   ]
+    const validateForm = (values) => {
+    const errorsValidation = {};
+    const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const regexPassword = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
+    const regexPhoneNumber = /^(\++237[\s.-]?)+\(?6[5-9]{1}[0-9]{1}[\s.-]?[0-9]{3}[\s.-]?([0-9]{3})\)?/;
 
-    const onSubmit = (e) => {
+    Object.keys(values).map((input,index)=>{
+        switch(input) {
+            case 'name':
+                if(!values[input]){
+                    errorsValidation.name = "Le Nom est requis";
+
+                }else if(values[input].length < 4){
+                    errorsValidation.name = "Le nom doit avoir au moins 4 lettres";
+                }else{
+                    
+                }
+                break;
+            case 'surname':
+                if(!values[input]){
+                    errorsValidation.surname = "Le Prénom est requis";
+
+                }else if(values[input].length < 4){
+                    errorsValidation.surname = "Le Prénom doit avoir au moins 4 lettres";
+                }else{
+                    
+                }
+                break;
+            case 'email':
+                if(!values[input]){
+                    errorsValidation.email = "Adresse Email requise";
+                }else if(!regexEmail.test(values[input])){
+                    errorsValidation.email= "Adresse Email invalide";
+                }else{
+                    
+                }
+                break;
+            case 'phone':
+                if(!values[input]){
+                    errorsValidation.phone = "Numero de Téléphone requis";
+                }else if(values[input].length === 13 || values[input].length === 9 ){
+                        if(!regexPhoneNumber.test(values[input])){
+                            errorsValidation.phone = "Numéro de Téléphone invalide";
+                        }else{
+                            
+                        }
+                }
+                else{
+                  console.log("taille du numero");
+                  console.log(values[input].length);
+                   errorsValidation.phone = "Format de Numéro invalide"; 
+                }
+                break;
+            case 'password':
+                if(!values[input]){
+                    errorsValidation.password = "Le mot de passe est requis";
+                }else if(!regexPassword.test(values[input])){
+                    errorsValidation.password = "mot de passe avec au moins 8 caractères,une majuscule,une minuscule et un chiffre";
+                }else{
+                    
+                }
+                break;
+            case 'confirm_password':
+                if(!values[input]){
+                    errorsValidation.confirm_password = "Veuillez confirmer le mot de passe";
+                }else if(values['password'] != values[input]){
+                    errorsValidation.confirm_password = "Confirmation de mot de passe invalide";
+                }else{
+                    
+                }
+                break;
+            case 'numCardNumber':
+                if(!values[input]){
+                    errorsValidation.numCardNumber = "Le numéro de la carte est requis";
+                }else{
+
+                }
+                break;
+            case 'cardExpireYear':
+                if(!values[input]){
+                    errorsValidation.cardExpireYear = "Année d'expiration requise";
+                }else{
+
+                }
+                break;
+            case 'cardCode':
+                if(!values[input]){
+                    errorsValidation.cardCode = "code requis pour votre carte";
+                }else{
+
+                }
+                break;
+                default:
+                    break;
+    }
+    
+    });
+
+       return errorsValidation;       
+  }
+  const onChangeRegisterParent = (e) => {
+        setRegisterParent({...registerParent,  [e.target.name]: e.target.value })
+        setFormErrors(validateForm(registerParent));
+        console.log(registerParent);
+    }
+   const onSubmit = (e) => {
         e.preventDefault();
-        if (submited) { return } 
-        if(isLoginForm) {
-            if(loginForm.username.trim()=='admin'&&loginForm.password.trim()=='admin'){
-              
-                history.push('/admin/dashboard');
-            }else if(loginForm.username.trim()=='stud'&&loginForm.password.trim()=='stud'){
-             
-                history.push('/student/dashboard');
-            }else if(loginForm.username.trim()=='tutor'&&loginForm.password.trim()=='tutor'){
-               
-                history.push('/tutor/dashboard');
-            }
-               
-             //dispatch(authSignIn({...loginForm, redirect: history.location.state?.pathname || 'dashboard'}));
-        } 
+        setFormErrors(validateForm(registerParent));
+        console.log(registerParent) ;
         setSubmited(true);
     }
     return(
@@ -133,113 +232,109 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                     </GridItem>
                                   </GridContainer>
 
-
-
+                                  <form onSubmit={onSubmit}>
                                   <GridContainer>
-                                    <GridItem xs={12} sm={4} md={4}>
-                                      
-                                     <div style={{width:'100%',cursor:'pointer'}}>
-                                            Nom
-                                         <input type='text' placeholder="" style={{
-                                                border:'2px solid #002495',
-                                                width:'100%',
-                                                height:'40px'}}
-                                         />
-                                         
-                                     </div>
-                                    </GridItem>
-                                     
-                                    <GridItem xs={12} sm={4} md={4}>
-                                     <div style={{width:'100%',cursor:'pointer'}}>
-                                        Prénom
-                                         <input type='text' placeholder="" style={{
-                                                border:'2px solid #002495',
-                                                width:'100%',
-                                                height:'40px'}}
-                                         />
-                                         
-                                     </div>
-                                    </GridItem>
-                                    <GridItem xs={12} sm={4} md={4}>
-                                     
-                                     <div style={{width:'100%',cursor:'pointer'}}>
-                                        Email
-                                         <input type='email' placeholder="" style={{
-                                                border:'2px solid #002495',
-                                                width:'100%',
-                                                height:'40px'}}
-                                         />
-                                         
-                                     </div>
-                                    </GridItem>
-                                  </GridContainer>
+                                      {Object.keys(registerParent).map((input,index)=>{
+                                        let id,label, type, name; 
+                                        if(input==="name"){
+                                          id="name"
+                                          type="text"
+                                          name="name"                                 
+                                          label="Nom"
+                                      }else if(input==='surname'){
+                                          id="surname"
+                                          type="text"
+                                          name="surname"                            
+                                          label="Prénom"
+                                      }else if(input==="email"){
+                                          id="email"
+                                          type="email"
+                                          name="email"                             
+                                          label="Email"
+                                      }else if(input==="phone"){
+                                          id="phone"
+                                          type="text"
+                                          name="phone"                            
+                                          label="Téléphone"
+                                      }else if(input==="ville"){
+                                          id="ville"  
+                                          type="text"
+                                          name="ville"                            
+                                          label="Ville"
+                                      }else if(input==='address'){
+                                          id="address"
+                                          type="text"
+                                          name="address"                             
+                                          label="Adresse"
+                                      }else if(input==="password"){
+                                          id="password"
+                                          type="password"
+                                          name="password"                             
+                                          label="Mot de passe"
+                                      }
+                                      else if(input==="confirm_password"){
+                                          id="confirm_password"
+                                          type="password"
+                                          name="confirm_password"                             
+                                          label="Confirmer mot de passe"
+                                      }
+                                      return(
 
-                                  <GridContainer>
-                                    <GridItem xs={12} sm={4} md={4}>
-                                      
-                                     <div style={{width:'100%',cursor:'pointer'}}>
-                                        Téléphone
-                                         <input type='text' placeholder="" style={{
-                                                border:'2px solid #002495',
+                                       <GridItem xs={12} sm={input==="password"||input==="confirm_password"?6:4} md={4} key={index}>
+                                        {input!="numCardNumber"&&input!="cardExpireMonth"&&input!="cardExpireYear"&&input!="cardCode"?
+                                        <div style={{width:'100%',cursor:'pointer'}}>
+                                            {label}
+                                         <input 
+                                            type={type} 
+                                            id={id}
+                                            name={name} 
+                                            value={registerParent[input]}
+                                            onChange={onChangeRegisterParent}
+                                            style={{
+                                                border:`${
+                                                        input==="name"&&formErrors.name?'2px solid #C84941':
+                                                        input==="surname"&&formErrors.surname?'2px solid #C84941':
+                                                        input==="email"&&formErrors.email?'2px solid #C84941':
+                                                        input==="phone"&&formErrors.phone?'2px solid #C84941':
+                                                        input==="password"&&formErrors.password?'2px solid #C84941':
+                                                        input==="confirm_password"&&formErrors.confirm_password?'2px solid #C84941':
+                                                
+                                                        '2px solid #002495'}`,
                                                 width:'100%',
                                                 height:'40px'}}
                                          />
+                                         {errorMessage && error && (
+                                                        <div className="form-group">
+                                                              <div style={{color:"red"}}>
+                                                                  {error.message}
+                                                              </div>
+                                                        </div>
+                                                                )}
+                                                                {formErrors && (
+                                                                    <div>
+                                                                        <div style={{color:"red",fontSize:"12px"}}>
+                                                                         {
+                                                                         input==="name"?formErrors.name:
+                                                                         input==="surname"?formErrors.surname:
+                                                                         input==="email"?formErrors.email:
+                                                                         input==="phone"?formErrors.phone:
+                                                                         input==="password"?formErrors.password:
+                                                                         input==="confirm_password"?formErrors.confirm_password:
+                                                                         
+                                                                         ""}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
                                          
-                                     </div>
-                                    </GridItem>
-                                    <GridItem xs={12} sm={4} md={4}>
-                                     <div style={{width:'100%',cursor:'pointer'}}>
-                                      Ville
-                                         <input type='text'  style={{
-                                                border:'2px solid #002495',
-                                                width:'100%',
-                                                height:'40px'}}
-                                         />
+                                        </div>
+                                        :""}
                                          
-                                     </div>
-                                    </GridItem>
-                                    <GridItem xs={12} sm={4} md={4}>
-                                     <div style={{width:'100%',cursor:'pointer'}}>
-                                       Adresse
-                                         <input type='text' style={{
-                                                border:'2px solid #002495',
-                                                width:'100%',
-                                                height:'40px'}}
-                                         />
-                                         
-                                     </div>
-                                    </GridItem>
+                                        </GridItem>
+                                        )
+                                        
+                                      })} 
                                   </GridContainer>
-
-                                   <GridContainer>
-                                    <GridItem xs={12} sm={6} md={4}>
-                                      
-                                     <div style={{width:'100%',cursor:'pointer'}}>
-                                     Mot de passe
-                                         <input type='text' style={{
-                                                border:'2px solid #002495',
-                                                width:'100%',
-                                                height:'40px'}}
-                                         />
-                                         
-                                     </div>
-                                    </GridItem>
-                                    <GridItem xs={12} sm={6} md={4}>
-                                     <div style={{width:'100%',cursor:'pointer'}}>
-                                     Confirmer mot de passe
-                                         <input type='text'  style={{
-                                                border:'2px solid #002495',
-                                                width:'100%',
-                                                height:'40px'}}
-                                         />
-                                         
-                                     </div>
-                                    </GridItem>
-                                    
-                                  </GridContainer>
-
                                   
-
                                    <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                        <div style={{
@@ -251,69 +346,142 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                             
                                     </GridItem>
                                   </GridContainer>
+                                  <GridContainer>
+                                  {Object.keys(registerParent).map((input,index)=>{
+                                    let id,label, type, name; 
+                                        if(input==="numCardNumber"){
+                                          id="numCardNumber"
+                                          type="text"
+                                          name="numCardNumber"                                 
+                                          label="Numéro de carte"
+                                      }else if(input==='cardExpireMonth'){
+                                          id="cardExpireMonth"
+                                          type="text"
+                                          name="cardExpireMonth"                            
+                                          label="MM"
+                                      }else if(input==="cardExpireYear"){
+                                          id="cardExpireYear"
+                                          type="text"
+                                          name="cardExpireYear"                             
+                                          label="YY"
+                                      }
+                                      else if(input==="cardCode"){
+                                          id="cardCode"
+                                          type="text"
+                                          name="cardCode"                             
+                                          label="Code"
+                                      }else{
+                                        return;
+                                      }
+                                      return(
+                                        <GridItem xs={12} sm={12} md={3} key={index}> 
+                            
+                                            {input==="numCardNumber"||input==="cardExpireMonth"||input==="cardExpireYear"||input==="cardCode"?
+                                           
+                                            input==="cardExpireMonth"?
 
-                                   <GridContainer>
-                                    <GridItem xs={12} sm={12} md={4}>  
-                                         Numéro de carte
-                                         <input type='text' style={{
-                                                border:'2px solid #002495',
-                                                width:'100%',
-                                                height:'40px'}}
-                                         />
-                                    </GridItem>
+                                                <div>
+                                                  Mois d'expiration
+                                                <select 
+                                                    name={name} 
+                                                    id={id}>
+                                                    <option value="1">Janvier</option>
+                                                    <option value="2">Février</option>
+                                                    <option value="3">Mars</option>
+                                                    <option value="4">Avril</option>
+                                                    <option value="5">Mai</option>
+                                                    <option value="6">Juin</option>
+                                                    <option value="7">Juillet</option>
+                                                    <option value="8">Août</option>
+                                                    <option value="9">Septembre</option>
+                                                    <option value="10">Octobre</option>
+                                                    <option value="11">Novembre</option>
+                                                    <option value="12">Décembre</option>
+                                                </select>
+                                                </div>: input==="cardExpireYear"?
+                                                <div>
+                                                  Année d'expiration
+                                                  <input 
+                                                    type={type} 
+                                                    id={id}
+                                                    name={name}
+                                                    value={registerParent[input]}
+                                                    onChange={onChangeRegisterParent}
+                                                    placeholder={label}
+                                                    style={{
+                                                    border:`${
+                                                        input==="cardExpireYear"&&formErrors.cardExpireYear?'2px solid #C84941':
+                                                        '2px solid #002495'}`,
+                                                    width:'100%',
+                                                    height:'40px'}}
+                                                /> 
+                                                {errorMessage && error && (
+                                                        <div className="form-group">
+                                                              <div style={{color:"red"}}>
+                                                                  {error.message}
+                                                              </div>
+                                                        </div>
+                                                                )}
+                                                                {formErrors && (
+                                                                    <div>
+                                                                        <div style={{color:"red",fontSize:"12px"}}>
+                                                                         {
+                                                                         input==="cardExpireYear"?formErrors.cardExpireYear:
+                                                                         ""}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                </div>
 
-                                    <GridItem xs={12} sm={12} md={4}>
-                                         Date d'expiration
-                                      <GridContainer>
-                                          <GridItem xs={12} sm={6} md={6}>
-                                               <input type='text' placeholder="MM" style={{
-                                                border:'2px solid #002495',
-                                                width:'100%',
-                                                height:'40px'}}/>
-                                        
-                                          </GridItem>
-                                         
-                    
-                                         
-                                          <GridItem xs={12} sm={6} md={6}>
-                                               <input type='text' placeholder="YY" style={{
-                                                border:'2px solid #002495',
-                                                width:'100%',
-                                                height:'40px'}}/>
-                                          </GridItem>
-                                      </GridContainer>
+                                            :<div style={{width:'100%',cursor:'pointer'}}>
+                                              {label}
+                                                <input 
+                                                    type={type} 
+                                                    id={id}
+                                                    name={name}
+                                                    value={registerParent[input]}
+                                                    onChange={onChangeRegisterParent}
 
-                                    </GridItem>
+                                                    style={{
+                                                    border:`${
+                                                        input==="numCardNumber"&&formErrors.numCardNumber?'2px solid #C84941':
+                                                        input==="cardCode"&&formErrors.cardCode?'2px solid #C84941':
+                                                        '2px solid #002495'}`,
+                                                    width:'100%',
+                                                    height:'40px'}}
+                                                />
+                                                {errorMessage && error && (
+                                                        <div className="form-group">
+                                                              <div style={{color:"red"}}>
+                                                                  {error.message}
+                                                              </div>
+                                                        </div>
+                                                                )}
+                                                                {formErrors && (
+                                                                    <div>
+                                                                        <div style={{color:"red",fontSize:"12px"}}>
+                                                                         {
+                                                                         input==="numCardNumber"?formErrors.numCardNumber:
+                                                                         input==="cardCode"?formErrors.cardCode:
+                                                                         ""}
+                                                                        </div>
+                                                                    </div>
+                                                                )}  
+                                            </div>
 
-                                    <GridItem xs={12} sm={12} md={4}>
-                                       Code
-                                         <input type='text' placeholder="Adresse" style={{
-                                                border:'2px solid #002495',
-                                                width:'100%',
-                                                height:'40px'}}
-                                         />
-                                    </GridItem>
-                                  </GridContainer>
+                                        :""}
+                                     
+                                        </GridItem>
 
-                    
-
-
-                                   <GridContainer>
-                                   
-                                
-                                  </GridContainer>
-
-                                   <GridContainer>
-                                    <GridItem xs={12} sm={12} md={12}>
-                                       
-                                    </GridItem>
+                                        )
+                                  })}
                                   </GridContainer>
 
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                     
-                                    <div style={{cursor:'pointer',
-                                          margin:'15% 20% 0% 20%',
+                                    <div onClick={onSubmit} style={{cursor:'pointer',
+                                          margin:'5% 20% 0% 20%',
                                           textAlign:'center'}}>
                                       <div style={{
                                           backgroundColor: '#4285f4',
@@ -336,7 +504,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                       
                                     </GridItem>
                                   </GridContainer>
-
+                                  </form>
                     
                               </div>
 
