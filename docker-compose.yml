@@ -1,0 +1,8 @@
+version: "3.8"
+
+services:
+  web:
+    name: nohellef_frontend
+    build: .
+  ports:
+    - 80:80

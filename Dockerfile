@@ -1,4 +1,4 @@
-FROM node:fermium-alpine3.15
+FROM node:fermium-alpine3.15 as builder
 
 WORKDIR app
 
@@ -11,6 +11,16 @@ RUN yarn install
 COPY public ./public
 COPY src ./src
 
-EXPOSE 3000
+RUN yarn build
 
-CMD ["yarn", "start"]
+FROM nginx:1.21.0-alpine as production
+
+ENV NODE_ENV production
+
+COPY --from=builder /app/build /usr/share/nginx/html
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
