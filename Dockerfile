@@ -6,7 +6,7 @@ ADD package.json yarn.lock ./
 
 RUN apk add --no-cache git openssh
 
-RUN yarn install
+RUN yarn install --network-timeout 100000
 
 COPY public ./public
 COPY src ./src
