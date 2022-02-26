@@ -1,4 +1,4 @@
-import react from 'react';
+import react,{ createRef } from 'react';
 import GridItem from "../../../app/components/Grid/GridItem.js";
 import GridContainer from "../../../app/components/Grid/GridContainer.js";
 import Card from "../../../app/components/Card/Card.js";
@@ -11,13 +11,18 @@ import { Dropdown } from 'react-bootstrap';
 import smile from '../../../assets/images/main/smile.png';
 import ReactSearchBox from "react-search-box";
 import smilevid from '../../../assets/images/dashboard/smilevid.png';
-import poster from '../../../assets/images/dashboard/smilevid.png';
+import vidio from '../../../assets/images/dashboard/vidio.png';
+import poster from '../../../assets/images/dashboard/poster.png';
 import videoLink from '../../../assets/video/testvideo2.mp4';
 import Avatar   from 'react-avatar';
 import ReactPlayer from 'react-player/lazy';
 import { Player, ControlBar } from 'video-react';
-import VideoContent from './videoContent';
+import VideoPlayer from 'react-video-js-player';
 import im5 from '../../../assets/images/im5.png';
+import vidioLink4 from '../../../assets/video/testvideo4.mp4';
+import vidioLink2 from '../../../assets/video/testvideo.mp4';
+import vidioLink3 from '../../../assets/video/testvideo3.mp4';
+
 
 
 /*import "video-react/dist/video-react.css";
@@ -32,40 +37,50 @@ import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";*
 import Pagination from './pagination.jsx';
 
 
-const ConferenceContent = () => {
+const ConferenceContent = ({playvideo,courseLink}) => {
 	const [posts, setPosts] = useState([]);
 	const [loading, serLoading] = useState(false);
 	const [currentPage, setCurrentPage] = useState(2);
 	const [postPerPage, setPostPerPage] = useState(4);
+  const [play,setPlay] = useState(playvideo);
+  const [vidLinks, setVidLinks] = useState(courseLink);
 
 	useEffect(()=>{
 		setPosts(data);
 	},[])
-  const playerRef = React.useRef(null);
+  const refMedia = createRef();
 
-  const videoJsOptions = { // lookup the options in the docs for more options
-    autoplay: true,
-    controls: true,
-    responsive: true,
-    fluid: true,
-    sources: [{
-      src: '/path/to/video.mp4',
-      type: 'video/mp4'
-    }]
+
+  const openVideo = () => {
+    console.log("auto Play PROPS",refMedia.current.props);
+
+  }
+  
+  function handleopen(links){
+        setPlay(true);
+        setVidLinks(links);
   }
 
-  const handlePlayerReady = (player) => {
-    playerRef.current = player;
+  const handlePause = (pause) => {
+    setPlay(false);
+  }
 
-    // you can handle player events here
-    player.on('waiting', () => {
-      console.log('player is waiting');
-    });
+  const handleEnded = (pause) => {
+    setPlay(false);
+  }
 
-    player.on('dispose', () => {
-      console.log('player will dispose');
-    });
-  };
+    const  onPlayerReady = (player) => {
+          console.log("VIDEO READY",player)
+    }
+
+    const  onVideoPlay = (duration) => {
+          console.log("VIDEO Play",duration)
+    }
+
+    const  onVideoPause = (player) => {
+
+          console.log("VIDEO pause",player)
+    }
 
     let data = [
     {
@@ -76,7 +91,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink4
     },
     {
       id: 2,
@@ -86,7 +102,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink2
     },
     {
       id: 3,
@@ -96,7 +113,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink3
     },
     {
       id: 4,
@@ -106,7 +124,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink4
     },
     {
       id: 5,
@@ -116,7 +135,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink3
     },
     {
       id: 6,
@@ -126,7 +146,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink2
     },
     
     {
@@ -137,7 +158,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink2
     },
     
     {
@@ -148,7 +170,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink2
     },
     
     {
@@ -159,7 +182,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink2
     },
     
     {
@@ -170,7 +194,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink2
     },
     {
       id: 11,
@@ -180,7 +205,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink2
     },
     {
       id: 12,
@@ -190,7 +216,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink2
     },
     {
       id: 13,
@@ -200,7 +227,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink2
     },
     {
       id: 14,
@@ -210,7 +238,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink3
     },
     {
       id: 15,
@@ -220,7 +249,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink3
     },
     {
       id: 16,
@@ -230,7 +260,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink3
     },
     {
       id: 17,
@@ -240,7 +271,8 @@ const ConferenceContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLinkVideo: videoLink
+      courseLinkVideo: vidio,
+      vidLink: vidioLink3
     },
   ];
   // Get current posts
@@ -256,9 +288,9 @@ const ConferenceContent = () => {
     console.log('ready open')
   }
 	return(
-			<div className="container" style={{margin:'0% 10% 0% 0%'}}>
-			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+			<div className="container" style={{margin:'0% 0% 0% 0%'}}>
+			 <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
+                        <GridItem xs={12} sm={12} md={3}>
                             <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
                                 Vidéothèque
                             </div>
@@ -275,17 +307,25 @@ const ConferenceContent = () => {
                         </GridItem>
                     </GridContainer>
              
-			         <GridContainer style={{overflow:'scroll'}}>
+			         <GridContainer>
 
-			 					  <GridItem xs={12} sm={12} md={8} style={{backgroundColor:'#eeeeee',margin:'0% 0% 0% 0%'}}>
+			 					  <GridItem xs={12} sm={12} md={8} style={{backgroundColor:'#eeeeee'}}>
                     <GridContainer>
                         <GridItem xs={12} sm={12} md={12}>
                           <div style={{
-                            margin:'2% 0% 0% 0%',
+                            margin:'-30% 0% 0% 0%',
                             width:'100%'
 
                         }}>
-                            <VideoContent videoLink={videoLink} vWidth={600} vHeight={300} />
+                            <ReactPlayer 
+                              url={vidLinks}
+                              playing={play}
+                              controls={true}
+                              width={600}
+                              height={720}
+                              onPause={handlePause}
+                              onEnded={handleEnded}
+                            />
                           </div>
                         </GridItem>
                     </GridContainer>
@@ -293,7 +333,7 @@ const ConferenceContent = () => {
 
                     <GridContainer>
                       <GridItem xs={12} sm={12} md={12}>
-                       <div style={{width:'100%',margin:'5% 0% 0% 0%'}}>
+                       <div style={{width:'100%',margin:'-25% 0% 0% 0%'}}>
                           <input type='text' placeholder='Votre commentaire'  style={{
                             width:'100%',
                             borderTop:'none',
@@ -311,7 +351,7 @@ const ConferenceContent = () => {
                         <div style={{overflow:'scroll',
                               backgroundColor:'white',
                               width:'100%',
-                              margin:'5% 0% 0% 0%',
+                              margin:'-20% 0% 0% 0%',
                               height:'150px'}}>
                         {currentPosts.map((value,index)=>{
                           return(
@@ -328,7 +368,7 @@ const ConferenceContent = () => {
                               </GridContainer>
                               <GridContainer>
                                 <GridItem xs={12} sm={12} md={12}>
-                                <div style={{fontSize:'1vw'}}>
+                                <div style={{fontSize:'100%'}}>
                                      cours intéressant, bravo à vous!!!, je vais télécharger la
                                      suite de la série
                                 </div>
@@ -348,7 +388,7 @@ const ConferenceContent = () => {
 
 
 
-			 			      <GridItem xs={12} sm={12} md={4} style={{backgroundColor:'#eeeeee',paddin:'0% 0% 0% 5%'}}>
+			 			      <GridItem xs={12} sm={12} md={4} style={{backgroundColor:'#eeeeee'}}>
                     <GridContainer>
                       <GridItem xs={12} sm={12} md={12}>
                         <div style={{
@@ -362,7 +402,7 @@ const ConferenceContent = () => {
                         }}>
                           <span style={{
                             float:'left',
-                            fontSize:'1vw'}}><img src={smilevid} width='15%' style={{
+                            fontSize:'100%'}}><img src={smilevid} width='15%' style={{
                               marginRight:'3%'
                             }}/>
                           A regarder également</span>
@@ -373,12 +413,12 @@ const ConferenceContent = () => {
                     </GridContainer>
 
                     <GridContainer>
-                      <GridItem xs={12} sm={12} md={12}>
-                      <div style={{margin:'5% 0% 0% 0%', cursor:'pointer',overflow:'scroll'}}>
-                        {currentPosts.map((value,index)=>{
+                      <GridItem xs={12} sm={12} md={12} style={{overflowY:'scroll',height:'480px'}} >
+                      <div style={{cursor:'pointer'}}>
+                        {posts.map((value,index)=>{
                           return(
                             <GridContainer>
-                                <GridItem xs={12} sm={12} md={12} style={{padding:'15%'}}>
+                                <GridItem xs={12} sm={12} md={12} style={{padding:'10%'}}>
                                   <div style={{margin:'2%'}}>
                                 <GridContainer>
                                   <GridItem xs={12} sm={12} md={6}>
@@ -387,18 +427,19 @@ const ConferenceContent = () => {
                                     width:'100%',
                                     height:'95px',
                                     backgroundColor:'white',
-                                    fontSize:'1vw'
-                                    }}> <VideoContent
+                                    fontSize:'100%'
+                                    }}> {/*<VideoContent
                                             videoLink={value.courseLinkVideo} 
                                             vWidth={120} 
-                                            vHeight={100} />
+                                            vHeight={100} />*/}
+                                        <img src={value.courseLinkVideo} onClick={()=>handleopen(value.vidLink)} />
                                     </div>
                                   </GridItem>
                                   <GridItem xs={12} sm={12} md={6}>
                                     <div style={{
-                                    width:'100%',
+                                    width:'110%',
                                     display:'inline-block',
-                                    height:'95px',
+                                    height:'100px',
                                     backgroundColor:'#ffce52',
                                     fontSize:'70%'}}>
                                      <div> Comment réussir son
@@ -406,7 +447,7 @@ const ConferenceContent = () => {
                                       leçons?</div>
                                       <div><strong>Spécialité:</strong> SVT</div>
                                       <div><strong>Proposé par:</strong> Bekono</div>
-                                      <div><strong>Télespcetateurs:</strong> 200</div>
+                                      <div><strong>Télespectateurs:</strong> 200</div>
                                     </div>
                                   </GridItem>
                                 </GridContainer>
@@ -426,12 +467,6 @@ const ConferenceContent = () => {
 
                 </GridContainer>
 
-                    <GridContainer>
-                    	<GridItem xs={12} sm={12} md={12}>
-                    		
-
-                    	</GridItem>
-                    </GridContainer>
             </div>
 		)
 }

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, {useContext, useState, useEffect } from 'react';
+import { Switch, Route, Router, Redirect, useHistory, useLocation } from 'react-router-dom';
 import './dashboard.css';
 import Avatar   from 'react-avatar';
 import Button from '../../../../app/components/buttons/button';
@@ -17,7 +18,9 @@ import d5 from '../../../../assets/images/dashboard/d5.png';
 import d6 from '../../../../assets/images/dashboard/d6.png';
 import d7 from '../../../../assets/images/dashboard/d7.png';
 import d8 from '../../../../assets/images/dashboard/d8.png';
+import p3 from '../../../../assets/images/dashboard/p3.png';
 import Select from "@material-ui/core/Select";
+import {Typography, AppBar} from "@material-ui/core";
 import im5 from '../../../../assets/images/im5.png';
 import ReactPaginate from 'react-paginate';
 import GridItem from "../../../../app/components/Grid/GridItem.js";
@@ -41,16 +44,22 @@ import HistoryContent from '../../components/historyContent.jsx';
 import PaymentContent from '../../components/paymentContent.jsx';
 import PaymentResourceContent from '../../components/paymentResourceContent.jsx';
 import AccountContent from '../../components/accountContent.jsx';
+import ProgressionContent from '../../components/progression.jsx';
 import { Player, ControlBar } from 'video-react';
 import badge from '../../../../assets/images/dashboard/badge.png';
 import Chat from "../../../../app/components/chat/chat.jsx";
 import ScrollToBottom from "react-scroll-to-bottom";
 import {NotificationManager,NotificationContainer} from 'react-notifications';
 import io from 'socket.io-client';
+import { SocketContext } from '../../../../SocketContext.js';
+import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessionId.jsx";
+import MesTravaux from '../../components/mesTravaux.jsx';
+
+
 //5271ff 
 //ffce52 
  const socket = io.connect("http://localhost:3001");
-const DashboardStudent = () => {
+ const DashboardStudent = () => {
 
     const [isAccountContent, setIsAccountContent] = useState(false);
     const [isChooseTutor, setIsChooseTutorContent] = useState(false);
@@ -60,32 +69,54 @@ const DashboardStudent = () => {
     const [isHistoryContent, setIsHistoryContent] = useState(false);
     const [isPaymentContent, setIsPaymentContent] = useState(false);
     const [isPaymentResourceContent, setIsPaymentResourceContent] = useState(false);
-    const [room, setRoom] = useState("123");
+    const [isProgressionContent, setIsProgressionContent] = useState(false);
     const [username, setUsername] = useState("pirateBay");
     const [showChatModal, setShowChatModal] = useState(false);
     const [displayAsk, setDisplayAsk] = useState("none");
+    const [showEditModal,setShowEditModal] = useState(false);
     const [remoteUsername, setRemoteUsername] = useState("Mme Ngono");
-    const [countBadge, setCountBadge] = useState(0);
+    const [remoteImage, setRemoteImage] = useState(im5);
+    const [countBadge, setCountBadge] = useState(1);
     const [showBadge, setShowBadge] = useState(false);
-    const [messageList, setMessageList] = useState({});
-    const [studentId, setStudentId] = useState(123);
-    const [tutorId, setTutorId] = useState(12345);
+    const [messageList, setMessageList] = useState([]);
+    const [studentId, setStudentId] = useState("student");
+    const [tutorId, setTutorId] = useState("tutor");
+    const [room, setRoom] = useState(tutorId+studentId);
+    const [statusConnection,setStatusConnection] = useState(false);
+    const [me, setMe] = useState('');
+    const [playVideor, setPlayVideor] = useState(false);
+    const [courseLink, setCourseLink] = useState("");
     let dataList = [];
 
-
+   const history = useHistory();
     const joinRoom = () => {
        const userData = {
             author : username,
             room : room
         };
-        console.log("MY DATA-------",userData);
         if(userData.author !== "" && userData.room !== ""){
            socket.emit("join_room", userData); 
         }
         
     }
-   
+    
       useEffect(()=>{
+        socket.emit("username",username);
+        socket.on('me', (id) => {
+            setMe(id);
+            setStatusConnection(true);
+            console.log('My ID',id);
+        }); 
+        console.log('My ID outside',me);
+        socket.on("disconnectMe", ()=>{
+            setStatusConnection(false);
+        });
+
+
+        socket.on("notification", (data)=>{
+            setShowChatModal(true,setDisplayAsk('flex'));
+        });
+
         var element1 = document.getElementById("myDiv1");
         var element2 = document.getElementById("dash1");
         element2.style.borderRadius = "3px 3px 3px 3px";
@@ -99,7 +130,8 @@ const DashboardStudent = () => {
                 document.getElementById('myDiv5'),
                 document.getElementById('myDiv6'),
                 document.getElementById('myDiv7'),
-                document.getElementById('myDiv8')
+                document.getElementById('myDiv8'),
+                document.getElementById('myDiv9')
             ];
             for(var i of tab1){
                 i.style.backgroundColor = ""
@@ -108,6 +140,7 @@ const DashboardStudent = () => {
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
+                document.getElementById('dash5')
                 
             ]
             for(var i of tab2){
@@ -115,8 +148,16 @@ const DashboardStudent = () => {
                 i.style.width = ""
                 i.style.border = ""
             }
-
+        return function cleanup () {
+            return;
+        }
     },[])
+
+    const disconnectUser = () => {
+        localStorage.removeItem("user");
+        window.location.reload();
+        return false;
+   }
 
 
     function menuToggle(){
@@ -133,11 +174,7 @@ const DashboardStudent = () => {
                 };
 
     const  createNotification = (type) => {
-            console.log(type);
-            if(countBadge == 0){
-                return;
-            }else{
-               return () => {
+            return () => {
               switch (type) {
                 case 'info':
                   NotificationManager.info(
@@ -145,7 +182,7 @@ const DashboardStudent = () => {
                     <Avatar 
                         size="30"
                         round={true}
-                        src={im5}
+                        src={remoteImage}
                         name='logo'
                     />
                     <span style={{margin:'0% 0% 0% 5%'}}>{remoteUsername}</span>
@@ -168,13 +205,36 @@ const DashboardStudent = () => {
                   break;
               }
             };  
-            }
-           
+            };
+             const ModalContentEdit  = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+           <div className="contain" id='myContain'>
+                <div style={{display:'inline-block', margin:'3%', fontSize:'100%', width:'170%'}}>
+                    <span className='close' onClick={()=>closeModal()}>&times;</span>
+                    <MesTravaux  /> 
+                </div>
+                
+            </div>
+          
+      </div>
+    )
   };
 
-   const callbackFunction = (childData) => {
-        console.log("Data from child", childData);
-    }
 
   const ModalChat = () => {
     return(
@@ -204,32 +264,19 @@ const DashboardStudent = () => {
                       <span className='close' onClick={()=>closeModal()}>&times;</span>
                   </GridItem>
               </GridContainer>
-              <GridContainer>
-                  <GridItem xs={4} sm={4} md={4}>
-                      <Avatar style={{margin:'0% 0% 0% 50%'}}
-                            size="30"
-                            round={true}
-                            src={im5}
-                            name='logo'
-                        />
-                  </GridItem>
-                  <GridItem xs={4} sm={4} md={5}>
-                      {remoteUsername}
-                  </GridItem>
-                  <GridItem xs={4} sm={4} md={3}>
-                      <div className="online"></div>
-                  </GridItem>
-              </GridContainer>
+              
               <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
                       <Chat 
+                        role={'student'}
                         socket={socket} 
+                        id={me}
                         username={username} 
-                        room={room} 
-                        messageListd={messageList} 
-                        studentId={studentId}
-                        tutorId={tutorId} 
-                        isRole={'student'}  />
+                        room={room}
+                        remoteImage={remoteImage}
+                        remoteUsername={remoteUsername}
+                        isConnected={statusConnection}
+                     />
                   </GridItem>
               </GridContainer>
           </GridItem>
@@ -237,6 +284,62 @@ const DashboardStudent = () => {
       </div>
     )
   };
+
+  const handlerAccount = () => {
+    setIsPaymentResourceContent(false,
+            setIsCourseContent(false),
+            setIsAccountContent(true),
+            setIsHistoryContent(false),
+            setIsPaymentContent(false),
+            setIsConferenceContent(false),
+            setIsChooseTutorContent(false),
+            setIsContactHelpContent(false),
+            setIsProgressionContent(false))
+    let element = document.getElementById("myDiv8");
+            element.style.backgroundColor = "#dd1b16";
+            let tab = [
+                document.getElementById('myDiv1'),
+                document.getElementById('myDiv2'),
+                document.getElementById('myDiv3'),
+                document.getElementById('myDiv6'),
+                document.getElementById('myDiv5'),
+                document.getElementById('myDiv4'),
+                document.getElementById('myDiv7'),
+                document.getElementById('myDiv9')
+            ]
+            for(var i of tab){
+                i.style.backgroundColor = ""
+            }
+  }
+
+  const outPutClickHandlerVideo = (courselink) => {
+    console.log("handle e target-------------------");
+    setPlayVideor(true,setCourseLink(courselink));
+    setIsPaymentResourceContent(false,
+            setIsCourseContent(false),
+            setIsAccountContent(false),
+            setIsHistoryContent(false),
+            setIsPaymentContent(false),
+            setIsConferenceContent(true),
+            setIsChooseTutorContent(false),
+            setIsContactHelpContent(false),
+            setIsProgressionContent(false))
+        let element = document.getElementById("myDiv4");
+            element.style.backgroundColor = "#dd1b16";
+            let tab = [
+                document.getElementById('myDiv1'),
+                document.getElementById('myDiv2'),
+                document.getElementById('myDiv3'),
+                document.getElementById('myDiv6'),
+                document.getElementById('myDiv5'),
+                document.getElementById('myDiv7'),
+                document.getElementById('myDiv8'),
+                document.getElementById('myDiv9')
+            ]
+            for(var i of tab){
+                i.style.backgroundColor = ""
+            }
+  }
 
     
 
@@ -248,8 +351,9 @@ const DashboardStudent = () => {
             setIsPaymentContent(false),
             setIsConferenceContent(false),
             setIsChooseTutorContent(false),
-            setIsContactHelpContent(false))
-        let element = document.getElementById("myDiv6");
+            setIsContactHelpContent(false),
+            setIsProgressionContent(false))
+        let element = document.getElementById("myDiv7");
             element.style.backgroundColor = "#dd1b16";
             let tab = [
                 document.getElementById('myDiv1'),
@@ -257,8 +361,9 @@ const DashboardStudent = () => {
                 document.getElementById('myDiv3'),
                 document.getElementById('myDiv4'),
                 document.getElementById('myDiv5'),
-                document.getElementById('myDiv7'),
-                document.getElementById('myDiv8')
+                document.getElementById('myDiv6'),
+                document.getElementById('myDiv8'),
+                document.getElementById('myDiv9')
             ]
             for(var i of tab){
                 i.style.backgroundColor = ""
@@ -322,7 +427,8 @@ const DashboardStudent = () => {
                     setIsConferenceContent(false),
                     setIsPaymentResourceContent(false),
                     setIsChooseTutorContent(false),
-                    setIsContactHelpContent(false))
+                    setIsContactHelpContent(false),
+                    setIsProgressionContent(false))
             let tab = [
                 document.getElementById('myDiv2'),
                 document.getElementById('myDiv3'),
@@ -330,7 +436,8 @@ const DashboardStudent = () => {
                 document.getElementById('myDiv5'),
                 document.getElementById('myDiv6'),
                 document.getElementById('myDiv7'),
-                document.getElementById('myDiv8')
+                document.getElementById('myDiv8'),
+                document.getElementById('myDiv9')
             ];
             for(var i of tab){
                 i.style.backgroundColor = ""
@@ -346,7 +453,8 @@ const DashboardStudent = () => {
                     setIsConferenceContent(false),
                     setIsPaymentResourceContent(false),
                     setIsChooseTutorContent(true),
-                    setIsContactHelpContent(false))
+                    setIsContactHelpContent(false),
+                    setIsProgressionContent(false))
              let tab = [
                 document.getElementById('myDiv1'),
                 document.getElementById('myDiv3'),
@@ -354,7 +462,8 @@ const DashboardStudent = () => {
                 document.getElementById('myDiv5'),
                 document.getElementById('myDiv6'),
                 document.getElementById('myDiv7'),
-                document.getElementById('myDiv8')
+                document.getElementById('myDiv8'),
+                document.getElementById('myDiv9')
             ]
             for(var i of tab){
                 i.style.backgroundColor = ""
@@ -369,7 +478,8 @@ const DashboardStudent = () => {
                     setIsConferenceContent(false),
                     setIsPaymentResourceContent(false),
                     setIsChooseTutorContent(false),
-                    setIsContactHelpContent(true))
+                    setIsContactHelpContent(true),
+                    setIsProgressionContent(false))
              let tab = [
                 document.getElementById('myDiv1'),
                 document.getElementById('myDiv2'),
@@ -377,7 +487,8 @@ const DashboardStudent = () => {
                 document.getElementById('myDiv5'),
                 document.getElementById('myDiv6'),
                 document.getElementById('myDiv7'),
-                document.getElementById('myDiv8')
+                document.getElementById('myDiv8'),
+                document.getElementById('myDiv9')
             ]
             for(var i of tab){
                 i.style.backgroundColor = ""
@@ -392,7 +503,8 @@ const DashboardStudent = () => {
                     setIsConferenceContent(true),
                     setIsPaymentResourceContent(false),
                     setIsChooseTutorContent(false),
-                    setIsContactHelpContent(false))
+                    setIsContactHelpContent(false),
+                    setIsProgressionContent(false))
             let tab = [
                 document.getElementById('myDiv1'),
                 document.getElementById('myDiv2'),
@@ -400,7 +512,8 @@ const DashboardStudent = () => {
                 document.getElementById('myDiv5'),
                 document.getElementById('myDiv6'),
                 document.getElementById('myDiv7'),
-                document.getElementById('myDiv8')
+                document.getElementById('myDiv8'),
+                document.getElementById('myDiv9')
             ]
             for(var i of tab){
                 i.style.backgroundColor = ""
@@ -411,11 +524,12 @@ const DashboardStudent = () => {
             setIsCourseContent(false,
                     setIsAccountContent(false),
                     setIsHistoryContent(false),
-                    setIsPaymentContent(true),
+                    setIsPaymentContent(false),
                     setIsConferenceContent(false),
                     setIsPaymentResourceContent(false),
                     setIsChooseTutorContent(false),
-                    setIsContactHelpContent(false))
+                    setIsContactHelpContent(false),
+                    setIsProgressionContent(true))
             let tab = [
                 document.getElementById('myDiv1'),
                 document.getElementById('myDiv2'),
@@ -423,7 +537,8 @@ const DashboardStudent = () => {
                 document.getElementById('myDiv4'),
                 document.getElementById('myDiv6'),
                 document.getElementById('myDiv7'),
-                document.getElementById('myDiv8')
+                document.getElementById('myDiv8'),
+                document.getElementById('myDiv9')
             ]
             for(var i of tab){
                 i.style.backgroundColor = ""
@@ -434,11 +549,12 @@ const DashboardStudent = () => {
             setIsCourseContent(false,
                     setIsAccountContent(false),
                     setIsHistoryContent(false),
-                    setIsPaymentContent(false),
+                    setIsPaymentContent(true),
                     setIsConferenceContent(false),
-                    setIsPaymentResourceContent(true),
+                    setIsPaymentResourceContent(false),
                     setIsChooseTutorContent(false),
-                    setIsContactHelpContent(false))
+                    setIsContactHelpContent(false),
+                    setIsProgressionContent(false))
             let tab = [
                 document.getElementById('myDiv1'),
                 document.getElementById('myDiv2'),
@@ -446,7 +562,8 @@ const DashboardStudent = () => {
                 document.getElementById('myDiv4'),
                 document.getElementById('myDiv5'),
                 document.getElementById('myDiv7'),
-                document.getElementById('myDiv8')
+                document.getElementById('myDiv8'),
+                document.getElementById('myDiv9')
             ]
             for(var i of tab){
                 i.style.backgroundColor = ""
@@ -455,13 +572,14 @@ const DashboardStudent = () => {
         else if(id=="myDiv7"){
             element.style.backgroundColor = "#dd1b16";
             setIsCourseContent(false,
-                    setIsAccountContent(true),
+                    setIsAccountContent(false),
                     setIsHistoryContent(false),
                     setIsPaymentContent(false),
                     setIsConferenceContent(false),
-                    setIsPaymentResourceContent(false),
+                    setIsPaymentResourceContent(true),
                     setIsChooseTutorContent(false),
-                    setIsContactHelpContent(false))
+                    setIsContactHelpContent(false),
+                    setIsProgressionContent(false))
              let tab = [
                 document.getElementById('myDiv1'),
                 document.getElementById('myDiv2'),
@@ -469,7 +587,8 @@ const DashboardStudent = () => {
                 document.getElementById('myDiv4'),
                 document.getElementById('myDiv5'),
                 document.getElementById('myDiv6'),
-                document.getElementById('myDiv8')
+                document.getElementById('myDiv8'),
+                document.getElementById('myDiv9')
             ]
             for(var i of tab){
                 i.style.backgroundColor = ""
@@ -478,13 +597,14 @@ const DashboardStudent = () => {
         else if(id=="myDiv8"){
             element.style.backgroundColor = "#dd1b16";
             setIsCourseContent(false,
-                    setIsAccountContent(false),
-                    setIsHistoryContent(true),
+                    setIsAccountContent(true),
+                    setIsHistoryContent(false),
                     setIsPaymentContent(false),
                     setIsConferenceContent(false),
                     setIsPaymentResourceContent(false),
                     setIsChooseTutorContent(false),
-                    setIsContactHelpContent(false))
+                    setIsContactHelpContent(false),
+                    setIsProgressionContent(false))
              let tab = [
                 document.getElementById('myDiv1'),
                 document.getElementById('myDiv2'),
@@ -492,7 +612,33 @@ const DashboardStudent = () => {
                 document.getElementById('myDiv4'),
                 document.getElementById('myDiv5'),
                 document.getElementById('myDiv6'),
-                document.getElementById('myDiv7')
+                document.getElementById('myDiv7'),
+                document.getElementById('myDiv9')
+
+            ]
+            for(var i of tab){
+                i.style.backgroundColor = ""
+            }
+        }else if(id=="myDiv9"){
+            element.style.backgroundColor = "#dd1b16";
+            setIsCourseContent(false,
+                    setIsAccountContent(false),
+                    setIsHistoryContent(true),
+                    setIsPaymentContent(false),
+                    setIsConferenceContent(false),
+                    setIsPaymentResourceContent(false),
+                    setIsChooseTutorContent(false),
+                    setIsContactHelpContent(false),
+                    setIsProgressionContent(false))
+             let tab = [
+                document.getElementById('myDiv1'),
+                document.getElementById('myDiv2'),
+                document.getElementById('myDiv3'),
+                document.getElementById('myDiv4'),
+                document.getElementById('myDiv5'),
+                document.getElementById('myDiv6'),
+                document.getElementById('myDiv7'),
+                document.getElementById('myDiv8')
 
             ]
             for(var i of tab){
@@ -504,18 +650,17 @@ const DashboardStudent = () => {
           
     }
         function closeModal(){
-          setShowChatModal(false,setDisplayAsk("none"));
+          setShowChatModal(false,setShowEditModal(false), setDisplayAsk("none"));
      
           }
-
-          function openModal(type){
-             if(type=="badge"){
-                setShowBadge(false);
-                setShowChatModal(true,setDisplayAsk("flex"));
-             }
-            
-             setShowChatModal(true,setDisplayAsk("flex"));
-          }
+        function openModal(type){
+                joinRoom();
+                if(type=="submit"){
+                    setShowChatModal(false,setShowEditModal(true), setDisplayAsk("flex")); 
+                }else{
+                    setShowChatModal(true,setShowEditModal(false), setDisplayAsk("flex")); 
+                } 
+              }
 
     function changeStyle1(id) {
         let element = document.getElementById(id);
@@ -527,6 +672,7 @@ const DashboardStudent = () => {
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
+                document.getElementById('dash5')
                 
             ]
             for(var i of tab){
@@ -543,7 +689,7 @@ const DashboardStudent = () => {
                 document.getElementById('dash1'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
-                
+                document.getElementById('dash5')
             ]
             for(var i of tab){
                 i.style.borderRadius = ""
@@ -559,7 +705,7 @@ const DashboardStudent = () => {
                 document.getElementById('dash1'),
                 document.getElementById('dash2'),
                 document.getElementById('dash4'),
-                
+                document.getElementById('dash5')
             ]
             for(var i of tab){
                 i.style.borderRadius = ""
@@ -575,7 +721,23 @@ const DashboardStudent = () => {
                 document.getElementById('dash1'),
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
-                
+                document.getElementById('dash5')
+            ]
+            for(var i of tab){
+                i.style.borderRadius = ""
+                i.style.width = ""
+                i.style.border = ""
+            }
+        }
+        else if(id=="dash5"){
+            element.style.borderRadius = "3px 3px 3px 3px";
+            element.style.width = "100%";
+            element.style.border = "2px solid #DD1B16";
+            let tab = [
+                document.getElementById('dash1'),
+                document.getElementById('dash2'),
+                document.getElementById('dash3'),
+                document.getElementById('dash4')
             ]
             for(var i of tab){
                 i.style.borderRadius = ""
@@ -589,8 +751,9 @@ const DashboardStudent = () => {
         return(
             <div style={{overflow:'hidden'}}>
             {showChatModal? <ModalChat />  : ''}
+            {showEditModal? <ModalContentEdit /> :'' } 
             <GridContainer>
-                <GridItem xs={12} sm={12} md={3}>
+                <GridItem xs={3} sm={3} md={3}>
                     <ProSidebar style={{width:'100%'}}>
                       <SidebarContent style={{backgroundColor:'#eeeeee', padding:'5%'}}>
                       <GridContainer>
@@ -615,7 +778,7 @@ const DashboardStudent = () => {
                               <div className="side-content siden1" id="myDiv1" onClick={()=>changeStyle('myDiv1')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={d1}
                                         name='logo'
@@ -634,7 +797,7 @@ const DashboardStudent = () => {
                                 <div className="side-content" id="myDiv2" onClick={()=>changeStyle('myDiv2')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={d2}
                                         name='logo'
@@ -651,7 +814,7 @@ const DashboardStudent = () => {
                                <div className="side-content" id="myDiv3" onClick={()=>changeStyle('myDiv3')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={d3}
                                         name='logo'
@@ -668,7 +831,7 @@ const DashboardStudent = () => {
                                <div className="side-content" id="myDiv4" onClick={()=>changeStyle('myDiv4')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={d4}
                                         name='logo'
@@ -685,7 +848,24 @@ const DashboardStudent = () => {
                                <div className="side-content" id="myDiv5" onClick={()=>changeStyle('myDiv5')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
+                                        round={false}
+                                        src={p3}
+                                        name='logo'
+                                    />
+                                </div>
+                                <span className="text">Votre Progression</span>
+                              </div>
+                            </GridItem>
+                                    
+                      </GridContainer>
+
+                      <GridContainer>
+                            <GridItem xs={12} sm={12} md={12}>
+                               <div className="side-content" id="myDiv6" onClick={()=>changeStyle('myDiv6')}>
+                                <div style={{padding:'3%',display:'inline-block'}}>
+                                    <Avatar 
+                                        size="40"
                                         round={false}
                                         src={d5}
                                         name='logo'
@@ -699,10 +879,10 @@ const DashboardStudent = () => {
 
                       <GridContainer>
                             <GridItem xs={12} sm={12} md={12}>
-                               <div className="side-content" id="myDiv6" onClick={()=>changeStyle('myDiv6')}>
+                               <div className="side-content" id="myDiv7" onClick={()=>changeStyle('myDiv7')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={d6}
                                         name='logo'
@@ -716,10 +896,10 @@ const DashboardStudent = () => {
 
                       <GridContainer>
                             <GridItem xs={12} sm={12} md={12}>
-                              <div className="side-content" id="myDiv7" onClick={()=>changeStyle('myDiv7')}>
+                              <div className="side-content" id="myDiv8" onClick={()=>changeStyle('myDiv8')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={d7}
                                         name='logo'
@@ -733,10 +913,10 @@ const DashboardStudent = () => {
 
                       <GridContainer>
                             <GridItem xs={12} sm={12} md={12}>
-                              <div className="side-content" id="myDiv8" onClick={()=>changeStyle('myDiv8')}>
+                              <div className="side-content" id="myDiv9" onClick={()=>changeStyle('myDiv9')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={d8}
                                         name='logo'
@@ -755,33 +935,25 @@ const DashboardStudent = () => {
                 </GridItem>
 
 
-                <GridItem xs={12} sm={12} md={9} style={{marginTop:'2%'}}>
+                <GridItem xs={9} sm={9} md={9} style={{marginTop:'2%'}}>
 
-                    <GridContainer>
-                        <GridItem xs={12} sm={12} md={2}>
+                   <GridContainer>
+                        <GridItem xs={2} sm={2} md={2}>
                             <div id="dash1" className='dash-navitem dashn1' onClick={()=>changeStyle1('dash1')}>Dashboard</div>
                         </GridItem>
-                       
                         <GridItem xs={12} sm={12} md={2}>
-                             <div id="dash2" className='dash-navitem' onClick={()=>changeStyle1('dash2')}>Nos offres</div>
+                             <div id="dash2" className='dash-navitem' onClick={()=>changeStyle1('dash2')}>Qui sommes-nous?</div>
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={2}>
-                             <div id="dash3" className='dash-navitem' onClick={()=>changeStyle1('dash3')}>Nos classes</div>
+                        <GridItem xs={2} sm={2} md={2}>
+                             <div id="dash3" className='dash-navitem' onClick={()=>changeStyle1('dash3')}>Nos offres</div>
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={2}>
-                             <div id="dash4" className='dash-navitem' onClick={()=>changeStyle1('dash4')}>Nos Enseignants</div>
+                        <GridItem xs={2} sm={2} md={2}>
+                             <div id="dash4" className='dash-navitem' onClick={()=>changeStyle1('dash4')}>Nos classes</div>
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={2}>
-                             <div style={{margin:'0% 0% 0% 25%'}}>
-                                        <button  onClick={createNotification('info')} type="button" class="icon-button" style={{float:'left'}}>
-                                            <span class="material-icons"><img src={badge} width='100%' /></span>
-                                           {showBadge?<span class="icon-button__badge">{countBadge}</span> :''} 
-                                        </button>
-                                       
-                                            
-                             </div>
+                        <GridItem xs={2} sm={2} md={2}>
+                             <div id="dash5" className='dash-navitem' onClick={()=>changeStyle1('dash5')}>Nos Enseignants</div>
                         </GridItem>
-                         <GridItem xs={12} sm={12} md={2}>
+                         <GridItem xs={2} sm={2} md={2}>
                                         <Dropdown style={{top:'-15px'}}>
                                                     <Dropdown.Toggle
                                                     variant="secondary btn-sm"
@@ -801,16 +973,28 @@ const DashboardStudent = () => {
                                                     </Dropdown.Toggle>
 
                                                     <Dropdown.Menu style={{backgroundColor:'#F8D04E',borderRadius:'10%'}}>
+                                                        <Dropdown.Item href="#">
+                                                            <div onClick={()=>history.push("/")}>
+                                                                <img src={dic} width='15%'/>
+                                                                <u>Acceuil</u>
+                                                            </div>
+                                                        </Dropdown.Item>
                                                         <Dropdown.Item href="#" >
-                                                            <div style={{marginBottom:'5%'}}>
+                                                            <div style={{marginBottom:'5%'}} onClick={handlerAccount}>
                                                                     <img src={acc} width='15%'/>
                                                                     <u>Mon compte</u>
                                                             </div>
                                                         </Dropdown.Item>
                                                         <Dropdown.Item href="#">
-                                                            <div>
+                                                            <div onClick={()=>disconnectUser()}>
                                                                 <img src={dic} width='15%'/>
                                                                 <u>Se déconnecter</u>
+                                                            </div>
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item href="#">
+                                                            <div style={{fontSize:'100%'}} onClick={()=>openModal('submit')}>
+            
+                                                                <u>Soumettre mes travaux</u>
                                                             </div>
                                                         </Dropdown.Item>
                                                     </Dropdown.Menu>
@@ -819,14 +1003,15 @@ const DashboardStudent = () => {
                        
                     </GridContainer>
 
-                          {isCourseContent?<CourseContent />:''}
+                          {isCourseContent?<CourseContent onChildClickHandlerVideo={outPutClickHandlerVideo}/>:''}
                           {isAccountContent?<AccountContent />:''}
-                          {isConferenceContent?<ConferenceContent />:''}
+                          {isConferenceContent?<ConferenceContent playvideo={playVideor} courseLink={courseLink} />:''}
                           {isContactHelpContent?<ContactHelpContent />:''}
-                          {isHistoryContent?<HistoryContent />:''}
+                          {isHistoryContent?<HistoryContent onChildClickHandlerVideo={outPutClickHandlerVideo} />:''}
                           {isPaymentContent?<PaymentContent onChildClickHandlerPay={outPutClickHandlerPay} />:''}
                           {isChooseTutor?<ChooseTutorContent onChildOpenModal={openModal} />:''}
                           {isPaymentResourceContent?<PaymentResourceContent />:''}
+                          {isProgressionContent?<ProgressionContent />:''}
 
 
                 </GridItem>

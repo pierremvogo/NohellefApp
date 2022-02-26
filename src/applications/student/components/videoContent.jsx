@@ -8,12 +8,14 @@ export const VideoContent = ( {
   vWidth,
   vHeight
 } ) => {
+
       return(
         <VideoPlayer 
             src={videoLink}
             poster={poster} 
             width={vWidth} 
             height={vHeight}
+            
           />
         )
  }

@@ -1,10 +1,10 @@
-import react from 'react';
+import React,{useState,useEffect} from 'react';
 import GridItem from "../../../app/components/Grid/GridItem.js";
 import GridContainer from "../../../app/components/Grid/GridContainer.js";
 import Card from "../../../app/components/Card/Card.js";
 import CardHeader from "../../../app/components/Card/CardHeader.js";
 import CardBody from "../../../app/components/Card/CardBody.js";
-import React,{useState,useEffect} from 'react';
+import { useHistory } from "react-router-dom";
 import CardAvatar from "../../../app/components/Card/CardAvatar.js";
 import CardFooter from "../../../app/components/Card/CardFooter.js";
 import { Dropdown } from 'react-bootstrap';
@@ -23,6 +23,7 @@ import Chat from "../../../app/components/chat/chat.jsx";
 import io from 'socket.io-client';
 
 
+
 const ChooseTutorContent = ({onChildOpenModal}) => {
 	const [posts, setPosts] = useState([]);
   const [posts1, setPosts1] = useState([]);
@@ -38,6 +39,7 @@ const ChooseTutorContent = ({onChildOpenModal}) => {
   const [date, setDate] = useState();
   const [showJoin, setShowJoin] = useState(false);
 
+  const history = useHistory();
 
 	useEffect(()=>{
 		setPosts(data,setPosts1(data1));
@@ -136,8 +138,8 @@ const ChooseTutorContent = ({onChildOpenModal}) => {
 
 
 	return(
-			<div className="container">
-			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
+			<div>
+			 <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
                             <div style={{display:'inline-block',color:'red',margin:'2%'}}>
                                 Vos Tuteurs
@@ -176,34 +178,34 @@ const ChooseTutorContent = ({onChildOpenModal}) => {
 
                               }}>
                               <GridContainer>
-                                <GridItem xs={12} sm={12} md={4}>
-                                <div style={{margin:'6%'}}>
+                                <GridItem xs={2} sm={2} md={2} style={{textAlign:'center'}}>
+                                <div style={{margin:'10%'}}>
                                   <Avatar 
                                         size="50"
                                         round={true}
                                         src={value.tutorPicture}
                                         name='logo'
                                     />
-                                    <div className="onlinetutor"></div>
+                                    
                                   </div>
                                 </GridItem>
-                                <GridItem xs={12} sm={12} md={4}>
-                                        <div style={{margin:'4%',float:'left'}}>
-                                          <div style={{color:'white',fontSize:'1.2vw'}}>{value.id}-Nom: {value.tutorName}</div>
-                                          <div style={{color:'white',fontSize:'1.2vw'}}>Spécialité: {value.tutorSpeciality}</div>
+                                <GridItem xs={5} sm={5} md={5} style={{textAlign:'center'}}>
+                                        <div style={{margin:'5%'}}>
+                                          <div style={{color:'white',fontSize:'100%'}}>{value.id}-Nom: {value.tutorName}</div>
+                                          <div style={{color:'white',fontSize:'100%'}}>Spécialité: {value.tutorSpeciality}</div>
                                         </div>
                                 </GridItem>
 
-                                <GridItem xs={12} sm={12} md={4}>
-                                  <div style={{margin:'7% 10% 0% 0%'}}>
-                                <GridContainer>
-                                  <GridItem xs={12} sm={12} md={6}>
-                                    <img src={conchat} width='30%'/>
-                                  </GridItem>
-                                  <GridItem xs={12} sm={12} md={6} onClick={(e)=>openModal(e)}>
-                                    <img src={chat1} width='100%'/>
-                                  </GridItem>
-                                </GridContainer>
+                                <GridItem xs={5} sm={5} md={5} style={{textAlign:'center'}}>
+                                  <div style={{margin:'5%'}}>
+                                    <GridContainer>
+                                      <GridItem xs={6} sm={6} md={6}>
+                                        <img src={conchat} onClick={()=>history.push('/room/chat')} width='30%'/>
+                                      </GridItem>
+                                      <GridItem xs={6} sm={6} md={6} onClick={(e)=>openModal(e)}>
+                                        <img src={chat1} width='100%'/>
+                                      </GridItem>
+                                    </GridContainer>
                                   </div>
                                 </GridItem>
 
@@ -233,8 +235,8 @@ const ChooseTutorContent = ({onChildOpenModal}) => {
                     </GridItem>
                   </GridContainer>
 
-                   <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                   <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
+                        <GridItem xs={3} sm={3} md={3} style={{marginTop:'2%'}}>
                             <div style={{display:'inline-block',color:'red',margin:'2%'}}>
                                 Rechercher un tuteur
                             </div>
@@ -245,16 +247,16 @@ const ChooseTutorContent = ({onChildOpenModal}) => {
                                 name='logo'
                             />
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={2} style={{marginTop:'2%'}}>
-                           <div style={{width:'100%',fontSize:'1vw'}}>
+                        <GridItem xs={2} sm={2} md={2} style={{marginTop:'2%'}}>
+                           <div style={{width:'100%',fontSize:'100%'}}>
                                <input type='date' onChange={e=>setDate(e.target.value)} style={{
                                 width:'100%',
                                 height:'45px'
                                }}/>
                             </div>
                         </GridItem>
-                         <GridItem xs={12} sm={12} md={2} style={{marginTop:'2%'}}>
-                             <div style={{fontSize:'1vw'}}>
+                         <GridItem xs={2} sm={2} md={2} style={{marginTop:'2%'}}>
+                             <div style={{fontSize:'100%'}}>
                                 <select name="pets" id="pet-select">
                                     <option value="">Plage horaire</option>
                                     <option value="dog">07h00 - 08h00</option>
@@ -271,7 +273,7 @@ const ChooseTutorContent = ({onChildOpenModal}) => {
                                 </select>
                             </div>
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={2} style={{marginTop:'2%'}}>
+                        <GridItem xs={2} sm={2} md={2} style={{marginTop:'2%'}}>
 
                              <div style={{border:'2px solid #0069D9', width:'110%'}}>
                                  <ReactSearchBox
@@ -284,8 +286,8 @@ const ChooseTutorContent = ({onChildOpenModal}) => {
 
                            
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={2} style={{marginTop:'2%'}}>
-                             <div style={{fontSize:'1vw'}}>
+                        <GridItem xs={2} sm={2} md={2} style={{marginTop:'2%'}}>
+                             <div style={{fontSize:'100%'}}>
                                 <select name="pets" id="pet-select">
                                     <option value="">Spécialité</option>
                                     <option value="dog">Français</option>
@@ -317,8 +319,8 @@ const ChooseTutorContent = ({onChildOpenModal}) => {
 
                               }}>
                               <GridContainer>
-                                <GridItem xs={12} sm={12} md={4}>
-                                <div style={{margin:'10%'}}>
+                                <GridItem xs={4} sm={4} md={4} style={{textAlign:'center'}}>
+                                <div style={{margin:'5%'}}>
                                   <Avatar 
                                         size="50"
                                         round={true}
@@ -328,17 +330,17 @@ const ChooseTutorContent = ({onChildOpenModal}) => {
 
                                   </div>
                                 </GridItem>
-                                <GridItem xs={12} sm={12} md={4}>
-                                  <div style={{margin:'4%',float:'left'}}>
-                                    <div style={{color:'white',fontSize:'1.2vw'}}>{value.id}-Nom: {value.tutorName}</div>
-                                    <div style={{color:'white',fontSize:'1.2vw'}}>Spécialité: {value.tutorSpeciality}</div>
+                                <GridItem xs={4} sm={4} md={4} style={{textAlign:'center'}}>
+                                  <div style={{margin:'5%'}}>
+                                    <div style={{color:'white',fontSize:'100%'}}>{value.id}-Nom: {value.tutorName}</div>
+                                    <div style={{color:'white',fontSize:'100%'}}>Spécialité: {value.tutorSpeciality}</div>
                                   </div>
                                 </GridItem>
-                                <GridItem xs={12} sm={12} md={4}>
+                                <GridItem xs={4} sm={4} md={4} style={{textAlign:'center'}}>
                                  
-                                <div style={{margin:'6%'}}>
-                                      <img src={choisir} width='90%'/>
-                                </div>
+                                  <div style={{margin:'5%'}}>
+                                        <img src={choisir} width='90%'/>
+                                  </div>
                                   
                                 </GridItem>
                               </GridContainer>

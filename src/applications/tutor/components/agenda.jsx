@@ -24,28 +24,28 @@ var now = new Date();
 var items = [
   {
    _id            :guid(),
-    name          : 'Meeting , dev staff!',
+    name          : 'Web-Conférence',
     startDateTime : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 10, 0),
     endDateTime   : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0),
     classes       : 'color-1 color-4'
   },
   {
    _id            :guid(),
-    name          : 'Working lunch , Holly',
+    name          : 'Web-Conférence',
     startDateTime : new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, 11, 0),
     endDateTime   : new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, 13, 0),
     classes       : 'color-2'
   },
   {
    _id            :guid(),
-    name          : 'Conference , plaza',
+    name          : 'Web-Conférence',
     startDateTime : new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, 11 , 0),
     endDateTime   : new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, 14 ,30),
     classes       : 'color-4'
   },
   {
    _id            :'event-4',
-    name          : 'Customers issues review',
+    name          : 'Web-Conférence',
     startDateTime : new Date(now.getFullYear(), now.getMonth(), now.getDate()+2, 10, 0),
     endDateTime   : new Date(now.getFullYear(), now.getMonth(), now.getDate()+2, 15, 0),
     classes       : 'color-3'
@@ -53,14 +53,14 @@ var items = [
   },
   {
     _id           :'event-5',
-    name          : 'Group activity',
+    name          : 'Web-Conférence',
     startDateTime : new Date(now.getFullYear(), now.getMonth(), now.getDate()+3, 10, 0),
     endDateTime   : new Date(now.getFullYear(), now.getMonth(), now.getDate()+3, 16, 30),
     classes       : 'color-4'
   },
   {
     _id           :'event-6',
-    name          : 'Fun Day !',
+    name          : 'Web-Conférence',
     startDateTime : new Date(now.getFullYear(), now.getMonth(), now.getDate()+7, 9, 14),
     endDateTime   : new Date(now.getFullYear(), now.getMonth(), now.getDate()+7, 17),
     classes       : 'color-3'
@@ -207,15 +207,7 @@ this.setState({numberOfDays:days})
 
       <div className="content-expanded">
 
-        <div className="control-buttons">
-          <button  className="button-control" onClick={this.zoomIn}> <img src={ag1} width='100%' /> </button>
-          <button  className="button-control" onClick={this.zoomOut}> <img src={ag2} width='70%' /> </button>
-          <button  className="button-control" onClick={this._openModal}> <img src={ag3} width='100%' /> </button>
-          <button  className="button-control" onClick={this.changeView.bind(null , 7)}> {moment.duration(7, "days").humanize()}  </button>
-          <button  className="button-control" onClick={this.changeView.bind(null , 4)}> {moment.duration(4, "days").humanize()}  </button>
-          <button  className="button-control" onClick={this.changeView.bind(null , 3)}> {moment.duration(3, "days").humanize()}  </button>
-          <button  className="button-control" onClick={this.changeView.bind(null , 1)}> {moment.duration(1, "day").humanize()} </button>
-        </div>
+       
 
         <ReactAgenda
           minDate={new Date(now.getFullYear(), now.getMonth()-3)}
@@ -231,35 +223,12 @@ this.setState({numberOfDays:days})
           rowsPerHour={this.state.rowsPerHour}
           itemColors={colors}
           helper={true}
-          //itemComponent={AgendaItem}
           view="calendar"
           autoScale={false}
           fixedHeader={true}
           onRangeSelection={this.handleRangeSelection.bind(this)}
-          onChangeEvent={this.handleItemChange.bind(this)}
-          onChangeDuration={this.handleItemSize.bind(this)}
-          onItemEdit={this.handleItemEdit.bind(this)}
           onCellSelect={this.handleCellSelection.bind(this)}
-          onItemRemove={this.removeEvent.bind(this)}
-          onDateRangeChange={this.handleDateRangeChange.bind(this)} />
-       {
-      this.state.showModal?
-          <Modal clickOutside={()=>this.setState({showModal:false})} >
-
-            <div className="modal-content">
-              <ReactAgendaCtrl
-                items={this.state.items}
-                itemColors={colors}
-                selectedCells={this.state.selected}
-                Addnew={this.addNewEvent}
-               edit={this.editEvent}  />
-            </div>
-
-        </Modal>:''
-        }
-
-
-
+          />
        </div>
 
     );

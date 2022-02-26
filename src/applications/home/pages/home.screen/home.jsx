@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Button from '../../../../app/components/buttons/button';
 import {connect, useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import { Link, Redirect, useHistory, useParams} from 'react-router-dom';
 /*import userService from '../../../services/user.service';
 import {authLogout} from '../../../auth/redux/reducer/actions/auth';
 import AuthLogin from '../../../auth/pages/auth.screen/auth_login';
@@ -31,6 +31,9 @@ import im3 from '../../../../assets/images/im3.png'
 import im5 from "../../../../assets/images/im5.png"
 import im4 from "../../../../assets/images/im4.png"
 import im7 from "../../../../assets/images/im7.png"
+import checkok from '../../../../assets/images/dashboard/checkok.png';
+import checknone from '../../../../assets/images/dashboard/checknone.png';
+import inscrip from "../../../../assets/images/inscrip.png";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import '../../../../assets/css/templatemo-style.css';
 import { Carousel } from 'react-responsive-carousel';
@@ -50,96 +53,390 @@ import AskRegister from '../../../auth/pages/auth.screen/askRegister.jsx';
 import Login from '../../../auth/pages/auth.screen/login.screen.jsx';
 import RegisterStudent from '../../../auth/pages/auth.screen/registerStudent.jsx';
 import RegisterParent from '../../../auth/pages/auth.screen/registerParent.jsx';
+import PartialLogin from '../../../auth/pages/auth.screen/partialLogin.jsx';
+import Pagination from '../../component/pagination.jsx';
 
 //#273941
-const Home = ({error}) => {
+const Home = ({user}) => {
 
     const [showAskModal,setShowAskModal] = useState(false);
-
+    const [showMessageModal,setShowMessageModal] = useState(false);
     const [showInscriptionModal, setShowInscriptionModal] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showRegisterStudentModal, setShowRegisterStudentModal] = useState(false);
     const [showRegisterParentModal, setShowRegisterParentModal] = useState(false);
+    const [showModalLoading, setShowModalLoading] = useState(false);
+    const [showModalPartial, setShowModalPartial] = useState(false);
+
+    const [studentForRegister, setStudentForRegister] = useState({});
+    const [successMessage, setSuccessMessage] = useState("");
 
     const handleConnexionClose = () =>{setShowAskModal(false)};
     const [displayAsk, setDisplayAsk] = useState("flex");
     const history = useHistory()
 
+    const [isBasic,setIsBasic] = useState(false);
+    const [isChat,setIsChat] = useState(false);
+    const [isWebConf,setIsWebConf] = useState(false);
+
+    const [posts, setPosts] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [postPerPage] = useState(3);
+    
+
+
+
+    useEffect(()=>{
+        setPosts(data);
+    },[]);
+
+
+    let data = [
+    {
+      id: 1,
+      profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbreCe cours est destiné au étudiant en algèbre",
+    },
+    {
+      id: 2,
+     profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbreCe cours est destiné au étudiant en algèbre",
+    },
+    {
+      id: 3,
+      profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbreCe cours est destiné au étudiant en algèbre",
+    },
+    {
+      id: 4,
+      profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbreCe cours est destiné au étudiant en algèbre",
+    },
+    {
+      profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbreCe cours est destiné au étudiant en algèbre",
+    },
+    {
+      id: 6,
+     profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbreCe cours est destiné au étudiant en algèbre",
+    },
+    
+    {
+      id: 7,
+     profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbre Ce cours est destiné au étudiant en algèbre",
+    },
+    
+    {
+      id: 8,
+     profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbreCe cours est destiné au étudiant en algèbre",
+    },
+    
+    {
+      id: 9,
+      profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbreCe cours est destiné au étudiant en algèbre",
+    },
+    
+    {
+      id: 10,
+      profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbreCe cours est destiné au étudiant en algèbre",
+    },
+    {
+      id: 11,
+     profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbreCe cours est destiné au étudiant en algèbre",
+    },
+    {
+      id: 12,
+      profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbreCe cours est destiné au étudiant en algèbre",
+    },
+    {
+      id: 13,
+      profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbreCe cours est destiné au étudiant en algèbre",
+    },
+    {
+      id: 14,
+     profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbreCe cours est destiné au étudiant en algèbre",
+    },
+    {
+      id: 15,
+      profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbreCe cours est destiné au étudiant en algèbre",
+    },
+    {
+      id: 16,
+     profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbreCe cours est destiné au étudiant en algèbre",
+    },
+    {
+      id: 17,
+      profile: im5,
+      name: "Pierre Mvogo",
+      comment: "Ce cours est destiné au étudiant en algèbreCe cours est destiné au étudiant en algèbre",
+    },
+  ];
+  const indexOfLastPost = currentPage * postPerPage;
+  const indexOfFirstPost = indexOfLastPost - postPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost,indexOfLastPost);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
    const outPutStudentRegister=(e)=> {
+        document.body.style.overflow = "hidden";
         setShowRegisterStudentModal(true,
             setShowLoginModal(false),
             setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
             setShowRegisterParentModal(false),setDisplayAsk("flex"))
     }
 
   const outPutParentRegister=(e)=> {
+    document.body.style.overflow = "hidden";
     setShowRegisterStudentModal(false,
             setShowLoginModal(false),
             setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
             setShowRegisterParentModal(true),setDisplayAsk("flex"))
     }
 
     const outPutLogin=(e)=> {
+        document.body.style.overflow = "hidden";
         setShowRegisterStudentModal(false,
             setShowLoginModal(true),
             setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
             setShowRegisterParentModal(false),setDisplayAsk("flex"))
     }
+
+     const outPutEventLoading=(isShow,type)=> {
+        switch(type){
+            case "login":
+                    setShowRegisterStudentModal(false,
+                    setShowLoginModal(true,setDisplayAsk("flex")),
+                    setShowAskModal(false),
+                    setShowModalLoading(isShow),
+                    setShowRegisterParentModal(false))
+                break;
+            case "rs":
+                    setShowRegisterStudentModal(true,setDisplayAsk("flex"),
+                    setShowLoginModal(false),
+                    setShowAskModal(false),
+                    setShowModalLoading(isShow),
+                    setShowRegisterParentModal(false))
+                break;
+            case "rp":
+                    setShowRegisterStudentModal(false,
+                    setShowLoginModal(false),
+                    setShowAskModal(false),
+                    setShowModalLoading(isShow),
+                    setShowRegisterParentModal(true,setDisplayAsk("flex")))
+                break;
+        }    
+    }
+
+    const outPutPartialLogin=(isShowPartial)=> {
+        setShowRegisterStudentModal((true,setDisplayAsk("flex")),
+            setShowLoginModal(false),
+            setShowModalPartial(isShowPartial),
+            setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowRegisterParentModal(false))
+    }
+    const closeMessage = (e) => {
+        setShowMessageModal(false);
+    }
+
+    const ModalSuccessMessage = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            display: displayAsk,
+            zIndex: "900000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+            <div
+                style={{
+                    width: "10%",
+                    height: "30%",
+                    zIndex: "300000",
+                    display: "flex",
+                    position: "absolute",
+                    top: "35%",
+                    left: "44%"
+                }}
+                >
+                <p>{successMessage}</p>
+            </div>
+          
+      </div>
+    )
+  };
+
+    const ModalLoading = () => {
+    
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "150%",
+            display: displayAsk,
+            zIndex: "900000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+            <div
+                style={{
+                    width: "10%",
+                    height: "30%",
+                    zIndex: "300000",
+                    display: "flex",
+                    position: "absolute",
+                    top: "20%",
+                    left: "44%"
+                }}
+                >
+                <Loader type="Oval" color="#2BAD60" height="100" width="70" />
+            </div>
+          
+      </div>
+    )
+  };
 
     const ModalAskInscription = () => {
     return(
       <div className="modal-content" id='cont'
         style={{
             width: "100%",
-            height: "4000px",
+            height: "100%",
             justifyContent: "center",
             display: displayAsk,
             alignItems: "center",
             zIndex: "300000",
             position: "absolute",
             overflow: "hidden",
-            backgroundColor: "rgb(0, 0, 0)",
-            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            backgroundColor: "transparent",
             top:"0px",
             left:"0px",
             }}
       >
             <div className="containask" id='myContain'>
-                <div style={{display:'inline-block',cursor:'pointer', fontSize:'1.5vw'}}>
-                   
-                </div><span className='close' onClick={()=>closeMod('other')}>&times;</span>
-                <AskRegister onChildClickStudentRegister={outPutStudentRegister}
-                             onChildClickParentRegister={outPutParentRegister}
-                             onChildClickLogin={outPutLogin}
-                             onChildCloseModal={closeMod} /> 
+                <div style={{display:'inline-block',cursor:'pointer', fontSize:'100%', width:'100%'}}>
+                   <span className='close' onClick={()=>closeModal('home')}>&times;</span>
+                   <AskRegister 
+                        onChildClickStudentRegister={outPutStudentRegister}
+                        onChildClickParentRegister={outPutParentRegister}
+                        onChildClickLogin={outPutLogin}
+                        onChildCloseModal={closeModal} /> 
+                </div>
+                
             </div>
           
       </div>
     )
   };
-  const ModalLogin = () => {
+
+
+const ModalPartialLogin = () => {
     return(
       <div className="modal-content" id='cont'
         style={{
             width: "100%",
-            height: "4000px",
+            height: "100%",
             justifyContent: "center",
             display: displayAsk,
             alignItems: "center",
             zIndex: "300000",
             position: "absolute",
             overflow: "hidden",
-            backgroundColor: "rgb(0, 0, 0)",
-            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            backgroundColor: "transparent",
             top:"0px",
             left:"0px",
+            bottom:'0px',
+            right:'0'
             }}
       >
             <div className="containlog" id='myContain'>
-                <div style={{display:'inline-block', fontSize:'1.5vw'}}>
-                   
-                </div><span className='close' onClick={()=>closeModal('home')}>&times;</span>
-                <Login onChildClick={openAskRegister} /> 
+                <div style={{display:'inline-block', fontSize:'100%', width:'100%'}}>
+                    <span className='close' onClick={()=>closePartialModal()}>&times;</span>
+                    <PartialLogin  
+                            onChildLoading={outPutEventLoading} 
+                            studentForRegister={studentForRegister} 
+                            onChildLoginNewUser={loginNewUser}
+                            onChildCloseModal={closePartialModal} />
+                </div>
+                
+            </div>
+          
+      </div>
+    )
+  };
+
+  const ModalLogin = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "transparent",
+            top:"0px",
+            left:"0px",
+            bottom:'0px',
+            right:'0'
+            }}
+      >
+            <div className="containlog" id='myContain'>
+                <div style={{display:'inline-block', fontSize:'100%', width:'100%'}}>
+                    <span className='close' onClick={()=>closeModal('home')}>&times;</span>
+                    <Login 
+                        onChildClick={openAskRegister} 
+                        onChildCloseMessage={closeMessage}
+                        onChildLoading={outPutEventLoading} />
+                </div>
+                
             </div>
           
       </div>
@@ -152,23 +449,28 @@ const Home = ({error}) => {
       <div className="modal-content" id='cont'
         style={{
             width: "100%",
-            height: "4000px",
+            height: "100%",
             justifyContent: "center",
             display: displayAsk,
             alignItems: "center",
             zIndex: "300000",
             position: "absolute",
             overflow: "hidden",
-            backgroundColor: "rgb(0, 0, 0)",
-            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            backgroundColor: "transparent",
             top:"0px",
             left:"0px",
             }}
       >
             <div className="containregs" id='myContain'>
             <span className='close' onClick={()=>closeModal('other')}>&times;</span>
-                <div style={{display:'inline-block', fontSize:'1vw'}}>
-                   <RegisterStudent onChildCloseModal={closeModal} onChildClickLogin={openLogin} /> 
+                <div style={{display:'inline-block', fontSize:'100%'}}>
+                   <RegisterStudent 
+                        onChildCloseModal={closeModal} 
+                        onChildClickLogin={openLogin} 
+                        onChildLoginNewUser={loginNewUser}
+                        onChildRequireParent={openPartialLogin}
+                        onChildLoading={outPutEventLoading}
+                        /> 
                 </div>
                 
             </div>
@@ -176,20 +478,28 @@ const Home = ({error}) => {
       </div>
     )
   };
+  const loginNewUser = (e) => {
+    const user  = JSON.parse(localStorage.getItem("user"));
+    if(user){
+        history.push("/");
+    }else{
+        openLogin();
+    }
+    
+  }
   const ModalInscriptionParent = () => {
     return(
       <div className="modal-content" id='cont'
         style={{
             width: "100%",
-            height: "4000px",
+            height: "100%",
             justifyContent: "center",
             display: displayAsk,
             alignItems: "center",
             zIndex: "300000",
             position: "absolute",
             overflow: "hidden",
-            backgroundColor: "rgb(0, 0, 0)",
-            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            backgroundColor: "transparent",
             top:"0px",
             left:"0px",
             }}
@@ -198,28 +508,48 @@ const Home = ({error}) => {
                 <div style={{display:'inline-block', fontSize:'1.5vw'}}>
                    
                 </div><span className='close' onClick={()=>closeModal('other')}>&times;</span>
-                <RegisterParent onChildCloseModal={closeModal} onChildClickLogin={openLogin} /> 
+                <RegisterParent onChildCloseModal={closeModal} 
+                                onChildLoading={outPutEventLoading} 
+                                onChildLoginNewUser={loginNewUser}
+                                onChildClickLogin={openLogin} /> 
             </div>
           
       </div>
     )
   };
   function closeMod(){
+    document.body.style.overflow = "scroll";
      setShowRegisterStudentModal(false,
             setShowLoginModal(false),
             setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
             setShowRegisterParentModal(false))
   }
   function openAskRegister(){
+    document.body.style.overflow = "hidden";
      setShowRegisterStudentModal(false,
             setShowLoginModal(false),
             setShowAskModal(true),
+            setShowModalLoading(false),
             setShowRegisterParentModal(false))
   }
   function openLogin(){
+    document.body.style.overflow = "hidden";
     setShowRegisterStudentModal(false,
             setShowLoginModal(true),
             setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
+            setShowRegisterParentModal(false))
+  }
+  function openPartialLogin(student){
+    setStudentForRegister(student);
+    setShowRegisterStudentModal(true,setDisplayAsk("flex"),
+            setShowLoginModal(false),
+            setShowModalPartial(true),
+            setShowAskModal(false),
+            setShowModalLoading(false),
             setShowRegisterParentModal(false))
   }
    
@@ -228,16 +558,31 @@ const Home = ({error}) => {
         closeModal();
     }
   })}*/
+  function closePartialModal(){
+    setShowRegisterStudentModal(true,
+            setShowLoginModal(false),
+            setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
+            setShowRegisterParentModal(false))
+  }
+ 
+
    function closeModal(content){
     if(content == 'home'){
+    document.body.style.overflow = "scroll";
     setShowRegisterStudentModal(false,
             setShowLoginModal(false),
             setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
             setShowRegisterParentModal(false))
     }else{
         setShowRegisterStudentModal(false,
             setShowLoginModal(false),
             setShowAskModal(true),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
             setShowRegisterParentModal(false))
     }
     
@@ -245,14 +590,18 @@ const Home = ({error}) => {
   }
 
     const outPutEventConnexion=(e)=> {
+        document.body.style.overflow = "hidden";
         setShowRegisterStudentModal(false,
             setShowLoginModal(true),
             setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
             setShowRegisterParentModal(false))
     }
 
   const outPutEventRegister=(e)=> {
-   setDisplayAsk("flex",setShowAskModal(true))
+        document.body.style.overflow = "hidden";
+        setDisplayAsk("flex",setShowAskModal(true))
     }
 
     
@@ -262,6 +611,9 @@ const Home = ({error}) => {
         {showRegisterStudentModal? <ModalInscriptionStudent /> :'' } 
         {showRegisterParentModal? <ModalInscriptionParent /> :'' } 
         {showLoginModal? <ModalLogin /> :'' }
+        {showModalLoading? <ModalLoading />: ''}
+        {showModalPartial? <ModalPartialLogin />: ''} 
+        {showMessageModal? <ModalSuccessMessage />: ''}
        
       
           <Header
@@ -289,13 +641,13 @@ const Home = ({error}) => {
                             <GridItem xs={12} sm={12} md={12}>
                                <span style={{textAlign:'center'}}> 
                                         <div className="dvs"> 
-                                            <img src={video1} className='imsc' width='30%'  />
-                                            <img src={fiche1} className='imsc' width='30%' />
+                                            <img src={video1} className='imsc' width='25%'  />
+                                            <img src={fiche1} className='imsc' width='25%' />
                                         </div>
                                                 
                                         <div className="dvs">
-                                            <img src={mise1} className='imsc' width='30%' />
-                                            <img src={web1}  className='imsc' width='30%' /> 
+                                            <img src={mise1} className='imsc' width='25%' />
+                                            <img src={web1}  className='imsc' width='25%' /> 
                                         </div>
                                                   
                                 </span>
@@ -317,15 +669,15 @@ const Home = ({error}) => {
                                <img src={a2} width='100%' />
                             </GridItem>
                             <GridItem xs={6} sm={6} md={6}>
-                                <fieldset style={{border:'2px solid #5473FF',textAlign:'center'}}>
-                                                          <legend>
+                                <fieldset style={{border:'2px solid #fff',textAlign:'center'}}>
+                                                          <legend style={{width:'100%',backgroundColor:'blue',borderColor:'#fff'}}>
                                                             <img src={c1} width='10%' />
                                                           </legend>
                                                            Outil conçu par les experts
                                                       </fieldset>
                                                       <p></p>
                                                     <div style={{marginLeft:'5%'}}>Un prof particulier disponible en ligne grâce au tchat
-                                                        Tutoring !</div> <ul style={{fontSize:'12px'}}>
+                                                        Tutoring !</div> <ul style={{fontSize:'100%'}}>
                                                         <li>Du lundi au vendredi de 17h à 20h, et le week-end
                                                         de 14h à 17h</li>
                                                         <li>Du lundi au vendredi de 17h à 20h, et le week-end
@@ -344,18 +696,18 @@ const Home = ({error}) => {
 
                          <GridContainer>
                             <GridItem xs={6} sm={6} md={6}>
-                               <fieldset style={{border:'2px solid #208F51',textAlign:'center'}}>
-                                                          <legend>
+                               <fieldset style={{border:'2px solid #fff',textAlign:'center'}}>
+                                                          <legend style={{width:'88%',backgroundColor:'green',borderColor:'#fff'}}>
                                                             <img src={c2} width='10%' />
                                                           </legend>
                                                            Des contenus uniques et novateurs
                                                       </fieldset>
-                                                      <div style={{marginLeft:'10px',fontSize:'15px'}}>
+                                                      <div style={{marginLeft:'10px',fontSize:'100%'}}>
                                                     Un prof particulier disponible en ligne grâce au 
                                                     tchat Tutoring !
                                                 </div>
                                                 
-                                                <ul style={{fontSize:'12px'}}>
+                                                <ul style={{fontSize:'100%'}}>
                                                     <li>Du lundi au vendredi de 17h à 20h, et le week-end
                                                     de 14h à 17h</li>
                                                     <li>Du lundi au vendredi de 17h à 20h, et le week-end
@@ -376,40 +728,62 @@ const Home = ({error}) => {
                         </GridContainer>
 
                          <GridContainer>
-                            <GridItem xs={12} sm={12} md={12}>
-                                
-                            <fieldset style={{marginTop:'5%',marginBottom:'5%',border:'2px solid #FFBF00',borderTopWidth:'2em',backgroundColor:'#FFBF00',color:'white',width:'100%',textAlign:'center'}}>
-                                    <legend>
-                                        Ce que pensent nos utilisateurs.
-                                    </legend>
+                            <GridItem xs={12} sm={12} md={12} style={{
+                                backgroundColor:'#FFAB00',
+                                margin:'2% 0% 2% 0%',
+                                }}>
+                                 <GridContainer>
+                                 {currentPosts.map((value,index)=>{
+                                    return(
+                                    <GridItem key={value.id} xs={12} sm={12} md={4} style={{
+                                        textAlign:'center', margin:'2% 0% 7% 0%'}}>
+                                        <GridContainer>
+                                             <GridItem xs={12} sm={12} md={12}>
+                                                 <Avatar 
+                                                    size="100"
+                                                    round={true}
+                                                    src={value.profile}
+                                                    name='logo'
+                                                 />
+                                             </GridItem>
+                                        </GridContainer>
+                                        <GridContainer>
+                                             <GridItem xs={12} sm={12} md={12}>
+                                                 {value.name}
+                                             </GridItem>
+                                        </GridContainer>
+                                        <GridContainer>
+                                             <GridItem xs={12} sm={12} md={12}>
+                                                 {value.comment}
+                                             </GridItem>
+                                        </GridContainer>
+                                     </GridItem>
+                                        )    
+                                 })}
+                                     
+                                 </GridContainer>
 
-                                          <Carousel width={100}>
-                                                <div>
-                                                    <img src={im5} width='3%' />
-                                                    <p className="legend">Legend 1</p>
-                                                </div>
-                                                <div>
-                                                    <img src={im5} width='3%' />
-                                                    <p className="legend">Legend 2</p>
-                                                </div>
-                                                <div>
-                                                    <img src={im5} width='3%' />
-                                                    <p className="legend">Legend 3</p>
-                                                </div>
-                                          </Carousel>                  
-                            </fieldset>
-
+                                  <GridContainer style={{backgroundColor:'#FFAB00'}}>
+                                    <GridItem xs={12} sm={12} md={12} style={{marginLeft:'7%'}}>
+                                        <Pagination 
+                                            postsPerPage={postPerPage} 
+                                            totalPosts={posts.length} 
+                                            paginate={paginate}
+                                        />
+                                    </GridItem>
+                                </GridContainer>
                             </GridItem>
                         </GridContainer>
+
 
                          <GridContainer>
                             <GridItem xs={6} sm={6} md={6}>
                                <img src={im4} width='100%' />
                             </GridItem>
-                             <GridItem xs={6} sm={6} md={6}>
-                               <p style={{marginBottom:'5%',fontSize:'15px'}}>
+                             <GridItem xs={6} sm={6} md={6} style={{textAlign:'center'}}>
+                               <p style={{marginBottom:'5%',fontSize:'100%'}}>
                                                     Inscrivez-vous dès maintement et béneficiez d'une reduction de
-                                                    plus de 50%
+                                                    plus de <strong>50%</strong>
                                                     Qu'attendez-vous?
                                                     ready, Go!
                                                    </p> 
@@ -419,8 +793,11 @@ const Home = ({error}) => {
                                                         type="submit" 
                                                         size="sm"
                                                         className="button-primary" 
+                                                        style={{borderRadius:'20px'}}
+                                                        onClick={outPutEventRegister}
                                                        >
                                                         Inscription
+                                                        <img src={inscrip} width='15%' style={{margin:'0% 0% 0% 3%'}} />
                                                     </Button>
                             </GridItem>
                         </GridContainer>
@@ -434,65 +811,100 @@ const Home = ({error}) => {
                             </GridItem>
                         </GridContainer>
 
-                         <GridContainer style={{textAlign:'center'}}>
+                         <GridContainer style={{textAlign:'center',height:'550px'}}>
                             
                             <GridItem xs={6} sm={6} md={4}>
                                 <img src={offre1} width='70%' />
-                                <div style={{position:'relative',top:'-12%'}}>
-                                     <Button 
-                                        variant="primary" 
-                                        type="submit" 
-                                        size="sm"
-                                        className="button-primary">
-                                        En savoir plus
-                                     </Button>
-                                </div>
-                                <div style={{position:'relative',top:'-45%'}}>content</div>
-                                <div style={{position:'relative',top:'-76%',fontWeight:'bold'}}>14.15$</div>
+                                <GridContainer style={{position:'relative',top:'-40%'}}>
+                                    <GridItem xs={6} sm={6} md={12}>
+                                        <GridContainer>
+                                            <GridItem xs={6} sm={6} md={12} style={{textAlign:'center',margin:'-13% 0% 0% 0%'}}>
+                                                <strong>14.15$</strong>
+                                            </GridItem>
+                                        </GridContainer>
+                                        <GridContainer>
+                                             
+                                        </GridContainer>
+                                        <GridContainer>
+                                            <GridItem xs={6} sm={6} md={12} style={{margin:'60% 0% -10% 0%'}}>
+                                                <Button 
+                                                    variant="primary" 
+                                                    type="submit" 
+                                                    size="sm"
+                                                    className="button-primary">
+                                                    En savoir plus
+                                                </Button>
+                                            </GridItem>
+                                        </GridContainer>
+                                    </GridItem>
+                                </GridContainer>
+                                
                             </GridItem>
 
                             <GridItem xs={6} sm={6} md={4}>
                                 <img src={offre2} width='70%' />
-                                <div style={{position:'relative',top:'-12%'}}>
-                                    <Button 
-                                        variant="primary" 
-                                        type="submit" 
-                                        size="sm"
-                                        className="button-primary">
-                                        En savoir plus
-                                     </Button>
-                                </div>
-                                <div style={{position:'relative',top:'-40%'}}>content</div>
-                                <div style={{position:'relative',top:'-76%',fontWeight:'bold'}}>15.5$</div>
+                                
+                                <GridContainer style={{position:'relative',top:'-40%'}}>
+                                    <GridItem xs={6} sm={6} md={12}>
+                                        <GridContainer>
+                                            <GridItem xs={6} sm={6} md={12} style={{textAlign:'center',margin:'-13% 0% 0% 0%'}}>
+                                               <strong> 19.17$</strong>
+                                            </GridItem>
+                                        </GridContainer>
+                                        <GridContainer>
+                                       
+                                        </GridContainer>
+                                        <GridContainer>
+                                            <GridItem xs={6} sm={6} md={12} style={{margin:'60% 0% -10% 0%'}}>
+                                                <Button 
+                                                    variant="primary" 
+                                                    type="submit" 
+                                                    size="sm"
+                                                    className="button-primary">
+                                                    En savoir plus
+                                                </Button>
+                                            </GridItem>
+                                        </GridContainer>
+                                    </GridItem>
+                                </GridContainer>
                             </GridItem>
 
                             <GridItem xs={6} sm={6} md={4}>
                                 <img src={offre3} width='70%' />
-                                 <div style={{position:'relative',top:'-12%'}}>
-                                     <Button 
-                                        variant="primary" 
-                                        type="submit" 
-                                        size="sm"
-                                        className="button-primary">
-                                        En savoir plus
-                                     </Button>
-                                 </div>
-                                <div style={{position:'relative',top:'-40%'}}>content</div>
-                                <div style={{position:'relative',top:'-76%',fontWeight:'bold'}}>27.8$</div>
+                                
+                                <GridContainer style={{position:'relative',top:'-40%'}}>
+                                    <GridItem xs={6} sm={6} md={12}>
+                                        <GridContainer>
+                                            <GridItem xs={6} sm={6} md={12} style={{textAlign:'center',margin:'-13% 0% 0% 0%'}}>
+                                                <strong>25.15$</strong>
+                                            </GridItem>
+                                        </GridContainer>
+                                        <GridContainer>
+                                  
+                                        </GridContainer>
+                                        <GridContainer>
+                                            <GridItem xs={6} sm={6} md={12} style={{margin:'60% 0% 0% 0%'}}>
+                                                <Button 
+                                                    variant="primary" 
+                                                    type="submit" 
+                                                    size="sm"
+                                                    className="button-primary">
+                                                    En savoir plus
+                                                </Button>
+                                            </GridItem>
+                                        </GridContainer>
+                                    </GridItem>
+                                </GridContainer>
                             </GridItem>
                         
                         </GridContainer>
-                        <GridContainer>
-                            <GridItem xs={12} sm={12} md={12}>
-                              <div style={{marginBottom:'5%'}}></div>
-                            </GridItem>
-                        </GridContainer>
+                       
 
                          <GridContainer>
-                            <GridItem xs={6} sm={6} md={6}>
+                            <GridItem xs={6} sm={6} md={4}>
                                <span className='decor22'> 
                                                
-                                                 <div style={{marginLeft:'10px',fontSize:'15px',padding:'15px',textAlign:'center'}}>
+                                                <div style={{marginLeft:'10px',color:'red',fontSize:'15px',padding:'15px',textAlign:'center'}}>
                                                     A vous les Parents
                                                 </div>
                                                 
@@ -516,8 +928,8 @@ const Home = ({error}) => {
 
                                           
                             </GridItem>
-                            <GridItem xs={6} sm={6} md={6}>
-                                <img src={im7} width='100%' />
+                            <GridItem xs={6} sm={6} md={8}>
+                                <img src={im7} width='100%' height="500px" />
                             </GridItem>
                         </GridContainer>
 
@@ -558,9 +970,9 @@ const Home = ({error}) => {
 
 const mapStateToProps=(state)=>{
   return{
-      isLoggedIn: state.isLoggedIn,
-      error: state.error,
-      user: state.user
+    user: state.authReducer.user,
+    redirect: state.authReducer.redirect,
+    isRestricted: state.authReducer.isRestricted
   };
 };
 export default connect(mapStateToProps)(Home);

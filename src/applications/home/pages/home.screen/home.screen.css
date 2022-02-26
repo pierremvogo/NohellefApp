@@ -24,35 +24,34 @@
     border-radius: 25px 25px 25px 25px;
     width: 35%;
     background-color: #ffce52;
-    position: relative;
-    top: -42%;
+    position: fixed;
+    top: 15%;
 }
 
 .containask{
     border-radius: 25px 25px 25px 25px;
     width: 35%;
     background-color: #ffce52;
-    position: relative;
-    top: -42%;
+    position: fixed;
+    top: 25%;
 }
 .containregs{
     border-radius: 25px 25px 25px 25px;
     width: 50%;
-    position: relative;
-    top: -42%;
-    font-size: 20%;
+    position: fixed;
+    top: 45%;
+    font-size: 100%;
 }
 .containregp{
     border-radius: 25px 25px 25px 25px;
     width: 50%;
-   
-    position: relative;
-    top: -42%;
+    position: fixed;
+    top: 45%;
 }
 
 .close {
   float: right;
-  font-size: 2vw;
+  font-size: 100%;
   font-weight: bold;
   margin: 3%;
   cursor: pointer;
@@ -95,7 +94,7 @@
     background-color: #BCB9DC;
     text-align: center;
     padding-top: 2%;
-    font-size: 1em;}
+    font-size: 100%;}
 
 .di{
    font-size: 15px;
@@ -147,7 +146,7 @@
 }
 .di1{
     color: #FFD20F;
-    font-size: 15px;
+    font-size: 100%;
 }
 .divi1{
     width: 100%;
@@ -201,11 +200,11 @@
 }
 .decor22{
     display: inline-block;
-    margin-top: 5%;
     margin-right: 5%;
     width: 100%;
-    background-color: #B09300;
-    height: 153px;
+    background-color: #ffecb3;
+    height: 500px;
+    padding-top: 40%;
 }
 .decor11{
     position: absolute;}
@@ -240,7 +239,7 @@
         .auth-container__title {
             color: $primary;
             font-family: "Poppins Medium", sans-serif;
-            font-size: 1.6rem;
+            font-size: 100%;
             text-align: center;
             padding: 10px 30px;
             padding-top: 0;
@@ -259,7 +258,7 @@
             border-color: $grey-100 !important;
         }
         .label {
-            font-size: 1.3rem;
+            font-size: 100%;
             margin-bottom: 5px;
             color: $grey-400;
             display: block;
@@ -413,3 +412,4 @@ label{
     transform: translate(-50%,-50%);
 
 }
+

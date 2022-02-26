@@ -203,7 +203,7 @@ const AskRegister = ({error,
                                     <GridItem xs={12} sm={12} md={12}>
                                       <div className="side-content" id="myDiv1" onClick={()=>changeStyle('myDiv1')}>
                                             <div style={{padding:'3%',display:'inline-block'}}>
-                                                <img src={ask1} width='15%' />
+                                                <img src={ask1} width='10%' />
                                                 <span className="text" style={{marginLeft:'25%'}}>Je suis Apprenant</span>
                                             </div>
                                            
@@ -227,7 +227,7 @@ const AskRegister = ({error,
                                     
                                      <div className="side-content" id="myDiv3" onClick={()=>changeStyle('myDiv3')}>
                                             <div style={{padding:'3%',display:'inline-block'}}>
-                                               <img src={ask3} width='15%' />
+                                               <img src={ask3} width='10%' />
                                                <span className="text" style={{marginLeft:'30%'}}>Je suis Parent</span>
                                             </div>
                                             

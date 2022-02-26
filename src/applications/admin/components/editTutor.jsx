@@ -85,19 +85,19 @@ const EditTutor = ({error}) => {
                                 width:'100%',
                                 height:'360px',
                                 backgroundColor:'#ffce52',
-                                margin:'5%',
+                                margin:'10% 0% 0% 5%',
                                 padding:'2%'
                               }}>
                                 <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                       
-                                     <div style={{margin:'2% 0% 1% 0%',cursor:'pointer'}}>
+                                     <div style={{margin:'5% 0% 1% 0%',cursor:'pointer'}}>
                                          <div>
                                             <div style={{
                                                 margin:'2% 2% 0% 0%',
                                                 color:'blue',
-                                                fontSize:'1.2vw'}}><strong style={{marginRight:'2%'}}>Informations personnelles</strong> 
-                                                <img src={ins2} width='10%'/>
+                                                fontSize:'100%'}}><strong style={{marginRight:'2%'}}>Modifier le mode de Connexion</strong> 
+                                               
                                             </div>
                                         
                                         </div>
@@ -112,70 +112,24 @@ const EditTutor = ({error}) => {
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                         <GridContainer>
-                                            <GridItem xs={12} sm={12} md={6}>
-                                            Nom
-                                                <div style={{margin:'0% 0% 5% 0%',width:'100%'}}>
-                                          <input type='text'  style={{
-                                           
-                                            border:'2px solid #002495',
-                                            width:'100%',
-                                            height:'40px'}}/>
-                                      </div>
+                                            <GridItem xs={12} sm={12} md={12} >
+                                            
+                                        <div style={{margin:'5% 0% 5% 0%',width:'100%'}}>
+                                                Definir le mode
+                                          <select name="pets" id="pet-select">
+                                            <option value="dog">Connexion par Adresse MAC</option>
+                                            <option value="cat">Connexion par Mail</option>
+                                          </select>
+                                       </div>
                                             </GridItem>
                                            
-                                            <GridItem xs={12} sm={12} md={6}>
-                                            prénom
-                                                <div style={{margin:'0% 0% 5% 0%'}}>
-                                                    <input type='text'  style={{
-                                                    border:'2px solid #002495',
-                                                    width:'100%',
-                                                    height:'40px'}}/>
-                                                </div>
-                                            </GridItem>
                                         </GridContainer>
 
-                                        <GridContainer>
-                                            <GridItem xs={12} sm={12} md={6}>
-                                            Email
-                                                <div style={{margin:'0% 0% 5% 0%',width:'100%'}}>
-                                          <input type='text'   style={{
-                                           
-                                            border:'2px solid #002495',
-                                            width:'100%',
-                                            height:'40px'}}/>
-                                      </div>
-                                            </GridItem>
-                                           
-                                            <GridItem xs={12} sm={12} md={6}>
-                                            Téléphone
-                                                <div style={{margin:'0% 0% 5% 0%'}}>
-                                                    <input type='text'   style={{
-                                                    border:'2px solid #002495',
-                                                    width:'100%',
-                                                    height:'40px'}}/>
-                                                </div>
-                                            </GridItem>
-                                        </GridContainer>
                                        
                                     </GridItem>
                                   </GridContainer>
 
-                                  <GridContainer>
-                                    <GridItem xs={12} sm={12} md={12}>
-                                      Adresse Mac
-                                     <div style={{margin:'2% 0% 1% 0%',cursor:'pointer'}}>
-                                         <div>
-                                           <div style={{margin:'0% 0% 5% 0%'}}>
-                                                    <input type='text'   style={{
-                                                    border:'2px solid #002495',
-                                                    width:'100%',
-                                                    height:'40px'}}/>
-                                                </div>
-                                        
-                                        </div>
-                                     </div>
-                                    </GridItem>
-                                  </GridContainer>
+                                 
 
 
                                   <GridContainer>
@@ -198,7 +152,7 @@ const EditTutor = ({error}) => {
                                           paddingTop:'3%'
                                         }}>
                                 
-                                <span className="text" style={{fontSize:'1.2vw',color:'white'}}>Enregistrer</span>
+                                <span className="text" style={{fontSize:'100%',color:'white'}}>Enregistrer</span>
                               </div>
                                     </div>
                                       

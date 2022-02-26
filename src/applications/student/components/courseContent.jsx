@@ -14,21 +14,169 @@ import download from '../../../assets/icons/download.png';
 import ReactSearchBox from "react-search-box";
 import pdfLink from '../../../assets/images/dashboard/smilevid.png';
 import videoLink from '../../../assets/video/testvideo2.mp4';
+import videoLink4 from '../../../assets/video/testvideo4.mp4';
+import videoLink2 from '../../../assets/video/testvideo.mp4';
+import videoLink3 from '../../../assets/video/testvideo3.mp4';
+import pdf1 from '../../../assets/pdf/PHP.pdf';
+import pdf2 from '../../../assets/pdf/seq.pdf';
 import Avatar   from 'react-avatar';
 import Pagination from './pagination.jsx';
 import Select from 'react-select';
 import SimpleSelect from './select';
 import VideoContent from './videoContent';
+import vidio from '../../../assets/images/dashboard/vidio.png';
+import imgpdf from '../../../assets/images/imgpdf.png';
 import './account.css';
-
-const CourseContent = () => {
+import {Document, Page, pdfjs,} from 'react-pdf';
+ 
+const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
+   
 	const [posts, setPosts] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [postPerPage] = useState(4);
+  const [displayPDF, setDisplayPDF] = useState("flex");
+  const [showPDFModal,setShowPDFModal] = useState(false);
+  const [linkPDF,setLinkPDF] = useState("");
+    const [numPages, setNumpages] = useState(null);
+    const [pageNumber, setPageNumber] = useState(1);
+
+    const [showChatModal, setShowChatModal] = useState(false);
+    const [displayAsk, setDisplayAsk] = useState("none");
+    
+    const openVideoTheque = (courselink) => {
+        console.log(courselink);
+        onChildClickHandlerVideo(courselink);
+    }
+
+    pdfjs.GlobalWorkerOptions.workerSrc = 
+         `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
+    const onDocumentLoadSuccess = ({numPages}) => {
+        setNumpages(numPages);
+    }
+
+    const goToPrevPage = () =>{
+        setPageNumber(pageNumber - 1);
+    }
+
+    const goToNextPage = () =>{
+        setPageNumber(pageNumber + 1);
+    }
 
 	useEffect(()=>{
 		setPosts(data);
 	},[])
+
+    function closeModal(){
+        setShowChatModal(false,setDisplayAsk("none"));
+        setShowPDFModal(false,setDisplayPDF("none"));
+        }
+
+    function openModal(type,link){
+      if(type==="pdf"){
+        setShowPDFModal(true,
+          setLinkPDF(link),
+          setDisplayPDF("flex"),
+          setShowChatModal(false, 
+          setDisplayAsk("none")));
+      }else{
+        setShowPDFModal(false,
+          setDisplayPDF("none"),
+          setShowChatModal(true, 
+          setDisplayAsk("flex")));
+      }
+        
+        }
+
+        const openPdf = (pdfLink) => {
+            window.open(pdfLink);
+        }
+
+    const ModalOpenPDF = () => {
+      return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            display: displayPDF,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+            <div className="contain" id='myContain'>
+                <div style={{display:'inline-block', fontSize:'100%'}}>
+                   
+                </div><span className='close' onClick={()=>closeModal()}>&times;</span>
+                <iframe src={linkPDF+"#toolbar=0"} style={{width:"70em", height:"35em"}} frameBorder="0"></iframe>
+            </div>
+          
+      </div>
+    )
+    }
+
+    const ModalChat = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "30%",
+            height: "100%",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            backgroundColor: "transparent",
+            border:'none',
+            top:"0%",
+            left:"40%",
+            }}
+      >
+      <GridContainer>
+          <GridItem xs={12} sm={12} md={12} style={{
+                                        backgroundColor:'#FFCE52',
+                                        borderRadius:'20px',
+                                        height:'105%',
+                                         }}>
+              <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                      <span className='close' onClick={()=>closeModal()}>&times;</span>
+                  </GridItem>
+              </GridContainer>
+              
+              <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                      <div>
+                          <nav>
+                              <button onClick={goToPrevPage}>Prevew</button>
+                              <button onClick={goToNextPage}>Next</button>
+                          </nav>
+
+                          <div style={{width: 600}}>
+                              <Document
+                                   file={'../../../assets/pdf/seq.pdf'}
+                                   onLoadSuccess={onDocumentLoadSuccess}
+                               >
+                               <Page pageNumber={pageNumber} width={600} />
+                              </Document>
+                          </div>
+                          <p>
+                              Page {pageNumber} of {numPages}
+                          </p>
+                      </div>
+                  </GridItem>
+              </GridContainer>
+          </GridItem>
+      </GridContainer>
+      </div>
+    );
+  };
 
     let data = [
     {
@@ -39,7 +187,7 @@ const CourseContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: pdfLink
+      courseLink: pdf1
     },
     {
       id: 2,
@@ -49,7 +197,7 @@ const CourseContent = () => {
       courseFormat:'Video',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: videoLink
+      courseLink: videoLink4
     },
     {
       id: 3,
@@ -59,7 +207,7 @@ const CourseContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: pdfLink
+      courseLink: pdf2
     },
     {
       id: 4,
@@ -69,7 +217,7 @@ const CourseContent = () => {
       courseFormat:'Video',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: videoLink
+      courseLink: videoLink3
     },
     {
       id: 5,
@@ -79,7 +227,7 @@ const CourseContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: pdfLink
+      courseLink: pdf2
     },
     {
       id: 6,
@@ -89,7 +237,7 @@ const CourseContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: pdfLink
+      courseLink: pdf2
     },
     
     {
@@ -100,7 +248,7 @@ const CourseContent = () => {
       courseFormat:'Video',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: videoLink
+      courseLink: videoLink2
     },
     
     {
@@ -111,7 +259,7 @@ const CourseContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: pdfLink
+      courseLink: pdf2
     },
     
     {
@@ -122,7 +270,7 @@ const CourseContent = () => {
       courseFormat:'Video',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: videoLink
+      courseLink: videoLink3
     },
     
     {
@@ -133,7 +281,7 @@ const CourseContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: pdfLink
+      courseLink: pdf1
     },
     {
       id: 11,
@@ -153,7 +301,7 @@ const CourseContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: pdfLink
+      courseLink: pdf1
     },
     {
       id: 13,
@@ -163,7 +311,7 @@ const CourseContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: pdfLink
+      courseLink: pdf1
     },
     {
       id: 14,
@@ -173,7 +321,7 @@ const CourseContent = () => {
       courseFormat:'Video',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: videoLink
+      courseLink: videoLink4
     },
     {
       id: 15,
@@ -183,7 +331,7 @@ const CourseContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: pdfLink
+      courseLink: pdf1
     },
     {
       id: 16,
@@ -193,7 +341,7 @@ const CourseContent = () => {
       courseFormat:'Video',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: videoLink
+      courseLink: videoLink3
     },
     {
       id: 17,
@@ -203,7 +351,7 @@ const CourseContent = () => {
       courseFormat:'PDF',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: pdfLink
+      courseLink: pdf1
     },
   ];
   const options = [
@@ -229,7 +377,9 @@ const CourseContent = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 	return(
 			<div className="container">
-			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
+            {showChatModal? <ModalChat />  : ''}
+            {showPDFModal? <ModalOpenPDF />  : ''}
+			 <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             <div style={{display:'inline-block',color:'red',margin:'2%'}}>
                                 Tous les cours
@@ -242,6 +392,9 @@ const CourseContent = () => {
                             />
                         </GridItem>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                            
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             <div style={{border:'2px solid #0069D9', width:'110%'}}>
                                  <ReactSearchBox
                                     placeholder="Rechercher"
@@ -252,6 +405,7 @@ const CourseContent = () => {
                             </div>
                         </GridItem>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                           
                             <div style={{fontSize:'1vw',marginBottom:'2%'}}>
                                <select name="pets" id="pet-select">
                                     <option value="">Spécialité</option>
@@ -263,26 +417,12 @@ const CourseContent = () => {
                                     <option value="goldfish">Science de l'ingénieur</option>
                                 </select>
                             </div>
-                        </GridItem>
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
-                            <div style={{width:'100%',fontSize:'1vw'}}>
-                                <select name="pets" id="pet-select">
-                                    <option value="">Types</option>
-                                    <option value="dog">type 1</option>
-                                    <option value="cat">type 2</option>
-                                    <option value="hamster">type 3</option>
-                                    <option value="parrot">type 3</option>
-                                    <option value="spider">type 4</option>
-                                    <option value="goldfish">type 4</option>
-                                </select>
-                            </div>
+
                         </GridItem>
                     </GridContainer>
              
 			 <GridContainer style={{backgroundColor:'#eeeeee'}}>
 			 			{currentPosts.map((post,index)=>{
-			 				console.log("my post")
-			 				console.log(post)
 			 				return(
 			 					<GridItem xs={12} sm={12} md={3} key={post.id}>
                         
@@ -290,11 +430,13 @@ const CourseContent = () => {
                                     <CardHeader style={{backgroundColor:'#5271ff'}}>
                                         {post.id}-{post.courseName}
                                     </CardHeader>
-                                    <CardBody style={{width:'100%'}}>
-                                        {post.courseFormat == 'Video'?"Video" : 
-                                         post.courseFormat == 'PDF'?   "PDF":''}
+                                    <CardBody style={{width:'100%',textAlign:'center',backgroundColor:'#C7D0D8'}}>
+                                        {post.courseFormat == 'Video'?
+                                            <img src={vidio} width='100%' height='80px'  /> : 
+                                         post.courseFormat == 'PDF'?   
+                                            <img src={imgpdf} width='25%' height='80px' />:''}
                                     </CardBody>
-                                    <CardFooter style={{width:'100%'}}>
+                                    <CardFooter style={{width:'100%',backgroundColor:'#ffce52'}}>
                                         <div style={{backgroundColor:'#ffce52',width:'100%',fontSize:'70%',padding:'3%'}}>
                                             <div><strong>Titre:</strong> {post.courseTitle}</div>
                                             <div><strong>Description:</strong> {post.courseDescription}</div>
@@ -304,7 +446,9 @@ const CourseContent = () => {
                                        
                                         <div style={{marginTop:'10%'}}>
                                            <span style={{float:'left',cursor:'pointer'}}>
-                                                <div><img src={eye} width='80%'/></div>
+                                                {post.courseFormat=="Video"?
+                                                <div onClick={()=>openVideoTheque(post.courseLink)}><img src={eye} width='80%'/></div>:
+                                                <div onClick={()=>openModal('pdf',post.courseLink)}><img src={eye} width='80%'/></div>}
                                                 <div>voir</div>
                                             </span>
                                            

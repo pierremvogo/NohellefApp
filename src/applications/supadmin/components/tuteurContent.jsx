@@ -25,7 +25,12 @@ import chat from '../../../assets/images/dashboard/chat2.png';
 import {Table} from 'react-bootstrap';
 import Select from 'react-select';
 import './admin.css';
+import {NotificationManager,NotificationContainer} from 'react-notifications';
+import io from 'socket.io-client';
+import Chat from "../../../app/components/chat/chat.jsx"
+import AffectRight from './affectRight.jsx';
 
+const socket = io.connect("http://localhost:3001");
 const TuteurContent = () => {
 	const [posts, setPosts] = useState([]);
 	const [currentPage, setCurrentPage] = useState(2);
@@ -33,14 +38,132 @@ const TuteurContent = () => {
 	const [display, setDisplay] = useState("flex");
 	const [showEditModal,setShowEditModal] = useState(false);
 	const [checked, setChecked] = useState(false);
+  const [username, setUsername] = useState("Alain");
+    const [showChatModal, setShowChatModal] = useState(false);
+    const [displayAsk, setDisplayAsk] = useState("none");
+    const [remoteUsername, setRemoteUsername] = useState("Mme Ngono");
+    const [remoteImage, setRemoteImage] = useState(im5);
+    const [countBadge, setCountBadge] = useState(1);
+    const [showBadge, setShowBadge] = useState(false);
+    const [messageList, setMessageList] = useState([]);
+    const [adminId, setAdminId] = useState("admin");
+    const [supAdminId, setSupAdminId] = useState("supadmin");
+    const [room, setRoom] = useState(adminId+supAdminId);
+    const [statusConnection,setStatusConnection] = useState(false);
+    const [isAdd,setIsAdd] = useState(false);
+    const [adminName, setAdminName] = useState('');
+
 
 	useEffect(()=>{
+    socket.on('id', (status)=>{
+            setStatusConnection(status);
+            console.log("MYid",status);
+        })
 		setPosts(data);
+    return function cleanup () {
+            return;
+        }
 	},[])
 
 	const handleChange = (checked) => {
 		setChecked(checked)
 	}
+
+  function closeModal(){
+      setDisplay("none",setShowEditModal(false));
+  }
+
+  const openModal=(isAffect,nameAdmin)=> {
+     if(isAffect=="add"){
+      setIsAdd(true);
+    }else{
+      setIsAdd(false,setAdminName(nameAdmin));
+    }
+      setShowEditModal(true,setDisplayAsk("flex"));
+    }
+
+    const ModalContentEdit  = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            display: displayAsk,
+            //alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+           <div className="contain" id='myContain'>
+                <div style={{display:'inline-block', margin:'0% 30% 0% 30%', fontSize:'100%',width:'35%'}}>
+                    <span className='close' onClick={()=>closeModal()}>&times;</span>
+                    {isAdd?<AddTutor />:<AffectRight adminName={adminName}/>}  
+                </div>
+               
+            </div>
+          
+      </div>
+    )
+  };
+
+    const handleCallback = (childData) =>{
+           
+         }
+
+    const ModalChat = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "30%",
+            height: "80%",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            border:'none',
+            top:"10%",
+            left:"70%",
+            }}
+      >
+      <GridContainer>
+          <GridItem xs={12} sm={12} md={12} style={{
+                                        backgroundColor:'#FFCE52',
+                                        borderRadius:'20px',
+                                        height:'105%',
+                                         }}>
+              <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                      <span className='close' onClick={()=>closeModal()}>&times;</span>
+                  </GridItem>
+              </GridContainer>
+              
+              <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                      <Chat 
+                        socket={socket} 
+                        username={username} 
+                        room={room}
+                        callBackParent={handleCallback}
+                        remoteImage={remoteImage}
+                        remoteUsername={remoteUsername}
+                        isConnected={statusConnection}
+                     />
+                  </GridItem>
+              </GridContainer>
+          </GridItem>
+      </GridContainer>
+      </div>
+    )
+  };
 
 	function menuToggle(){
 		const toggleMenu = document.querySelector('.menu');
@@ -55,34 +178,6 @@ const TuteurContent = () => {
     { value: 'ingenieur', label: "Science de l'ingénieur" }
   ]
 
-	 const ModalContentEdit  = () => {
-    return(
-      <div className="modal-content" id='cont'
-        style={{
-            width: "100%",
-            height: "4000px",
-            justifyContent: "center",
-            display: display,
-            alignItems: "center",
-            zIndex: "300000",
-            position: "absolute",
-            overflow: "hidden",
-            backgroundColor: "rgb(0, 0, 0)",
-            backgroundColor: "rgba(0, 0, 0, 0.6)",
-            top:"0px",
-            left:"0px",
-            }}
-      >
-           <div className="contain" id='myContain'>
-                <div style={{display:'inline-block', margin:'3%', fontSize:'1.5vw'}}>
-                    
-                </div><span className='close' onClick={()=>closeModal()}>&times;</span>
-                <AddTutor /> 
-            </div>
-          
-      </div>
-    )
-  };
   
   function checkUser(id)
     {
@@ -95,19 +190,12 @@ const TuteurContent = () => {
       }
     };
 
-  function closeModal(){
-    setDisplay("none",setShowEditModal(false));
-  }
-
-  const openModal=()=> {
-    setDisplay("flex",setShowEditModal(true));
-    }
 
     let data = [
     {
       id: 1,
       userProfile: im5,
-      adminName:"mvogo",
+      adminName:"Merlin",
       adminEmail:"mvogopierre129@gmail.com",
       adminRights:"Tous les droits",
       adminActivate: <input type='checkbox' />,
@@ -117,7 +205,7 @@ const TuteurContent = () => {
     {
       id: 2,
       userProfile: im5,
-      adminName:"mvogo",
+      adminName:"Paul",
       adminEmail:"mvogopierre129@gmail.com",
       adminRights:"Tous les droits",
       adminActivate: <input type='checkbox' />,
@@ -127,7 +215,7 @@ const TuteurContent = () => {
     {
       id: 3,
       userProfile: im5,
-      adminName:"mvogo",
+      adminName:"Emaus",
       adminEmail:"mvogopierre129@gmail.com",
       adminRights:"Tous les droits",
       adminActivate: <input type='checkbox' />,
@@ -137,7 +225,7 @@ const TuteurContent = () => {
     {
       id: 4,
      userProfile: im5,
-      adminName:"mvogo",
+      adminName:"Albert",
       adminEmail:"mvogopierre129@gmail.com",
       adminRights:"Tous les droits",
       adminActivate: <input type='checkbox' />,
@@ -147,7 +235,7 @@ const TuteurContent = () => {
     {
       id: 5,
       userProfile: im5,
-      adminName:"mvogo",
+      adminName:"copenhague",
       adminEmail:"mvogopierre129@gmail.com",
       adminRights:"Tous les droits",
       adminActivate: <input type='checkbox' />,
@@ -157,7 +245,7 @@ const TuteurContent = () => {
     {
       id: 6,
       userProfile: im5,
-      adminName:"mvogo",
+      adminName:"Luis",
       adminEmail:"mvogopierre129@gmail.com",
       adminRights:"Tous les droits",
       adminActivate: <input type='checkbox' />,
@@ -288,12 +376,13 @@ const TuteurContent = () => {
 	return(
 			<div className="container" style={{margin:'5% 0% 0% 0%'}}>
 
-			{showEditModal? <ModalContentEdit /> :'' } 
-			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
+			 {showEditModal? <ModalContentEdit /> :'' } 
+       {showChatModal? <ModalChat  />  : ''}
+			 <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
 
                         <GridItem xs={12} sm={12} md={3}>
                             <div style={{display:'inline-block',color:'#5271ff',margin:'2%'}}>
-                                Tous les Administrateurs
+                                Tous les Tuteurs
                             </div>
                             
                         </GridItem>
@@ -311,7 +400,7 @@ const TuteurContent = () => {
                              
                         </GridItem>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
-                            <div style={{width:'100%',fontSize:'1vw'}}>
+                            <div style={{width:'100%',fontSize:'100%'}}>
                                 
                             </div>
                         </GridItem>
@@ -336,9 +425,9 @@ const TuteurContent = () => {
                                           cursor: 'pointer',
                                           textAlign:'center',
                                           paddingTop:'5%'
-                                        }} onClick={()=> openModal()}>
+                                        }} onClick={()=> openModal("add")}>
                                 
-                                <span className="text" style={{fontSize:'1.2vw',color:'white'}}>Ajouter</span>
+                                <span className="text" style={{fontSize:'100%',color:'white'}}>Ajouter</span>
                               </div>
                                     </div>
                     	</GridItem>
@@ -373,8 +462,8 @@ const TuteurContent = () => {
                     <td>{post.adminEmail}</td>
                     <td>{post.adminRights}</td>
                     <td>{post.adminActivate}</td>
-                    <td><img style={{cursor:'pointer'}} src={post.adminAffect} width='20%'/></td>  
-                    <td><img style={{cursor:'pointer'}} src={post.adminChat} width='50%'/></td>
+                    <td onClick={()=>{openModal('affect',post.adminName)}}><img style={{cursor:'pointer'}} src={post.adminAffect} width='20%'/></td>  
+                    <td onClick={()=>console.log("tr")}><img style={{cursor:'pointer'}} src={post.adminChat} width='50%'/></td>
                   </tr>
                   )
               })}

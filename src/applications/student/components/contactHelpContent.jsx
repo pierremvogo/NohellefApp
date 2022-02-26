@@ -44,7 +44,7 @@ const ContactHelpContent = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 	return(
 			<div className="container">
-			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
+			 <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
                         <GridItem xs={12} sm={12} md={3}>
                             <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
                                 Contacter de l'aide
@@ -72,7 +72,7 @@ const ContactHelpContent = () => {
 
                         <GridContainer>
                           <GridItem xs={12} sm={12} md={12}>
-                            <div style={{fontSize:'1.5vw'}}>Besoin d'aide?</div>
+                            <div style={{fontSize:'100%'}}>Besoin d'aide?</div>
                           </GridItem>
                         </GridContainer>
 
@@ -132,7 +132,7 @@ const ContactHelpContent = () => {
                                           paddingTop:'3%'
                                         }}>
                                 
-                                <span className="text" style={{fontSize:'1.2vw',color:'white'}}>Envoyer</span>
+                                <span className="text" style={{fontSize:'100%',color:'white'}}>Envoyer</span>
                               </div>
                                     </div>
                                       

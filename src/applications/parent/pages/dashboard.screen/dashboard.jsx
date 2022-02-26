@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, {useContext, useState, useEffect } from 'react';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import './dashboard.css';
 import Avatar   from 'react-avatar';
 import Button from '../../../../app/components/buttons/button';
@@ -47,10 +48,19 @@ import PaymentContent from '../../components/paymentContent.jsx';
 import PaymentResourceContent from '../../components/paymentResourceContent.jsx';
 import AccountContent from '../../components/accountContent.jsx';
 
+import badge from '../../../../assets/images/dashboard/badge.png';
+import Chat from "../../../../app/components/chat/chat.jsx";
+import ScrollToBottom from "react-scroll-to-bottom";
+import {NotificationManager,NotificationContainer} from 'react-notifications';
+import io from 'socket.io-client';
+import { SocketContext } from '../../../../SocketContext.js';
+import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessionId.jsx";
+
 //5271ff 
 //ffce52 
+const socket = io.connect("http://localhost:3001");
 const DashboardStudent = () => {
-
+    const history = useHistory();
     const [isAccountContent, setIsAccountContent] = useState(false);
     const [isChooseTutor, setIsChooseTutorContent] = useState(false);
     const [isConferenceContent, setIsConferenceContent] = useState(false);
@@ -59,6 +69,18 @@ const DashboardStudent = () => {
     const [isHistoryContent, setIsHistoryContent] = useState(false);
     const [isPaymentContent, setIsPaymentContent] = useState(false);
     const [isPaymentResourceContent, setIsPaymentResourceContent] = useState(false);
+    const [username, setUsername] = useState("pirateBay");
+    const [showChatModal, setShowChatModal] = useState(false);
+    const [displayAsk, setDisplayAsk] = useState("none");
+    const [remoteUsername, setRemoteUsername] = useState("Mme Ngono");
+    const [remoteImage, setRemoteImage] = useState(im5);
+    const [countBadge, setCountBadge] = useState(1);
+    const [showBadge, setShowBadge] = useState(false);
+    const [messageList, setMessageList] = useState([]);
+    const [parentId, setParentId] = useState("parent");
+    const [supAdminId, setSupAdminId] = useState("supadmin");
+    const [room, setRoom] = useState(parentId+supAdminId);
+    const [statusConnection,setStatusConnection] = useState(false);
 
 
     function menuToggle(){
@@ -90,8 +112,60 @@ const DashboardStudent = () => {
                 i.style.backgroundColor = ""
             }
     }
+    const handlerAccount = () => {
+    setIsPaymentResourceContent(false,
+            setIsCourseContent(false),
+            setIsAccountContent(true),
+            setIsHistoryContent(false),
+            setIsPaymentContent(false),
+            setIsConferenceContent(false),
+            setIsChooseTutorContent(false),
+            setIsContactHelpContent(false))
+    let element = document.getElementById("myDiv7");
+            element.style.backgroundColor = "#dd1b16";
+            let tab = [
+                document.getElementById('myDiv1'),
+                document.getElementById('myDiv2'),
+                document.getElementById('myDiv3'),
+                document.getElementById('myDiv6'),
+                document.getElementById('myDiv5'),
+                document.getElementById('myDiv4'),
+                document.getElementById('myDiv8'),
+                
+            ]
+            for(var i of tab){
+                i.style.backgroundColor = ""
+            }
+  }
+  const disconnectUser = () => {
+    localStorage.removeItem("user");
+    window.location.reload();
+    return false;
+   }
+    const joinRoom = () => {
+       const userData = {
+            author : username,
+            room : room
+        };
+        console.log("MY DATA-------",userData);
+        if(userData.author !== "" && userData.room !== ""){
+           socket.emit("join_room", userData); 
+        }
+        
+    }
 
     useEffect(()=>{
+        joinRoom();
+         socket.on('id', (status)=>{
+            setStatusConnection(status);
+            console.log("MYid",status);
+        });
+         socket.on("notification", (data)=>{
+            if(data.room == "adminparent"){
+              setShowBadge(true,setCountBadge(1),setShowChatModal(true),setDisplayAsk('flex'));
+            }
+           
+        });
         var element1 = document.getElementById("myDiv1");
         var element2 = document.getElementById("dash1");
         element2.style.borderRadius = "3px 3px 3px 3px";
@@ -114,7 +188,6 @@ const DashboardStudent = () => {
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
-                document.getElementById('dash5')
             ]
             for(var i of tab2){
                 i.style.borderRadius = ""
@@ -122,7 +195,72 @@ const DashboardStudent = () => {
                 i.style.border = ""
             }
 
+        return function cleanup () {
+            return;
+        }
+
     },[])
+
+     const ModalChat = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "30%",
+            height: "80%",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            backgroundColor: "transparent",
+            border:'none',
+            top:"10%",
+            left:"70%",
+            }}
+      >
+      <GridContainer>
+          <GridItem xs={12} sm={12} md={12} style={{
+                                        backgroundColor:'#FFCE52',
+                                        borderRadius:'20px',
+                                        height:'105%',
+                                         }}>
+              <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                      <span className='close' onClick={()=>closeModal()}>&times;</span>
+                  </GridItem>
+              </GridContainer>
+              
+              <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                      <Chat 
+                        socket={socket} 
+                        username={username} 
+                        room={room}
+                        callBackParent={handleCallback}
+                        remoteImage={remoteImage}
+                        remoteUsername={remoteUsername}
+                        isConnected={statusConnection}
+                     />
+                  </GridItem>
+              </GridContainer>
+          </GridItem>
+      </GridContainer>
+      </div>
+    )
+  };
+  const handleCallback = (childData) =>{
+           
+         }
+
+  function closeModal(){
+          setShowChatModal(false,setDisplayAsk("none"),setShowBadge(false));
+     
+          }
+        function openModal(type){
+                if(type=="badge"){
+                    setShowBadge(false);
+                }setShowChatModal(true, setDisplayAsk("flex")); 
+              }
 
 
 
@@ -374,7 +512,6 @@ const DashboardStudent = () => {
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
-                document.getElementById('dash5')
             ]
             for(var i of tab){
                 i.style.borderRadius = ""
@@ -390,7 +527,6 @@ const DashboardStudent = () => {
                 document.getElementById('dash1'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
-                document.getElementById('dash5')
             ]
             for(var i of tab){
                 i.style.borderRadius = ""
@@ -406,7 +542,6 @@ const DashboardStudent = () => {
                 document.getElementById('dash1'),
                 document.getElementById('dash2'),
                 document.getElementById('dash4'),
-                document.getElementById('dash5')
             ]
             for(var i of tab){
                 i.style.borderRadius = ""
@@ -422,23 +557,6 @@ const DashboardStudent = () => {
                 document.getElementById('dash1'),
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
-                document.getElementById('dash5')
-            ]
-            for(var i of tab){
-                i.style.borderRadius = ""
-                i.style.width = ""
-                i.style.border = ""
-            }
-        }
-        else if(id=="dash5"){
-            element.style.borderRadius = "3px 3px 3px 3px";
-            element.style.width = "100%";
-            element.style.border = "2px solid #DD1B16";
-            let tab = [
-                document.getElementById('dash1'),
-                document.getElementById('dash2'),
-                document.getElementById('dash3'),
-                document.getElementById('dash4')
             ]
             for(var i of tab){
                 i.style.borderRadius = ""
@@ -450,6 +568,7 @@ const DashboardStudent = () => {
     }
         return(
             <div style={{overflow:'hidden'}}>
+            {showChatModal? <ModalChat />  : ''}
             <GridContainer>
                 <GridItem xs={12} sm={12} md={3}>
                     <ProSidebar style={{width:'100%'}}>
@@ -476,7 +595,7 @@ const DashboardStudent = () => {
                               <div className="side-content siden1" id="myDiv1" onClick={()=>changeStyle('myDiv1')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={p1}
                                         name='logo'
@@ -495,7 +614,7 @@ const DashboardStudent = () => {
                                 <div className="side-content" id="myDiv2" onClick={()=>changeStyle('myDiv2')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={p2}
                                         name='logo'
@@ -512,7 +631,7 @@ const DashboardStudent = () => {
                                <div className="side-content" id="myDiv3" onClick={()=>changeStyle('myDiv3')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={p3}
                                         name='logo'
@@ -539,7 +658,7 @@ const DashboardStudent = () => {
                                <div className="side-content" id="myDiv5" onClick={()=>changeStyle('myDiv5')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={d5}
                                         name='logo'
@@ -556,7 +675,7 @@ const DashboardStudent = () => {
                                <div className="side-content" id="myDiv6" onClick={()=>changeStyle('myDiv6')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={d6}
                                         name='logo'
@@ -573,7 +692,7 @@ const DashboardStudent = () => {
                               <div className="side-content" id="myDiv7" onClick={()=>changeStyle('myDiv7')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={d7}
                                         name='logo'
@@ -590,7 +709,7 @@ const DashboardStudent = () => {
                               <div className="side-content" id="myDiv8" onClick={()=>changeStyle('myDiv8')}>
                                 <div style={{padding:'3%',display:'inline-block'}}>
                                     <Avatar 
-                                        size="45"
+                                        size="40"
                                         round={false}
                                         src={d8}
                                         name='logo'
@@ -627,20 +746,46 @@ const DashboardStudent = () => {
                         <GridItem xs={12} sm={12} md={2}>
                              <div id="dash5" className='dash-navitem' onClick={()=>changeStyle1('dash5')}>Nos Enseignants</div>
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={2}>
-                             <div style={{position:'relative',top:'-15px',cursor:'pointer'}}>    
-                                    
+                         <GridItem xs={12} sm={12} md={2}>
+                                        <Dropdown style={{top:'-15px'}}>
+                                                    <Dropdown.Toggle
+                                                    variant="secondary btn-sm"
+                                                    style={{
+                                                        width:'0%',
 
-                                  <div className="action">
-                                                <div className='profile' onClick={(e)=>menuToggle(e)}>
-                                                    <img src={im5} width='30%'/> 
-                                                </div>
-                                                <div className="menu">
-                                                    <div style={{marginBottom:'5%'}}><img src={acc} width='15%'/><u>Mon compte</u></div>
-                                                    <div><img src={dic} width='15%'/><u>Se déconnecter</u></div>
-                                                </div>
-                                </div>                                               
-                             </div>
+                                                        borderColor:'#fff',
+                                                        backgroundColor:'#fff',
+                                                        borderRadius:'20%'}}>
+                                                    
+                                                        <Avatar 
+                                                            size="50"
+                                                            round={true}
+                                                            src={im5}
+                                                            name='logo'
+                                                        />
+                                                    </Dropdown.Toggle>
+
+                                                    <Dropdown.Menu style={{backgroundColor:'#F8D04E',borderRadius:'5px'}}>
+                                                        <Dropdown.Item href="#" >
+                                                            <div style={{marginBottom:'5%'}} onClick={()=>{history.push("/")}}>
+                                                                   
+                                                                    <u>Acceuil</u>
+                                                            </div>
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item href="#" >
+                                                            <div style={{marginBottom:'5%'}} onClick={handlerAccount}>
+                                                                    <img src={acc} width='15%'/>
+                                                                    <u>Mon compte</u>
+                                                            </div>
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item href="#">
+                                                            <div onClick={()=>disconnectUser()}>
+                                                                <img src={dic} width='15%'/>
+                                                                <u>Se déconnecter</u>
+                                                            </div>
+                                                        </Dropdown.Item>
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
                         </GridItem>
                        
                     </GridContainer>

@@ -20,6 +20,7 @@ import Switch from "react-switch";
 import edit from '../../../assets/images/dashboard/edit.png';
 import co1 from '../../../assets/images/dashboard/co1.png';
 import {Table} from 'react-bootstrap';
+import Comment from './comment.jsx';
 
 const ChooseTutorContent = () => {
   const [posts, setPosts] = useState([]);
@@ -98,6 +99,39 @@ const ChooseTutorContent = () => {
     }
     
   ];
+ const ModalContentEdit  = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height:"100%",
+            justifyContent: "center",
+            display: display,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+           <div className="contain" id='myContain'>
+                <div style={{display:'inline-block', margin:'3%', fontSize:'100%', width:'200%'}}>
+                    <span className='close' onClick={()=>closeModal()}>&times;</span>
+                    <Comment /> 
+                </div>
+                
+            </div>
+          
+      </div>
+    )
+  };
+
+ 
+
+
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
@@ -106,7 +140,7 @@ const ChooseTutorContent = () => {
   return(
       <div className="container" style={{margin:'5% 0% 0% 0%'}}>
 
-    
+      {showEditModal? <ModalContentEdit /> :'' } 
        <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
 
                         <GridItem xs={12} sm={12} md={6}>
@@ -157,12 +191,13 @@ const ChooseTutorContent = () => {
                     <td>{post.userSurname}</td>
                     <td>{post.userSpeciality}</td>
                     <td>{post.userNote}</td>
-                    <td><Avatar 
-                                  size="20"
-                                  round={false}
-                                  src={post.userStatus}
-                                  name='Laissez un commentaire'
-                              /></td>
+                    <td style={{cursor:'pointer'}} onClick={()=>openModal("yess",post)}>
+                          <Avatar 
+                              size="20"
+                              round={false}
+                              src={post.userStatus}
+                              name='Laissez un commentaire'
+                          /></td>
                   </tr>
                   )
               })}

@@ -23,6 +23,8 @@ import edit from '../../../assets/images/dashboard/edit.png';
 import affect from '../../../assets/images/dashboard/affect.png';
 import {Table} from 'react-bootstrap';
 import './admin.css';
+import EditTutor from './editTutor.jsx';
+import AffectTutor from './affectTutor.jsx';
 
 const ApprenantContent = () => {
   const [posts, setPosts] = useState([]);
@@ -31,6 +33,8 @@ const ApprenantContent = () => {
   const [display, setDisplay] = useState("flex");
   const [showEditModal,setShowEditModal] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [tutorName, setTutorName] = useState("");
 
   useEffect(()=>{
     setPosts(data);
@@ -50,7 +54,7 @@ const ApprenantContent = () => {
       <div className="modal-content" id='cont'
         style={{
             width: "100%",
-            height: "4000px",
+            height: "100%",
             justifyContent: "center",
             display: display,
             alignItems: "center",
@@ -64,10 +68,11 @@ const ApprenantContent = () => {
             }}
       >
            <div className="contain" id='myContain'>
-                <div style={{display:'inline-block', margin:'3%', fontSize:'1.5vw'}}>
-                    
-                </div><span className='close' onClick={()=>closeModal()}>&times;</span>
-                <AddTutor /> 
+                <div style={{display:'inline-block', margin:'3%', fontSize:'100%',width:'130%'}}>
+                    <span className='close' onClick={()=>closeModal()}>&times;</span>
+                    {isEdit?<EditTutor />:<AffectTutor tutorName={tutorName} />}
+                </div>
+                
             </div>
           
       </div>
@@ -82,7 +87,12 @@ const ApprenantContent = () => {
     setDisplay("none",setShowEditModal(false));
   }
 
-  const openModal=()=> {
+  const openModal=(type,tutorInfo)=> {
+    if(type=="edit"){
+      setIsEdit(true); 
+    }else{
+      setIsEdit(false,setTutorName(tutorInfo));
+    }
     setDisplay("flex",setShowEditModal(true));
     }
 
@@ -233,9 +243,9 @@ const ApprenantContent = () => {
                     <td>{post.tutorSurname}</td>
                     <td>{post.tutorSpeciality}</td>
                     <td>{post.tutorModeConnect}</td>
-                    <td><img src={post.tutorAffect} width='25%' style={{cursor:'pointer'}}/></td>
-                    <td><img src={post.tutorChat} width='25%' style={{cursor:'pointer'}}/></td>
-                    <td><img src={post.tutorEdit} width='30%' style={{cursor:'pointer'}}/></td>
+                    <td style={{cursor:'pointer'}} onClick={()=>openModal("affect",post.tutorName)}><img src={post.tutorAffect} width='25%' style={{cursor:'pointer'}}/></td>
+                    <td style={{cursor:'pointer'}}><img src={post.tutorChat} width='25%' style={{cursor:'pointer'}}/></td>
+                    <td style={{cursor:'pointer'}}onClick={()=>openModal("edit")}><img src={post.tutorEdit} width='30%' style={{cursor:'pointer'}}/></td>
                   </tr>
                   )
               })}
