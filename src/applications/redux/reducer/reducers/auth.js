@@ -11,6 +11,7 @@ const INITIAL_STATE = user ?
                                 isRestricted: true,
                                 error: null,
                                 resetToken: null,
+                                resetPayload: null,
                                 user:user
                             }:
                             {
@@ -19,6 +20,7 @@ const INITIAL_STATE = user ?
                                 isRestricted: false,
                                 error: null,
                                 resetToken: null,
+                                resetPayload: null,
                                 user: null
                             };
 
@@ -71,6 +73,26 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 loading: false,
                 error: action.message,
                 user: null
+            };
+        case types.RESET_SUCCESS:
+            return {
+                ...state,
+                isLoggedIn: false,
+                isRestricted: false,
+                loading: false,
+                error: null,
+                resetPayload: action.payload
+
+            };
+        case types.RESET_FAILED:
+            return {
+                ...state,
+                isLoggedIn: false,
+                isRestricted: false,
+                loading: false,
+                error: action.message,
+                resetPayload: null,
+                
             };
         case types.TOKEN_FAILED:
             return {

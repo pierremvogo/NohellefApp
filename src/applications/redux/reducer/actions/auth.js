@@ -32,6 +32,16 @@ export const authgetResetTokenFailed = (message) => ({
     message,
 });
 
+export const authResetFailed = (message) => ({
+    type: types.RESET_FAILED,
+    message,
+});
+
+export const authResetSuccess = (payload) => ({
+    type: types.RESET_SUCCESS,
+    payload,
+});
+
 export const authLoginFailed = (message) => ({
     type: types.LOGIN_FAILED,
     message,

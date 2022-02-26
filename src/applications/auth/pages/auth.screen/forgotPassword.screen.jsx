@@ -110,13 +110,14 @@ const ForgotPassword = ({error}) => {
             setFormErrors({});
             setErrorMessage(true);
             handleLoading(true);
-            console.log(forgotPasswordForm);
-            authService.getForgotPasswordToken(forgotPasswordForm)
+            console.log("MY FORGOT PASSWORD FORM");
+            console.log(forgotPasswordForm.email);
+            authService.getForgotPasswordToken(forgotPasswordForm.email)
             .then((response) => {
                 console.log("Reset password Token");
-                console.log(response.data);
+                console.log(response);
                 handleLoading(false);
-                dispatch(authgetResetTokenSuccess(response.data));  
+                dispatch(authgetResetTokenFailed(response)); 
             })
             .catch((error) => {
                 handleLoading(false);

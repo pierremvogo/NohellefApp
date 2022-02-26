@@ -94,7 +94,7 @@ const RegisterParent = ({error,
                 }else if(values[input].length < 4){
                     errorsValidation.name = "Le nom doit avoir au moins 4 lettres";
                 }else{
-                    
+                     setSubmited(true)
                 }
                 break;
             case 'surname':
@@ -104,7 +104,7 @@ const RegisterParent = ({error,
                 }else if(values[input].length < 4){
                     errorsValidation.surname = "Le Prénom doit avoir au moins 4 lettres";
                 }else{
-                    
+                     setSubmited(true)
                 }
                 break;
             case 'email':
@@ -113,7 +113,7 @@ const RegisterParent = ({error,
                 }else if(!regexEmail.test(values[input])){
                     errorsValidation.email= "Adresse Email invalide";
                 }else{
-                    
+                     setSubmited(true)
                 }
                 break;
             case 'username':
@@ -123,7 +123,7 @@ const RegisterParent = ({error,
                 }else if(values[input].length < 4){
                     errorsValidation.username = "Nom d'utilisateur avec au moins 4 lettres";
                 }else{
-                    
+                     setSubmited(true)
                 }
                 break;
             case 'phone':
@@ -133,7 +133,7 @@ const RegisterParent = ({error,
                         if(!regexPhoneNumber.test(values[input])){
                             errorsValidation.phone = "Numéro de Téléphone invalide";
                         }else{
-                            
+                             setSubmited(true)
                         }
                 }
                 else{
@@ -155,7 +155,7 @@ const RegisterParent = ({error,
                 }else if(!regexPassword.test(values[input])){
                     errorsValidation.password = "mot de passe avec au moins 8 caractères,une majuscule,une minuscule et un chiffre";
                 }else{
-                    
+                    setSubmited(true)
                 }
                 break;
             case 'confirm_password':
@@ -164,7 +164,7 @@ const RegisterParent = ({error,
                 }else if(values['password'] != values[input]){
                     errorsValidation.confirm_password = "Confirmation de mot de passe invalide";
                 }else{
-                    
+                     setSubmited(true)
                 }
                 break;
             case 'numCardNumber':
@@ -178,14 +178,14 @@ const RegisterParent = ({error,
                 if(!values[input]){
                     errorsValidation.cardExpireYear = "Année d'expiration requise";
                 }else{
-
+                    setSubmited(true)
                 }
                 break;
             case 'cardCode':
                 if(!values[input]){
                     errorsValidation.cardCode = "code requis pour votre carte";
                 }else{
-
+                    setSubmited(true)
                 }
                 break;
                 default:
@@ -521,13 +521,7 @@ const RegisterParent = ({error,
                                                     width:'100%',
                                                     height:'40px'}}
                                                 /> 
-                                                {errorMessage && error && (
-                                                        <div className="form-group">
-                                                              <div style={{color:"red"}}>
-                                                                  {error.message}
-                                                              </div>
-                                                        </div>
-                                                                )}
+                                                
                                                                 {formErrors && (
                                                                     <div>
                                                                         <div style={{color:"red",fontSize:"12px"}}>

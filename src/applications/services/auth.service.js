@@ -30,8 +30,8 @@ class AuthService {
         return http.get(`/auth/password-forgot/${email}`);
     }
 
-    resetPassword(token) {
-        return http.put(`/auth/reset-password/${token}`);
+    resetPassword(token,payload) {
+        return http.patch(`/auth/reset-password/${token}`, payload);
     }
 
     changePassword(id) {
