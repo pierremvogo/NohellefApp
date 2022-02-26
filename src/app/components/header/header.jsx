@@ -1,6 +1,6 @@
-import React, { useEffect,useState } from 'react'
+import React, { useEffect,useState } from 'react';
+import {connect, useDispatch, useSelector} from 'react-redux';
 import Avatar   from 'react-avatar';
-import { useDispatch, connect } from 'react-redux';
 import {Redirect, useHistory} from 'react-router-dom'
 //import { makeStyles } from "@material-ui/core/styles";
 //import { Link, Redirect, useHistory } from 'react-router-dom';
@@ -13,11 +13,24 @@ import Button from '../buttons/button';
 
 
 
-const Header = ({error,onChildClickConnexion,onChildClickRegister,isDashboard,isHome})  =>{
+
+const Header = ({
+                user,
+                onChildClickConnexion,
+                onChildClickRegister,
+                isDashboard,
+                isHome})  =>{
    
     const clickHandlerConnexion=(e)=>{
             onChildClickConnexion(e.target.name);
     }
+    const history = useHistory();
+
+   const disconnectUser = () => {
+    localStorage.removeItem("user");
+    window.location.reload();
+    return false;
+   }
 
     const clickHandlerRegister=(e)=>{
             onChildClickRegister(e.target.name);
@@ -119,13 +132,24 @@ const Header = ({error,onChildClickConnexion,onChildClickRegister,isDashboard,is
                             {isDashboard?'':<span id="dash3" className="nav-menu" onClick={()=>changeStyle1('dash3')}>Nos Enseignants</span>}
                             {!isDashboard?'':<span  className="nav-menu" onClick={()=>console.log('')}>Nos matières</span>}
                             <span id="dash4" className="nav-menu" onClick={()=>changeStyle1('dash4')}>Nos offres</span>
-                            {isDashboard?'': <span className="nav-menu" style={{
+                            
+                            {isDashboard?'': !user?(<span className="nav-menu" style={{
                                 borderRadius:"5px 5px 5px 5px",
                                 textAlign:'center',
                                 backgroundColor:'#8399FF',
                                 width:'15%',
                                 padding:'2.5px'}} 
-                                onClick={(e)=>clickHandlerConnexion(e)}>Connexion</span>}
+                                onClick={(e)=>clickHandlerConnexion(e)}>Connexion</span>):
+                            (<span className="nav-menu" style={{
+                                borderRadius:"5px 5px 5px 5px",
+                                textAlign:'center',
+                                backgroundColor:'#8399FF',
+                                width:'15%',
+                                padding:'2.5px'}} 
+                                onClick={()=>disconnectUser()}>Deconnexion</span>) 
+
+                            }
+
                                 
                             {isDashboard?'': <span className="nav-menu" style={{
                                 borderRadius:"5px 5px 5px 5px",
@@ -135,12 +159,13 @@ const Header = ({error,onChildClickConnexion,onChildClickRegister,isDashboard,is
                                 padding:'2.5px'}} 
                                 onClick={(e)=>clickHandlerRegister(e)}>Inscription</span>}    
                             
+                             <div style={{cursor:"pointer"}} onClick={()=>history.push(user.redirect)}>
                              <Avatar 
                                 size="40"
                                 round={true}
                                 src={im5}
-                                name='Profile'
-                             />
+                                name='Mon Compte'
+                             /></div>
 
                         </ul>
                      
@@ -153,4 +178,10 @@ const Header = ({error,onChildClickConnexion,onChildClickRegister,isDashboard,is
     )
 }
 
-export default Header;
+const mapStateToProps=(state)=>{
+  return{
+      user: state.authReducer.user
+  };
+};
+
+export default connect(mapStateToProps)(Header);

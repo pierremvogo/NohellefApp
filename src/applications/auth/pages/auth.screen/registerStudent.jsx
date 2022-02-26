@@ -22,18 +22,30 @@ import Select from 'react-select';
 import ReCAPTCHA from "react-google-recaptcha";
 import useForm from "../../../../hooks/useForm";
 import ReactTooltip from 'react-tooltip';
+import { authRegisterSuccess,authRegisterFailed } from '../../../redux/reducer/actions/auth';
+import { getUserSuccess,getUserFailed } from '../../../redux/reducer/actions/users';
+import authService from '../../../services/auth.service'; 
 
-const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
+const RegisterStudent = ({  error,
+                            user,
+                            onChildCloseModal,
+                            onChildLoading,
+                            onChildClickLogin,
+                            onChildRequireParent,
+                            onChildLoginNewUser
+                            }) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     
-    const [registerStudent, setRegisterStudent] = useState(
+   const [registerStudent, setRegisterStudent] = useState(
            {confirm_age:false, 
             level:"sixieme",
             name:"",
             surname:"",
             email:"",
+            username:"",
             phone:"",
+            birthDay:"",
             ville:"",
             address:"",
             password:"",
@@ -57,7 +69,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
     const inputRef = useRef(null);
 
     useEffect(()=>{
-    console.log(formErrors);
+        console.log(formErrors);
     if(Object.keys(formErrors).length === 0 && submited){
         console.log(registerStudent);
     }
@@ -69,12 +81,22 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
     const clickHandlerConnectModal=(e)=>{
         onChildClickLogin(e.target.name);
     }
+    const clickHandlerRequireParent=(student)=>{
+        onChildRequireParent(student);
+    }
+    const handleLoading = (isShow,result,type) => {
+        onChildLoading(isShow,result,type);
+    }
+    const loginNewUser = (e) => {
+        onChildLoginNewUser(e.target.name);
+    }
+     
     const validateForm = (values) => {
     const errorsValidation = {};
     const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const regexPassword = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
     const regexPhoneNumber = /^(\++237[\s.-]?)+\(?6[5-9]{1}[0-9]{1}[\s.-]?[0-9]{3}[\s.-]?([0-9]{3})\)?/;
-
+    const regexBirthDay = /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/;
     Object.keys(values).map((input,index)=>{
         switch(input) {
             case 'name':
@@ -84,7 +106,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                 }else if(values[input].length < 4){
                     errorsValidation.name = "Le nom doit avoir au moins 4 lettres";
                 }else{
-                    
+                    setSubmited(true);
                 }
                 break;
             case 'surname':
@@ -94,7 +116,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                 }else if(values[input].length < 4){
                     errorsValidation.surname = "Le Prénom doit avoir au moins 4 lettres";
                 }else{
-                    
+                    setSubmited(true);
                 }
                 break;
             case 'email':
@@ -103,7 +125,17 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                 }else if(!regexEmail.test(values[input])){
                     errorsValidation.email= "Adresse Email invalide";
                 }else{
-                    
+                    setSubmited(true);
+                }
+                break;
+            case 'username':
+                if(!values[input]){
+                    errorsValidation.username = "Nom d'utilisateur requis";
+
+                }else if(values[input].length < 4){
+                    errorsValidation.username = "Nom d'utilisateur avec au moins 4 lettres";
+                }else{
+                    setSubmited(true);
                 }
                 break;
             case 'phone':
@@ -113,11 +145,20 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                         if(!regexPhoneNumber.test(values[input])){
                             errorsValidation.phone = "Numéro de Téléphone invalide";
                         }else{
-                            
+                            setSubmited(true);
                         }
                 }
                 else{
                    errorsValidation.phone = "Format de Numéro invalide"; 
+                }
+                break;
+            case 'birthDay':
+                if(!values[input]){
+                    errorsValidation.birthDay = "Date de naissance requise";
+                }else if(!regexBirthDay.test(values[input]) ){
+                    errorsValidation.birthDay = "Format invalide";
+                }else{
+                    setSubmited(true);     
                 }
                 break;
             case 'password':
@@ -126,7 +167,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                 }else if(!regexPassword.test(values[input])){
                     errorsValidation.password = "mot de passe avec au moins 8 caractères,une majuscule,une minuscule et un chiffre";
                 }else{
-                    
+                    setSubmited(true);
                 }
                 break;
             case 'confirm_password':
@@ -135,28 +176,28 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                 }else if(values['password'] != values[input]){
                     errorsValidation.confirm_password = "Confirmation de mot de passe invalide";
                 }else{
-                    
+                    setSubmited(true);
                 }
                 break;
             case 'numCardNumber':
                 if(!values[input]){
                     errorsValidation.numCardNumber = "Le numéro de la carte est requis";
                 }else{
-
+                    setSubmited(true);
                 }
                 break;
             case 'cardExpireYear':
                 if(!values[input]){
                     errorsValidation.cardExpireYear = "Année d'expiration requise";
                 }else{
-
+                    setSubmited(true);
                 }
                 break;
             case 'cardCode':
                 if(!values[input]){
                     errorsValidation.cardCode = "code requis pour votre carte";
                 }else{
-
+                    setSubmited(true);
                 }
                 break;
                 default:
@@ -165,7 +206,8 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
     
     });
 
-       return errorsValidation;       
+       return errorsValidation;
+             
   }
 
     
@@ -189,9 +231,65 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
 
     const onSubmit = (e) => {
         e.preventDefault();
+        let studentRegister = {
+            firstName: registerStudent.name,
+            lastName: registerStudent.surname,
+            email: registerStudent.email,
+            username: registerStudent.username,
+            password: registerStudent.password,
+            phoneNumber: registerStudent.phone,
+            city: registerStudent.ville,
+            address: registerStudent.address,
+            bankCardNumber: registerStudent.numCardNumber,
+            bankCardExpirationDate: registerStudent.cardExpireYear+"-"+registerStudent.cardExpireMonth,
+            bankCardCode: registerStudent.cardCode,
+            parentId: "",
+            birthDay: registerStudent.birthDay,
+            userType: "0",
+    }
         setFormErrors(validateForm(registerStudent));
-        console.log(registerStudent);
-        setSubmited(true);
+        if(Object.keys(formErrors).length === 0 && submited){
+            if(registerStudent.confirm_age){
+            setErrorMessage(true);
+            handleLoading(true,'rs');
+            console.log("form Student register");
+            console.log(studentRegister);
+            authService.registerUser(studentRegister)
+            .then((response) => {
+                if(!response.data.success){
+                    dispatch(authRegisterFailed(response));
+                    console.log("Response register student  not success");
+                    console.log(response);
+                    handleLoading(false,'rs'); 
+                    
+                }else{
+                    dispatch(authRegisterSuccess(response));
+                    console.log("Response register student success");
+                    console.log(response.data);
+                    handleLoading(false,'rs');
+                    loginNewUser(e);
+                    
+                } 
+            })
+            .catch((error) => {
+                handleLoading(false,'rs');
+                console.log("Error  Register student");
+                if(error.response === undefined){
+                    dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                }else{
+                console.log(error.response);
+                dispatch(authRegisterFailed(error.response));
+                }
+            });
+        }else{
+            clickHandlerRequireParent(studentRegister);
+        }
+            
+        }else{
+            handleLoading(false,'rs');
+            return; 
+        }
+        
     }
     return(
 
@@ -204,12 +302,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                      }}>
                     <GridContainer>
                      <GridItem xs={12} sm={12} md={12}>
-                        <GridContainer>
-                          <GridItem xs={12} sm={12} md={12}>
                         
-                           
-                          </GridItem>
-                        </GridContainer>
 
                         <GridContainer>
                           <GridItem xs={12} sm={12} md={12}>
@@ -238,7 +331,20 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                      </div>
                                     </GridItem>
                                   </GridContainer>
-
+                                  <GridContainer>
+                                      <GridItem xs={12} sm={12} md={12}>
+                                       {errorMessage && error && (
+                                            <div className="form-group">
+                                                {error.data&&(<div className="alert alert-danger" style={{width:"50%",fontSize:'0.7em',margin:'0% 25% 0% 25%'}} role="alert">
+                                                        {error.data.message}
+                                                </div>)}
+                                                {!error.data&&(<div className="alert alert-danger" style={{width:"50%",fontSize:'0.7em',margin:'0% 25% 0% 25%'}} role="alert">
+                                                        {error}
+                                                </div>)}
+                                            </div>
+                                        )}
+                                      </GridItem>
+                                  </GridContainer>
                                   <GridContainer>
                                     <GridItem xs={12} sm={6} md={6}>
                                        <div style={{margin:'0% 0% 0% 0%',color:'blue'}}>
@@ -345,11 +451,21 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                           type="email"
                                           name="email"                             
                                           label="Email"
+                                      }else if(input==="username"){
+                                          id="username"
+                                          type="text"
+                                          name="username"                             
+                                          label="Nom d'utilisateur"
                                       }else if(input==="phone"){
                                           id="phone"
                                           type="text"
                                           name="phone"                            
                                           label="Téléphone"
+                                      }else if(input==="birthDay"){
+                                          id="birthDay"
+                                          type="text"
+                                          name="birthDay"                            
+                                          label="Date de Naissance"
                                       }else if(input==="ville"){
                                           id="ville"  
                                           type="text"
@@ -392,13 +508,14 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                                 width:'100%',
                                                 height:'45px',
                                                 backgroundColor:'#c7d0d8'}}>
-                                            <ReCAPTCHA
+                                            {/* <ReCAPTCHA
                                                 sitekey={keySite}
                                                 onChange={onChange}
-                                            />
+                                            />*/}
                                          </div>
                                          : <div><input 
                                             type={type} 
+                                            placeholder={input==="birthDay"?"YYYY-MM-DD":""}
                                             id={id}
                                             name={name} 
                                             value={registerStudent[input]}
@@ -408,7 +525,9 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                                         input==="name"&&formErrors.name?'2px solid #C84941':
                                                         input==="surname"&&formErrors.surname?'2px solid #C84941':
                                                         input==="email"&&formErrors.email?'2px solid #C84941':
+                                                        input==="username"&&formErrors.username?'2px solid #C84941':
                                                         input==="phone"&&formErrors.phone?'2px solid #C84941':
+                                                        input==="birthDay"&&formErrors.birthDay?'2px solid #C84941':
                                                         input==="password"&&formErrors.password?'2px solid #C84941':
                                                         input==="confirm_password"&&formErrors.confirm_password?'2px solid #C84941':
                                                 
@@ -417,13 +536,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                                 height:'40px'}}
                                             />
 
-                                            {errorMessage && error && (
-                                                        <div className="form-group">
-                                                              <div style={{color:"red"}}>
-                                                                  {error.message}
-                                                              </div>
-                                                        </div>
-                                                                )}
+                                        
                                                                 {formErrors && (
                                                                     <div>
                                                                         <div style={{color:"red",fontSize:"12px"}}>
@@ -431,7 +544,9 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                                                          input==="name"?formErrors.name:
                                                                          input==="surname"?formErrors.surname:
                                                                          input==="email"?formErrors.email:
+                                                                         input==="username"?formErrors.username:
                                                                          input==="phone"?formErrors.phone:
+                                                                         input==="birthDay"?formErrors.birthDay:
                                                                          input==="password"?formErrors.password:
                                                                          input==="confirm_password"?formErrors.confirm_password:
                                                                          
@@ -583,13 +698,7 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                                     width:'100%',
                                                     height:'40px'}}
                                                 /> 
-                                                {errorMessage && error && (
-                                                        <div className="form-group">
-                                                              <div style={{color:"red"}}>
-                                                                  {error.message}
-                                                              </div>
-                                                        </div>
-                                                                )}
+                                               
                                                                 {formErrors && (
                                                                     <div>
                                                                         <div style={{color:"red",fontSize:"12px"}}>
@@ -682,4 +791,12 @@ const RegisterStudent = ({error,onChildCloseModal,onChildClickLogin}) => {
              </div>
         )
 }
-export default RegisterStudent;
+const mapStateToProps=(state)=>{
+  return{
+      isLoggedIn: state.authReducer.isLoggedIn,
+      error: state.authReducer.error,
+      loading: state.authReducer.loading,
+      user: state.authReducer.user
+  };
+};
+export default connect(mapStateToProps)(RegisterStudent);

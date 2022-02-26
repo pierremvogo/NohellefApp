@@ -64,7 +64,7 @@ import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessi
 //5271ff 
 //ffce52 
 const DashboardSupAdmin = () => {
-    const [isAdminContent, setIsAdminContent] = useState(false);
+    const [isAdminContent, setIsAdminContent] = useState(true);
     const [isAbonnementContent, setIsAbonnementContent] = useState(false);
     const [isAchatContent, setIsAchatContent] = useState(false);
     const [isApprenantContent, setIsApprenantContent] = useState(false);
@@ -166,10 +166,10 @@ function menuToggle(){
         let element = document.getElementById(id);
         if(id=="myDiv1"){
             element.style.backgroundColor = "#dd1b16";
-            setIsTuteurContent(true,
+            setIsTuteurContent(false,
                     setIsAbonnementContent(false),
                     setIsAchatContent(false),
-                    setIsAdminContent(false),
+                    setIsAdminContent(true),
                     setIsApprenantContent(false),
                     setIsPublicityContent(false),
                      setIsAchatC(false),
@@ -192,14 +192,14 @@ function menuToggle(){
         }
         else if(id=="myDiv2"){
             element.style.backgroundColor = "#dd1b16";
-            setIsTuteurContent(false,
+            setIsTuteurContent(true,
                     setIsAbonnementContent(false),
                     setIsAchatContent(false),
-                    setIsAdminContent(true),
+                    setIsAdminContent(false),
                     setIsApprenantContent(false),
                     setIsPublicityContent(false),
                     setIsAchatC(false),
-                      setIsFormule(false),)
+                    setIsFormule(false),)
              let tab = [
                 document.getElementById('myDiv1'),
                 document.getElementById('myDiv3'),

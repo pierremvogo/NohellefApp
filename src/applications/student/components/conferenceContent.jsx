@@ -37,13 +37,13 @@ import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";*
 import Pagination from './pagination.jsx';
 
 
-const ConferenceContent = ({playvideo}) => {
+const ConferenceContent = ({playvideo,courseLink}) => {
 	const [posts, setPosts] = useState([]);
 	const [loading, serLoading] = useState(false);
 	const [currentPage, setCurrentPage] = useState(2);
 	const [postPerPage, setPostPerPage] = useState(4);
   const [play,setPlay] = useState(playvideo);
-  const [vidLinks, setVidLinks] = useState(videoLink)
+  const [vidLinks, setVidLinks] = useState(courseLink);
 
 	useEffect(()=>{
 		setPosts(data);

@@ -2,6 +2,7 @@ const ROUTES = {
     HOME : "/",
     LOGIN : "/auth/login",
     LOGIN_OTHERS : "/others/auth/login",
+    REGISTER_SUPADMIN : "/auth/sup/admin/register",
     FORGOT_PASSWORD : "/auth/forgot",
     RESET_PASSWORD : "/auth/reset",
     STUDENT : "/student/dashboard",

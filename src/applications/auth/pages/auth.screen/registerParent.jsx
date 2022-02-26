@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import {connect, useSelector} from 'react-redux';
-import {useDispatch} from 'react-redux';
+import {connect,useDispatch, useSelector} from 'react-redux';
+
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import Button from '../../../../app/components/buttons/button';
 import Card from "../../../../app/components/Card/Card.js";
@@ -15,22 +15,32 @@ import ins1 from '../../../../assets/images/home/ins1.png';
 import ins2 from '../../../../assets/images/home/ins2.png';
 import go1 from '../../../../assets/images/home/go1.png';
 import mpay from '../../../../assets/images/dashboard/mpay.png';
-import divid from '../../../../assets/images/dashboard/divid.png';
+import divid from '../../../../assets/images/dashboard/divid.png'
 import GridContainer from "../../../../app/components/Grid/GridContainer.js";
 import Footer from "../../../../app/components/footer/footer.jsx";
 import Avatar   from 'react-avatar';
 import Select from 'react-select';
 import useForm from "../../../../hooks/useForm";
 import ReactTooltip from 'react-tooltip';
+import { authRegisterSuccess,authRegisterFailed } from '../../../redux/reducer/actions/auth';
+import authService from '../../../services/auth.service'; 
 
-const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
+const RegisterParent = ({error,
+                         user,
+                         onChildCloseModal,
+                         onChildLoading,
+                         onChildClickLogin,
+                         onChildLoginNewUser
+                         }) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     const [registerParent, setRegisterParent] = useState(
            {name:"", 
             surname:"",
             email:"",
+            username:"",
             phone:"",
+            birthDay:"",
             ville:"",
             address:"",
             password:"",
@@ -53,9 +63,17 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
     const clickHandlerCloseModal=(e)=>{
             onChildCloseModal(e.target.name);
     }
+    
     const clickHandlerConnectModal=(e)=>{
         onChildClickLogin(e.target.name);
     }
+    const handleLoading = (isShow,type) => {
+        onChildLoading(isShow,type);
+    }
+    const loginNewUser = (e) => {
+        onChildLoginNewUser(e);
+    }
+    
     const options = [
     { value: 'chocolate', label: 'Niveau1' },
     { value: 'strawberry', label: 'Niveau2' },
@@ -66,7 +84,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
     const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const regexPassword = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
     const regexPhoneNumber = /^(\++237[\s.-]?)+\(?6[5-9]{1}[0-9]{1}[\s.-]?[0-9]{3}[\s.-]?([0-9]{3})\)?/;
-
+    const regexBirthDay = /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/;
     Object.keys(values).map((input,index)=>{
         switch(input) {
             case 'name':
@@ -98,6 +116,16 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                     
                 }
                 break;
+            case 'username':
+                if(!values[input]){
+                    errorsValidation.username = "Nom d'utilisateur requis";
+
+                }else if(values[input].length < 4){
+                    errorsValidation.username = "Nom d'utilisateur avec au moins 4 lettres";
+                }else{
+                    
+                }
+                break;
             case 'phone':
                 if(!values[input]){
                     errorsValidation.phone = "Numero de Téléphone requis";
@@ -109,9 +137,16 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                         }
                 }
                 else{
-                  console.log("taille du numero");
-                  console.log(values[input].length);
                    errorsValidation.phone = "Format de Numéro invalide"; 
+                }
+                break;
+            case 'birthDay':
+                if(!values[input]){
+                    errorsValidation.birthDay = "Date de naissance requise";
+                }else if(!regexBirthDay.test(values[input]) ){
+                    errorsValidation.birthDay = "Format invalide";
+                }else{
+                    setSubmited(true);     
                 }
                 break;
             case 'password':
@@ -167,10 +202,61 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
         console.log(registerParent);
     }
    const onSubmit = (e) => {
-        e.preventDefault();
+    e.preventDefault();
+        let parentRegister = {
+            firstName: registerParent.name,
+            lastName: registerParent.surname,
+            email: registerParent.email,
+            username: registerParent.username,
+            password: registerParent.password,
+            phoneNumber: registerParent.phone,
+            city: registerParent.ville,
+            address: registerParent.address,
+            bankCardNumber: registerParent.numCardNumber,
+            bankCardExpirationDate: registerParent.cardExpireYear+"-"+registerParent.cardExpireMonth,
+            bankCardCode: registerParent.cardCode,
+            parentId: "",
+            birthDay: registerParent.birthDay,
+            userType: "1",
+    }
         setFormErrors(validateForm(registerParent));
-        console.log(registerParent) ;
-        setSubmited(true);
+        if(Object.keys(formErrors).length === 0 && submited){
+            setErrorMessage(true);
+            handleLoading(true,'rp');
+            console.log("form Parent register");
+            console.log(parentRegister);
+            authService.registerUser(parentRegister)
+            .then((response) => {
+                if(!response.data.success){
+                    dispatch(authRegisterFailed(response));
+                    console.log("Response register parent  not success");
+                    console.log(response);
+                    handleLoading(false,'rp'); 
+                }else{
+                    dispatch(authRegisterSuccess(response));
+                    console.log("Response register parent success");
+                    console.log(response.data);
+                    handleLoading(false,'rp');
+                    loginNewUser(e);
+                    
+                }   
+
+            })
+            .catch((error) => {
+                handleLoading(false,'rp');
+                console.log("Error  Register parent");
+                if(error.response === undefined){
+                    dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                }else{
+                console.log(error.response);
+                dispatch(authRegisterFailed(error.response));
+                }
+            });
+        }
+        else{
+            handleLoading(false,'rp');
+            return; 
+        }
     }
     return(
 
@@ -216,7 +302,20 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                      </div>
                                     </GridItem>
                                   </GridContainer>
-
+                                  <GridContainer>
+                                      <GridItem xs={12} sm={12} md={12}>
+                                       {errorMessage && error && (
+                                            <div className="form-group">
+                                                {error.data&&(<div className="alert alert-danger" style={{width:"50%",fontSize:'0.7em',margin:'0% 25% 0% 25%'}} role="alert">
+                                                        {error.data.message}
+                                                </div>)}
+                                                {!error.data&&(<div className="alert alert-danger" style={{width:"50%",fontSize:'0.7em',margin:'0% 25% 0% 25%'}} role="alert">
+                                                        {error}
+                                                </div>)}
+                                            </div>
+                                        )}
+                                      </GridItem>
+                                  </GridContainer>
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                         <div>
@@ -231,8 +330,6 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                        
                                     </GridItem>
                                   </GridContainer>
-
-                                  <form onSubmit={onSubmit}>
                                   <GridContainer>
                                       {Object.keys(registerParent).map((input,index)=>{
                                         let id,label, type, name; 
@@ -251,11 +348,21 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                           type="email"
                                           name="email"                             
                                           label="Email"
+                                      }else if(input==="username"){
+                                          id="username"
+                                          type="text"
+                                          name="username"                             
+                                          label="Nom d'utilisateur"
                                       }else if(input==="phone"){
                                           id="phone"
                                           type="text"
                                           name="phone"                            
                                           label="Téléphone"
+                                      }else if(input==="birthDay"){
+                                          id="birthDay"
+                                          type="text"
+                                          name="birthDay"                            
+                                          label="Date de Naissance"
                                       }else if(input==="ville"){
                                           id="ville"  
                                           type="text"
@@ -288,6 +395,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                             type={type} 
                                             id={id}
                                             name={name} 
+                                            placeholder={input==="birthDay"?"YYYY-MM-DD":""}
                                             value={registerParent[input]}
                                             onChange={onChangeRegisterParent}
                                             style={{
@@ -295,7 +403,9 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                                         input==="name"&&formErrors.name?'2px solid #C84941':
                                                         input==="surname"&&formErrors.surname?'2px solid #C84941':
                                                         input==="email"&&formErrors.email?'2px solid #C84941':
+                                                        input==="username"&&formErrors.username?'2px solid #C84941':
                                                         input==="phone"&&formErrors.phone?'2px solid #C84941':
+                                                        input==="birthDay"&&formErrors.birthDay?'2px solid #C84941':
                                                         input==="password"&&formErrors.password?'2px solid #C84941':
                                                         input==="confirm_password"&&formErrors.confirm_password?'2px solid #C84941':
                                                 
@@ -303,13 +413,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                                 width:'100%',
                                                 height:'40px'}}
                                          />
-                                         {errorMessage && error && (
-                                                        <div className="form-group">
-                                                              <div style={{color:"red"}}>
-                                                                  {error.message}
-                                                              </div>
-                                                        </div>
-                                                                )}
+                                         
                                                                 {formErrors && (
                                                                     <div>
                                                                         <div style={{color:"red",fontSize:"12px"}}>
@@ -317,7 +421,9 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                                                          input==="name"?formErrors.name:
                                                                          input==="surname"?formErrors.surname:
                                                                          input==="email"?formErrors.email:
+                                                                         input==="username"?formErrors.username:
                                                                          input==="phone"?formErrors.phone:
+                                                                         input==="birthDay"?formErrors.birthDay:
                                                                          input==="password"?formErrors.password:
                                                                          input==="confirm_password"?formErrors.confirm_password:
                                                                          
@@ -450,13 +556,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                                     width:'100%',
                                                     height:'40px'}}
                                                 />
-                                                {errorMessage && error && (
-                                                        <div className="form-group">
-                                                              <div style={{color:"red"}}>
-                                                                  {error.message}
-                                                              </div>
-                                                        </div>
-                                                                )}
+                    
                                                                 {formErrors && (
                                                                     <div>
                                                                         <div style={{color:"red",fontSize:"12px"}}>
@@ -504,7 +604,7 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
                                       
                                     </GridItem>
                                   </GridContainer>
-                                  </form>
+                                  
                     
                               </div>
 
@@ -519,4 +619,12 @@ const RegisterParent = ({error,onChildCloseModal,onChildClickLogin}) => {
              </div>
         )
 }
-export default RegisterParent;
+const mapStateToProps=(state)=>{
+  return{
+      isLoggedIn: state.authReducer.isLoggedIn,
+      error: state.authReducer.error,
+      loading: state.authReducer.loading,
+      user: state.authReducer.user
+  };
+};
+export default connect(mapStateToProps)(RegisterParent);

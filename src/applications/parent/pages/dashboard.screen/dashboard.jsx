@@ -1,4 +1,5 @@
 import React, {useContext, useState, useEffect } from 'react';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import './dashboard.css';
 import Avatar   from 'react-avatar';
 import Button from '../../../../app/components/buttons/button';
@@ -59,7 +60,7 @@ import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessi
 //ffce52 
 const socket = io.connect("http://localhost:3001");
 const DashboardStudent = () => {
-
+    const history = useHistory();
     const [isAccountContent, setIsAccountContent] = useState(false);
     const [isChooseTutor, setIsChooseTutorContent] = useState(false);
     const [isConferenceContent, setIsConferenceContent] = useState(false);
@@ -136,6 +137,11 @@ const DashboardStudent = () => {
                 i.style.backgroundColor = ""
             }
   }
+  const disconnectUser = () => {
+    localStorage.removeItem("user");
+    window.location.reload();
+    return false;
+   }
     const joinRoom = () => {
        const userData = {
             author : username,
@@ -761,13 +767,19 @@ const DashboardStudent = () => {
 
                                                     <Dropdown.Menu style={{backgroundColor:'#F8D04E',borderRadius:'5px'}}>
                                                         <Dropdown.Item href="#" >
+                                                            <div style={{marginBottom:'5%'}} onClick={()=>{history.push("/")}}>
+                                                                   
+                                                                    <u>Acceuil</u>
+                                                            </div>
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item href="#" >
                                                             <div style={{marginBottom:'5%'}} onClick={handlerAccount}>
                                                                     <img src={acc} width='15%'/>
                                                                     <u>Mon compte</u>
                                                             </div>
                                                         </Dropdown.Item>
                                                         <Dropdown.Item href="#">
-                                                            <div>
+                                                            <div onClick={()=>disconnectUser()}>
                                                                 <img src={dic} width='15%'/>
                                                                 <u>Se déconnecter</u>
                                                             </div>

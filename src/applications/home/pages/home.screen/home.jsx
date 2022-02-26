@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Button from '../../../../app/components/buttons/button';
 import {connect, useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import { Link, Redirect, useHistory, useParams} from 'react-router-dom';
 /*import userService from '../../../services/user.service';
 import {authLogout} from '../../../auth/redux/reducer/actions/auth';
 import AuthLogin from '../../../auth/pages/auth.screen/auth_login';
@@ -53,17 +53,23 @@ import AskRegister from '../../../auth/pages/auth.screen/askRegister.jsx';
 import Login from '../../../auth/pages/auth.screen/login.screen.jsx';
 import RegisterStudent from '../../../auth/pages/auth.screen/registerStudent.jsx';
 import RegisterParent from '../../../auth/pages/auth.screen/registerParent.jsx';
+import PartialLogin from '../../../auth/pages/auth.screen/partialLogin.jsx';
 import Pagination from '../../component/pagination.jsx';
 
 //#273941
-const Home = ({error}) => {
+const Home = ({user}) => {
 
     const [showAskModal,setShowAskModal] = useState(false);
-
+    const [showMessageModal,setShowMessageModal] = useState(false);
     const [showInscriptionModal, setShowInscriptionModal] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showRegisterStudentModal, setShowRegisterStudentModal] = useState(false);
     const [showRegisterParentModal, setShowRegisterParentModal] = useState(false);
+    const [showModalLoading, setShowModalLoading] = useState(false);
+    const [showModalPartial, setShowModalPartial] = useState(false);
+
+    const [studentForRegister, setStudentForRegister] = useState({});
+    const [successMessage, setSuccessMessage] = useState("");
 
     const handleConnexionClose = () =>{setShowAskModal(false)};
     const [displayAsk, setDisplayAsk] = useState("flex");
@@ -76,6 +82,9 @@ const Home = ({error}) => {
     const [posts, setPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [postPerPage] = useState(3);
+    
+
+
 
     useEffect(()=>{
         setPosts(data);
@@ -194,27 +203,142 @@ const Home = ({error}) => {
   const currentPosts = posts.slice(indexOfFirstPost,indexOfLastPost);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-
    const outPutStudentRegister=(e)=> {
+        document.body.style.overflow = "hidden";
         setShowRegisterStudentModal(true,
             setShowLoginModal(false),
             setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
             setShowRegisterParentModal(false),setDisplayAsk("flex"))
     }
 
   const outPutParentRegister=(e)=> {
+    document.body.style.overflow = "hidden";
     setShowRegisterStudentModal(false,
             setShowLoginModal(false),
             setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
             setShowRegisterParentModal(true),setDisplayAsk("flex"))
     }
 
     const outPutLogin=(e)=> {
+        document.body.style.overflow = "hidden";
         setShowRegisterStudentModal(false,
             setShowLoginModal(true),
             setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
             setShowRegisterParentModal(false),setDisplayAsk("flex"))
     }
+
+     const outPutEventLoading=(isShow,type)=> {
+        switch(type){
+            case "login":
+                    setShowRegisterStudentModal(false,
+                    setShowLoginModal(true,setDisplayAsk("flex")),
+                    setShowAskModal(false),
+                    setShowModalLoading(isShow),
+                    setShowRegisterParentModal(false))
+                break;
+            case "rs":
+                    setShowRegisterStudentModal(true,setDisplayAsk("flex"),
+                    setShowLoginModal(false),
+                    setShowAskModal(false),
+                    setShowModalLoading(isShow),
+                    setShowRegisterParentModal(false))
+                break;
+            case "rp":
+                    setShowRegisterStudentModal(false,
+                    setShowLoginModal(false),
+                    setShowAskModal(false),
+                    setShowModalLoading(isShow),
+                    setShowRegisterParentModal(true,setDisplayAsk("flex")))
+                break;
+        }    
+    }
+
+    const outPutPartialLogin=(isShowPartial)=> {
+        setShowRegisterStudentModal((true,setDisplayAsk("flex")),
+            setShowLoginModal(false),
+            setShowModalPartial(isShowPartial),
+            setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowRegisterParentModal(false))
+    }
+    const closeMessage = (e) => {
+        setShowMessageModal(false);
+    }
+
+    const ModalSuccessMessage = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            display: displayAsk,
+            zIndex: "900000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+            <div
+                style={{
+                    width: "10%",
+                    height: "30%",
+                    zIndex: "300000",
+                    display: "flex",
+                    position: "absolute",
+                    top: "35%",
+                    left: "44%"
+                }}
+                >
+                <p>{successMessage}</p>
+            </div>
+          
+      </div>
+    )
+  };
+
+    const ModalLoading = () => {
+    
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "150%",
+            display: displayAsk,
+            zIndex: "900000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+            <div
+                style={{
+                    width: "10%",
+                    height: "30%",
+                    zIndex: "300000",
+                    display: "flex",
+                    position: "absolute",
+                    top: "20%",
+                    left: "44%"
+                }}
+                >
+                <Loader type="Oval" color="#2BAD60" height="100" width="70" />
+            </div>
+          
+      </div>
+    )
+  };
 
     const ModalAskInscription = () => {
     return(
@@ -235,11 +359,12 @@ const Home = ({error}) => {
       >
             <div className="containask" id='myContain'>
                 <div style={{display:'inline-block',cursor:'pointer', fontSize:'100%', width:'100%'}}>
-                   <span className='close' onClick={()=>closeMod('other')}>&times;</span>
-                   <AskRegister onChildClickStudentRegister={outPutStudentRegister}
-                             onChildClickParentRegister={outPutParentRegister}
-                             onChildClickLogin={outPutLogin}
-                             onChildCloseModal={closeMod} /> 
+                   <span className='close' onClick={()=>closeModal('home')}>&times;</span>
+                   <AskRegister 
+                        onChildClickStudentRegister={outPutStudentRegister}
+                        onChildClickParentRegister={outPutParentRegister}
+                        onChildClickLogin={outPutLogin}
+                        onChildCloseModal={closeModal} /> 
                 </div>
                 
             </div>
@@ -247,6 +372,43 @@ const Home = ({error}) => {
       </div>
     )
   };
+
+
+const ModalPartialLogin = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "transparent",
+            top:"0px",
+            left:"0px",
+            bottom:'0px',
+            right:'0'
+            }}
+      >
+            <div className="containlog" id='myContain'>
+                <div style={{display:'inline-block', fontSize:'100%', width:'100%'}}>
+                    <span className='close' onClick={()=>closePartialModal()}>&times;</span>
+                    <PartialLogin  
+                            onChildLoading={outPutEventLoading} 
+                            studentForRegister={studentForRegister} 
+                            onChildLoginNewUser={loginNewUser}
+                            onChildCloseModal={closePartialModal} />
+                </div>
+                
+            </div>
+          
+      </div>
+    )
+  };
+
   const ModalLogin = () => {
     return(
       <div className="modal-content" id='cont'
@@ -269,7 +431,10 @@ const Home = ({error}) => {
             <div className="containlog" id='myContain'>
                 <div style={{display:'inline-block', fontSize:'100%', width:'100%'}}>
                     <span className='close' onClick={()=>closeModal('home')}>&times;</span>
-                    <Login onChildClick={openAskRegister} />
+                    <Login 
+                        onChildClick={openAskRegister} 
+                        onChildCloseMessage={closeMessage}
+                        onChildLoading={outPutEventLoading} />
                 </div>
                 
             </div>
@@ -291,8 +456,7 @@ const Home = ({error}) => {
             zIndex: "300000",
             position: "absolute",
             overflow: "hidden",
-            backgroundColor: "rgb(0, 0, 0)",
-            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            backgroundColor: "transparent",
             top:"0px",
             left:"0px",
             }}
@@ -300,7 +464,13 @@ const Home = ({error}) => {
             <div className="containregs" id='myContain'>
             <span className='close' onClick={()=>closeModal('other')}>&times;</span>
                 <div style={{display:'inline-block', fontSize:'100%'}}>
-                   <RegisterStudent onChildCloseModal={closeModal} onChildClickLogin={openLogin} /> 
+                   <RegisterStudent 
+                        onChildCloseModal={closeModal} 
+                        onChildClickLogin={openLogin} 
+                        onChildLoginNewUser={loginNewUser}
+                        onChildRequireParent={openPartialLogin}
+                        onChildLoading={outPutEventLoading}
+                        /> 
                 </div>
                 
             </div>
@@ -308,6 +478,15 @@ const Home = ({error}) => {
       </div>
     )
   };
+  const loginNewUser = (e) => {
+    const user  = JSON.parse(localStorage.getItem("user"));
+    if(user){
+        history.push("/");
+    }else{
+        openLogin();
+    }
+    
+  }
   const ModalInscriptionParent = () => {
     return(
       <div className="modal-content" id='cont'
@@ -320,8 +499,7 @@ const Home = ({error}) => {
             zIndex: "300000",
             position: "absolute",
             overflow: "hidden",
-            backgroundColor: "rgb(0, 0, 0)",
-            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            backgroundColor: "transparent",
             top:"0px",
             left:"0px",
             }}
@@ -330,28 +508,48 @@ const Home = ({error}) => {
                 <div style={{display:'inline-block', fontSize:'1.5vw'}}>
                    
                 </div><span className='close' onClick={()=>closeModal('other')}>&times;</span>
-                <RegisterParent onChildCloseModal={closeModal} onChildClickLogin={openLogin} /> 
+                <RegisterParent onChildCloseModal={closeModal} 
+                                onChildLoading={outPutEventLoading} 
+                                onChildLoginNewUser={loginNewUser}
+                                onChildClickLogin={openLogin} /> 
             </div>
           
       </div>
     )
   };
   function closeMod(){
+    document.body.style.overflow = "scroll";
      setShowRegisterStudentModal(false,
             setShowLoginModal(false),
             setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
             setShowRegisterParentModal(false))
   }
   function openAskRegister(){
+    document.body.style.overflow = "hidden";
      setShowRegisterStudentModal(false,
             setShowLoginModal(false),
             setShowAskModal(true),
+            setShowModalLoading(false),
             setShowRegisterParentModal(false))
   }
   function openLogin(){
+    document.body.style.overflow = "hidden";
     setShowRegisterStudentModal(false,
             setShowLoginModal(true),
             setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
+            setShowRegisterParentModal(false))
+  }
+  function openPartialLogin(student){
+    setStudentForRegister(student);
+    setShowRegisterStudentModal(true,setDisplayAsk("flex"),
+            setShowLoginModal(false),
+            setShowModalPartial(true),
+            setShowAskModal(false),
+            setShowModalLoading(false),
             setShowRegisterParentModal(false))
   }
    
@@ -360,16 +558,31 @@ const Home = ({error}) => {
         closeModal();
     }
   })}*/
+  function closePartialModal(){
+    setShowRegisterStudentModal(true,
+            setShowLoginModal(false),
+            setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
+            setShowRegisterParentModal(false))
+  }
+ 
+
    function closeModal(content){
     if(content == 'home'){
+    document.body.style.overflow = "scroll";
     setShowRegisterStudentModal(false,
             setShowLoginModal(false),
             setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
             setShowRegisterParentModal(false))
     }else{
         setShowRegisterStudentModal(false,
             setShowLoginModal(false),
             setShowAskModal(true),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
             setShowRegisterParentModal(false))
     }
     
@@ -377,14 +590,18 @@ const Home = ({error}) => {
   }
 
     const outPutEventConnexion=(e)=> {
+        document.body.style.overflow = "hidden";
         setShowRegisterStudentModal(false,
             setShowLoginModal(true),
             setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
             setShowRegisterParentModal(false))
     }
 
   const outPutEventRegister=(e)=> {
-   setDisplayAsk("flex",setShowAskModal(true))
+        document.body.style.overflow = "hidden";
+        setDisplayAsk("flex",setShowAskModal(true))
     }
 
     
@@ -394,6 +611,9 @@ const Home = ({error}) => {
         {showRegisterStudentModal? <ModalInscriptionStudent /> :'' } 
         {showRegisterParentModal? <ModalInscriptionParent /> :'' } 
         {showLoginModal? <ModalLogin /> :'' }
+        {showModalLoading? <ModalLoading />: ''}
+        {showModalPartial? <ModalPartialLogin />: ''} 
+        {showMessageModal? <ModalSuccessMessage />: ''}
        
       
           <Header
@@ -750,9 +970,9 @@ const Home = ({error}) => {
 
 const mapStateToProps=(state)=>{
   return{
-      isLoggedIn: state.isLoggedIn,
-      error: state.error,
-      user: state.user
+    user: state.authReducer.user,
+    redirect: state.authReducer.redirect,
+    isRestricted: state.authReducer.isRestricted
   };
 };
 export default connect(mapStateToProps)(Home);

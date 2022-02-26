@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {connect, useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import { Link, Redirect, useHistory } from 'react-router-dom';
+import authService from '../../../services/auth.service'; 
 import Button from '../../../../app/components/buttons/button';
 import Card from "../../../../app/components/Card/Card.js";
 import CardHeader from "../../../../app/components/Card/CardHeader.js";
@@ -15,6 +16,8 @@ import forgotsmile from '../../../../assets/images/dashboard/forgot.png';
 import GridContainer from "../../../../app/components/Grid/GridContainer.js";
 import Footer from "../../../../app/components/footer/footer.jsx";
 import Avatar   from 'react-avatar';
+import { authgetResetTokenSuccess,authgetResetTokenFailed } from '../../../redux/reducer/actions/auth';
+import Loader from 'react-loader-spinner';
 import './login.screen.css';
 
 const ForgotPassword = ({error}) => {
@@ -26,6 +29,8 @@ const ForgotPassword = ({error}) => {
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState(false);
+    const [showModalLoading, setShowModalLoading] = useState(false);
+    const [displayLoading, setDisplayLoading] = useState("flex");
     const history = useHistory();
     const dispatch= useDispatch();
 
@@ -41,7 +46,7 @@ const ForgotPassword = ({error}) => {
                 }else if(!regexEmail.test(values[input])){
                     errorsValidation.email= "Adresse Email invalide";
                 }else{
-                    
+                    setSubmited(true);
                 }
                 break;
                 default:
@@ -52,21 +57,91 @@ const ForgotPassword = ({error}) => {
 
        return errorsValidation;       
   }
+
+   const ModalLoading = () => {
+    
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "150%",
+            display: displayLoading,
+            zIndex: "900000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+            <div
+                style={{
+                    width: "10%",
+                    height: "30%",
+                    zIndex: "300000",
+                    display: "flex",
+                    position: "absolute",
+                    top: "20%",
+                    left: "44%"
+                }}
+                >
+                <Loader type="Oval" color="#2BAD60" height="100" width="70" />
+            </div>
+          
+      </div>
+    )
+  };
+  const handleLoading = (isShow) => {
+    setShowModalLoading(isShow);
+  }
+
+
    const onChangeForgotPassword = (e) => {
         setForgotPasswordForm({...forgotPasswordForm,  [e.target.name]: e.target.value })
         setFormErrors(validateForm(forgotPasswordForm));
         }
 
 
-    const onSubmit = (e) => {
+   const onSubmit = (e) => {
         e.preventDefault();
         setFormErrors(validateForm(forgotPasswordForm));
-        console.log(forgotPasswordForm); 
-        setSubmited(true);
+        if(Object.keys(formErrors).length === 0 && submited){
+            setFormErrors({});
+            setErrorMessage(true);
+            handleLoading(true);
+            console.log(forgotPasswordForm);
+            authService.getForgotPasswordToken(forgotPasswordForm)
+            .then((response) => {
+                console.log("Reset password Token");
+                console.log(response.data);
+                handleLoading(false);
+                dispatch(authgetResetTokenSuccess(response.data));  
+            })
+            .catch((error) => {
+                handleLoading(false);
+                if(error.response === undefined){
+                    console.log("Network Error");
+                    dispatch(authgetResetTokenFailed("Network Error, possible you are not connected"));
+                }else{
+                    console.log("Error Getting Token");
+                    console.log(error.response);
+                    dispatch(authgetResetTokenFailed(error.response));
+                 
+                }
+                
+            });
+        }else{
+            handleLoading(false);
+            return; 
+        }
     }
+
+
 	return(
 
         <div style={{backgroundColor:'#eeeeee'}}>
+        {showModalLoading? <ModalLoading />: ''}
                     <GridContainer>
                      <GridItem xs={12} sm={12} md={4} style={{textAlign:'center'}}>
                         <div style={{margin:'10% 0% 0% 0%'}}>
@@ -111,7 +186,7 @@ const ForgotPassword = ({error}) => {
                                 border:'1px solid #ffce52',
                                 borderRadius:'25px 25px 25px 25px',
                                 width:'40%',
-                                height:'250px',
+                                height:'260px',
                                 backgroundColor:'#ffce52',
                                 margin:'5%',
                                 padding:'1%'
@@ -124,8 +199,7 @@ const ForgotPassword = ({error}) => {
                                      </div>
                                     </GridItem>
                                   </GridContainer>
-                                  <form onSubmit={onSubmit}>
-                                  <>
+                                  
                                   {Object.keys(forgotPasswordForm).map((input,index)=>{
                                     return(
                                     <GridContainer>
@@ -145,13 +219,6 @@ const ForgotPassword = ({error}) => {
                                             width:'100%',
                                             height:'40px'}}/>
 
-                                            {errorMessage && error && (
-                                                        <div className="form-group">
-                                                              <div style={{color:"red"}}>
-                                                                  {error.message}
-                                                              </div>
-                                                        </div>
-                                                                )}
                                                                 {formErrors && (
                                                                     <div>
                                                                         <div style={{color:"red",fontSize:"12px"}}>
@@ -166,14 +233,14 @@ const ForgotPassword = ({error}) => {
                                     </GridContainer>
                                         )
                                   })}
-                                  </>
+                            
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={6}>
                                     
                                     <div style={{cursor:'pointer',
                                           margin:'20% 0% 5% 0%',
                                           textAlign:'center'}}>
-                                      <div style={{
+                                      <div onClick={onSubmit} style={{
                                           backgroundColor: '#4b9960',
                                           borderRadius: '15px',
                                           borderBottom: '4px solid #002495',
@@ -187,7 +254,7 @@ const ForgotPassword = ({error}) => {
                                           paddingTop:'8%'
                                         }}>
                                 
-                                <span className="text" onClick={onSubmit} style={{fontSize:'100%',color:'white'}}>Envoyer</span>
+                                <span className="text" style={{fontSize:'100%',color:'white'}}>Envoyer</span>
                               </div>
                                     </div>
                                       
@@ -217,22 +284,45 @@ const ForgotPassword = ({error}) => {
                                       
                                     </GridItem>
                                   </GridContainer>
-                                  </form>
+                                  <GridContainer>
+                          <GridItem xs={12} sm={12} md={12}>
+                            {errorMessage && error && (
+                                    <div className="form-group">
+                                    {error.data&&(<div className="alert alert-danger" style={{width:"50%",fontSize:'0.7em',margin:'0% 25% 0% 25%'}} role="alert">
+                                                {error.data.message}
+                                    </div>)}
+                                    {!error.data&&(<div className="alert alert-danger" style={{width:"50%",fontSize:'0.7em',margin:'0% 25% 0% 25%'}} role="alert">
+                                                {error}
+                                    </div>)}
+                                    </div>
+                            )}
+                           
+                          </GridItem>
+                        </GridContainer>
                                  
                               </div>
 
 
                           </GridItem>
                         </GridContainer>
+
                       </GridItem>
 
 
                     </GridContainer>
+                    
                     <div className="row">
                         <Footer />
                     </div>
 			 </div>
 		)
 }
-export default ForgotPassword;
+
+const mapStateToProps=(state)=>{
+  return{
+    error: state.authReducer.error,
+    resetToken: state.authReducer.resetToken,
+  };
+};
+export default connect(mapStateToProps)(ForgotPassword);
 

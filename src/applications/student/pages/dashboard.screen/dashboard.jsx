@@ -1,4 +1,5 @@
 import React, {useContext, useState, useEffect } from 'react';
+import { Switch, Route, Router, Redirect, useHistory, useLocation } from 'react-router-dom';
 import './dashboard.css';
 import Avatar   from 'react-avatar';
 import Button from '../../../../app/components/buttons/button';
@@ -84,9 +85,10 @@ import MesTravaux from '../../components/mesTravaux.jsx';
     const [statusConnection,setStatusConnection] = useState(false);
     const [me, setMe] = useState('');
     const [playVideor, setPlayVideor] = useState(false);
+    const [courseLink, setCourseLink] = useState("");
     let dataList = [];
 
-
+   const history = useHistory();
     const joinRoom = () => {
        const userData = {
             author : username,
@@ -109,6 +111,7 @@ import MesTravaux from '../../components/mesTravaux.jsx';
         socket.on("disconnectMe", ()=>{
             setStatusConnection(false);
         });
+
 
         socket.on("notification", (data)=>{
             setShowChatModal(true,setDisplayAsk('flex'));
@@ -149,6 +152,12 @@ import MesTravaux from '../../components/mesTravaux.jsx';
             return;
         }
     },[])
+
+    const disconnectUser = () => {
+        localStorage.removeItem("user");
+        window.location.reload();
+        return false;
+   }
 
 
     function menuToggle(){
@@ -303,8 +312,9 @@ import MesTravaux from '../../components/mesTravaux.jsx';
             }
   }
 
-  const outPutClickHandlerVideo = (e) => {
-    setPlayVideor(true);
+  const outPutClickHandlerVideo = (courselink) => {
+    console.log("handle e target-------------------");
+    setPlayVideor(true,setCourseLink(courselink));
     setIsPaymentResourceContent(false,
             setIsCourseContent(false),
             setIsAccountContent(false),
@@ -963,6 +973,12 @@ import MesTravaux from '../../components/mesTravaux.jsx';
                                                     </Dropdown.Toggle>
 
                                                     <Dropdown.Menu style={{backgroundColor:'#F8D04E',borderRadius:'10%'}}>
+                                                        <Dropdown.Item href="#">
+                                                            <div onClick={()=>history.push("/")}>
+                                                                <img src={dic} width='15%'/>
+                                                                <u>Acceuil</u>
+                                                            </div>
+                                                        </Dropdown.Item>
                                                         <Dropdown.Item href="#" >
                                                             <div style={{marginBottom:'5%'}} onClick={handlerAccount}>
                                                                     <img src={acc} width='15%'/>
@@ -970,7 +986,7 @@ import MesTravaux from '../../components/mesTravaux.jsx';
                                                             </div>
                                                         </Dropdown.Item>
                                                         <Dropdown.Item href="#">
-                                                            <div>
+                                                            <div onClick={()=>disconnectUser()}>
                                                                 <img src={dic} width='15%'/>
                                                                 <u>Se déconnecter</u>
                                                             </div>
@@ -989,7 +1005,7 @@ import MesTravaux from '../../components/mesTravaux.jsx';
 
                           {isCourseContent?<CourseContent onChildClickHandlerVideo={outPutClickHandlerVideo}/>:''}
                           {isAccountContent?<AccountContent />:''}
-                          {isConferenceContent?<ConferenceContent playvideo={playVideor} />:''}
+                          {isConferenceContent?<ConferenceContent playvideo={playVideor} courseLink={courseLink} />:''}
                           {isContactHelpContent?<ContactHelpContent />:''}
                           {isHistoryContent?<HistoryContent onChildClickHandlerVideo={outPutClickHandlerVideo} />:''}
                           {isPaymentContent?<PaymentContent onChildClickHandlerPay={outPutClickHandlerPay} />:''}

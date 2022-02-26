@@ -110,7 +110,7 @@ const Adress = ({error,tutorName}) => {
                                             <GridItem xs={12} sm={12} md={12} style={{margin:'10% 0% 0% 0%'}}>
                                             Nom du Tuteur
                                                
-                                          <input type='text' value={tutorName}  style={{
+                                            <input type='text' value={tutorName}  style={{
                                            
                                             border:'2px solid #002495',
                                             width:'100%',

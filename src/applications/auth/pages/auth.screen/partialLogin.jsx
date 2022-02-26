@@ -13,6 +13,7 @@ import logoImage from '../../../../assets/images/im10.png';
 import GridContainer from "../../../../app/components/Grid/GridContainer.js";
 import Footer from "../../../../app/components/footer/footer.jsx";
 import { authLoginSuccess,authLoginFailed } from '../../../redux/reducer/actions/auth';
+import { authRegisterSuccess,authRegisterFailed } from '../../../redux/reducer/actions/auth';
 import { getUserSuccess,getUserFailed } from '../../../redux/reducer/actions/users';
 import userService from '../../../services/user.service';
 import authService from '../../../services/auth.service'; 
@@ -22,13 +23,16 @@ import AskRegister from '../../../auth/pages/auth.screen/askRegister.jsx';
 import ReactTooltip from 'react-tooltip';
 import Loader from 'react-loader-spinner';
 
-const Login = ({error,
-                user,
-                loading,
-                onChildClick,
-                onChildLoading,
-                onChildCloseMessage,
-                }) => {
+const PartialLogin = ({error,
+                      user,
+                      onChildLoading,
+                      loading,
+                      onChildPartialLogin,
+                      onChildCloseModal,
+                      onChildSharedParentId,
+                      studentForRegister,
+                      onChildLoginNewUser
+                    }) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     const [loginForm, setLoginForm] = useState({login: "", password: ""})
@@ -43,23 +47,30 @@ const Login = ({error,
     const [displayAsk, setDisplayAsk] = useState("flex");
     const [formErrors, setFormErrors] = useState({});
     const [errorMessage, setErrorMessage] = useState(false);
+    const [responseMessage, setResponseMessage] = useState(false);
     const [showModalLoading, setShowModalLoading] = useState(false);
     const inputRef = useRef(null);
 
     useEffect(() => {
-    }, [formErrors,loginForm]);
+        console.log(studentForRegister);
+    }, [formErrors]);
 
-
-  const handlerChildClick =(e) => {
-        onChildClick(e.target.name);
-  }
-
-  const handleLoading = (isShow,type) => {
+  
+const clickHandlerRequireParent=(isShowPartial)=>{
+        onChildPartialLogin(isShowPartial);
+    }
+const closePartialModal=(e)=>{
+    onChildCloseModal(e.target.name);
+}
+const clickHandlerShareParentId=(parentId)=>{
+        onChildSharedParentId(parentId);
+    }
+const handleLoading = (isShow,type) => {
         onChildLoading(isShow,type);
-  }
-  const closeMessage = (e) => {
-    onChildCloseMessage(e.target.name);
-  }
+    }
+const loginNewUser = (e) => {
+    onChildLoginNewUser(e.target.name);
+}
 
   const validateForm = (values) => {
     const errorsValidation = {};
@@ -102,19 +113,38 @@ const Login = ({error,
     setFormErrors(validateForm(loginForm));
     console.log(loginForm);
   };
-  const handleCloseModalLoading = () =>{setShowModalLoading(false);}
 
    
     const onChangeResetPassword = (e) => {
         setResetPasswordForm({...resetPasswordForm,  [e.target.name]: e.target.value })
         setFormErrors(null)
     }
-
-    const tooltipStyles = {
-        main:{
-            backgroundColor: "red",
-            color: "black",
-        }
+    const handleRegisterStudent = (e,studentForm) => {
+        authService.registerUser(studentForm)
+            .then((response) => {
+                if(!response.data.success){
+                    dispatch(authRegisterFailed(response));
+                    console.log("Response partial not success");
+                    console.log(response);
+                    handleLoading(false,'rs'); 
+                  
+                }else{
+                    dispatch(authRegisterSuccess(response.data)); 
+                    console.log("Response partial success");
+                    console.log(response);
+                    handleLoading(false,'rs');  
+                    loginNewUser(e);
+                     
+                }   
+            })
+            .catch((error) => {
+                dispatch(authRegisterFailed(error.response));
+                handleLoading(false,'rs');
+                console.log("Error register partial");
+                console.log(error.response);
+               
+                
+            });
     }
 
 
@@ -122,85 +152,35 @@ const Login = ({error,
         e.preventDefault();
         setFormErrors(validateForm(loginForm));
         if(Object.keys(formErrors).length === 0 && submited){
-            setFormErrors({});
-            setErrorMessage(true);
-            handleLoading(true,'login');
+            handleLoading(true,'rs');
             console.log(loginForm);
             authService.loginUser(loginForm)
             .then((response) => {
-                setErrorMessage(false);
-                let userType = response.data.currentUser.type; 
-                response.data.redirect = 
-                                  userType==="0" ?"/student/dashboard":
-                                  userType==="1" ?"/parent/dashboard":
-                                  userType==="2" ?"/tutor/dashboard":
-                                  userType==="3" ?"/admin/dashboard":
-                                  userType==="4" ?"/admin/sup/dashboard":"/"
-                localStorage.setItem('user', JSON.stringify(response.data));
-                dispatch(authLoginSuccess(response.data));
-                history.push(response.data.redirect);
-                handleLoading(false,'login');
-                console.log("data for login success");
-                console.log(response.data);      
+                studentForRegister.parentId = response.data.currentUser.id;
+                console.log("Register student with parent ID");
+                console.log(studentForRegister);
+                handleRegisterStudent(e,studentForRegister);
             })
             .catch((error) => {
                 handleLoading(false,'login');
-                console.log("Error login");
+                console.log("Error Partial login");
                 if(error.response === undefined){
                     dispatch(authLoginFailed("Network Error, possible you are not connected"));
                 }else{
                 console.log(error.response);
                 dispatch(authLoginFailed(error.response));
                 }
-                
             });
         }else{
             error = null;
-            handleLoading(false,'login');
+            handleLoading(false,'rs');
+            setErrorMessage(false);
             return; 
         }
     }
 
-    const ModalAskInscription = () => {
+  
     return(
-      <div className="modal-content" id='cont'
-        style={{
-            width: "100%",
-            height: "100%",
-            justifyContent: "center",
-            display: displayAsk,
-            alignItems: "center",
-            zIndex: "300000",
-            position: "absolute",
-            overflow: "hidden",
-            backgroundColor: "transparent",
-            top:"0px",
-            left:"0px",
-            }}
-      >
-            <div className="contain" id='myContain'>
-                <div style={{display:'inline-block', fontSize:'1.5vw'}}>
-                   
-                </div><span className='close' onClick={()=>closeModal()}>&times;</span>
-                <AskRegister /> 
-            </div>
-          
-      </div>
-    )
-  };
-
-  function closeModal(){
-    setDisplayAsk("none",setShowAskModal(false))
-  }
-
-    const outPutEventConnexion=(e)=> {
-        history.push('/auth/login')
-    }
-
-  const outPutEventRegister=(e)=> {
-   setDisplayAsk("flex",setShowAskModal(true))
-    }
-	return(
 
         <div style={{
                 backgroundColor:'#ffce52',
@@ -210,11 +190,10 @@ const Login = ({error,
                                     <GridItem xs={12} sm={12} md={12}>
                                       
                                      <div style={{margin:'2% 0% 15% 2%'}}>
-                                         <span style={{color:'blue',float:'left'}}><strong><u>Connexion</u></strong></span>
+                                         <span style={{color:'blue',textAlign:'center'}}><strong><u>Moins de 18 ans? Veuillez renseigner les indentifiants de votre parent</u></strong></span>
                                      </div>
                                     </GridItem>
                                   </GridContainer>
-                                  <form onSubmit={onSubmit}>
                                   <>
                                   {Object.keys(loginForm).map((input,index)=>{
                                         let type, id, idTooltip, name, placeholder;                                     
@@ -222,12 +201,12 @@ const Login = ({error,
                                             name="login";
                                             id = "login";
                                             type = "text";
-                                            placeholder = "Votre nom d'utilisateur"
+                                            placeholder = "nom d'utilisateur du Parent"
                                           }else if (input === 'password') {
                                             name="password";
                                             id = "password";
                                             type = 'password';                             
-                                            placeholder = "Votre mot de passe";
+                                            placeholder = "Mot de passe du Parent";
                                           } else { return }
                                           return(
                                             <GridContainer key={index}>
@@ -265,53 +244,59 @@ const Login = ({error,
                                   </>
 
                                   <GridContainer>
-                                    <GridItem xs={12} sm={12} md={12}>
+                                    <GridItem xs={12} sm={12} md={6}>
                 
                                     <div onClick={onSubmit} style={{cursor:'pointer',
                                           margin:'10% 20% 5% 20%',
                                           textAlign:'center'}}>
                                       <div style={{
                                           backgroundColor: '#4b9960',
-                                          borderRadius: '15px',
+                                          borderRadius: '10px',
                                           borderBottom: '3px solid #002495',
                                           borderRight:  '3px solid #002495',
                                           borderTop: '1px solid #002495',
                                           borderLeft:  '1px solid #002495',
-                                          height: '55px',
+                                          height: '45px',
                                           width: '100%',
                                           cursor: 'pointer',
                                           textAlign:'center',
-                                          paddingTop:'4%'
+                                          paddingTop:'5%'
                                         }}>
                                 
-                                <span className="text" style={{fontSize:'100%',color:'white'}} ><strong>Se connecter</strong></span>
+                                <span className="text" style={{fontSize:'100%',color:'white'}} ><strong>Valider</strong></span>
+                                    </div>
+                                    </div>
+                                      
+                                    </GridItem>
+                                    <GridItem xs={12} sm={12} md={6}>
+                
+                                    <div onClick={(e)=>closePartialModal(e)} style={{cursor:'pointer',
+                                          margin:'10% 20% 5% 20%',
+                                          textAlign:'center'}}>
+                                      <div style={{
+                                          backgroundColor: '#4b9960',
+                                          borderRadius: '10px',
+                                          borderBottom: '3px solid #002495',
+                                          borderRight:  '3px solid #002495',
+                                          borderTop: '1px solid #002495',
+                                          borderLeft:  '1px solid #002495',
+                                          height: '45px',
+                                          width: '100%',
+                                          cursor: 'pointer',
+                                          textAlign:'center',
+                                          paddingTop:'5%'
+                                        }}>
+                                
+                                <span className="text" style={{fontSize:'100%',color:'white'}} ><strong>Annuler</strong></span>
                                     </div>
                                     </div>
                                       
                                     </GridItem>
                                   </GridContainer>
-                                  </form>
 
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
-                                      <div style={{margin:'0% 5% 15% 5%'}}>
-                                          <span style={{
-                                            color:'blue',
-                                            float:'left',
-                                            cursor:'pointer'
-                                        }} onClick={()=>history.push('/auth/forgot')}>Mot de passe oublié?</span>
-                                          <span style={{
-                                            color:'green',
-                                            float:'right',
-                                            cursor:'pointer'
-                                        }} onClick={(e)=>handlerChildClick(e)}>Pas de compte?</span>
-                                      </div>
-                                    </GridItem>
-                                  </GridContainer>
-
-                                  <GridContainer>
-                                    <GridItem xs={12} sm={12} md={12}>
-                                      {errorMessage && error && (
+                                      {error && (
                                             <div className="form-group">
                                                 {error.data&&(<div className="alert alert-danger" style={{width:"50%",fontSize:'0.7em',margin:'0% 25% 0% 25%'}} role="alert">
                                                         {error.data.message}
@@ -325,7 +310,7 @@ const Login = ({error,
                                   </GridContainer>
                      
              </div>
-		)
+        )
 }
 const mapStateToProps=(state)=>{
   return{
@@ -335,4 +320,4 @@ const mapStateToProps=(state)=>{
       user: state.authReducer.user
   };
 };
-export default connect(mapStateToProps)(Login);
+export default connect(mapStateToProps)(PartialLogin);

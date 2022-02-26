@@ -21,42 +21,109 @@ import Avatar   from 'react-avatar';
 const AddTutor = ({error}) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
-    const [loginForm, setLoginForm] = useState({username: "", password: "", remember: false})
+    const [registerTutorForm, setRegisterTutorForm] = useState(
+                        {
+                            name: "", 
+                            surname: "", 
+                            email: "",
+                            phone: "",
+                            macAddress: ""
+                        }   );
+    const [errorMessage, setErrorMessage] = useState(false);
     const [isLoginForm, setIsLoginForm] = useState(true);
-    const [formError, setformError] = useState(null);
+    const [formErrors, setFormErrors] = useState({});
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [resetPasswordForm,setResetPasswordForm] = useState({email: ""});
     const [tooltipOpen, setTooltipOpen] = useState(false)
     const history = useHistory()
     const dispatch= useDispatch()
 
+    const validateForm = (values) => {
+    const errorsValidation = {};
+    const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const regexPassword = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
+    const regexPhoneNumber = /^(\++237[\s.-]?)+\(?6[5-9]{1}[0-9]{1}[\s.-]?[0-9]{3}[\s.-]?([0-9]{3})\)?/;
+
+    Object.keys(values).map((input,index)=>{
+        switch(input) {
+            case 'name':
+                if(!values[input]){
+                    errorsValidation.name = "Le Nom est requis";
+
+                }else if(values[input].length < 4){
+                    errorsValidation.name = "Le nom doit avoir au moins 4 lettres";
+                }else{
+                    
+                }
+                break;
+            case 'surname':
+                if(!values[input]){
+                    errorsValidation.surname = "Le Prénom est requis";
+
+                }else if(values[input].length < 4){
+                    errorsValidation.surname = "Le Prénom doit avoir au moins 4 lettres";
+                }else{
+                    
+                }
+                break;
+            case 'email':
+                if(!values[input]){
+                    errorsValidation.email = "Adresse Email requise";
+                }else if(!regexEmail.test(values[input])){
+                    errorsValidation.email= "Adresse Email invalide";
+                }else{
+                    
+                }
+                break;
+            case 'phone':
+                if(!values[input]){
+                    errorsValidation.phone = "Numero de Téléphone requis";
+                }else if(values[input].length === 13 || values[input].length === 9 ){
+                        if(!regexPhoneNumber.test(values[input])){
+                            errorsValidation.phone = "Numéro de Téléphone invalide";
+                        }else{
+                            
+                        }
+                }
+                else{
+                   errorsValidation.phone = "Format de Numéro invalide"; 
+                }
+                break;
+            case 'macAddress':
+                if(!values[input]){
+                    errorsValidation.macAddress = "L'Adresse MAC est requise";
+                }else{
+                    
+                }
+                break;
+                default:
+                    break;
+    }
+    
+    });
+
+       return errorsValidation;       
+  }
+
     
 
-    const onChangeLogin = (e) => {
-        setLoginForm({...loginForm,  [e.target.name]: e.target.value })}
+    const onChangeRegisterTutor = (e) => {
+        setRegisterTutorForm({...registerTutorForm,  [e.target.name]: e.target.value });
+        setFormErrors(validateForm(registerTutorForm));
+        console.log(registerTutorForm);
+
+    }
 
     const onChangeResetPassword = (e) => {
         setResetPasswordForm({...resetPasswordForm,  [e.target.name]: e.target.value })
-        setformError(null)
+        setFormErrors(null)
     }
 
     const onSubmit = (e) => {
         e.preventDefault();
+        setFormErrors(validateForm(registerTutorForm));
         if (submited) { return } 
-        if(isLoginForm) {
-            if(loginForm.username.trim()=='admin'&&loginForm.password.trim()=='admin'){
-              
-                history.push('/admin/dashboard');
-            }else if(loginForm.username.trim()=='stud'&&loginForm.password.trim()=='stud'){
-             
-                history.push('/student/dashboard');
-            }else if(loginForm.username.trim()=='tutor'&&loginForm.password.trim()=='tutor'){
-               
-                history.push('/tutor/dashboard');
-            }
-               
-             //dispatch(authSignIn({...loginForm, redirect: history.location.state?.pathname || 'dashboard'}));
-        } 
+        
         setSubmited(true);
     }
 	return(
@@ -104,84 +171,91 @@ const AddTutor = ({error}) => {
                                      </div>
                                     </GridItem>
                                   </GridContainer>
-
-
-                             
-
-
+                                  <form onSubmit={onSubmit}>
                                   <GridContainer>
-                                    <GridItem xs={12} sm={12} md={12}>
-                                        <GridContainer>
-                                            <GridItem xs={12} sm={12} md={6}>
-                                            Nom
-                                                <div style={{margin:'0% 0% 5% 0%',width:'100%'}}>
-                                          <input type='text'  style={{
-                                           
-                                            border:'2px solid #002495',
-                                            width:'100%',
-                                            height:'40px'}}/>
-                                      </div>
-                                            </GridItem>
-                                           
-                                            <GridItem xs={12} sm={12} md={6}>
-                                            prénom
-                                                <div style={{margin:'0% 0% 5% 0%'}}>
-                                                    <input type='text'  style={{
-                                                    border:'2px solid #002495',
-                                                    width:'100%',
-                                                    height:'40px'}}/>
-                                                </div>
-                                            </GridItem>
-                                        </GridContainer>
+                                      {Object.keys(registerTutorForm).map((input,index)=>{
+                                        let id,type,name,label
+                                        if(input==="name"){
+                                            id="name";
+                                            type="text";
+                                            name="name";
+                                            label="Nom"
+                                        }else if(input==="surname"){
+                                            id="surname";
+                                            type="text";
+                                            name="surname";
+                                            label="Prénom";
+                                        }else if(input==="email"){
+                                            id="email";
+                                            type="email";
+                                            name="email";
+                                            label="Email";
+                                        }else if(input==="phone"){
+                                            id="phone";
+                                            type="text";
+                                            name="phone";
+                                            label="Téléphone";
+                                        }
+                                        else if(input==="macAddress"){
+                                            id="macAddress";
+                                            type="text";
+                                            name="macAddress";
+                                            label="Adresse MAC";
+                                        }
+                                        return(
+                                            <GridItem xs={12} sm={12} md={input==="macAddress"?12:6} key={index}>
+                                            {label}
+                                              <div style={{margin:'0% 0% 5% 0%',width:'100%'}}>
+                                                  <input 
+                                                    type={type}
+                                                    id={id}
+                                                    name={name}
+                                                    onChange={onChangeRegisterTutor}
+                                                    value={registerTutorForm[input]}   
 
-                                        <GridContainer>
-                                            <GridItem xs={12} sm={12} md={6}>
-                                            Email
-                                                <div style={{margin:'0% 0% 5% 0%',width:'100%'}}>
-                                          <input type='text'   style={{
-                                           
-                                            border:'2px solid #002495',
-                                            width:'100%',
-                                            height:'40px'}}/>
-                                      </div>
+                                                    style={{
+                                                        border:`${
+                                                        input==="name"&&formErrors.name?'2px solid #C84941':
+                                                        input==="surname"&&formErrors.surname?'2px solid #C84941':
+                                                        input==="email"&&formErrors.email?'2px solid #C84941':
+                                                        input==="phone"&&formErrors.phone?'2px solid #C84941':
+                                                        input==="macAddress"&&formErrors.macAddress?'2px solid #C84941':
+                                                        
+                                                        '2px solid #002495'}`,
+                                                        width:'100%',
+                                                        height:'40px'}}/>
+                                                        {errorMessage && error && (
+                                                        <div className="form-group">
+                                                              <div style={{color:"red"}}>
+                                                                  {error.message}
+                                                              </div>
+                                                        </div>
+                                                                )}
+                                                                {formErrors && (
+                                                                    <div>
+                                                                        <div style={{color:"red",fontSize:"12px"}}>
+                                                                         {
+                                                                         input==="name"?formErrors.name:
+                                                                         input==="surname"?formErrors.surname:
+                                                                         input==="email"?formErrors.email:
+                                                                         input==="phone"?formErrors.phone:
+                                                                         input==="macAddress"?formErrors.macAddress:
+                                                                         
+                                                                         
+                                                                         ""}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                              </div>
                                             </GridItem>
-                                           
-                                            <GridItem xs={12} sm={12} md={6}>
-                                            Téléphone
-                                                <div style={{margin:'0% 0% 5% 0%'}}>
-                                                    <input type='text'   style={{
-                                                    border:'2px solid #002495',
-                                                    width:'100%',
-                                                    height:'40px'}}/>
-                                                </div>
-                                            </GridItem>
-                                        </GridContainer>
-                                       
-                                    </GridItem>
+                                            )
+                                      })}
                                   </GridContainer>
-
-                                  <GridContainer>
-                                    <GridItem xs={12} sm={12} md={12}>
-                                      Adresse Mac
-                                     <div style={{margin:'2% 0% 1% 0%',cursor:'pointer'}}>
-                                         <div>
-                                           <div style={{margin:'0% 0% 5% 0%'}}>
-                                                    <input type='text'   style={{
-                                                    border:'2px solid #002495',
-                                                    width:'100%',
-                                                    height:'40px'}}/>
-                                                </div>
-                                        
-                                        </div>
-                                     </div>
-                                    </GridItem>
-                                  </GridContainer>
-
 
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                     
-                                    <div style={{cursor:'pointer',
+                                    <div onClick={onSubmit} style={{cursor:'pointer',
                                           margin:'5% 0% 5% 0%',
                                           textAlign:'center'}}>
                                       <div style={{
@@ -204,7 +278,7 @@ const AddTutor = ({error}) => {
                                       
                                     </GridItem>
                                   </GridContainer>
-
+                                  </form>
                     
                               </div>
 

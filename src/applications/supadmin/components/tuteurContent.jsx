@@ -28,7 +28,6 @@ import './admin.css';
 import {NotificationManager,NotificationContainer} from 'react-notifications';
 import io from 'socket.io-client';
 import Chat from "../../../app/components/chat/chat.jsx"
-import AddAdmin from './addAdmin.jsx';
 import AffectRight from './affectRight.jsx';
 
 const socket = io.connect("http://localhost:3001");
@@ -91,7 +90,7 @@ const TuteurContent = () => {
             height: "100%",
             justifyContent: "center",
             display: displayAsk,
-            alignItems: "center",
+            //alignItems: "center",
             zIndex: "300000",
             position: "absolute",
             overflow: "hidden",
@@ -102,9 +101,9 @@ const TuteurContent = () => {
             }}
       >
            <div className="contain" id='myContain'>
-                <div style={{display:'inline-block', margin:'3%', fontSize:'100%',width:'100%'}}>
+                <div style={{display:'inline-block', margin:'0% 30% 0% 30%', fontSize:'100%',width:'35%'}}>
                     <span className='close' onClick={()=>closeModal()}>&times;</span>
-                    {isAdd?<AddAdmin />:<AffectRight adminName={adminName}/>}  
+                    {isAdd?<AddTutor />:<AffectRight adminName={adminName}/>}  
                 </div>
                
             </div>
@@ -128,7 +127,8 @@ const TuteurContent = () => {
             alignItems: "center",
             zIndex: "300000",
             position: "absolute",
-            backgroundColor: "transparent",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
             border:'none',
             top:"10%",
             left:"70%",
@@ -382,7 +382,7 @@ const TuteurContent = () => {
 
                         <GridItem xs={12} sm={12} md={3}>
                             <div style={{display:'inline-block',color:'#5271ff',margin:'2%'}}>
-                                Tous les Administrateurs
+                                Tous les Tuteurs
                             </div>
                             
                         </GridItem>

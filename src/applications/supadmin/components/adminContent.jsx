@@ -18,7 +18,7 @@ import affect from '../../../assets/images/dashboard/affect.png';
 import im5 from '../../../assets/images/im5.png';
 import chat from '../../../assets/images/dashboard/chat2.png';
 import ipa from '../../../assets/images/dashboard/ip.png';
-import AddTutor from './addTutor.jsx';
+import AddAdmin from './addAdmin.jsx';
 import {NotificationManager,NotificationContainer} from 'react-notifications';
 import io from 'socket.io-client';
 import Chat from "../../../app/components/chat/chat.jsx"
@@ -312,8 +312,8 @@ const AdminContent = () => {
             width: "100%",
             height: "100%",
             justifyContent: "center",
-            display: display,
-            alignItems: "center",
+            display: displayAsk,
+            //alignItems: "center",
             zIndex: "300000",
             position: "absolute",
             overflow: "hidden",
@@ -324,9 +324,9 @@ const AdminContent = () => {
             }}
       >
            <div className="contain" id='myContain'>
-                <div style={{display:'inline-block', margin:'3%', fontSize:'100%',width:'100%'}}>
+                <div style={{display:'inline-block', margin:'0% 30% 0% 30%', fontSize:'100%',width:'35%'}}>
                     <span className='close' onClick={()=>closeModal()}>&times;</span>
-                     {isAdress?<Adress tutorName={tutorName}/>: <AddTutor /> }
+                     {isAdress?<Adress tutorName={tutorName}/>: <AddAdmin /> }
                 </div>
                
             </div>
@@ -347,7 +347,7 @@ const AdminContent = () => {
        <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'5%'}}>
                             <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
-                                Tous les Tuteurs
+                                Tous les Administarteurs
                             </div>
                             
                         </GridItem>

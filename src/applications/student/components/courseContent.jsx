@@ -14,6 +14,9 @@ import download from '../../../assets/icons/download.png';
 import ReactSearchBox from "react-search-box";
 import pdfLink from '../../../assets/images/dashboard/smilevid.png';
 import videoLink from '../../../assets/video/testvideo2.mp4';
+import videoLink4 from '../../../assets/video/testvideo4.mp4';
+import videoLink2 from '../../../assets/video/testvideo.mp4';
+import videoLink3 from '../../../assets/video/testvideo3.mp4';
 import pdf1 from '../../../assets/pdf/PHP.pdf';
 import pdf2 from '../../../assets/pdf/seq.pdf';
 import Avatar   from 'react-avatar';
@@ -31,15 +34,18 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
 	const [posts, setPosts] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [postPerPage] = useState(4);
-
+  const [displayPDF, setDisplayPDF] = useState("flex");
+  const [showPDFModal,setShowPDFModal] = useState(false);
+  const [linkPDF,setLinkPDF] = useState("");
     const [numPages, setNumpages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
 
     const [showChatModal, setShowChatModal] = useState(false);
     const [displayAsk, setDisplayAsk] = useState("none");
     
-    const openVideoTheque = (e) => {
-        onChildClickHandlerVideo(e.target.name);
+    const openVideoTheque = (courselink) => {
+        console.log(courselink);
+        onChildClickHandlerVideo(courselink);
     }
 
     pdfjs.GlobalWorkerOptions.workerSrc = 
@@ -62,15 +68,58 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
 	},[])
 
     function closeModal(){
-           setShowChatModal(false,setDisplayAsk("none"));
-          }
-    function openModal(){
-            setShowChatModal(true, setDisplayAsk("flex")); 
+        setShowChatModal(false,setDisplayAsk("none"));
+        setShowPDFModal(false,setDisplayPDF("none"));
+        }
+
+    function openModal(type,link){
+      if(type==="pdf"){
+        setShowPDFModal(true,
+          setLinkPDF(link),
+          setDisplayPDF("flex"),
+          setShowChatModal(false, 
+          setDisplayAsk("none")));
+      }else{
+        setShowPDFModal(false,
+          setDisplayPDF("none"),
+          setShowChatModal(true, 
+          setDisplayAsk("flex")));
+      }
+        
         }
 
         const openPdf = (pdfLink) => {
             window.open(pdfLink);
         }
+
+    const ModalOpenPDF = () => {
+      return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            display: displayPDF,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+            <div className="contain" id='myContain'>
+                <div style={{display:'inline-block', fontSize:'100%'}}>
+                   
+                </div><span className='close' onClick={()=>closeModal()}>&times;</span>
+                <iframe src={linkPDF+"#toolbar=0"} style={{width:"70em", height:"35em"}} frameBorder="0"></iframe>
+            </div>
+          
+      </div>
+    )
+    }
 
     const ModalChat = () => {
     return(
@@ -105,7 +154,7 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
                   <GridItem xs={12} sm={12} md={12}>
                       <div>
                           <nav>
-                              <button onClick={goToPrevPage}>Prev</button>
+                              <button onClick={goToPrevPage}>Prevew</button>
                               <button onClick={goToNextPage}>Next</button>
                           </nav>
 
@@ -148,7 +197,7 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
       courseFormat:'Video',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: videoLink
+      courseLink: videoLink4
     },
     {
       id: 3,
@@ -168,7 +217,7 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
       courseFormat:'Video',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: videoLink
+      courseLink: videoLink3
     },
     {
       id: 5,
@@ -199,7 +248,7 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
       courseFormat:'Video',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: videoLink
+      courseLink: videoLink2
     },
     
     {
@@ -221,7 +270,7 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
       courseFormat:'Video',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: videoLink
+      courseLink: videoLink3
     },
     
     {
@@ -272,7 +321,7 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
       courseFormat:'Video',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: videoLink
+      courseLink: videoLink4
     },
     {
       id: 15,
@@ -292,7 +341,7 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
       courseFormat:'Video',
       courseLevel:'Niveau 8',
       courseSubjet:'Mathématiques',
-      courseLink: videoLink
+      courseLink: videoLink3
     },
     {
       id: 17,
@@ -329,6 +378,7 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
 	return(
 			<div className="container">
             {showChatModal? <ModalChat />  : ''}
+            {showPDFModal? <ModalOpenPDF />  : ''}
 			 <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             <div style={{display:'inline-block',color:'red',margin:'2%'}}>
@@ -396,9 +446,9 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
                                        
                                         <div style={{marginTop:'10%'}}>
                                            <span style={{float:'left',cursor:'pointer'}}>
-                                                {post.courseLink==videoLink?
-                                                <div onClick={(e)=>openVideoTheque(e)}><img src={eye} width='80%'/></div>:
-                                                <div onClick={()=>openPdf(post.courseLink)}><img src={eye} width='80%'/></div>}
+                                                {post.courseFormat=="Video"?
+                                                <div onClick={()=>openVideoTheque(post.courseLink)}><img src={eye} width='80%'/></div>:
+                                                <div onClick={()=>openModal('pdf',post.courseLink)}><img src={eye} width='80%'/></div>}
                                                 <div>voir</div>
                                             </span>
                                            
