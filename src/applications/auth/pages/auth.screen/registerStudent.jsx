@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {connect, useSelector} from 'react-redux';
-import {useDispatch} from 'react-redux';
+import {connect, useSelector,useDispatch} from 'react-redux';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import Button from '../../../../app/components/buttons/button';
 import Card from "../../../../app/components/Card/Card.js";
@@ -20,14 +19,16 @@ import Footer from "../../../../app/components/footer/footer.jsx";
 import Avatar   from 'react-avatar';
 import Select from 'react-select';
 import ReCAPTCHA from "react-google-recaptcha";
-import useForm from "../../../../hooks/useForm";
 import ReactTooltip from 'react-tooltip';
-import { authRegisterSuccess,authRegisterFailed } from '../../../redux/reducer/actions/auth';
+import { authRegisterSuccess,authRegisterFailed,authShowMessage,
+            authSetRegisterForm } from '../../../redux/reducer/actions/auth';
 import { getUserSuccess,getUserFailed } from '../../../redux/reducer/actions/users';
 import authService from '../../../services/auth.service'; 
 
 const RegisterStudent = ({  error,
                             user,
+                            registersForm,
+                            isShowMessage,
                             onChildCloseModal,
                             onChildLoading,
                             onChildClickLogin,
@@ -37,7 +38,7 @@ const RegisterStudent = ({  error,
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     
-   const [registerStudent, setRegisterStudent] = useState(
+   const [registerStudent, setRegisterStudent] = useState(registersForm?registersForm:
            {confirm_age:false, 
             level:"sixieme",
             name:"",
@@ -58,7 +59,7 @@ const RegisterStudent = ({  error,
             check_Condition:false});
     const [isLoginForm, setIsLoginForm] = useState(true);
     const [formErrors, setFormErrors] = useState({});
-    const [errorMessage, setErrorMessage] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(isShowMessage);
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [resetPasswordForm,setResetPasswordForm] = useState({email: ""});
     const [tooltipOpen, setTooltipOpen] = useState(false);
@@ -226,7 +227,9 @@ const RegisterStudent = ({  error,
                     e.target.value==="checkCondition"?
                     e.target.checked:
                     e.target.value })
-        setFormErrors(validateForm(registerStudent));   
+        setFormErrors(validateForm(registerStudent)); 
+        dispatch(authShowMessage(false));  
+        dispatch(authSetRegisterForm(registerStudent));
     }
 
     const onSubmit = (e) => {
@@ -249,8 +252,9 @@ const RegisterStudent = ({  error,
     }
         setFormErrors(validateForm(registerStudent));
         if(Object.keys(formErrors).length === 0 && submited){
+            dispatch(authShowMessage(true));
+            dispatch(authSetRegisterForm(registerStudent));
             if(registerStudent.confirm_age){
-            setErrorMessage(true);
             handleLoading(true,'rs');
             console.log("form Student register");
             console.log(studentRegister);
@@ -272,6 +276,7 @@ const RegisterStudent = ({  error,
                 } 
             })
             .catch((error) => {
+                dispatch(authShowMessage(true));
                 handleLoading(false,'rs');
                 console.log("Error  Register student");
                 if(error.response === undefined){
@@ -374,6 +379,7 @@ const RegisterStudent = ({  error,
                                                         id="confirm_age"
                                                         value={"checkAge"}
                                                         onChange={onChangeRegisterStudent}
+                                                        autoComplete="off"
 
                                                         style={{
                                                         border:'2px solid #002495',
@@ -520,6 +526,8 @@ const RegisterStudent = ({  error,
                                             name={name} 
                                             value={registerStudent[input]}
                                             onChange={onChangeRegisterStudent}
+                                            autoComplete="off"
+
                                             style={{
                                                 border:`${
                                                         input==="name"&&formErrors.name?'2px solid #C84941':
@@ -656,6 +664,8 @@ const RegisterStudent = ({  error,
                                                     value={registerStudent[input]}
                                                     onChange={onChangeRegisterStudent}
                                                     placeholder={label}
+                                                    autoComplete="off"
+
                                                     style={{
                                                     border:`${
                                                         input==="cardExpireYear"&&formErrors.cardExpireYear?'2px solid #C84941':
@@ -689,6 +699,7 @@ const RegisterStudent = ({  error,
                                                     name={name}
                                                     value={registerStudent[input]}
                                                     onChange={onChangeRegisterStudent}
+                                                    autoComplete="off"
 
                                                     style={{
                                                     border:`${
@@ -731,7 +742,10 @@ const RegisterStudent = ({  error,
                                                   type='checkbox'
                                                   name="check_Condition"
                                                   value={"checkCondition"}
-                                                  onChange={onChangeRegisterStudent} />
+                                                  onChange={onChangeRegisterStudent}
+                                                  autoComplete="off"
+
+                                                   />
                                               <span style={{marginLeft:'2%',fontSize:'70%'}}>En cliquant sur "M'inscrire" je confirme avoir pris connaissance des termes et
                                                 conditions d'utilisation de Online Nohellef</span>
                                           </div>
@@ -796,6 +810,8 @@ const mapStateToProps=(state)=>{
       isLoggedIn: state.authReducer.isLoggedIn,
       error: state.authReducer.error,
       loading: state.authReducer.loading,
+      isShowMessage: state.authReducer.isShowMessage,
+      registersForm: state.authReducer.registersForm,
       user: state.authReducer.user
   };
 };

@@ -80,18 +80,6 @@
             }
         
 
-        .auth-container__button-primary {
-            width: 100%;
-            margin-bottom: 5%;
-            color: black;
-            font-family: "Poppins Medium", sans-serif;
-            border-color: red;
-            border-style: !important;
-            border-radius: 100px 100px 100px 100px;
-            cursor: pointer;
-            text-align: center;
-            
-        }
 
         .auth-container__line-element {
             margin-top: 20px;

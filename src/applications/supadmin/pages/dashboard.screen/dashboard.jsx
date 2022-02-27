@@ -55,12 +55,12 @@ import supadm3 from '../../../../assets/images/dashboard/supadm3.png';
 import supadm4 from '../../../../assets/images/dashboard/supadm4.png';
 import './dashboard.css';
 import {NotificationManager,NotificationContainer} from 'react-notifications';
-import io from 'socket.io-client';
+/*import io from 'socket.io-client';*/
 import Chat from "../../../../app/components/chat/chat.jsx";
 import badge from '../../../../assets/images/dashboard/badge.png';
 import ScrollToBottom from "react-scroll-to-bottom";
-import { SocketContext } from '../../../../SocketContext.js';
-import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessionId.jsx";
+/*import { SocketContext } from '../../../../SocketContext.js';
+import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessionId.jsx";*/
 //5271ff 
 //ffce52 
 const DashboardSupAdmin = () => {

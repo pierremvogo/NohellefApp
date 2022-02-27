@@ -49,16 +49,16 @@ import NotificationBadge from 'react-notification-badge';
 import {Effect} from 'react-notification-badge';
 import Notifications from "../../../../app/components/Notifications/notification.jsx";
 import 'react-notifications/lib/notifications.css';
-import io from 'socket.io-client';
+//import io from 'socket.io-client';
 import {NotificationManager,NotificationContainer} from 'react-notifications';
 import ChatTutor from "../../../../app/components/chatTutor/chatTutor.jsx";
 import ScrollToBottom from "react-scroll-to-bottom";
-import { SocketContext } from '../../../../SocketContext.js';
-import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessionId.jsx";
+/*import { SocketContext } from '../../../../SocketContext.js';
+import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessionId.jsx";*/
 import mychat from "../../../../assets/images/dashboard/mychat.png";
 //5271ff 
 //ffce52 
- const socket = io.connect("http://localhost:3001");
+ //const socket = io.connect("http://localhost:3001");
  const DashboardStudent = () => {
     const [isAccountContent, setIsAccountContent] = useState(false);
     const [isChooseTutor, setIsChooseTutorContent] = useState(false);
@@ -84,14 +84,14 @@ import mychat from "../../../../assets/images/dashboard/mychat.png";
     const [me, setMe] = useState('');
     const [dataList,setDataList] = useState([]);
 
-    const joinRoom = () => {
+   /* const joinRoom = () => {
     const userData = {
         room: room,
         author: username,}
             if (userData.author !== "" && userData.room !== "") { 
               socket.emit("join_room",userData)
              };
-            }
+            }*/
 
         const handleCallback = (childData) =>{
            
@@ -99,7 +99,7 @@ import mychat from "../../../../assets/images/dashboard/mychat.png";
          }
 
      useEffect(()=>{
-        socket.emit("username",username);
+       /* socket.emit("username",username);
         joinRoom();
         socket.on('me', (id) => {
             setMe(id);
@@ -118,7 +118,7 @@ import mychat from "../../../../assets/images/dashboard/mychat.png";
             }
            
             
-        });
+        });*/
         
             for(data of dataList){
                 if(data.message !== ""){
@@ -241,7 +241,7 @@ const ModalChat = () => {
                                         borderRadius:'20px',
                                         height:'105%',
                                         }}>
-              <GridContainer>
+              {/* <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
                       <span className='close' onClick={()=>closeModal()}>&times;</span>
 
@@ -258,7 +258,7 @@ const ModalChat = () => {
                         remoteUsername={remoteUsername}
                         isConnected={statusConnection}                   
                       />
-              </GridContainer>
+              </GridContainer>*/}
           </GridItem>
       </GridContainer>
       </div>

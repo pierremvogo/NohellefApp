@@ -47,6 +47,21 @@ export const authLoginFailed = (message) => ({
     message,
 });
 
+export const authShowMessage = (isShow) => ({
+    type: types.SHOW_MESSAGE,
+    isShow,
+});
+
+export const authSetLoginForm = (formData) => ({
+    type: types.SET_LOGIN_FORM,
+    formData,
+});
+
+export const authSetRegisterForm = (formData) => ({
+    type: types.SET_REGISTER_FORM,
+    formData,
+});
+
 export const authRegisterSuccess = (payload) => ({
     type: types.REGISTER_SUCCESS,
     payload

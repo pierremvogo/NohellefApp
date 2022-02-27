@@ -1,7 +1,7 @@
 import React,{ Component } from 'react';
-import 'react-agenda/build/styles.css';
-import 'react-datetime/css/react-datetime.css';
-import { ReactAgenda , ReactAgendaCtrl, guid , getUnique , getLast , getFirst , Modal } from 'react-agenda';
+//import 'react-agenda/build/styles.css';
+//import 'react-datetime/css/react-datetime.css';
+//import { ReactAgenda , ReactAgendaCtrl, guid , getUnique , getLast , getFirst , Modal } from 'react-agenda';
 import moment from 'moment';
 import ag1 from '../../../assets/images/dashboard/ag1.png';
 import ag2 from '../../../assets/images/dashboard/ag2.png';
@@ -11,7 +11,7 @@ require('moment/locale/fr.js');
 
 
 
-var now = new Date();
+/*var now = new Date();
     var colors= {
       'color-1':"rgba(102, 195, 131 , 1)" ,
       "color-2":"rgba(242, 177, 52, 1)" ,
@@ -65,10 +65,10 @@ var items = [
     endDateTime   : new Date(now.getFullYear(), now.getMonth(), now.getDate()+7, 17),
     classes       : 'color-3'
   }
-];
+];*/
 
 export default class Agenda extends Component {
-  constructor(props){
+ /* constructor(props){
   super(props);
 
 
@@ -194,14 +194,14 @@ editEvent (items , item){
 changeView (days , event ){
 this.setState({numberOfDays:days})
 }
-
+*/
 
   render() {
 
-    var AgendaItem = function(props){
+   /* var AgendaItem = function(props){
       console.log( ' item component props' , props)
       return <div style={{display:'block', position:'absolute' , background:'#FFF'}}>{props.item.name} <button onClick={()=> props.edit(props.item)}>Edit </button></div>
-    }
+    }*/
 
     return (
 
@@ -209,7 +209,7 @@ this.setState({numberOfDays:days})
 
        
 
-        <ReactAgenda
+       {/* <ReactAgenda
           minDate={new Date(now.getFullYear(), now.getMonth()-3)}
           maxDate={new Date(now.getFullYear(), now.getMonth()+3)}
           startDate={this.state.startDate}
@@ -228,7 +228,7 @@ this.setState({numberOfDays:days})
           fixedHeader={true}
           onRangeSelection={this.handleRangeSelection.bind(this)}
           onCellSelect={this.handleCellSelection.bind(this)}
-          />
+          />*/}
        </div>
 
     );

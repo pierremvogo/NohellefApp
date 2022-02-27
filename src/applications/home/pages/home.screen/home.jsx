@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../../../../app/components/buttons/button';
-import {connect, useSelector} from 'react-redux';
-import {useDispatch} from 'react-redux';
+import {connect, useSelector,useDispatch} from 'react-redux';
 import { Link, Redirect, useHistory, useParams} from 'react-router-dom';
 /*import userService from '../../../services/user.service';
 import {authLogout} from '../../../auth/redux/reducer/actions/auth';
 import AuthLogin from '../../../auth/pages/auth.screen/auth_login';
 import Header from '../../../../app/components/header/header';
 import Footer from '../../../../app/components/footer/footer';*/
+import { authShowMessage } from '../../../redux/reducer/actions/auth';
 import Avatar   from 'react-avatar';
 import DownloadLink from "react-download-link";
 import Loader from 'react-loader-spinner';
@@ -73,7 +73,8 @@ const Home = ({user}) => {
 
     const handleConnexionClose = () =>{setShowAskModal(false)};
     const [displayAsk, setDisplayAsk] = useState("flex");
-    const history = useHistory()
+    const history = useHistory();
+    const dispatch= useDispatch();
 
     const [isBasic,setIsBasic] = useState(false);
     const [isChat,setIsChat] = useState(false);
@@ -481,7 +482,9 @@ const ModalPartialLogin = () => {
   const loginNewUser = (e) => {
     const user  = JSON.parse(localStorage.getItem("user"));
     if(user){
-        history.push("/");
+        setShowRegisterStudentModal(false);
+        setShowRegisterParentModal(false);
+        setShowModalPartial(false);
     }else{
         openLogin();
     }
@@ -518,6 +521,7 @@ const ModalPartialLogin = () => {
     )
   };
   function closeMod(){
+    dispatch(authShowMessage(false));
     document.body.style.overflow = "scroll";
      setShowRegisterStudentModal(false,
             setShowLoginModal(false),
@@ -559,6 +563,7 @@ const ModalPartialLogin = () => {
     }
   })}*/
   function closePartialModal(){
+    dispatch(authShowMessage(false));
     setShowRegisterStudentModal(true,
             setShowLoginModal(false),
             setShowAskModal(false),
@@ -569,6 +574,7 @@ const ModalPartialLogin = () => {
  
 
    function closeModal(content){
+    dispatch(authShowMessage(false));
     if(content == 'home'){
     document.body.style.overflow = "scroll";
     setShowRegisterStudentModal(false,

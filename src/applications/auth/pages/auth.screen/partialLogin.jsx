@@ -12,8 +12,12 @@ import smileauth from '../../../../assets/images/dashboard/smileauth.png';
 import logoImage from '../../../../assets/images/im10.png';
 import GridContainer from "../../../../app/components/Grid/GridContainer.js";
 import Footer from "../../../../app/components/footer/footer.jsx";
-import { authLoginSuccess,authLoginFailed } from '../../../redux/reducer/actions/auth';
-import { authRegisterSuccess,authRegisterFailed } from '../../../redux/reducer/actions/auth';
+import {    authLoginSuccess,
+            authRegisterFailed,
+            authRegisterSuccess,
+            authLoginFailed,
+            authShowMessage,
+            authSetLoginForm, } from '../../../redux/reducer/actions/auth';
 import { getUserSuccess,getUserFailed } from '../../../redux/reducer/actions/users';
 import userService from '../../../services/user.service';
 import authService from '../../../services/auth.service'; 
@@ -25,6 +29,7 @@ import Loader from 'react-loader-spinner';
 
 const PartialLogin = ({error,
                       user,
+                      loginsForm,
                       onChildLoading,
                       loading,
                       onChildPartialLogin,
@@ -35,7 +40,7 @@ const PartialLogin = ({error,
                     }) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
-    const [loginForm, setLoginForm] = useState({login: "", password: ""})
+    const [loginForm, setLoginForm] = useState(loginsForm?loginsForm:{login: "", password: ""})
     const [isLoginForm, setIsLoginForm] = useState(true);
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [resetPasswordForm,setResetPasswordForm] = useState({email: ""});
@@ -111,6 +116,8 @@ const loginNewUser = (e) => {
   const onChangeLoginForm = (e) => {
     setLoginForm({...loginForm, [e.target.name]: e.target.value});
     setFormErrors(validateForm(loginForm));
+    dispatch(authShowMessage(false));  
+    dispatch(authSetLoginForm(loginForm));
     console.log(loginForm);
   };
 
@@ -162,7 +169,7 @@ const loginNewUser = (e) => {
                 handleRegisterStudent(e,studentForRegister);
             })
             .catch((error) => {
-                handleLoading(false,'login');
+                handleLoading(false,'rs');
                 console.log("Error Partial login");
                 if(error.response === undefined){
                     dispatch(authLoginFailed("Network Error, possible you are not connected"));
@@ -317,6 +324,8 @@ const mapStateToProps=(state)=>{
       isLoggedIn: state.authReducer.isLoggedIn,
       error: state.authReducer.error,
       loading: state.authReducer.loading,
+      loginsForm: state.authReducer.loginsForm,
+      registersForm: state.authReducer.registersForm,
       user: state.authReducer.user
   };
 };

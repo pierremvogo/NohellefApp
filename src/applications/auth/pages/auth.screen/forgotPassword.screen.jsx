@@ -20,7 +20,7 @@ import { authgetResetTokenSuccess,authgetResetTokenFailed } from '../../../redux
 import Loader from 'react-loader-spinner';
 import './login.screen.css';
 
-const ForgotPassword = ({error}) => {
+const ForgotPassword = ({error,tokenPayload}) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     const [forgotPasswordForm, setForgotPasswordForm] = useState({email: ""});
@@ -117,7 +117,8 @@ const ForgotPassword = ({error}) => {
                 console.log("Reset password Token");
                 console.log(response);
                 handleLoading(false);
-                dispatch(authgetResetTokenFailed(response)); 
+                response.data.message = "An Email has been sent to your Address Please check it to reset your password"
+                dispatch(authgetResetTokenSuccess(response.data.message)); 
             })
             .catch((error) => {
                 handleLoading(false);
@@ -177,6 +178,18 @@ const ForgotPassword = ({error}) => {
                                 }}><p style={{marginLeft:'5%'}}>Avez-vous perdu ou oublié votre mot de passe?</p>
 									<p style={{marginLeft:'7%'}}><strong>sans inquiétude nous gérons le problème</strong></p>
                             </div>
+                          
+                          </GridItem>
+                        </GridContainer>
+
+                        <GridContainer>
+                          <GridItem xs={12} sm={12} md={12}>
+                          
+                            {tokenPayload&&
+                                (<div className="alert alert-success" style={{width:"50%",fontSize:'1em',textAlign:'center'}} role="alert">
+                                            {tokenPayload}
+                                 </div>)
+                            }
                           
                           </GridItem>
                         </GridContainer>
@@ -322,7 +335,7 @@ const ForgotPassword = ({error}) => {
 const mapStateToProps=(state)=>{
   return{
     error: state.authReducer.error,
-    resetToken: state.authReducer.resetToken,
+    tokenPayload: state.authReducer.tokenPayload,
   };
 };
 export default connect(mapStateToProps)(ForgotPassword);

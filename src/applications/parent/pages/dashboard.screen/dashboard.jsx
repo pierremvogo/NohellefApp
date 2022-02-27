@@ -52,13 +52,13 @@ import badge from '../../../../assets/images/dashboard/badge.png';
 import Chat from "../../../../app/components/chat/chat.jsx";
 import ScrollToBottom from "react-scroll-to-bottom";
 import {NotificationManager,NotificationContainer} from 'react-notifications';
-import io from 'socket.io-client';
+/*import io from 'socket.io-client';
 import { SocketContext } from '../../../../SocketContext.js';
-import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessionId.jsx";
+import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessionId.jsx";*/
 
 //5271ff 
 //ffce52 
-const socket = io.connect("http://localhost:3001");
+/*const socket = io.connect("http://localhost:3001");*/
 const DashboardStudent = () => {
     const history = useHistory();
     const [isAccountContent, setIsAccountContent] = useState(false);
@@ -142,7 +142,7 @@ const DashboardStudent = () => {
     window.location.reload();
     return false;
    }
-    const joinRoom = () => {
+    /*const joinRoom = () => {
        const userData = {
             author : username,
             room : room
@@ -152,10 +152,10 @@ const DashboardStudent = () => {
            socket.emit("join_room", userData); 
         }
         
-    }
+    }*/
 
     useEffect(()=>{
-        joinRoom();
+        /*joinRoom();
          socket.on('id', (status)=>{
             setStatusConnection(status);
             console.log("MYid",status);
@@ -165,7 +165,7 @@ const DashboardStudent = () => {
               setShowBadge(true,setCountBadge(1),setShowChatModal(true),setDisplayAsk('flex'));
             }
            
-        });
+        });*/
         var element1 = document.getElementById("myDiv1");
         var element2 = document.getElementById("dash1");
         element2.style.borderRadius = "3px 3px 3px 3px";
@@ -230,7 +230,7 @@ const DashboardStudent = () => {
                   </GridItem>
               </GridContainer>
               
-              <GridContainer>
+              {/* <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
                       <Chat 
                         socket={socket} 
@@ -242,7 +242,7 @@ const DashboardStudent = () => {
                         isConnected={statusConnection}
                      />
                   </GridItem>
-              </GridContainer>
+              </GridContainer>*/}
           </GridItem>
       </GridContainer>
       </div>

@@ -50,15 +50,15 @@ import badge from '../../../../assets/images/dashboard/badge.png';
 import Chat from "../../../../app/components/chat/chat.jsx";
 import ScrollToBottom from "react-scroll-to-bottom";
 import {NotificationManager,NotificationContainer} from 'react-notifications';
-import io from 'socket.io-client';
+/*import io from 'socket.io-client';
 import { SocketContext } from '../../../../SocketContext.js';
-import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessionId.jsx";
+import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessionId.jsx";*/
 import MesTravaux from '../../components/mesTravaux.jsx';
 
 
 //5271ff 
 //ffce52 
- const socket = io.connect("http://localhost:3001");
+ //const socket = io.connect("http://localhost:3001");
  const DashboardStudent = () => {
 
     const [isAccountContent, setIsAccountContent] = useState(false);
@@ -89,7 +89,7 @@ import MesTravaux from '../../components/mesTravaux.jsx';
     let dataList = [];
 
    const history = useHistory();
-    const joinRoom = () => {
+    /*const joinRoom = () => {
        const userData = {
             author : username,
             room : room
@@ -98,10 +98,10 @@ import MesTravaux from '../../components/mesTravaux.jsx';
            socket.emit("join_room", userData); 
         }
         
-    }
+    }*/
     
       useEffect(()=>{
-        socket.emit("username",username);
+       /* socket.emit("username",username);
         socket.on('me', (id) => {
             setMe(id);
             setStatusConnection(true);
@@ -115,7 +115,7 @@ import MesTravaux from '../../components/mesTravaux.jsx';
 
         socket.on("notification", (data)=>{
             setShowChatModal(true,setDisplayAsk('flex'));
-        });
+        });*/
 
         var element1 = document.getElementById("myDiv1");
         var element2 = document.getElementById("dash1");
@@ -265,7 +265,7 @@ import MesTravaux from '../../components/mesTravaux.jsx';
                   </GridItem>
               </GridContainer>
               
-              <GridContainer>
+              {/* <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
                       <Chat 
                         role={'student'}
@@ -278,7 +278,7 @@ import MesTravaux from '../../components/mesTravaux.jsx';
                         isConnected={statusConnection}
                      />
                   </GridItem>
-              </GridContainer>
+              </GridContainer>*/}
           </GridItem>
       </GridContainer>
       </div>
@@ -654,7 +654,7 @@ import MesTravaux from '../../components/mesTravaux.jsx';
      
           }
         function openModal(type){
-                joinRoom();
+                //joinRoom();
                 if(type=="submit"){
                     setShowChatModal(false,setShowEditModal(true), setDisplayAsk("flex")); 
                 }else{

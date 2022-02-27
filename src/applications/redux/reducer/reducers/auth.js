@@ -12,6 +12,9 @@ const INITIAL_STATE = user ?
                                 error: null,
                                 resetToken: null,
                                 resetPayload: null,
+                                isShowMessage: false,
+                                loginsForm: null,
+                                registersForm: null,
                                 user:user
                             }:
                             {
@@ -19,8 +22,11 @@ const INITIAL_STATE = user ?
                                 loading: false,
                                 isRestricted: false,
                                 error: null,
+                                loginsForm: null,
+                                registersForm: null,
                                 resetToken: null,
                                 resetPayload: null,
+                                isShowMessage: false,
                                 user: null
                             };
 
@@ -45,6 +51,7 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 isLoggedIn: false,
                 loading: false, 
                 error: null, 
+                isShowMessage: false,
                 user: action.payload
             };
         case types.REGISTER_FAILED:
@@ -52,6 +59,7 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 isLoggedIn: false,
                 loading: false,
+                isShowMessage: true,
                 error: action.message
             }
         case types.LOGIN_SUCCESS:
@@ -63,6 +71,7 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 loading: false,
                 isRestricted: true,
                 error: null,
+                isShowMessage: false,
                 user: action.payload
             };
         case types.LOGIN_FAILED:
@@ -71,6 +80,7 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 isLoggedIn: false,
                 isRestricted: false,
                 loading: false,
+                isShowMessage: true,
                 error: action.message,
                 user: null
             };
@@ -81,6 +91,7 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 isRestricted: false,
                 loading: false,
                 error: null,
+                isShowMessage: false,
                 resetPayload: action.payload
 
             };
@@ -91,6 +102,7 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 isRestricted: false,
                 loading: false,
                 error: action.message,
+                isShowMessage: true,
                 resetPayload: null,
                 
             };
@@ -98,13 +110,32 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 error: action.message,
-                resetToken: null,
+                isShowMessage: false,
+                tokenPayload: null,
             };
         case types.TOKEN_SUCCESS:
             return {
                 ...state,
                 error: null,
-                resetToken: action.payload,
+                isShowMessage: true,
+                tokenPayload: action.payload,
+            };
+        case types.SHOW_MESSAGE:
+            return {
+                ...state,
+                isShowMessage: action.isShow,
+            };
+        case types.SET_LOGIN_FORM:
+            return {
+                ...state,
+                loginsForm: action.formData,
+            };
+        case types.SET_REGISTER_FORM:
+        console.log("form in reeducer");
+        console.log(action.formData);
+            return {
+                ...state,
+                registersForm: action.formData,
             };
         case types.LOGOUT_REQUESTED:
             return {

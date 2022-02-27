@@ -20,13 +20,13 @@ import GridContainer from "../../../../app/components/Grid/GridContainer.js";
 import Footer from "../../../../app/components/footer/footer.jsx";
 import Avatar   from 'react-avatar';
 import Select from 'react-select';
-import useForm from "../../../../hooks/useForm";
 import ReactTooltip from 'react-tooltip';
-import { authRegisterSuccess,authRegisterFailed } from '../../../redux/reducer/actions/auth';
+import { authRegisterSuccess, authRegisterFailed, authShowMessage } from '../../../redux/reducer/actions/auth';
 import authService from '../../../services/auth.service'; 
 
 const RegisterParent = ({error,
                          user,
+                         isShowMessage,
                          onChildCloseModal,
                          onChildLoading,
                          onChildClickLogin,
@@ -51,7 +51,7 @@ const RegisterParent = ({error,
             cardCode:""})
     const [isLoginForm, setIsLoginForm] = useState(true);
     const [formErrors, setFormErrors] = useState({});
-    const [errorMessage, setErrorMessage] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(isShowMessage);
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [resetPasswordForm,setResetPasswordForm] = useState({email: ""});
     const [tooltipOpen, setTooltipOpen] = useState(false);
@@ -199,6 +199,7 @@ const RegisterParent = ({error,
   const onChangeRegisterParent = (e) => {
         setRegisterParent({...registerParent,  [e.target.name]: e.target.value })
         setFormErrors(validateForm(registerParent));
+        dispatch(authShowMessage(false));
         console.log(registerParent);
     }
    const onSubmit = (e) => {
@@ -228,11 +229,13 @@ const RegisterParent = ({error,
             authService.registerUser(parentRegister)
             .then((response) => {
                 if(!response.data.success){
+                    dispatch(authShowMessage(true));
                     dispatch(authRegisterFailed(response));
                     console.log("Response register parent  not success");
                     console.log(response);
                     handleLoading(false,'rp'); 
                 }else{
+                    dispatch(authShowMessage(false));
                     dispatch(authRegisterSuccess(response));
                     console.log("Response register parent success");
                     console.log(response.data);
@@ -243,6 +246,7 @@ const RegisterParent = ({error,
 
             })
             .catch((error) => {
+                dispatch(authShowMessage(true));
                 handleLoading(false,'rp');
                 console.log("Error  Register parent");
                 if(error.response === undefined){
@@ -398,6 +402,9 @@ const RegisterParent = ({error,
                                             placeholder={input==="birthDay"?"YYYY-MM-DD":""}
                                             value={registerParent[input]}
                                             onChange={onChangeRegisterParent}
+                                            autoComplete="off"
+
+
                                             style={{
                                                 border:`${
                                                         input==="name"&&formErrors.name?'2px solid #C84941':
@@ -514,6 +521,9 @@ const RegisterParent = ({error,
                                                     value={registerParent[input]}
                                                     onChange={onChangeRegisterParent}
                                                     placeholder={label}
+                                                    autoComplete="off"
+
+
                                                     style={{
                                                     border:`${
                                                         input==="cardExpireYear"&&formErrors.cardExpireYear?'2px solid #C84941':
@@ -618,6 +628,7 @@ const mapStateToProps=(state)=>{
       isLoggedIn: state.authReducer.isLoggedIn,
       error: state.authReducer.error,
       loading: state.authReducer.loading,
+      isShowMessage: state.authReducer.isShowMessage,
       user: state.authReducer.user
   };
 };

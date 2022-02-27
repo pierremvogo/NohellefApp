@@ -22,11 +22,11 @@ import './admin.css';
 import {Table} from 'react-bootstrap';
 import chat from '../../../assets/images/dashboard/chat2.png';
 import {NotificationManager,NotificationContainer} from 'react-notifications';
-import io from 'socket.io-client';
+//import io from 'socket.io-client';
 import Chat from "../../../app/components/chat/chat.jsx"
 
 
-const socket = io.connect("http://localhost:3001");
+//const socket = io.connect("http://localhost:3001");
 const AbonnementContent = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -48,10 +48,10 @@ const AbonnementContent = () => {
      const [statusConnection,setStatusConnection] = useState(false);
 
   useEffect(()=>{
-    socket.on('id', (status)=>{
+    /*socket.on('id', (status)=>{
             setStatusConnection(status);
             console.log("MYid",status);
-        })
+        })*/
      setPosts(data);
      return function cleanup () {
             return;
@@ -129,7 +129,7 @@ const AbonnementContent = () => {
                   </GridItem>
               </GridContainer>
               
-              <GridContainer>
+              {/* <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
                       <Chat 
                         socket={socket} 
@@ -141,7 +141,7 @@ const AbonnementContent = () => {
                         isConnected={statusConnection}
                      />
                   </GridItem>
-              </GridContainer>
+              </GridContainer>*/}
           </GridItem>
       </GridContainer>
       </div>

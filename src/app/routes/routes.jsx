@@ -5,7 +5,7 @@ import PrivateRoute from './private.routes';
 import PublicRoute from './public.routes';
 import ProtectedRoute from './public.routes';
 import ROUTES from './path.routes';
-import { ContextProvider } from '../../SocketContext.js';
+//import { ContextProvider } from '../../SocketContext.js';
 
 import Home from '../../applications/home/pages/home.screen/home';
 import StudentPage from '../../applications/student/pages/dashboard.screen/dashboard.jsx';
@@ -18,7 +18,7 @@ import LoginOthers from '../../applications/auth/pages/auth.screen/loginOthers.s
 import RegisterSupAdmin from '../../applications/auth/pages/auth.screen/registerSupAdmin.jsx';
 import ForgotPassword from '../../applications/auth/pages/auth.screen/forgotPassword.screen.jsx';
 import ResetPassword from '../../applications/auth/pages/auth.screen/resetPassword.screen.jsx';
-import VideoChat from '../../applications/videoChat/pages/videoChat.screen/videoChat.screen.jsx';
+//import VideoChat from '../../applications/videoChat/pages/videoChat.screen/videoChat.screen.jsx';
 
 const MainRoute = ({user,redirect,isRestricted = false}) =>{
     const urlpath = window.location.pathname;
@@ -129,13 +129,13 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
                         component={ResetPassword}
                         path={ROUTES.RESET_PASSWORD} 
                     />
-                    <ContextProvider>
+                    {/*<ContextProvider>
                         <Route 
                             exact
                             component={VideoChat}
                             path={ROUTES.VIDEO_CHAT} 
                         />
-                    </ContextProvider>
+                    </ContextProvider>*/}
           
         </Switch>
 

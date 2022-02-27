@@ -54,12 +54,12 @@ import badge from '../../../../assets/images/dashboard/badge.png';
 import Chat from "../../../../app/components/chat/chat.jsx";
 import ScrollToBottom from "react-scroll-to-bottom";
 import {NotificationManager,NotificationContainer} from 'react-notifications';
-import io from 'socket.io-client';
-import { SocketContext } from '../../../../SocketContext.js';
+/*import io from 'socket.io-client';
+import { SocketContext } from '../../../../SocketContext.js';*/
 import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessionId.jsx";
 //5271ff 
 //ffce52 
-const socket = io.connect("http://localhost:3001");
+//const socket = io.connect("http://localhost:3001");
 const DashboardAdmin = () => {
 
     const [isAdminContent, setIsAdminContent] = useState(false);
@@ -83,7 +83,7 @@ const DashboardAdmin = () => {
     const [me, setMe] = useState('');
 
 
-const joinRoom = () => {
+/*const joinRoom = () => {
        const userData = {
             author : username,
             room : room
@@ -93,9 +93,9 @@ const joinRoom = () => {
            socket.emit("join_room", userData); 
         }
         
-    }
+    }*/
     useEffect(()=>{
-        joinRoom();
+        /*joinRoom();
 
         socket.on("notification", (data)=>{
             if(data.room == "adminsupadmin"){
@@ -112,7 +112,7 @@ const joinRoom = () => {
             setStatusConnection(false);
             console.log("User disconnected");
         });
-       // <ShareSessionId  AdminSessionId={me} />
+       // <ShareSessionId  AdminSessionId={me} />*/
         
         var element1 = document.getElementById("myDiv1");
         var element2 = document.getElementById("dash1");
@@ -146,6 +146,8 @@ const joinRoom = () => {
         }
 
     },[])
+
+
     const ModalChat = () => {
     return(
       <div className="modal-content" id='cont'
@@ -175,7 +177,7 @@ const joinRoom = () => {
                   </GridItem>
               </GridContainer>
               
-              <GridContainer>
+             {/* <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
                       <Chat 
                         socket={socket} 
@@ -187,7 +189,7 @@ const joinRoom = () => {
                         isConnected={statusConnection}
                      />
                   </GridItem>
-              </GridContainer>
+              </GridContainer>*/}
           </GridItem>
       </GridContainer>
       </div>
@@ -202,7 +204,7 @@ const joinRoom = () => {
      
           }
         function openModal(type){
-                joinRoom();
+                //joinRoom();
                 if(type=="badge"){
                     setShowBadge(false);
                 }setShowChatModal(true, setDisplayAsk("flex")); 

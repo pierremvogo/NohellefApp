@@ -20,7 +20,7 @@ import Avatar   from 'react-avatar';
 import './account.css';
 import Pagination from './pagination.jsx';
 import Chat from "../../../app/components/chat/chat.jsx";
-import io from 'socket.io-client';
+//import io from 'socket.io-client';
 
 
 

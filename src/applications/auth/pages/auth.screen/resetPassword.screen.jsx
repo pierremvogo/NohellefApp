@@ -20,7 +20,7 @@ import { authResetSuccess,authResetFailed } from '../../../redux/reducer/actions
 import authService from '../../../services/auth.service'; 
 import Loader from 'react-loader-spinner';
 
-const ResetPassword = ({error}) => {
+const ResetPassword = ({error,resetPayload}) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     const [resetForm, setResetForm] = useState({password: "", confirm_password: "",});
@@ -135,7 +135,7 @@ const ModalLoading = () => {
                     console.log(response);
                     handleLoading(false); 
                 }else{
-                    dispatch(authResetFailed(response));
+                    dispatch(authResetSuccess(response.data.message));
                     console.log("Reset success");
                     console.log(response.data);
                     handleLoading(false);
@@ -177,7 +177,7 @@ const ModalLoading = () => {
                         <GridContainer>
                           <GridItem xs={12} sm={12} md={12}>
                             <div style={{
-                                margin:'5% 0% 2% 25%'
+                                margin:'5% 0% 2% 20%'
                             }}>
                                  <img src={forgotsmile} width='10%' />
 
@@ -189,9 +189,21 @@ const ModalLoading = () => {
                         <GridContainer>
                           <GridItem xs={12} sm={12} md={12}>
                             <div style={{
-                                fontSize:'1.6vw',
-                                margin:'0% 0% 0% 16%'
+                                fontSize:'100%',
+                                margin:'0% 0% 0% 13%'
                                 }}>Dernière étape pour vous !</div>
+                          </GridItem>
+                        </GridContainer>
+
+                        <GridContainer>
+                          <GridItem xs={12} sm={12} md={12}>
+                          
+                            {resetPayload&&
+                                (<div className="alert alert-success" style={{width:"50%",fontSize:'1em',textAlign:'center'}} role="alert">
+                                            {resetPayload}
+                                 </div>)
+                            }
+                          
                           </GridItem>
                         </GridContainer>
 
@@ -203,7 +215,7 @@ const ModalLoading = () => {
                                 width:'50%',
                                 height:'350px',
                                 backgroundColor:'#ffce52',
-                                margin:'5%',
+                                margin:'0%',
                                 padding:'2%'
                               }}>
                               <GridContainer>
@@ -325,6 +337,7 @@ const ModalLoading = () => {
 const mapStateToProps=(state)=>{
   return{
       error: state.authReducer.error,
+      resetPayload: state.authReducer.resetPayload,
   };
 };
 export default connect(mapStateToProps)(ResetPassword);

@@ -12,7 +12,7 @@ import smileauth from '../../../../assets/images/dashboard/smileauth.png';
 import logoImage from '../../../../assets/images/im10.png';
 import GridContainer from "../../../../app/components/Grid/GridContainer.js";
 import Footer from "../../../../app/components/footer/footer.jsx";
-import { authLoginSuccess,authLoginFailed } from '../../../redux/reducer/actions/auth';
+import { authLoginSuccess,authLoginFailed,authShowMessage } from '../../../redux/reducer/actions/auth';
 import { getUserSuccess,getUserFailed } from '../../../redux/reducer/actions/users';
 import userService from '../../../services/user.service';
 import authService from '../../../services/auth.service'; 
@@ -24,6 +24,7 @@ import Loader from 'react-loader-spinner';
 
 const Login = ({error,
                 user,
+                isShowMessage,
                 loading,
                 onChildClick,
                 onChildLoading,
@@ -42,7 +43,7 @@ const Login = ({error,
     const [displayLoading, setDisplayLoading] = useState("flex");
     const [displayAsk, setDisplayAsk] = useState("flex");
     const [formErrors, setFormErrors] = useState({});
-    const [errorMessage, setErrorMessage] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(isShowMessage);
     const [showModalLoading, setShowModalLoading] = useState(false);
     const inputRef = useRef(null);
 
@@ -100,6 +101,7 @@ const Login = ({error,
   const onChangeLoginForm = (e) => {
     setLoginForm({...loginForm, [e.target.name]: e.target.value});
     setFormErrors(validateForm(loginForm));
+    dispatch(authShowMessage(false));
     console.log(loginForm);
   };
   const handleCloseModalLoading = () =>{setShowModalLoading(false);}
@@ -123,12 +125,12 @@ const Login = ({error,
         setFormErrors(validateForm(loginForm));
         if(Object.keys(formErrors).length === 0 && submited){
             setFormErrors({});
-            setErrorMessage(true);
+            dispatch(authShowMessage(true));
             handleLoading(true,'login');
             console.log(loginForm);
             authService.loginUser(loginForm)
             .then((response) => {
-                setErrorMessage(false);
+                dispatch(authShowMessage(false));
                 let userType = response.data.currentUser.type; 
                 response.data.redirect = 
                                   userType==="0" ?"/student/dashboard":
@@ -155,7 +157,6 @@ const Login = ({error,
                 
             });
         }else{
-            error = null;
             handleLoading(false,'login');
             return; 
         }
@@ -241,6 +242,7 @@ const Login = ({error,
                                                     onChange={onChangeLoginForm}
                                                     value={loginForm[input]} 
                                                     placeholder={placeholder}
+                                                    autoComplete="off"
                                                     required
 
                                                     style={{
@@ -332,6 +334,7 @@ const mapStateToProps=(state)=>{
       isLoggedIn: state.authReducer.isLoggedIn,
       error: state.authReducer.error,
       loading: state.authReducer.loading,
+      isShowMessage: state.authReducer.isShowMessage,
       user: state.authReducer.user
   };
 };
