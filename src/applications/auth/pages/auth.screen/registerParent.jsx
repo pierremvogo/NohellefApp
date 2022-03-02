@@ -21,12 +21,12 @@ import Footer from "../../../../app/components/footer/footer.jsx";
 import Avatar   from 'react-avatar';
 import Select from 'react-select';
 import ReactTooltip from 'react-tooltip';
-import { authRegisterSuccess, authRegisterFailed, authShowMessage } from '../../../redux/reducer/actions/auth';
+import { authRegisterSuccess, authRegisterFailed, authShowMessage, authSetRegisterForm } from '../../../redux/reducer/actions/auth';
 import authService from '../../../services/auth.service'; 
 
 const RegisterParent = ({error,
                          user,
-                         isShowMessage,
+                         registersForm,
                          onChildCloseModal,
                          onChildLoading,
                          onChildClickLogin,
@@ -35,7 +35,7 @@ const RegisterParent = ({error,
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     const [registerParent, setRegisterParent] = useState(
-           {name:"", 
+           registersForm?registersForm:{name:"", 
             surname:"",
             email:"",
             username:"",
@@ -51,7 +51,7 @@ const RegisterParent = ({error,
             cardCode:""})
     const [isLoginForm, setIsLoginForm] = useState(true);
     const [formErrors, setFormErrors] = useState({});
-    const [errorMessage, setErrorMessage] = useState(isShowMessage);
+   
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [resetPasswordForm,setResetPasswordForm] = useState({email: ""});
     const [tooltipOpen, setTooltipOpen] = useState(false);
@@ -60,6 +60,9 @@ const RegisterParent = ({error,
     const history = useHistory()
     const dispatch= useDispatch()
 
+    useEffect(()=>{
+
+    },[])
     const clickHandlerCloseModal=(e)=>{
             onChildCloseModal(e.target.name);
     }
@@ -199,7 +202,8 @@ const RegisterParent = ({error,
   const onChangeRegisterParent = (e) => {
         setRegisterParent({...registerParent,  [e.target.name]: e.target.value })
         setFormErrors(validateForm(registerParent));
-        dispatch(authShowMessage(false));
+        dispatch(authRegisterFailed(null)); 
+        dispatch(authSetRegisterForm(registerParent));
         console.log(registerParent);
     }
    const onSubmit = (e) => {
@@ -222,21 +226,23 @@ const RegisterParent = ({error,
     }
         setFormErrors(validateForm(registerParent));
         if(Object.keys(formErrors).length === 0 && submited){
-            setErrorMessage(true);
+            dispatch(authSetRegisterForm(registerParent));
+
             handleLoading(true,'rp');
             console.log("form Parent register");
             console.log(parentRegister);
             authService.registerUser(parentRegister)
             .then((response) => {
                 if(!response.data.success){
-                    dispatch(authShowMessage(true));
                     dispatch(authRegisterFailed(response));
                     console.log("Response register parent  not success");
                     console.log(response);
                     handleLoading(false,'rp'); 
                 }else{
-                    dispatch(authShowMessage(false));
-                    dispatch(authRegisterSuccess(response));
+                    dispatch(authSetRegisterForm(null));
+                    dispatch(authRegisterSuccess(response.data));
+                    dispatch(authRegisterFailed(null));
+
                     console.log("Response register parent success");
                     console.log(response.data);
                     handleLoading(false,'rp');
@@ -246,18 +252,19 @@ const RegisterParent = ({error,
 
             })
             .catch((error) => {
-                dispatch(authShowMessage(true));
                 handleLoading(false,'rp');
                 console.log("Error  Register parent");
                 if(error.response === undefined){
                     dispatch(authRegisterFailed("Network Error, possible you are not connected"));
                 }else{
+                    dispatch(authRegisterFailed(error.response));
                 console.log(error.response);
-                dispatch(authRegisterFailed(error.response));
+                
                 }
             });
         }
         else{
+            dispatch(authRegisterFailed(null));
             handleLoading(false,'rp');
             return; 
         }
@@ -266,9 +273,9 @@ const RegisterParent = ({error,
 
         <div style={{backgroundColor:'#FBAB0D',
                      borderRadius:'25px 25px 25px 25px',
-                     position:'absolute',
-                     width:'110%',
-                     top:'-295px'
+                     width:'50%',
+                     position: 'fixed'
+                     
                      }}>
                     <GridContainer>
                      <GridItem xs={12} sm={12} md={12}>
@@ -291,7 +298,7 @@ const RegisterParent = ({error,
                                 
                                 borderRadius:'25px 25px 25px 25px',
                                 width:'100%',
-                                height:'620px',
+                                height:'100%',
                                 backgroundColor:'#ffce52',
                                 padding:'1% 5% 2% 5%'
                                 
@@ -308,7 +315,7 @@ const RegisterParent = ({error,
                                   </GridContainer>
                                   <GridContainer>
                                       <GridItem xs={12} sm={12} md={12}>
-                                       {errorMessage && error && (
+                                       {error && (
                                             <div className="form-group">
                                                 {error.data&&(<div className="alert alert-danger" style={{width:"50%",fontSize:'0.7em',margin:'0% 25% 0% 25%'}} role="alert">
                                                         {error.data.message}
@@ -393,7 +400,7 @@ const RegisterParent = ({error,
 
                                        <GridItem xs={12} sm={input==="password"||input==="confirm_password"?6:4} md={4} key={index}>
                                         {input!="numCardNumber"&&input!="cardExpireMonth"&&input!="cardExpireYear"&&input!="cardCode"?
-                                        <div style={{width:'100%',cursor:'pointer'}}>
+                                        <div style={{width:'100%',cursor:'pointer', fontSize:'90%'}}>
                                             {label}
                                          <input 
                                             type={type} 
@@ -487,13 +494,13 @@ const RegisterParent = ({error,
                                         return;
                                       }
                                       return(
-                                        <GridItem xs={12} sm={12} md={3} key={index}> 
+                                        <GridItem xs={12} sm={12} md={3} key={index} style={{fontSize:'90%'}}> 
                             
                                             {input==="numCardNumber"||input==="cardExpireMonth"||input==="cardExpireYear"||input==="cardCode"?
                                            
                                             input==="cardExpireMonth"?
 
-                                                <div>
+                                                <div style={{fontSize:'90%'}}>
                                                   Mois d'expiration
                                                 <select 
                                                     name={name} 
@@ -512,7 +519,7 @@ const RegisterParent = ({error,
                                                     <option value="12">Décembre</option>
                                                 </select>
                                                 </div>: input==="cardExpireYear"?
-                                                <div>
+                                                <div style={{fontSize:'90%'}}>
                                                   Année d'expiration
                                                   <input 
                                                     type={type} 
@@ -543,7 +550,7 @@ const RegisterParent = ({error,
                                                                 )}
                                                 </div>
 
-                                            :<div style={{width:'100%',cursor:'pointer'}}>
+                                            :<div style={{width:'100%',cursor:'pointer', fontSize:'90%'}}>
                                               {label}
                                                 <input 
                                                     type={type} 
@@ -629,6 +636,7 @@ const mapStateToProps=(state)=>{
       error: state.authReducer.error,
       loading: state.authReducer.loading,
       isShowMessage: state.authReducer.isShowMessage,
+      registersForm: state.authReducer.registersForm,
       user: state.authReducer.user
   };
 };

@@ -16,8 +16,8 @@ import {    authLoginSuccess,
             authRegisterFailed,
             authRegisterSuccess,
             authLoginFailed,
-            authShowMessage,
-            authSetLoginForm, } from '../../../redux/reducer/actions/auth';
+            authSetLoginForm,
+            authSetRegisterForm } from '../../../redux/reducer/actions/auth';
 import { getUserSuccess,getUserFailed } from '../../../redux/reducer/actions/users';
 import userService from '../../../services/user.service';
 import authService from '../../../services/auth.service'; 
@@ -51,7 +51,6 @@ const PartialLogin = ({error,
     const [displayLoading, setDisplayLoading] = useState("flex");
     const [displayAsk, setDisplayAsk] = useState("flex");
     const [formErrors, setFormErrors] = useState({});
-    const [errorMessage, setErrorMessage] = useState(false);
     const [responseMessage, setResponseMessage] = useState(false);
     const [showModalLoading, setShowModalLoading] = useState(false);
     const inputRef = useRef(null);
@@ -116,7 +115,7 @@ const loginNewUser = (e) => {
   const onChangeLoginForm = (e) => {
     setLoginForm({...loginForm, [e.target.name]: e.target.value});
     setFormErrors(validateForm(loginForm));
-    dispatch(authShowMessage(false));  
+    dispatch(authLoginFailed(null));  
     dispatch(authSetLoginForm(loginForm));
     console.log(loginForm);
   };
@@ -136,7 +135,9 @@ const loginNewUser = (e) => {
                     handleLoading(false,'rs'); 
                   
                 }else{
+                    dispatch(authRegisterFailed(null));
                     dispatch(authRegisterSuccess(response.data)); 
+                    
                     console.log("Response partial success");
                     console.log(response);
                     handleLoading(false,'rs');  
@@ -159,14 +160,18 @@ const loginNewUser = (e) => {
         e.preventDefault();
         setFormErrors(validateForm(loginForm));
         if(Object.keys(formErrors).length === 0 && submited){
+            dispatch(authSetLoginForm(loginForm));
             handleLoading(true,'rs');
             console.log(loginForm);
             authService.loginUser(loginForm)
             .then((response) => {
+                dispatch(authLoginFailed(null));
+                dispatch(authSetLoginForm(null));
                 studentForRegister.parentId = response.data.currentUser.id;
                 console.log("Register student with parent ID");
                 console.log(studentForRegister);
                 handleRegisterStudent(e,studentForRegister);
+                
             })
             .catch((error) => {
                 handleLoading(false,'rs');
@@ -179,9 +184,8 @@ const loginNewUser = (e) => {
                 }
             });
         }else{
-            error = null;
+            dispatch(authLoginFailed(null));
             handleLoading(false,'rs');
-            setErrorMessage(false);
             return; 
         }
     }

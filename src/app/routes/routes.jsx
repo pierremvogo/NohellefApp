@@ -18,6 +18,7 @@ import LoginOthers from '../../applications/auth/pages/auth.screen/loginOthers.s
 import RegisterSupAdmin from '../../applications/auth/pages/auth.screen/registerSupAdmin.jsx';
 import ForgotPassword from '../../applications/auth/pages/auth.screen/forgotPassword.screen.jsx';
 import ResetPassword from '../../applications/auth/pages/auth.screen/resetPassword.screen.jsx';
+import ConfirmEmail from '../../applications/auth/pages/auth.screen/confirmEmail.jsx';
 //import VideoChat from '../../applications/videoChat/pages/videoChat.screen/videoChat.screen.jsx';
 
 const MainRoute = ({user,redirect,isRestricted = false}) =>{
@@ -128,6 +129,12 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
                         exact
                         component={ResetPassword}
                         path={ROUTES.RESET_PASSWORD} 
+                    />
+
+                    <Route 
+                        exact
+                        component={ConfirmEmail}
+                        path={ROUTES.CONFIRM_EMAIL} 
                     />
                     {/*<ContextProvider>
                         <Route 

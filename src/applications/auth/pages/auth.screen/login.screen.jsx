@@ -12,7 +12,7 @@ import smileauth from '../../../../assets/images/dashboard/smileauth.png';
 import logoImage from '../../../../assets/images/im10.png';
 import GridContainer from "../../../../app/components/Grid/GridContainer.js";
 import Footer from "../../../../app/components/footer/footer.jsx";
-import { authLoginSuccess,authLoginFailed,authShowMessage } from '../../../redux/reducer/actions/auth';
+import { authLoginSuccess,authLoginFailed,authSetLoginForm } from '../../../redux/reducer/actions/auth';
 import { getUserSuccess,getUserFailed } from '../../../redux/reducer/actions/users';
 import userService from '../../../services/user.service';
 import authService from '../../../services/auth.service'; 
@@ -24,7 +24,9 @@ import Loader from 'react-loader-spinner';
 
 const Login = ({error,
                 user,
-                isShowMessage,
+                loginsForm,
+                isRegister,
+                onChildCloseModal,
                 loading,
                 onChildClick,
                 onChildLoading,
@@ -32,7 +34,7 @@ const Login = ({error,
                 }) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
-    const [loginForm, setLoginForm] = useState({login: "", password: ""})
+    const [loginForm, setLoginForm] = useState(loginsForm?loginsForm:{login: "", password: ""})
     const [isLoginForm, setIsLoginForm] = useState(true);
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [resetPasswordForm,setResetPasswordForm] = useState({email: ""});
@@ -43,7 +45,6 @@ const Login = ({error,
     const [displayLoading, setDisplayLoading] = useState("flex");
     const [displayAsk, setDisplayAsk] = useState("flex");
     const [formErrors, setFormErrors] = useState({});
-    const [errorMessage, setErrorMessage] = useState(isShowMessage);
     const [showModalLoading, setShowModalLoading] = useState(false);
     const inputRef = useRef(null);
 
@@ -60,6 +61,9 @@ const Login = ({error,
   }
   const closeMessage = (e) => {
     onChildCloseMessage(e.target.name);
+  }
+  const clickCloseModal = (content) => {
+    onChildCloseModal(content);
   }
 
   const validateForm = (values) => {
@@ -101,7 +105,7 @@ const Login = ({error,
   const onChangeLoginForm = (e) => {
     setLoginForm({...loginForm, [e.target.name]: e.target.value});
     setFormErrors(validateForm(loginForm));
-    dispatch(authShowMessage(false));
+    dispatch(authLoginFailed(null));
     console.log(loginForm);
   };
   const handleCloseModalLoading = () =>{setShowModalLoading(false);}
@@ -124,13 +128,13 @@ const Login = ({error,
         e.preventDefault();
         setFormErrors(validateForm(loginForm));
         if(Object.keys(formErrors).length === 0 && submited){
-            setFormErrors({});
-            dispatch(authShowMessage(true));
+            dispatch(authSetLoginForm(loginForm));
             handleLoading(true,'login');
-            console.log(loginForm);
             authService.loginUser(loginForm)
             .then((response) => {
-                dispatch(authShowMessage(false));
+                handleLoading(false,'login'); 
+                dispatch(authLoginFailed(null));
+                dispatch(authSetLoginForm(null));
                 let userType = response.data.currentUser.type; 
                 response.data.redirect = 
                                   userType==="0" ?"/student/dashboard":
@@ -141,9 +145,7 @@ const Login = ({error,
                 localStorage.setItem('user', JSON.stringify(response.data));
                 dispatch(authLoginSuccess(response.data));
                 history.push(response.data.redirect);
-                handleLoading(false,'login');
-                console.log("data for login success");
-                console.log(response.data);      
+                    
             })
             .catch((error) => {
                 handleLoading(false,'login');
@@ -157,6 +159,8 @@ const Login = ({error,
                 
             });
         }else{
+            console.log(submited);
+            dispatch(authLoginFailed(null));
             handleLoading(false,'login');
             return; 
         }
@@ -206,15 +210,30 @@ const Login = ({error,
         <div style={{
                 backgroundColor:'#ffce52',
                 borderRadius:'25px 25px 25px 25px',
+                width:'40%',
+                position: 'fixed'
                 }}>
-                     <GridContainer>
+                                 <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                       
-                                     <div style={{margin:'2% 0% 15% 2%'}}>
-                                         <span style={{color:'blue',float:'left'}}><strong><u>Connexion</u></strong></span>
+                                     <div style={{margin:"0% 0% 10% 0%"}}>
+                                         <span style={{color:'blue',margin:'5%'}}><strong>Connexion</strong></span>
+                                         <span className='close' style={{fontSize:"1.5em"}} onClick={()=>clickCloseModal('home')}>&times;</span>
                                      </div>
                                     </GridItem>
+
                                   </GridContainer>
+                                  <GridContainer>
+                                  <GridItem xs={12} sm={12} md={12}>
+                                  
+                                    {isRegister&&
+                                        (<div className="alert alert-success" style={{width:"100%",fontSize:'1px',textAlign:'center'}} role="alert">
+                                                    <p>Account Create Successfully: Please check your Email to activate your Account</p>
+                                         </div>)
+                                    }
+                                  
+                                  </GridItem>
+                                </GridContainer>
                                   <form onSubmit={onSubmit}>
                                   <>
                                   {Object.keys(loginForm).map((input,index)=>{
@@ -295,25 +314,30 @@ const Login = ({error,
                                   </form>
 
                                   <GridContainer>
-                                    <GridItem xs={12} sm={12} md={12}>
-                                      <div style={{margin:'0% 5% 15% 5%'}}>
+                                    <GridItem xs={12} sm={12} md={6} style={{textAlign:'center',margin:"0% 0% 5% 0%"}}>
+                                     
                                           <span style={{
                                             color:'blue',
-                                            float:'left',
-                                            cursor:'pointer'
+                                            cursor:'pointer',
+                                            margin:'5%',
                                         }} onClick={()=>history.push('/auth/forgot')}>Mot de passe oublié?</span>
+                                        
+                                   
+                                    </GridItem>
+                                    <GridItem xs={12} sm={12} md={6} style={{textAlign:'center',margin:"0% 0% 5% 0%"}}>
+                                     
                                           <span style={{
                                             color:'green',
-                                            float:'right',
-                                            cursor:'pointer'
+                                            cursor:'pointer',
+                                            margin:'5%',
                                         }} onClick={(e)=>handlerChildClick(e)}>Pas de compte?</span>
-                                      </div>
+                                 
                                     </GridItem>
                                   </GridContainer>
 
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
-                                      {errorMessage && error && (
+                                      {error && (
                                             <div className="form-group">
                                                 {error.data&&(<div className="alert alert-danger" style={{width:"50%",fontSize:'0.7em',margin:'0% 25% 0% 25%'}} role="alert">
                                                         {error.data.message}
@@ -330,12 +354,14 @@ const Login = ({error,
 		)
 }
 const mapStateToProps=(state)=>{
+
   return{
       isLoggedIn: state.authReducer.isLoggedIn,
       error: state.authReducer.error,
       loading: state.authReducer.loading,
-      isShowMessage: state.authReducer.isShowMessage,
+      loginsForm: state.authReducer.loginsForm,
       user: state.authReducer.user
   };
 };
+
 export default connect(mapStateToProps)(Login);

@@ -11,8 +11,12 @@ const INITIAL_STATE = user ?
                                 isRestricted: true,
                                 error: null,
                                 resetToken: null,
+                                changePayload: null,
+                                changesForm: null,
                                 resetPayload: null,
                                 isShowMessage: false,
+                                confirmEmail: null,
+                                isRegister: false,
                                 loginsForm: null,
                                 registersForm: null,
                                 user:user
@@ -21,9 +25,13 @@ const INITIAL_STATE = user ?
                                 isLoggedIn: false,
                                 loading: false,
                                 isRestricted: false,
+                                changePayload: null,
+                                changesForm: null,
                                 error: null,
                                 loginsForm: null,
                                 registersForm: null,
+                                confirmEmail: null,
+                                isRegister: false,
                                 resetToken: null,
                                 resetPayload: null,
                                 isShowMessage: false,
@@ -51,6 +59,7 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 isLoggedIn: false,
                 loading: false, 
                 error: null, 
+                isRegister: true,
                 isShowMessage: false,
                 user: action.payload
             };
@@ -59,6 +68,7 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 isLoggedIn: false,
                 loading: false,
+                isRegister: false,
                 isShowMessage: true,
                 error: action.message
             }
@@ -113,6 +123,19 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 isShowMessage: false,
                 tokenPayload: null,
             };
+
+        case types.CONFIRM_EMAIL_SUCCESS:
+            return {
+                ...state,
+                error: null,
+                confirmEmail: action.payload,
+            };
+        case types.CONFIRM_EMAIL_FAILED:
+            return {
+                ...state,
+                error: action.message,
+                confirmEmail: null
+            };
         case types.TOKEN_SUCCESS:
             return {
                 ...state,
@@ -131,8 +154,6 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 loginsForm: action.formData,
             };
         case types.SET_REGISTER_FORM:
-        console.log("form in reeducer");
-        console.log(action.formData);
             return {
                 ...state,
                 registersForm: action.formData,
@@ -145,6 +166,24 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 error: null,
                 isRestricted: false,
                 user: null
+            };
+        case types.CHANGE_SUCCESS:
+            return {
+                ...state,
+                error: null,
+                changePayload: action.payload,
+                                
+            };
+        case types.CHANGE_FAILED:
+            return {
+                ...state,
+                error: action.message,
+                changePayload: null,
+            };
+        case types.SET_CHANGE_FORM:
+            return {
+                ...state,
+                changesForm: action.formData,
             };
         default:
             return state;

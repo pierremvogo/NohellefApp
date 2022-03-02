@@ -3,6 +3,7 @@ import GridItem from "../../../app/components/Grid/GridItem.js";
 import GridContainer from "../../../app/components/Grid/GridContainer.js";
 import Card from "../../../app/components/Card/Card.js";
 import CardHeader from "../../../app/components/Card/CardHeader.js";
+import {useDispatch} from 'react-redux';
 import CardBody from "../../../app/components/Card/CardBody.js";
 import React,{useState,useEffect} from 'react';
 import CardAvatar from "../../../app/components/Card/CardAvatar.js";
@@ -15,19 +16,23 @@ import Avatar   from 'react-avatar';
 import Pagination from './pagination.jsx';
 import checkok from '../../../assets/images/dashboard/checkok.png';
 import checknone from '../../../assets/images/dashboard/checknone.png';
+import ChangePassword from './changePassword.jsx';
+import { authChangeSuccess} from '../../redux/reducer/actions/auth';
 import './account.css';
 
 
-const AccountContent = () => {
+const AccountContent = ({user}) => {
 	const [posts, setPosts] = useState([]);
 	const [loading, serLoading] = useState(false);
 	const [currentPage, setCurrentPage] = useState(2);
 	const [postPerPage, setPostPerPage] = useState(4);
-
+  const [display, setDisplay] = useState("flex");
+  const [showEditModal,setShowEditModal] = useState(false);
 
 const [isBasic,setIsBasic] = useState(false);
 const [isChat,setIsChat] = useState(false);
 const [isWebConf,setIsWebConf] = useState(false);
+const dispatch= useDispatch()
 
 	useEffect(()=>{
 		setPosts(data);
@@ -192,6 +197,43 @@ const [isWebConf,setIsWebConf] = useState(false);
       courseSubjet:'Mathématiques'
     },
   ];
+
+   const ModalContentEdit  = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            display: display,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+                    
+                    <ChangePassword onChildCloseModal={closeModal} /> 
+                
+          
+          
+      </div>
+    )
+  };
+  const openModal = () => {
+    setDisplay("flex",setShowEditModal(true));
+  }
+  function closeModal(){
+    dispatch(authChangeSuccess(null));
+    setDisplay("none",setShowEditModal(false));
+  }
+  const handleChange = (e) => {
+    console.log(e.target.name);
+  }
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
@@ -199,6 +241,7 @@ const [isWebConf,setIsWebConf] = useState(false);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 	return(
 			<div className="container" style={{backgroundColor:'#eeeeee'}}>
+      {showEditModal? <ModalContentEdit /> :'' } 
 			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
                             <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
@@ -218,24 +261,26 @@ const [isWebConf,setIsWebConf] = useState(false);
                     </GridContainer>
              
 			              <GridContainer>
-			 			           <GridItem xs={12} sm={12} md={12}>
+			 			         
+                      
+                      <GridItem xs={12} sm={12} md={12} style={{textAlign:'center'}}>
                           <div style={{
                             float:'right',
                             marginBottom: '2%',
                             backgroundColor: '#f8db52',
-                            borderRadius: '25px',
-                            borderBottom: '4px solid #002495',
-                            borderRight:  '4px solid #002495',
+                            borderRadius: '15px',
+                            borderBottom: '2px solid #002495',
+                            borderRight:  '2px solid #002495',
                             borderTop: '1px solid #002495',
                             borderLeft:  '1px solid #002495',
-                            height: '60px',
+                            height: '50px',
                             width: '25%',
                             cursor: 'pointer',
                             textAlign:'center',
                             paddingTop:'1.2%'
-                          }}>
+                          }} onClick={()=>openModal()}>
                                 
-                                <span className="text" style={{fontSize:'100%'}}>Modifier votre compte</span>
+                                <span className="text" style={{fontSize:'100%'}}>Modifier Votre Mot de passe</span>
                               </div>
                           
                       </GridItem>
@@ -262,8 +307,28 @@ const [isWebConf,setIsWebConf] = useState(false);
                                      <GridItem xs={12} sm={12} md={12}>
                                       <div style={{margin:'3%'}}>
                                         <span style={{marginRight:'0%'}}><strong>
-                                        Nom:</strong><input className='input_content' type='text' placeholder="Entrer votre Nom" value='Bekono'/></span>
-                                       <span><strong>Prenom:</strong><input className='input_content' type='text' placeholder="Enter Votre prénom" value='Roland'/></span>
+                                        Nom :</strong>
+                                        <input 
+                                            className='input_content' 
+                                            onChange={handleChange}
+                                            type='text' 
+                                            placeholder="Entrer votre Nom" 
+                                            value={user&&user.currentUser.lastName}
+
+                                            style={{width:'30%'}}
+                                            />
+                                        </span>
+                                       <span><strong>Prenom :</strong>
+                                       <input 
+                                           className='input_content' 
+                                           type='text' 
+                                           onChange={handleChange}
+                                           placeholder="Enter Votre prénom" 
+                                           value={user&&user.currentUser.firstName}
+
+                                           
+                                       />
+                                       </span>
                                       </div>
                                        
                                      </GridItem>
@@ -273,8 +338,27 @@ const [isWebConf,setIsWebConf] = useState(false);
                                      <GridItem xs={12} sm={12} md={12}>
                                      <div style={{margin:'3%'}}>
                                          <span style={{marginRight:'5%'}}><strong>
-                                         Email:</strong><input className='input_content' type='email' placeholder="Entrer votre adresse email" value='mvogopierre129@gmail.com'/></span>
-                                       <span><strong>Tel:</strong><input className='input_content' type='text' placeholder="Entrer votre Numéro" value='698114902'/></span>
+                                         Email :</strong>
+                                         <input 
+                                           className='input_content' 
+                                           type='email'
+                                           onChange={handleChange}
+                                           placeholder="Entrer votre adresse email" 
+                                           value={user&&user.currentUser.email}
+
+                                        />
+                                        </span>
+                                       <span><strong>Tel :</strong>
+                                       <input 
+                                         className='input_content' 
+                                         type='text' 
+                                         onChange={handleChange}
+                                         placeholder="Entrer votre Numéro" 
+                                         value={user&&user.currentUser.phoneNumber}
+
+                                       />
+
+                                       </span>
                                       </div>
                                       
                                      </GridItem>
@@ -284,7 +368,7 @@ const [isWebConf,setIsWebConf] = useState(false);
                                      
                                      <GridItem xs={12} sm={12} md={12}>
                                      <div style={{margin:'3%'}}>
-                                        <span><strong>Niveau:</strong> niveau 7</span>
+                                        <span><strong>Niveau :</strong>{user&&user.currentUser.level}</span>
                                       </div>
                                        
                                      </GridItem>

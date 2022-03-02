@@ -7,7 +7,10 @@ import {authLogout} from '../../../auth/redux/reducer/actions/auth';
 import AuthLogin from '../../../auth/pages/auth.screen/auth_login';
 import Header from '../../../../app/components/header/header';
 import Footer from '../../../../app/components/footer/footer';*/
-import { authShowMessage } from '../../../redux/reducer/actions/auth';
+import {
+    authLoginFailed,
+    authSetRegisterForm,
+    authSetLoginForm } from '../../../redux/reducer/actions/auth';
 import Avatar   from 'react-avatar';
 import DownloadLink from "react-download-link";
 import Loader from 'react-loader-spinner';
@@ -67,6 +70,7 @@ const Home = ({user}) => {
     const [showRegisterParentModal, setShowRegisterParentModal] = useState(false);
     const [showModalLoading, setShowModalLoading] = useState(false);
     const [showModalPartial, setShowModalPartial] = useState(false);
+    const [isRegister, setIsRegister] = useState(false);
 
     const [studentForRegister, setStudentForRegister] = useState({});
     const [successMessage, setSuccessMessage] = useState("");
@@ -312,7 +316,7 @@ const Home = ({user}) => {
       <div className="modal-content" id='cont'
         style={{
             width: "100%",
-            height: "150%",
+            height: "10000%",
             display: displayAsk,
             zIndex: "900000",
             position: "absolute",
@@ -329,12 +333,14 @@ const Home = ({user}) => {
                     height: "30%",
                     zIndex: "300000",
                     display: "flex",
-                    position: "absolute",
-                    top: "20%",
+                    position: "fixed",
+                    top: "35%",
                     left: "44%"
                 }}
                 >
-                <Loader type="Oval" color="#2BAD60" height="100" width="70" />
+               
+                    <Loader type="Oval" color="#2BAD60" height="100" width="70" />
+                
             </div>
           
       </div>
@@ -356,19 +362,15 @@ const Home = ({user}) => {
             backgroundColor: "transparent",
             top:"0px",
             left:"0px",
+            bottom:'0px',
+            right:'0px'
             }}
       >
-            <div className="containask" id='myContain'>
-                <div style={{display:'inline-block',cursor:'pointer', fontSize:'100%', width:'100%'}}>
-                   <span className='close' onClick={()=>closeModal('home')}>&times;</span>
                    <AskRegister 
                         onChildClickStudentRegister={outPutStudentRegister}
                         onChildClickParentRegister={outPutParentRegister}
                         onChildClickLogin={outPutLogin}
                         onChildCloseModal={closeModal} /> 
-                </div>
-                
-            </div>
           
       </div>
     )
@@ -429,16 +431,14 @@ const ModalPartialLogin = () => {
             right:'0'
             }}
       >
-            <div className="containlog" id='myContain'>
-                <div style={{display:'inline-block', fontSize:'100%', width:'100%'}}>
-                    <span className='close' onClick={()=>closeModal('home')}>&times;</span>
+            
                     <Login 
                         onChildClick={openAskRegister} 
+                        isRegister={isRegister}
+                        onChildCloseModal={closeModal}
                         onChildCloseMessage={closeMessage}
                         onChildLoading={outPutEventLoading} />
-                </div>
-                
-            </div>
+           
           
       </div>
     )
@@ -462,9 +462,6 @@ const ModalPartialLogin = () => {
             left:"0px",
             }}
       >
-            <div className="containregs" id='myContain'>
-            <span className='close' onClick={()=>closeModal('other')}>&times;</span>
-                <div style={{display:'inline-block', fontSize:'100%'}}>
                    <RegisterStudent 
                         onChildCloseModal={closeModal} 
                         onChildClickLogin={openLogin} 
@@ -472,9 +469,6 @@ const ModalPartialLogin = () => {
                         onChildRequireParent={openPartialLogin}
                         onChildLoading={outPutEventLoading}
                         /> 
-                </div>
-                
-            </div>
           
       </div>
     )
@@ -486,6 +480,7 @@ const ModalPartialLogin = () => {
         setShowRegisterParentModal(false);
         setShowModalPartial(false);
     }else{
+        setIsRegister(true);
         openLogin();
     }
     
@@ -507,21 +502,22 @@ const ModalPartialLogin = () => {
             left:"0px",
             }}
       >
-            <div className="containregp" id='myContain'>
-                <div style={{display:'inline-block', fontSize:'1.5vw'}}>
-                   
-                </div><span className='close' onClick={()=>closeModal('other')}>&times;</span>
+           
+               
                 <RegisterParent onChildCloseModal={closeModal} 
                                 onChildLoading={outPutEventLoading} 
                                 onChildLoginNewUser={loginNewUser}
                                 onChildClickLogin={openLogin} /> 
-            </div>
+         
           
       </div>
     )
   };
   function closeMod(){
-    dispatch(authShowMessage(false));
+    dispatch(authSetRegisterForm(null));
+    dispatch(authSetLoginForm(null));
+    dispatch(authLoginFailed(null));
+
     document.body.style.overflow = "scroll";
      setShowRegisterStudentModal(false,
             setShowLoginModal(false),
@@ -563,7 +559,9 @@ const ModalPartialLogin = () => {
     }
   })}*/
   function closePartialModal(){
-    dispatch(authShowMessage(false));
+    dispatch(authSetLoginForm(null));
+    dispatch(authLoginFailed(null));
+
     setShowRegisterStudentModal(true,
             setShowLoginModal(false),
             setShowAskModal(false),
@@ -574,7 +572,10 @@ const ModalPartialLogin = () => {
  
 
    function closeModal(content){
-    dispatch(authShowMessage(false));
+    dispatch(authSetRegisterForm(null));
+    dispatch(authSetLoginForm(null));
+    dispatch(authLoginFailed(null));
+
     if(content == 'home'){
     document.body.style.overflow = "scroll";
     setShowRegisterStudentModal(false,
@@ -623,7 +624,7 @@ const ModalPartialLogin = () => {
        
       
           <Header
-            isHme={true} 
+            isHome={true} 
             onChildClickConnexion={outPutEventConnexion} 
             onChildClickRegister={outPutEventRegister} />
       

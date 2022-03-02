@@ -1,6 +1,7 @@
 import React, {useContext, useState, useEffect } from 'react';
 import { Switch, Route, Router, Redirect, useHistory, useLocation } from 'react-router-dom';
 import './dashboard.css';
+import {connect, useSelector,useDispatch} from 'react-redux';
 import Avatar   from 'react-avatar';
 import Button from '../../../../app/components/buttons/button';
 import { ProSidebar, SidebarHeader, SidebarFooter, SidebarContent } from 'react-pro-sidebar';
@@ -59,7 +60,7 @@ import MesTravaux from '../../components/mesTravaux.jsx';
 //5271ff 
 //ffce52 
  //const socket = io.connect("http://localhost:3001");
- const DashboardStudent = () => {
+ const DashboardStudent = ({user}) => {
 
     const [isAccountContent, setIsAccountContent] = useState(false);
     const [isChooseTutor, setIsChooseTutorContent] = useState(false);
@@ -1004,7 +1005,7 @@ import MesTravaux from '../../components/mesTravaux.jsx';
                     </GridContainer>
 
                           {isCourseContent?<CourseContent onChildClickHandlerVideo={outPutClickHandlerVideo}/>:''}
-                          {isAccountContent?<AccountContent />:''}
+                          {isAccountContent?<AccountContent user={user} />:''}
                           {isConferenceContent?<ConferenceContent playvideo={playVideor} courseLink={courseLink} />:''}
                           {isContactHelpContent?<ContactHelpContent />:''}
                           {isHistoryContent?<HistoryContent onChildClickHandlerVideo={outPutClickHandlerVideo} />:''}
@@ -1023,4 +1024,11 @@ import MesTravaux from '../../components/mesTravaux.jsx';
     
         )
 }
-export default DashboardStudent;
+const mapStateToProps=(state)=>{
+  return{
+    user: state.authReducer.user,
+    redirect: state.authReducer.redirect,
+    isRestricted: state.authReducer.isRestricted,
+  };
+};
+export default connect(mapStateToProps)(DashboardStudent);

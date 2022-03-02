@@ -22,7 +22,7 @@ class AuthService {
         return http.put(`/users/set-tutor/${studentId}/${tutorId}`);
     }
 
-    getActiveAccount(token) {
+    activeAccount(token) {
         return http.get(`/auth/active-account/${token}`);
     }
 
@@ -34,8 +34,8 @@ class AuthService {
         return http.patch(`/auth/reset-password/${token}`, payload);
     }
 
-    changePassword(id) {
-        return http.put(`/auth/change-password/${id}`);
+    changePassword(id,payload) {
+        return http.patch(`/auth/change-password/${id}`, payload);
     }
 
     lockAccount(id) {

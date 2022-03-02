@@ -28,7 +28,6 @@ import authService from '../../../services/auth.service';
 const RegisterStudent = ({  error,
                             user,
                             registersForm,
-                            isShowMessage,
                             onChildCloseModal,
                             onChildLoading,
                             onChildClickLogin,
@@ -40,7 +39,7 @@ const RegisterStudent = ({  error,
     
    const [registerStudent, setRegisterStudent] = useState(registersForm?registersForm:
            {confirm_age:false, 
-            level:"sixieme",
+            level:"",
             name:"",
             surname:"",
             email:"",
@@ -53,13 +52,13 @@ const RegisterStudent = ({  error,
             confirm_password:"",
             recapchatCode:"",
             numCardNumber:"",
-            cardExpireMonth:"1",
+            cardExpireMonth:"",
             cardExpireYear:"",
             cardCode:"",
             check_Condition:false});
     const [isLoginForm, setIsLoginForm] = useState(true);
     const [formErrors, setFormErrors] = useState({});
-    const [errorMessage, setErrorMessage] = useState(isShowMessage);
+
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [resetPasswordForm,setResetPasswordForm] = useState({email: ""});
     const [tooltipOpen, setTooltipOpen] = useState(false);
@@ -77,7 +76,7 @@ const RegisterStudent = ({  error,
     },[formErrors]);
     
     const clickHandlerCloseModal=(e)=>{
-            onChildCloseModal(e.target.name);
+        onChildCloseModal(e.target.name);
     }
     const clickHandlerConnectModal=(e)=>{
         onChildClickLogin(e.target.name);
@@ -201,6 +200,20 @@ const RegisterStudent = ({  error,
                     setSubmited(true);
                 }
                 break;
+            case 'level':
+                if(!values[input]){
+                    errorsValidation.level = "Votre Niveau est requis";
+                }else{
+                    setSubmited(true);
+                }
+                break;
+            case 'cardExpireMonth':
+                if(!values[input]){
+                    errorsValidation.cardExpireMonth = "Mois d'expiration requis";
+                }else{
+                    setSubmited(true);
+                }
+                break;
                 default:
                     break;
     }
@@ -228,7 +241,7 @@ const RegisterStudent = ({  error,
                     e.target.checked:
                     e.target.value })
         setFormErrors(validateForm(registerStudent)); 
-        dispatch(authShowMessage(false));  
+        dispatch(authRegisterFailed(null));  
         dispatch(authSetRegisterForm(registerStudent));
     }
 
@@ -252,8 +265,8 @@ const RegisterStudent = ({  error,
     }
         setFormErrors(validateForm(registerStudent));
         if(Object.keys(formErrors).length === 0 && submited){
-            dispatch(authShowMessage(true));
             dispatch(authSetRegisterForm(registerStudent));
+
             if(registerStudent.confirm_age){
             handleLoading(true,'rs');
             console.log("form Student register");
@@ -262,12 +275,16 @@ const RegisterStudent = ({  error,
             .then((response) => {
                 if(!response.data.success){
                     dispatch(authRegisterFailed(response));
+
                     console.log("Response register student  not success");
                     console.log(response);
                     handleLoading(false,'rs'); 
                     
                 }else{
+                    dispatch(authRegisterFailed(null));
                     dispatch(authRegisterSuccess(response));
+                    dispatch(authSetRegisterForm(null));
+
                     console.log("Response register student success");
                     console.log(response.data);
                     handleLoading(false,'rs');
@@ -276,7 +293,6 @@ const RegisterStudent = ({  error,
                 } 
             })
             .catch((error) => {
-                dispatch(authShowMessage(true));
                 handleLoading(false,'rs');
                 console.log("Error  Register student");
                 if(error.response === undefined){
@@ -291,6 +307,7 @@ const RegisterStudent = ({  error,
         }
             
         }else{
+            dispatch(authRegisterFailed(null));
             handleLoading(false,'rs');
             return; 
         }
@@ -300,9 +317,8 @@ const RegisterStudent = ({  error,
 
         <div style={{backgroundColor:'#FBAB0D',
                      borderRadius:'25px 25px 25px 25px',
-                     position:'absolute',
-                     width:'110%',
-                     top:'-300px'
+                     width:'50%',
+                     position: "fixed"
                      
                      }}>
                     <GridContainer>
@@ -321,7 +337,7 @@ const RegisterStudent = ({  error,
                                 
                                 borderRadius:'25px 25px 25px 25px',
                                 width:'100%',
-                                height:'675px',
+                                height:'100%',
                                 backgroundColor:'#FBAB0D',
                                 padding:'1% 5% 2% 5%'
                                 
@@ -338,7 +354,7 @@ const RegisterStudent = ({  error,
                                   </GridContainer>
                                   <GridContainer>
                                       <GridItem xs={12} sm={12} md={12}>
-                                       {errorMessage && error && (
+                                       {error && (
                                             <div className="form-group">
                                                 {error.data&&(<div className="alert alert-danger" style={{width:"50%",fontSize:'0.7em',margin:'0% 25% 0% 25%'}} role="alert">
                                                         {error.data.message}
@@ -353,13 +369,13 @@ const RegisterStudent = ({  error,
                                   <GridContainer>
                                     <GridItem xs={12} sm={6} md={6}>
                                        <div style={{margin:'0% 0% 0% 0%',color:'blue'}}>
-                                          <span style={{marginRight:'5%',fontSize:'100%'}}>Avez-vous 18 ans?</span>
+                                          <span style={{marginRight:'5%',fontSize:'90%'}}>Avez-vous 18 ans?</span>
                                           <img src={ins1} width='12%' />
                                       </div>
                                     </GridItem>
 
                                     <GridItem xs={12} sm={6} md={6}>
-                                       <div style={{margin:'0% 0% 5% 0%',fontSize:'100%'}}>
+                                       <div style={{margin:'0% 0% 5% 0%',fontSize:'90%'}}>
                                             <span style={{color:'blue'}}>Quel est votre niveau?</span>
                                           
                                       </div>
@@ -371,7 +387,7 @@ const RegisterStudent = ({  error,
                                         return(
                                             <>
                                             {input==="confirm_age"?  
-                                            <GridItem xs={12} sm={6} md={6} key={index}>
+                                            <GridItem xs={12} sm={6} md={6} key={index} style={{fontSize:'90%'}}>
                                                 <div>
                                                     <input 
                                                         type='checkbox' 
@@ -398,8 +414,15 @@ const RegisterStudent = ({  error,
                                                          name="level" 
                                                          onChange={onChangeRegisterStudent}
                                                          value={registerStudent[input]}
-                                                         id="level">
-                                                   
+                                                         id="level"
+
+                                                         style={{
+                                                            border:`${
+                                                            input==="level"&&formErrors.level?'2px solid #C84941':
+                                                            '2px solid #002495'}`
+                                                            }}
+                                                            >
+                                                        <option value=""></option>
                                                         <option value="sixieme">6ieme</option>
                                                         <option value="cinquieme">5ieme</option>
                                                         <option value="quatrieme">4ieme</option>
@@ -408,6 +431,15 @@ const RegisterStudent = ({  error,
                                                         <option value="premiere">1ere</option>
                                                         <option value="terminale">Tle</option>
                                                       </select>
+                                                      {formErrors && (
+                                                                    <div>
+                                                                        <div style={{color:"red",fontSize:"12px"}}>
+                                                                         {
+                                                                         input==="level"?formErrors.level:
+                                                                         ""}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
                                                     </div>
                                                 </GridItem>
 
@@ -505,7 +537,7 @@ const RegisterStudent = ({  error,
 
                                        <GridItem xs={12} sm={input==="password"||input==="confirm_password"?6:4} md={4} key={index}>
                                         {input!="numCardNumber"&&input!="cardExpireMonth"&&input!="cardExpireYear"&&input!="cardCode"&&input!="check_Condition"?
-                                        <div style={{width:'100%',cursor:'pointer'}}>
+                                        <div style={{width:'100%',cursor:'pointer',fontSize:'90%'}}>
                                             {label}
                                          {input==="recapchatCode"? 
 
@@ -628,7 +660,7 @@ const RegisterStudent = ({  error,
                                         return;
                                       }
                                       return(
-                                        <GridItem xs={12} sm={6} md={3} key={index}> 
+                                        <GridItem xs={12} sm={6} md={3} key={index} style={{fontSize:'90%'}}> 
                             
                                             {input==="numCardNumber"||input==="cardExpireMonth"||input==="cardExpireYear"||input==="cardCode"?
                                            
@@ -640,20 +672,38 @@ const RegisterStudent = ({  error,
                                                     name={name}
                                                     onChange={onChangeRegisterStudent}
                                                     value={registerStudent[input]} 
-                                                    id={id}>
-                                                    <option value="1">Janvier</option>
-                                                    <option value="2">Février</option>
-                                                    <option value="3">Mars</option>
-                                                    <option value="4">Avril</option>
-                                                    <option value="5">Mai</option>
-                                                    <option value="6">Juin</option>
-                                                    <option value="7">Juillet</option>
-                                                    <option value="8">Août</option>
-                                                    <option value="9">Septembre</option>
-                                                    <option value="10">Octobre</option>
-                                                    <option value="11">Novembre</option>
-                                                    <option value="12">Décembre</option>
+                                                    id={id}
+
+                                                    style={{
+                                                            border:`${
+                                                            input==="cardExpireMonth"&&formErrors.cardExpireMonth?'2px solid #C84941':
+                                                            '2px solid #002495'}`
+                                                            }}
+
+                                                    >
+                                                    <option value=""></option>
+                                                    <option value="janvier">Janvier</option>
+                                                    <option value="fevrier">Février</option>
+                                                    <option value="mars">Mars</option>
+                                                    <option value="avril">Avril</option>
+                                                    <option value="mai">Mai</option>
+                                                    <option value="juin">Juin</option>
+                                                    <option value="juillet">Juillet</option>
+                                                    <option value="aout">Août</option>
+                                                    <option value="septembre">Septembre</option>
+                                                    <option value="octobre">Octobre</option>
+                                                    <option value="novembre">Novembre</option>
+                                                    <option value="decembre">Décembre</option>
                                                 </select>
+                                                {formErrors && (
+                                                                    <div>
+                                                                        <div style={{color:"red",fontSize:"12px"}}>
+                                                                         {
+                                                                         input==="cardExpireMonth"?formErrors.cardExpireMonth:
+                                                                         ""}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
                                                 </div>: input==="cardExpireYear"?
                                                 <div>
                                                   Année d'expiration
@@ -673,7 +723,7 @@ const RegisterStudent = ({  error,
                                                     width:'100%',
                                                     height:'40px'}}
                                                 /> 
-                                                {errorMessage && error && (
+                                                {error && (
                                                         <div className="form-group">
                                                               <div style={{color:"red"}}>
                                                                   {error.message}
@@ -691,7 +741,7 @@ const RegisterStudent = ({  error,
                                                                 )}
                                                 </div>
 
-                                            :<div style={{width:'100%',cursor:'pointer'}}>
+                                            :<div style={{width:'100%',cursor:'pointer',fontSize:'90%'}}>
                                               {label}
                                                 <input 
                                                     type={type} 

@@ -31,6 +31,7 @@ const AskRegister = ({error,
    onChildClickStudentRegister,
    onChildClickParentRegister,
    onChildClickLogin,
+   onChildCloseModal
    }) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
@@ -56,6 +57,10 @@ const AskRegister = ({error,
 
     const outPutCloseModal=(e)=> {
         setShowAskRegister(true,setShowRegisterStudent(false));
+    }
+
+    const clickCloseModal = (content) => {
+        onChildCloseModal(content);
     }
 
     const onChangeLogin = (e) => {
@@ -165,7 +170,9 @@ const AskRegister = ({error,
     <div style={{
                 backgroundColor:'#ffce52',
                 borderRadius:'25px 25px 25px 25px',
-                margin:'0% 0% 0% 10%',}}>
+                marginLeft:"-10%",
+                position:"fixed"
+                }}>
                    
                     <GridContainer>
                      <GridItem xs={12} sm={12} md={12}>
@@ -174,10 +181,10 @@ const AskRegister = ({error,
                               <div style={{
                                 
                                 borderRadius:'25px 25px 25px 25px',
-                                width:'100%',
-                                height:'300px',
+                                width:'160%',
+                                height:'250px',
                                 backgroundColor:'#ffce52',
-                                margin:'0%',
+                                
                                 padding:'2%'
                               }}>
                                 <GridContainer>
@@ -186,7 +193,7 @@ const AskRegister = ({error,
                                      <div style={{margin:'2% 0% 5% 0%',cursor:'pointer'}}>
                                          <span onClick={(e)=>clickHandlerLogin(e)} style={{float:'left',marginRight:'5%'}}>Se connecter</span>
                                          <span onClick={(e)=>openRegisterUser(e)} style={{color:'blue'}}><u>S'inscrire</u></span>
-                                        
+                                         <span className='close' style={{fontSize:"1.5em"}} onClick={()=>clickCloseModal('home')}>&times;</span>
                                      </div>
                                     </GridItem>
                                   </GridContainer>
@@ -200,7 +207,7 @@ const AskRegister = ({error,
                                   </GridContainer>
 
                                   <GridContainer>
-                                    <GridItem xs={12} sm={12} md={12}>
+                                    <GridItem xs={12} sm={12} md={12} style={{margin:'0% 10% 1% 10%'}}>
                                       <div className="side-content" id="myDiv1" onClick={()=>changeStyle('myDiv1')}>
                                             <div style={{padding:'3%',display:'inline-block'}}>
                                                 <img src={ask1} width='10%' />
@@ -211,19 +218,20 @@ const AskRegister = ({error,
                                     </GridItem>
                                   </GridContainer>
 
-
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
-                                     <div id="myDiv2">
-                                           
+                                      <div id="myDiv2" >
                                             
-                                    </div>
-                                       
+                                           
+                                          </div>
                                     </GridItem>
                                   </GridContainer>
 
+
+        
+
                                   <GridContainer>
-                                    <GridItem xs={12} sm={12} md={12}>
+                                    <GridItem xs={12} sm={12} md={12} style={{margin:'0% 10% 1% 10%'}}>
                                     
                                      <div className="side-content" id="myDiv3" onClick={()=>changeStyle('myDiv3')}>
                                             <div style={{padding:'3%',display:'inline-block'}}>

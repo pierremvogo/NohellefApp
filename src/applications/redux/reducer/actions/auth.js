@@ -57,6 +57,31 @@ export const authSetLoginForm = (formData) => ({
     formData,
 });
 
+export const authConfirmEmailSuccess = (payload) => ({
+    type: types.CONFIRM_EMAIL_SUCCESS,
+    payload,
+})
+
+export const authConfirmEmailFailed = (message) => ({
+    type: types.CONFIRM_EMAIL_FAILED,
+    message,
+})
+
+export const authChangeSuccess = (payload) => ({
+    type: types.CHANGE_SUCCESS,
+    payload,
+})
+
+export const authChangeFailed = (message) => ({
+    type: types.CHANGE_FAILED,
+    message,
+})
+
+export const authSetChangeForm = (formData) => ({
+    type: types.SET_CHANGE_FORM,
+    formData,
+})
+
 export const authSetRegisterForm = (formData) => ({
     type: types.SET_REGISTER_FORM,
     formData,

@@ -1,6 +1,7 @@
 import React, {useContext, useState, useEffect } from 'react';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import './dashboard.css';
+import {connect, useSelector,useDispatch} from 'react-redux';
 import Avatar   from 'react-avatar';
 import Button from '../../../../app/components/buttons/button';
 import { ProSidebar, SidebarHeader, SidebarFooter, SidebarContent } from 'react-pro-sidebar';
@@ -59,7 +60,7 @@ import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessi
 //5271ff 
 //ffce52 
 /*const socket = io.connect("http://localhost:3001");*/
-const DashboardStudent = () => {
+const DashboardParent = ({user}) => {
     const history = useHistory();
     const [isAccountContent, setIsAccountContent] = useState(false);
     const [isChooseTutor, setIsChooseTutorContent] = useState(false);
@@ -791,7 +792,7 @@ const DashboardStudent = () => {
                     </GridContainer>
 
                           {isCourseContent?<CourseContent />:''}
-                          {isAccountContent?<AccountContent />:''}
+                          {isAccountContent?<AccountContent user={user} />:''}
                           {isConferenceContent?<ConferenceContent />:''}
                           {isContactHelpContent?<ContactHelpContent />:''}
                           {isHistoryContent?<HistoryContent />:''}
@@ -809,4 +810,11 @@ const DashboardStudent = () => {
     
         )
 }
-export default DashboardStudent;
+const mapStateToProps=(state)=>{
+  return{
+    user: state.authReducer.user,
+    redirect: state.authReducer.redirect,
+    isRestricted: state.authReducer.isRestricted,
+  };
+};
+export default connect(mapStateToProps)(DashboardParent);
