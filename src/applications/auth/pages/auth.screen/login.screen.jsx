@@ -142,6 +142,7 @@ const Login = ({error,
                 localStorage.setItem('user', JSON.stringify(response.data));
                 dispatch(authLoginSuccess(response.data));
                 history.push(response.data.redirect);
+                window.location.reload();
                     
             })
             .catch((error) => {
