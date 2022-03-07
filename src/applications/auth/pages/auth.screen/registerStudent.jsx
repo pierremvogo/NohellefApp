@@ -20,8 +20,10 @@ import Avatar   from 'react-avatar';
 import Select from 'react-select';
 import ReCAPTCHA from "react-google-recaptcha";
 import ReactTooltip from 'react-tooltip';
-import { authRegisterSuccess,authRegisterFailed,authShowMessage,
-            authSetRegisterForm } from '../../../redux/reducer/actions/auth';
+import { authRegisterSuccess,
+         authRegisterFailed,
+         authShowMessage,
+         authSetRegisterForm } from '../../../redux/reducer/actions/auth';
 import { getUserSuccess,getUserFailed } from '../../../redux/reducer/actions/users';
 import authService from '../../../services/auth.service'; 
 
@@ -348,7 +350,7 @@ const RegisterStudent = ({  error,
                                      <div style={{margin:'0% 0% 1% 0%',cursor:'pointer', fontSize:'100%'}}>
                                          <span style={{float:'left',marginRight:'2%'}} onClick={(e)=>clickHandlerConnectModal(e)}>Se connecter</span>
                                          <span style={{color:'blue'}}><u>S'inscrire</u></span>
-                                         <span className='close' style={{float:'right'}} onClick={(e)=>clickHandlerCloseModal(e)}>&times;</span>
+                                         <span className='close' style={{float:'right',fontSize:'30px'}} onClick={(e)=>clickHandlerCloseModal(e)}>&times;</span>
                                      </div>
                                     </GridItem>
                                   </GridContainer>
@@ -417,6 +419,8 @@ const RegisterStudent = ({  error,
                                                          id="level"
 
                                                          style={{
+                                                            width:'60%',
+                                                            height:'40px',
                                                             border:`${
                                                             input==="level"&&formErrors.level?'2px solid #C84941':
                                                             '2px solid #002495'}`
@@ -675,6 +679,8 @@ const RegisterStudent = ({  error,
                                                     id={id}
 
                                                     style={{
+                                                            width:'100%',
+                                                            height:'40px',
                                                             border:`${
                                                             input==="cardExpireMonth"&&formErrors.cardExpireMonth?'2px solid #C84941':
                                                             '2px solid #002495'}`

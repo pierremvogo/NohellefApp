@@ -309,7 +309,7 @@ const RegisterParent = ({error,
                                      <div style={{margin:'0% 0% 1% 0%',cursor:'pointer'}}>
                                          <span style={{float:'left',marginRight:'2%'}} onClick={(e)=>clickHandlerConnectModal(e)}>Se connecter</span>
                                          <span style={{color:'blue'}}><u>S'inscrire</u></span>
-                                         <span className='close' style={{float:'right'}} onClick={(e)=>clickHandlerCloseModal(e)}>&times;</span>
+                                         <span className='close' style={{float:'right', fontSize:'30px'}} onClick={(e)=>clickHandlerCloseModal(e)}>&times;</span>
                                      </div>
                                     </GridItem>
                                   </GridContainer>
@@ -500,23 +500,35 @@ const RegisterParent = ({error,
                                            
                                             input==="cardExpireMonth"?
 
-                                                <div style={{fontSize:'90%'}}>
+                                                <div>
                                                   Mois d'expiration
                                                 <select 
-                                                    name={name} 
-                                                    id={id}>
-                                                    <option value="1">Janvier</option>
-                                                    <option value="2">Février</option>
-                                                    <option value="3">Mars</option>
-                                                    <option value="4">Avril</option>
-                                                    <option value="5">Mai</option>
-                                                    <option value="6">Juin</option>
-                                                    <option value="7">Juillet</option>
-                                                    <option value="8">Août</option>
-                                                    <option value="9">Septembre</option>
-                                                    <option value="10">Octobre</option>
-                                                    <option value="11">Novembre</option>
-                                                    <option value="12">Décembre</option>
+                                                    name={name}
+                                                    onChange={onChangeRegisterParent}
+                                                    value={registerParent[input]} 
+                                                    id={id}
+
+                                                    style={{
+                                                            width:'100%',
+                                                            height:'40px',
+                                                            border:`${
+                                                            input==="cardExpireMonth"&&formErrors.cardExpireMonth?'2px solid #C84941':
+                                                            '2px solid #002495'}`
+                                                            }}
+                                                    >
+                                                    <option value=""></option>
+                                                    <option value="janvier">Janvier</option>
+                                                    <option value="fevrier">Février</option>
+                                                    <option value="mars">Mars</option>
+                                                    <option value="avril">Avril</option>
+                                                    <option value="mai">Mai</option>
+                                                    <option value="juin">Juin</option>
+                                                    <option value="juillet">Juillet</option>
+                                                    <option value="aout">Août</option>
+                                                    <option value="septembre">Septembre</option>
+                                                    <option value="octobre">Octobre</option>
+                                                    <option value="novembre">Novembre</option>
+                                                    <option value="decembre">Décembre</option>
                                                 </select>
                                                 </div>: input==="cardExpireYear"?
                                                 <div style={{fontSize:'90%'}}>

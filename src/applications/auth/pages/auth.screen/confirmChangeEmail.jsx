@@ -18,9 +18,10 @@ import Avatar   from 'react-avatar';
 import './login.screen.css';
 import { authConfirmEmailSuccess,authConfirmEmailFailed } from '../../../redux/reducer/actions/auth';
 import authService from '../../../services/auth.service'; 
+import userService from '../../../services/user.service'; 
 import Loader from 'react-loader-spinner';
 
-const ConfirmEmail = ({error,confirmEmail}) => {
+const ConfirmChangeEmail = ({error,confirmEmail}) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     const [resetForm, setResetForm] = useState({password: "", confirm_password: "",});
@@ -37,7 +38,6 @@ const ConfirmEmail = ({error,confirmEmail}) => {
 
     const search = useLocation().search;
     const token = new URLSearchParams(search).get('token');
-    const code = new URLSearchParams(search).get('code');
 
 const ModalLoading = () => {
     
@@ -117,51 +117,15 @@ const ModalLoading = () => {
     }
 
     const onSubmit = (e) => {
-            handleLoading(true);
-           token?( authService.activeAccount(token)
+        handleLoading(true);
+           userService.confirmNewEmailAddress(token)
             .then((response) => {
-                if(!response.data.success){
-                    dispatch(authConfirmEmailFailed(response));
-                    console.log("Confirm not success");
-                    console.log(response);
-                    handleLoading(false); 
-                }else{
-                    dispatch(authConfirmEmailFailed(null));
-                    dispatch(authConfirmEmailSuccess(response.data.message));
-                    console.log("Confirm success");
-                    console.log(response.data);
-                    handleLoading(false);
-                    
-                }   
-
-            })
-            .catch((error) => {
-                handleLoading(false);
-                console.log("Error Confirm Email");
-                if(error.response === undefined){
-                    dispatch(authConfirmEmailFailed("Network Error, possible you are not connected"));
-                }else{
-                console.log(error.response);
-                dispatch(authConfirmEmailFailed(error.response));
-                }
-            })):
-            (authService.confirmAdminLogin(code)
-            .then((response) => {
-                    dispatch(authConfirmEmailFailed(null));
-                    dispatch(authConfirmEmailSuccess(response.data.message));
-                    console.log("Confirm success");
-                    console.log(response.data);
-                    let userType = response.data.currentUser.type; 
-                    response.data.redirect =
-                                  userType==="2" ?"/tutor/dashboard":
-                                  userType==="3" ?"/admin/sup/dashboard":
-                                  userType==="4" ?"/admin/dashboard":"/"
-                    localStorage.setItem('user', JSON.stringify(response.data));
-                    handleLoading(false);
-                    history.push(response.data.redirect);
-                    window.location.reload();
-                    
                 
+                    dispatch(authConfirmEmailFailed(null));
+                    dispatch(authConfirmEmailSuccess(response.data.message));
+                    console.log("Confirm success");
+                    console.log(response.data);
+                    handleLoading(false);  
 
             })
             .catch((error) => {
@@ -173,7 +137,7 @@ const ModalLoading = () => {
                 console.log(error.response);
                 dispatch(authConfirmEmailFailed(error.response));
                 }
-            })) 
+            })
         
     }
     
@@ -211,7 +175,7 @@ const ModalLoading = () => {
                             <div style={{
                                 fontSize:'100%',
                                 margin:'0% 0% 0% 13%'
-                                }}>Activation de Votre compte !</div>
+                                }}>Confirmation d'adresse Email!</div>
                           </GridItem>
                         </GridContainer>
 
@@ -259,7 +223,7 @@ const ModalLoading = () => {
                                           paddingTop:'5%'
                                         }}>
                                 
-                                <span className="text" style={{fontSize:'100%',color:'white'}}>Confirmer l'activation</span>
+                                <span className="text" style={{fontSize:'100%',color:'white'}}>Confirmer Votre Email</span>
                               </div>
                                     </div>
                                       
@@ -327,4 +291,4 @@ const mapStateToProps=(state)=>{
       confirmEmail: state.authReducer.confirmEmail,
   };
 };
-export default connect(mapStateToProps)(ConfirmEmail);
+export default connect(mapStateToProps)(ConfirmChangeEmail);

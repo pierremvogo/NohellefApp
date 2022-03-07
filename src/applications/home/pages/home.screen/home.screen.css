@@ -12,6 +12,13 @@
   background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.4);
 }
+.offre1{
+    background-image: url(../../../../assets/images/main/offre1.png);
+    background-position: center;
+    background-size: ;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
 
 .modal-content {
   margin: auto;
@@ -58,20 +65,22 @@
 }
 
 .main_content{
- margin-top: 20%;
+ margin-top: 33%;
 }
+
 .imsc{
     margin:2%;
     cursor: pointer;
     position: sticky;
 }
+
 .dvs{
     position: sticky;
-
 }
+
 .slogan{
     position: absolute;
-    top: -3%;
+    top: -3px;
 }
 .pf{
     margin-top: 30%;

@@ -71,6 +71,7 @@ const Home = ({user}) => {
     const [showModalLoading, setShowModalLoading] = useState(false);
     const [showModalPartial, setShowModalPartial] = useState(false);
     const [isRegister, setIsRegister] = useState(false);
+    const [position, setPosition] = useState(0);
 
     const [studentForRegister, setStudentForRegister] = useState({});
     const [successMessage, setSuccessMessage] = useState("");
@@ -93,7 +94,42 @@ const Home = ({user}) => {
 
     useEffect(()=>{
         setPosts(data);
+        let phoneScreen = window.matchMedia("(max-width: 768px)");
+       let tabletScreen = window.matchMedia("(max-width: 992px) and (min-width: 780px)");
+       let laptopScreen = window.matchMedia("(max-width: 1200px) and (min-width: 992px)");
+       let desktopScreen = window.matchMedia("(min-width: 1200px)");
+
+       responsiveHome("phone",phoneScreen);
+       responsiveHome("tablet",tabletScreen);
+       responsiveHome("laptop",laptopScreen);
+       responsiveHome("desktop",desktopScreen);
     },[]);
+    const responsiveHome = (type,screen) => {
+        switch(type){
+            case 'phone':
+                if(screen.matches){
+                     setPosition(-130);
+                }
+                break;
+            case 'tablet':
+                if(screen.matches){
+                    setPosition(-185);
+                }
+                break;
+            case 'laptop':
+                if(screen.matches){
+                    setPosition(-350);
+                }
+                break;
+            case 'desktop':
+                if(screen.matches){
+                   setPosition(-350);
+                }
+                break;
+                default:
+                    break;
+        }
+    }
 
 
     let data = [
@@ -208,8 +244,17 @@ const Home = ({user}) => {
   const currentPosts = posts.slice(indexOfFirstPost,indexOfLastPost);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const styles = {
+    offreContainer: {
+        backgroundImage: `url(${offre1})`,
+        backgroundPosition: "center",
+        backgroundSize: "50%",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+    }
+};
+
    const outPutStudentRegister=(e)=> {
-        document.body.style.overflow = "hidden";
         setShowRegisterStudentModal(true,
             setShowLoginModal(false),
             setShowAskModal(false),
@@ -219,7 +264,6 @@ const Home = ({user}) => {
     }
 
   const outPutParentRegister=(e)=> {
-    document.body.style.overflow = "hidden";
     setShowRegisterStudentModal(false,
             setShowLoginModal(false),
             setShowAskModal(false),
@@ -229,7 +273,6 @@ const Home = ({user}) => {
     }
 
     const outPutLogin=(e)=> {
-        document.body.style.overflow = "hidden";
         setShowRegisterStudentModal(false,
             setShowLoginModal(true),
             setShowAskModal(false),
@@ -398,7 +441,7 @@ const ModalPartialLogin = () => {
       >
             <div className="containlog" id='myContain'>
                 <div style={{display:'inline-block', fontSize:'100%', width:'100%'}}>
-                    <span className='close' onClick={()=>closePartialModal()}>&times;</span>
+                    <span className='close' style={{fontSize:'30px'}} onClick={()=>closePartialModal()}>&times;</span>
                     <PartialLogin  
                             onChildLoading={outPutEventLoading} 
                             studentForRegister={studentForRegister} 
@@ -518,7 +561,6 @@ const ModalPartialLogin = () => {
     dispatch(authSetLoginForm(null));
     dispatch(authLoginFailed(null));
 
-    document.body.style.overflow = "scroll";
      setShowRegisterStudentModal(false,
             setShowLoginModal(false),
             setShowAskModal(false),
@@ -527,7 +569,6 @@ const ModalPartialLogin = () => {
             setShowRegisterParentModal(false))
   }
   function openAskRegister(){
-    document.body.style.overflow = "hidden";
      setShowRegisterStudentModal(false,
             setShowLoginModal(false),
             setShowAskModal(true),
@@ -535,7 +576,6 @@ const ModalPartialLogin = () => {
             setShowRegisterParentModal(false))
   }
   function openLogin(){
-    document.body.style.overflow = "hidden";
     setShowRegisterStudentModal(false,
             setShowLoginModal(true),
             setShowAskModal(false),
@@ -577,7 +617,6 @@ const ModalPartialLogin = () => {
     dispatch(authLoginFailed(null));
 
     if(content == 'home'){
-    document.body.style.overflow = "scroll";
     setShowRegisterStudentModal(false,
             setShowLoginModal(false),
             setShowAskModal(false),
@@ -597,7 +636,6 @@ const ModalPartialLogin = () => {
   }
 
     const outPutEventConnexion=(e)=> {
-        document.body.style.overflow = "hidden";
         setShowRegisterStudentModal(false,
             setShowLoginModal(true),
             setShowAskModal(false),
@@ -607,7 +645,6 @@ const ModalPartialLogin = () => {
     }
 
   const outPutEventRegister=(e)=> {
-        document.body.style.overflow = "hidden";
         setDisplayAsk("flex",setShowAskModal(true))
     }
 
@@ -629,7 +666,7 @@ const ModalPartialLogin = () => {
             onChildClickRegister={outPutEventRegister} />
       
          
-       <div className="container-fluid" >
+       <div>
          
            
             <div className="main_home">
@@ -645,22 +682,25 @@ const ModalPartialLogin = () => {
                     <div className='main_content'>
                         
                         <GridContainer>
-                            <GridItem xs={12} sm={12} md={12}>
-                               <span style={{textAlign:'center'}}> 
-                                        <div className="dvs"> 
-                                            <img src={video1} className='imsc' width='25%'  />
-                                            <img src={fiche1} className='imsc' width='25%' />
-                                        </div>
-                                                
-                                        <div className="dvs">
-                                            <img src={mise1} className='imsc' width='25%' />
-                                            <img src={web1}  className='imsc' width='25%' /> 
-                                        </div>
-                                                  
-                                </span>
+                            <GridItem xs={6} sm={6} md={6} style={{textAlign:'right'}}>  
+                                    <img src={video1}  width='50%'  />                    
                             </GridItem>
-
+                            <GridItem xs={6} sm={6} md={6} style={{textAlign:'left'}}>
+                                    <img src={fiche1} width='50%' />   
+                            </GridItem>
                         </GridContainer>
+
+
+                        <GridContainer>
+                            <GridItem xs={6} sm={6} md={6} style={{textAlign:'right'}}>
+                                    <img src={mise1}  width='50%' />
+                            </GridItem>
+                            <GridItem xs={6} sm={6} md={6} style={{textAlign:'left'}}>
+                                    <img src={web1}   width='50%' />      
+                            </GridItem>
+                        </GridContainer>
+
+
 
                         <GridContainer >
                             <GridItem xs={12} sm={12} md={12} style={{marginBottom:'3%'}}>
@@ -672,10 +712,10 @@ const ModalPartialLogin = () => {
                         </GridContainer>
 
                          <GridContainer>
-                            <GridItem xs={6} sm={6} md={6}>
+                            <GridItem xs={12} sm={12} md={6}>
                                <img src={a2} width='100%' />
                             </GridItem>
-                            <GridItem xs={6} sm={6} md={6}>
+                            <GridItem xs={12} sm={12} md={6}>
                                 <fieldset style={{border:'2px solid #fff',textAlign:'center'}}>
                                                           <legend style={{width:'100%',backgroundColor:'blue',borderColor:'#fff'}}>
                                                             <img src={c1} width='10%' />
@@ -702,7 +742,7 @@ const ModalPartialLogin = () => {
                         </GridContainer>
 
                          <GridContainer>
-                            <GridItem xs={6} sm={6} md={6}>
+                            <GridItem xs={12} sm={12} md={6}>
                                <fieldset style={{border:'2px solid #fff',textAlign:'center'}}>
                                                           <legend style={{width:'88%',backgroundColor:'green',borderColor:'#fff'}}>
                                                             <img src={c2} width='10%' />
@@ -728,7 +768,7 @@ const ModalPartialLogin = () => {
                                                     ou son mobile</li>
                                                 </ul>
                             </GridItem>
-                            <GridItem xs={6} sm={6} md={6}>
+                            <GridItem xs={12} sm={12} md={6}>
                                <img src={im3} width='100%' />
 
                             </GridItem>
@@ -771,7 +811,7 @@ const ModalPartialLogin = () => {
                                  </GridContainer>
 
                                   <GridContainer style={{backgroundColor:'#FFAB00'}}>
-                                    <GridItem xs={12} sm={12} md={12} style={{marginLeft:'7%'}}>
+                                    <GridItem xs={12} sm={12} md={12} >
                                         <Pagination 
                                             postsPerPage={postPerPage} 
                                             totalPosts={posts.length} 
@@ -784,10 +824,10 @@ const ModalPartialLogin = () => {
 
 
                          <GridContainer>
-                            <GridItem xs={6} sm={6} md={6}>
+                            <GridItem xs={12} sm={12} md={6}>
                                <img src={im4} width='100%' />
                             </GridItem>
-                             <GridItem xs={6} sm={6} md={6} style={{textAlign:'center'}}>
+                             <GridItem xs={12} sm={12} md={6} style={{textAlign:'center'}}>
                                <p style={{marginBottom:'5%',fontSize:'100%'}}>
                                                     Inscrivez-vous dès maintement et béneficiez d'une reduction de
                                                     plus de <strong>50%</strong>
@@ -818,93 +858,98 @@ const ModalPartialLogin = () => {
                             </GridItem>
                         </GridContainer>
 
-                         <GridContainer style={{textAlign:'center',height:'550px'}}>
-                            
-                            <GridItem xs={6} sm={6} md={4}>
-                                <img src={offre1} width='70%' />
-                                <GridContainer style={{position:'relative',top:'-40%'}}>
-                                    <GridItem xs={6} sm={6} md={12}>
+                         <GridContainer style={{textAlign:'center'}}>
+                            <GridItem xs={12} sm={12} md={12}>
+                                <GridContainer>
+                                    <GridItem xs={4} sm={4} md={4} >
+                                        <img src={offre1} width='70%' />
+                                        
+                                        
+                                    </GridItem>
+
+                                    <GridItem xs={4} sm={4} md={4}>
+                                        <img src={offre2} width='70%' />
+                                        
+                                    
+                                    </GridItem>
+
+                                    <GridItem xs={4} sm={4} md={4}>
+                                        <img src={offre3} width='70%' />
+                                    </GridItem>
+                                </GridContainer>
+
+                                <GridContainer style={{position:'relative',top:`${position}px`}}>
+                                    <GridItem xs={4} sm={4} md={4}>
                                         <GridContainer>
-                                            <GridItem xs={6} sm={6} md={12} style={{textAlign:'center',margin:'-13% 0% 0% 0%'}}>
+                                            <GridItem xs={12} sm={12} md={12} style={{textAlign:'center',margin:'-13% 0% 0% 0%'}}>
                                                 <strong>14.15$</strong>
                                             </GridItem>
                                         </GridContainer>
+                                        
                                         <GridContainer>
-                                             
-                                        </GridContainer>
-                                        <GridContainer>
-                                            <GridItem xs={6} sm={6} md={12} style={{margin:'60% 0% -10% 0%'}}>
-                                                <Button 
-                                                    variant="primary" 
-                                                    type="submit" 
-                                                    size="sm"
-                                                    className="button-primary">
-                                                    En savoir plus
-                                                </Button>
-                                            </GridItem>
-                                        </GridContainer>
-                                    </GridItem>
-                                </GridContainer>
-                                
-                            </GridItem>
+                                            <GridItem xs={12} sm={12} md={12} style={{textAlign:'center',margin:'60% 0% 0% 25%'}}>
+                                               <div style={{
+                                                        borderRadius:"5px 5px 5px 5px",
+                                                        cursor:"pointer",
+                                                        backgroundColor:'#3D4FFF',
+                                                        fontSize: '1.5vw',
+                                                        width:'60%',
+                                                        height:'50px',
+                                                        padding:'2.5px'}} 
+                                                        >En savoir plus</div>
 
-                            <GridItem xs={6} sm={6} md={4}>
-                                <img src={offre2} width='70%' />
                                 
-                                <GridContainer style={{position:'relative',top:'-40%'}}>
-                                    <GridItem xs={6} sm={6} md={12}>
-                                        <GridContainer>
-                                            <GridItem xs={6} sm={6} md={12} style={{textAlign:'center',margin:'-13% 0% 0% 0%'}}>
-                                               <strong> 19.17$</strong>
-                                            </GridItem>
-                                        </GridContainer>
-                                        <GridContainer>
-                                       
-                                        </GridContainer>
-                                        <GridContainer>
-                                            <GridItem xs={6} sm={6} md={12} style={{margin:'60% 0% -10% 0%'}}>
-                                                <Button 
-                                                    variant="primary" 
-                                                    type="submit" 
-                                                    size="sm"
-                                                    className="button-primary">
-                                                    En savoir plus
-                                                </Button>
                                             </GridItem>
                                         </GridContainer>
                                     </GridItem>
-                                </GridContainer>
-                            </GridItem>
+                                    <GridItem xs={4} sm={4} md={4}>
+                                        <GridContainer>
+                                            <GridItem xs={12} sm={12} md={12} style={{textAlign:'center',margin:'-13% 0% 0% 0%'}}>
+                                                <strong>14.15$</strong>
+                                            </GridItem>
+                                        </GridContainer>
+                                        
+                                        <GridContainer>
+                                            <GridItem xs={12} sm={12} md={12} style={{margin:'60% 0% 0% 25%'}}>
+                                                <div style={{
+                                                        borderRadius:"5px 5px 5px 5px",
+                                                        cursor:"pointer",
+                                                        backgroundColor:'#3D4FFF',
+                                                        fontSize: '1.5vw',
+                                                        width:'60%',
+                                                        height:'50px',
+                                                        padding:'2.5px'}} 
+                                                        >En savoir plus</div>
+                                            </GridItem>
+                                        </GridContainer>
+                                    </GridItem>
 
-                            <GridItem xs={6} sm={6} md={4}>
-                                <img src={offre3} width='70%' />
-                                
-                                <GridContainer style={{position:'relative',top:'-40%'}}>
-                                    <GridItem xs={6} sm={6} md={12}>
+                                    <GridItem xs={4} sm={4} md={4}>
                                         <GridContainer>
-                                            <GridItem xs={6} sm={6} md={12} style={{textAlign:'center',margin:'-13% 0% 0% 0%'}}>
-                                                <strong>25.15$</strong>
+                                            <GridItem xs={12} sm={12} md={12} style={{textAlign:'center',margin:'-13% 0% 0% 0%'}}>
+                                                <strong>14.15$</strong>
                                             </GridItem>
                                         </GridContainer>
+                                        
                                         <GridContainer>
-                                  
-                                        </GridContainer>
-                                        <GridContainer>
-                                            <GridItem xs={6} sm={6} md={12} style={{margin:'60% 0% 0% 0%'}}>
-                                                <Button 
-                                                    variant="primary" 
-                                                    type="submit" 
-                                                    size="sm"
-                                                    className="button-primary">
-                                                    En savoir plus
-                                                </Button>
+                                            <GridItem xs={12} sm={12} md={12} style={{textAlign:'center',margin:'60% 0% 0% 25%'}}>
+                                                <div style={{
+                                                        borderRadius:"5px 5px 5px 5px",
+                                                        cursor:"pointer",
+                                                        backgroundColor:'#3D4FFF',
+                                                        fontSize: '1.5vw',
+                                                        width:'60%',
+                                                        height: '50px',
+                                                        padding:'2.5px'}} 
+                                                        >En savoir plus</div>
                                             </GridItem>
                                         </GridContainer>
                                     </GridItem>
-                                </GridContainer>
+                                 </GridContainer>
                             </GridItem>
                         
                         </GridContainer>
+                        
                        
 
                          <GridContainer>

@@ -957,17 +957,15 @@ import MesTravaux from '../../components/mesTravaux.jsx';
                          <GridItem xs={2} sm={2} md={2}>
                                         <Dropdown style={{top:'-15px'}}>
                                                     <Dropdown.Toggle
-                                                    variant="secondary btn-sm"
+                                                    variant="warning btn-sm"
                                                     style={{
-                                                        width:'0%',
-
                                                         borderColor:'#fff',
                                                         backgroundColor:'#fff',
-                                                        borderRadius:'20%'}}>
+                                                        }}>
                                                     
                                                         <Avatar 
-                                                            size="50"
-                                                            round={true}
+                                                            size="30"
+                                                            round={false}
                                                             src={im5}
                                                             name='logo'
                                                         />

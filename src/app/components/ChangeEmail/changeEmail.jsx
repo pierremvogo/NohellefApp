@@ -2,34 +2,34 @@ import React, { useEffect, useState } from 'react';
 import {connect, useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import { Link, Redirect, useHistory, useLocation } from 'react-router-dom';
-import Button from '../../../app/components/buttons/button';
-import Card from "../../../app/components/Card/Card.js";
-import CardHeader from "../../../app/components/Card/CardHeader.js";
-import CardBody from "../../../app/components/Card/CardBody.js";
-import CardAvatar from "../../../app/components/Card/CardAvatar.js";
-import CardFooter from "../../../app/components/Card/CardFooter.js";
-import GridItem from "../../../app/components/Grid/GridItem.js";
+import Button from '../buttons/button';
+import Card from "../Card/Card.js";
+import CardHeader from "../Card/CardHeader.js";
+import CardBody from "../Card/CardBody.js";
+import CardAvatar from "../Card/CardAvatar.js";
+import CardFooter from "../Card/CardFooter.js";
+import GridItem from "../Grid/GridItem.js";
 import smileauth from '../../../assets/images/dashboard/smileauth.png';
 import logoImage from '../../../assets/images/im10.png';
-import GridContainer from "../../../app/components/Grid/GridContainer.js";
-import Footer from "../../../app/components/footer/footer.jsx";
+import GridContainer from "../Grid/GridContainer.js";
+import Footer from "../footer/footer.jsx";
 import forgotsmile from '../../../assets/images/dashboard/forgot.png';
 import Avatar   from 'react-avatar';
-import { authChangeSuccess,authChangeFailed,authSetChangeForm} from '../../redux/reducer/actions/auth';
-import authService from '../../services/auth.service'; 
+import { authChangeSuccess,authChangeFailed,authSetChangeForm} from '../../../applications/redux/reducer/actions/auth';
+import authService from '../../../applications/services/auth.service'; 
+import userService from '../../../applications/services/user.service'; 
 import Loader from 'react-loader-spinner';
 
-const ChangePassword = ({error,
+const ChangeEmail = ({error,
                         changePayload,
                         changesForm,
                         user,
                         onChildCloseModal}) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
-    const [changeForm, setChangeForm] = useState(changesForm?changesForm:{
-                                                 currentPassword: "",
-                                                 oldPassword: "",
-                                                 newPassword: ""});
+    const [changeEmail, setChangeEmail] = useState(changesForm?changesForm:{
+                                                 newEmail: "",
+                                                 });
     const [isLoginForm, setIsLoginForm] = useState(true);
     const [formErrors, setFormErrors] = useState({})
     const [isForgotPassword, setIsForgotPassword] = useState(false);
@@ -65,8 +65,8 @@ const ModalLoading = () => {
                     zIndex: "300000",
                     display: "flex",
                     position: "absolute",
-                    top: "20%",
-                    left: "42%"
+                    top: "27%",
+                    left: "47%"
                 }}
                 >
                 <Loader type="Oval" color="#2BAD60" height="100" width="70" />
@@ -80,6 +80,7 @@ const ModalLoading = () => {
   }
 
   const closeModal = (e) => {
+  	dispatch(authChangeFailed(null));
     onChildCloseModal(e.target.name);
   }
 
@@ -87,35 +88,16 @@ const ModalLoading = () => {
     const validateForm = (values) => {
     const errorsValidation = {};
     const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    const regexPassword = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
 
     Object.keys(values).map((input,index)=>{
         switch(input) {
-            case 'currentPassword':
+            case 'newEmail':
                 if(!values[input]){
-                    errorsValidation.currentPassword = "Le mot de passe actuel est requis";
-                }else if(!regexPassword.test(values[input])){
-                    errorsValidation.currentPassword = "mot de passe avec au moins 8 caractères,une majuscule,une minuscule et un chiffre";
+                    errorsValidation.newEmail = "Adresse Email requise";
+                }else if(!regexEmail.test(values[input])){
+                    errorsValidation.newEmail= "Adresse Email invalide";
                 }else{
-                    setSubmited(true)
-                }
-                break;
-            case 'oldPassword':
-                if(!values[input]){
-                    errorsValidation.oldPassword = "L'Ancien mot de passe est requis";
-                }else if(!regexPassword.test(values[input])){
-                    errorsValidation.oldPassword = "mot de passe avec au moins 8 caractères,une majuscule,une minuscule et un chiffre";
-                }else{
-                    setSubmited(true)
-                }
-                break;
-            case 'newPassword':
-                if(!values[input]){
-                    errorsValidation.newPassword = "Le Nouveau mot de passe est requis";
-                }else if(!regexPassword.test(values[input])){
-                    errorsValidation.newPassword = "mot de passe avec au moins 8 caractères,une majuscule,une minuscule et un chiffre";
-                }else{
-                    setSubmited(true)
+                     setSubmited(true)
                 }
                 break;
                 default:
@@ -126,35 +108,35 @@ const ModalLoading = () => {
 
        return errorsValidation;       
   }
-  const onChangePasswordForm = (e) => {
-        setChangeForm({...changeForm,  [e.target.name]: e.target.value });
-        setFormErrors(validateForm(changeForm));
+  const onChangeNewEmail = (e) => {
+        setChangeEmail({...changeEmail,  [e.target.name]: e.target.value });
+        setFormErrors(validateForm(changeEmail));
         dispatch(authChangeFailed(null));
-        dispatch(authSetChangeForm(changeForm));
-        console.log(changeForm);
+        dispatch(authSetChangeForm(changeEmail));
+        console.log(changeEmail);
 
     }
 
     const onSubmit = (e) => {
         e.preventDefault();
-        setFormErrors(validateForm(changeForm));
+        setFormErrors(validateForm(changeEmail));
         if(Object.keys(formErrors).length === 0 && submited){
             handleLoading(true);
-            dispatch(authSetChangeForm(changeForm));
-            console.log("form Change password");
-            console.log(changeForm);
-            authService.changePassword(user&&user.currentUser.id,changeForm)
+            dispatch(authSetChangeForm(changeEmail));
+            console.log("form Change New Email");
+            console.log(changeEmail);
+            userService.changeUserEmailAddress(user&&user.currentUser.id,changeEmail)
             .then((response) => {
                 if(!response.data.success){
                     dispatch(authChangeFailed(response));
-                    console.log("Change not success");
+                    console.log("Change Email not success");
                     console.log(response);
                     handleLoading(false); 
                 }else{
                     dispatch(authSetChangeForm(null));
                     dispatch(authChangeFailed(null));
                     dispatch(authChangeSuccess(response.data.message));
-                    console.log("Change success");
+                    console.log("Change Email success");
                     console.log(response.data);
                     handleLoading(false);
                     
@@ -163,7 +145,7 @@ const ModalLoading = () => {
             })
             .catch((error) => {
                 handleLoading(false);
-                console.log("Error Change Password");
+                console.log("Error Change Email");
                 if(error.response === undefined){
                     dispatch(authChangeFailed("Network Error, possible you are not connected"));
                 }else{
@@ -181,7 +163,7 @@ const ModalLoading = () => {
                 backgroundColor:'#ffce52',
                 borderRadius:'15px 15px 15px 15px',
                 width:'30%'}}>
-         {showModalLoading? <ModalLoading />: ''}
+                    {showModalLoading? <ModalLoading />: ''}
                     <GridContainer>
                     
 
@@ -190,7 +172,7 @@ const ModalLoading = () => {
                      <GridContainer>
                           <GridItem xs={12} sm={12} md={12}>
                           
-                           <span className='close' onClick={(e)=>closeModal(e)}>&times;</span>
+                           <span className='close' style={{margin:'2%', cursor:'pointer'}} onClick={(e)=>closeModal(e)}>&times;</span>
                           
                           </GridItem>
                         </GridContainer>
@@ -219,43 +201,31 @@ const ModalLoading = () => {
                                 padding:'2%'
                               }}>
 
-                              {Object.keys(changeForm).map((input,index)=>{
-                                let id,label, type, name; 
-                                     if(input==="currentPassword"){
-                                          id="currentPassword"
+                              {Object.keys(changeEmail).map((input,index)=>{
+                                let id,label,type,name; 
+                                     if(input==="newEmail"){
+                                          id="newEmail"
                                           type="text"
-                                          name="currentPassword"                             
-                                          label="Votre Mot de passe actuel"
+                                          name="newEmail"                             
+                                          label="Votre Nouvelle Addresse Email"
                                       }
-                                      else if(input==="oldPassword"){
-                                          id="oldPassword"
-                                          type="text"
-                                          name="oldPassword"                             
-                                          label="Votre Ancien Mot de passe"
-                                      }
-                                      else if(input==="newPassword"){
-                                          id="newPassword"
-                                          type="text"
-                                          name="newPassword"                             
-                                          label="Votre Nouveau Mot de passe"
-                                      }
+                                     
                                     return(
                                     <GridContainer>
                                         <GridItem xs={12} sm={12} md={12}>
                                            <div style={{margin:'0% 0% 1% 0%'}}>
                                           <input
                                             name={input}
-                                            onChange={onChangePasswordForm}
-                                            value={changeForm[input]}
+                                            onChange={onChangeNewEmail}
+                                            value={changeEmail[input]}
                                             type={type} 
                                             placeholder={label} 
 
                                             style={{
                                             borderRadius:'10px',
                                             border:`${
-                                                        input==="currentPassword"&&formErrors.currentPassword?'2px solid #C84941':
-                                                        input==="oldPassword"&&formErrors.oldPassword?'2px solid #C84941':
-                                                        input==="newPassword"&&formErrors.newPassword?'2px solid #C84941':
+                                     
+                                                        input==="newEmail"&&formErrors.newEmail?'2px solid #C84941':
                                                         '2px solid #002495'}`,
                                             width:'100%',
                                             height:'40px'}}/>
@@ -264,9 +234,8 @@ const ModalLoading = () => {
                                                                     <div>
                                                                         <div style={{color:"red",fontSize:"12px"}}>
                                                                          {
-                                                                         input==="currentPassword"?formErrors.currentPassword:
-                                                                         input==="oldPassword"?formErrors.oldPassword:
-                                                                         input==="newPassword"?formErrors.newPassword:
+                                                                         input==="newEmail"?formErrors.newEmail:
+                                                                        
                                                                          ""}
                                                                         </div>
                                                                     </div>
@@ -340,4 +309,5 @@ const mapStateToProps=(state)=>{
       user: state.authReducer.user
   };
 };
-export default connect(mapStateToProps)(ChangePassword);
+export default connect(mapStateToProps)(ChangeEmail);
+

@@ -3,7 +3,7 @@ import GridItem from "../../../app/components/Grid/GridItem.js";
 import GridContainer from "../../../app/components/Grid/GridContainer.js";
 import Card from "../../../app/components/Card/Card.js";
 import CardHeader from "../../../app/components/Card/CardHeader.js";
-import {useDispatch} from 'react-redux';
+import {useDispatch,connect} from 'react-redux';
 import CardBody from "../../../app/components/Card/CardBody.js";
 import React,{useState,useEffect} from 'react';
 import CardAvatar from "../../../app/components/Card/CardAvatar.js";
@@ -16,18 +16,38 @@ import Avatar   from 'react-avatar';
 import Pagination from './pagination.jsx';
 import checkok from '../../../assets/images/dashboard/checkok.png';
 import checknone from '../../../assets/images/dashboard/checknone.png';
-import ChangePassword from './changePassword.jsx';
-import { authChangeSuccess} from '../../redux/reducer/actions/auth';
+import ChangePassword from '../../../app/components/ChangePassword/changePassword.jsx';
+import ChangeEmail from '../../../app/components/ChangeEmail/changeEmail.jsx';
+import { authUpdateSuccess, authUpdateFailed } from '../../redux/reducer/actions/auth';
+import authService from '../../services/auth.service'; 
+import userService from  '../../services/user.service'; 
 import './account.css';
+import Loader from 'react-loader-spinner';
 
 
-const AccountContent = ({user}) => {
+const AccountContent = ({error,user,updatePayload}) => {
 	const [posts, setPosts] = useState([]);
 	const [loading, serLoading] = useState(false);
 	const [currentPage, setCurrentPage] = useState(2);
 	const [postPerPage, setPostPerPage] = useState(4);
   const [display, setDisplay] = useState("flex");
   const [showEditModal,setShowEditModal] = useState(false);
+  const [showModalLoading, setShowModalLoading] = useState(false);
+  const [displayLoading, setDisplayLoading] = useState("flex");
+  const [submited, setSubmited] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
+  const [isPass,setIsPass] = useState(false);
+  const [updateStudent, setUpdateStudent] = useState(
+           {
+            firstName: user?user.currentUser.firstName:"",
+            lastName:  user?user.currentUser.lastName:"",
+            username:  user?user.currentUser.username:"",
+            phoneNumber: user?user.currentUser.phoneNumber:"",
+            city: user?user.currentUser.city:"",
+            address: user?user.currentUser.address:"",
+            }
+
+            )
 
 const [isBasic,setIsBasic] = useState(false);
 const [isChat,setIsChat] = useState(false);
@@ -37,6 +57,55 @@ const dispatch= useDispatch()
 	useEffect(()=>{
 		setPosts(data);
 	},[])
+
+   const validateForm = (values) => {
+    const errorsValidation = {};
+    const regexPhoneNumber = /^(\++237[\s.-]?)+\(?6[5-9]{1}[0-9]{1}[\s.-]?[0-9]{3}[\s.-]?([0-9]{3})\)?/;
+   
+    Object.keys(values).map((input,index)=>{
+        switch(input) {
+            case 'firstName':
+                if(values[input].length < 4){
+                    errorsValidation.firstName = "Le nom doit avoir au moins 4 lettres";
+                }else{
+                     setSubmited(true)
+                }
+                break;
+            case 'lastName':
+                if(values[input].length < 4){
+                    errorsValidation.lastName = "Le Prénom doit avoir au moins 4 lettres";
+                }else{
+                     setSubmited(true)
+                }
+                break;
+            
+            case 'username':
+                if(values[input].length < 4){
+                    errorsValidation.username = "Nom d'utilisateur avec au moins 4 lettres";
+                }else{
+                     setSubmited(true)
+                }
+                break;
+            case 'phoneNumber':
+                if(values[input].length === 13 || values[input].length === 9 ){
+                        if(!regexPhoneNumber.test(values[input])){
+                            errorsValidation.phoneNumber = "Numéro de Téléphone invalide";
+                        }else{
+                             setSubmited(true)
+                        }
+                }
+                else{
+                   errorsValidation.phoneNumber = "Format de Numéro invalide"; 
+                }
+                break;
+                default:
+                    break;
+    }
+    
+    });
+
+       return errorsValidation;       
+  }
 
     let data = [
     {
@@ -217,23 +286,123 @@ const dispatch= useDispatch()
             }}
       >
                     
-                    <ChangePassword onChildCloseModal={closeModal} /> 
+                    {
+                      isPass?
+                      <ChangePassword onChildCloseModal={closeModal} />:
+                      <ChangeEmail onChildCloseModal={closeModal} /> 
+                    } 
+                   
                 
           
           
       </div>
     )
   };
-  const openModal = () => {
-    setDisplay("flex",setShowEditModal(true));
+  const openModal = (type) => {
+    dispatch(authUpdateFailed(null));
+    if(type==="pass"){
+      setIsPass(true);
+      setDisplay("flex",setShowEditModal(true),setShowModalLoading(false));
+    }else{
+      setIsPass(false);
+      setDisplay("flex",setShowEditModal(true),setShowModalLoading(false));
+    }
+    
   }
   function closeModal(){
-    dispatch(authChangeSuccess(null));
     setDisplay("none",setShowEditModal(false));
   }
-  const handleChange = (e) => {
-    console.log(e.target.name);
+  const handleChangeUpdate = (e) => {
+    setUpdateStudent({...updateStudent,  [e.target.name]: e.target.value } )
+     setFormErrors(validateForm(updateStudent));
+     dispatch(authUpdateFailed(null));
+     console.log(updateStudent);
   }
+  const ModalLoading = () => {
+    
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "150%",
+            display: displayLoading,
+            zIndex: "900000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+            <div
+                style={{
+                    width: "10%",
+                    height: "30%",
+                    zIndex: "300000",
+                    display: "flex",
+                    position: "absolute",
+                    top: "20%",
+                    left: "44%"
+                }}
+                >
+                <Loader type="Oval" color="#2BAD60" height="100" width="70" />
+            </div>
+          
+      </div>
+    )
+  };
+  const handleLoading = (isShow) => {
+
+    setShowModalLoading(isShow,setShowEditModal(false));
+  }
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+     let updatePayload = 
+          { 
+            firstName: updateStudent.firstName,
+            lastName:  updateStudent.lastName,
+            username:  updateStudent.username,
+            birthDay: user&&user.currentUser.birthDay,
+            phoneNumber: updateStudent.phoneNumber,
+            city: updateStudent.city,
+            address: updateStudent.address,
+            bankCardNumber: user&&user.currentUser.paymentCards[0].bankCardNumber,
+            bankCardExpirationDate: user&&user.currentUser.paymentCards[0].bankCardExpirationDate,
+            bankCardCode: user&&user.currentUser.paymentCards[0].bankCardCode,
+          }
+   setFormErrors(validateForm(updateStudent));
+   if(Object.keys(formErrors).length === 0 && submited){
+      handleLoading(true);
+        userService.editUser(user&&user.currentUser.id,updatePayload)
+        .then((response) => {
+                handleLoading(false); 
+                dispatch(authUpdateFailed(null));
+                dispatch(authUpdateSuccess(response.data));      
+            })
+            .catch((error) => {
+                handleLoading(false);
+                console.log("Error Update");
+                if(error.response === undefined){
+                    dispatch(authUpdateFailed("Network Error, possible you are not connected"));
+                }else{
+                console.log(error.response);
+                dispatch(authUpdateFailed(error.response));
+                }
+                
+            });
+   }else{
+            dispatch(authUpdateFailed(null));
+            handleLoading(false);
+            return; 
+        }
+   
+
+
+
+  }
+
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
@@ -242,6 +411,7 @@ const dispatch= useDispatch()
 	return(
 			<div className="container" style={{backgroundColor:'#eeeeee'}}>
       {showEditModal? <ModalContentEdit /> :'' } 
+      {showModalLoading? <ModalLoading />: ''}
 			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
                             <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
@@ -259,11 +429,55 @@ const dispatch= useDispatch()
                             
                         </GridItem>
                     </GridContainer>
+                    <GridContainer>
+                                      <GridItem xs={12} sm={12} md={12}>
+                                      {updatePayload&&
+                                          (<div className="alert alert-success" style={{width:"60%",fontSize:'1em',textAlign:'center'}} role="alert">
+                                                      {updatePayload}
+                                           </div>)
+                                      }
+                                       {error && (
+                                            <div className="form-group">
+                                                {error.data&&(<div className="alert alert-danger" style={{width:"50%",fontSize:'0.7em',margin:'0% 25% 0% 25%'}} role="alert">
+                                                        {error.data.message}
+                                                </div>)}
+                                                {!error.data&&(<div className="alert alert-danger" style={{width:"50%",fontSize:'0.7em',margin:'0% 25% 0% 25%'}} role="alert">
+                                                        {error}
+                                                </div>)}
+                                            </div>
+                                        )}
+                                      </GridItem>
+                                  </GridContainer>
              
 			              <GridContainer>
+                    <GridItem xs={3} sm={3} md={3} style={{textAlign:'center'}}>
+                          
+                          
+                      </GridItem>
+                      <GridItem xs={3} sm={3} md={3} style={{textAlign:'center'}}>
+                          <div style={{
+                            float:'right',
+                            marginBottom: '2%',
+                            backgroundColor: '#8CB7F0',
+                            borderRadius: '15px',
+                            borderBottom: '2px solid #002495',
+                            borderRight:  '2px solid #002495',
+                            borderTop: '1px solid #002495',
+                            borderLeft:  '1px solid #002495',
+                            height: '50px',
+                            width: '100%',
+                            cursor: 'pointer',
+                            textAlign:'center',
+                            padding:'5% 10% 5% 10%'
+                          }} onClick={onSubmit}>
+                                
+                                <span className="text" style={{fontSize:'100%'}}>Enregistrer</span>
+                              </div>
+                          
+                      </GridItem>
 			 			         
                       
-                      <GridItem xs={12} sm={12} md={12} style={{textAlign:'center'}}>
+                      <GridItem xs={3} sm={3} md={3} style={{textAlign:'center'}}>
                           <div style={{
                             float:'right',
                             marginBottom: '2%',
@@ -274,13 +488,34 @@ const dispatch= useDispatch()
                             borderTop: '1px solid #002495',
                             borderLeft:  '1px solid #002495',
                             height: '50px',
-                            width: '25%',
+                            width: '100%',
                             cursor: 'pointer',
                             textAlign:'center',
-                            paddingTop:'1.2%'
+                            padding:'5% 10% 5% 10%'
                           }} onClick={()=>openModal()}>
                                 
-                                <span className="text" style={{fontSize:'100%'}}>Modifier Votre Mot de passe</span>
+                                <span className="text" style={{fontSize:'100%'}}>Modifier Votre Email </span>
+                              </div>
+                          
+                      </GridItem>
+                      <GridItem xs={3} sm={3} md={3} style={{textAlign:'center', marginBottom:'3%'}}>
+                          <div style={{
+                            float:'right',
+                            marginBottom: '2%',
+                            backgroundColor: '#f8db52',
+                            borderRadius: '15px',
+                            borderBottom: '2px solid #002495',
+                            borderRight:  '2px solid #002495',
+                            borderTop: '1px solid #002495',
+                            borderLeft:  '1px solid #002495',
+                            height: '50px',
+                            width: '100%',
+                            cursor: 'pointer',
+                            textAlign:'center',
+                            padding:'5% 10% 5% 10%'
+                          }} onClick={()=>openModal("pass")}>
+                                
+                                <span className="text" style={{fontSize:'100%'}}>Modifier Mot de passe</span>
                               </div>
                           
                       </GridItem>
@@ -304,75 +539,90 @@ const dispatch= useDispatch()
                                 <fieldset style={{border:'2px solid #4d6bf4'}}>
                                   <legend style={{width:'45%'}}>Informations Personnelle</legend>
                                    <GridContainer>
-                                     <GridItem xs={12} sm={12} md={12}>
-                                      <div style={{margin:'3%'}}>
-                                        <span style={{marginRight:'0%'}}><strong>
-                                        Nom :</strong>
-                                        <input 
-                                            className='input_content' 
-                                            onChange={handleChange}
-                                            type='text' 
-                                            placeholder="Entrer votre Nom" 
-                                            value={user&&user.currentUser.lastName}
+                                   <>
+                                    {Object.keys(updateStudent).map((input,index)=> {
+                                      let id,label, type, name; 
+                                        if(input==="firstName"){
+                                          id="firstName"
+                                          type="text"
+                                          name="firstName"                                 
+                                          label="Nom"
+                                      }else if(input==='lastName'){
+                                          id="lastName"
+                                          type="text"
+                                          name="lastName"                            
+                                          label="Prénom"
+                                      }else if(input==="username"){
+                                          id="username"
+                                          type="text"
+                                          name="username"                             
+                                          label="Nom d'utilisateur"
+                                      }else if(input==="phoneNumber"){
+                                          id="phoneNumber"
+                                          type="text"
+                                          name="phoneNumber"                            
+                                          label="Téléphone"
+                                      }else if(input==="city"){
+                                          id="city"  
+                                          type="text"
+                                          name="city"                            
+                                          label="Ville"
+                                      }else if(input==='address'){
+                                          id="address"
+                                          type="text"
+                                          name="address"                             
+                                          label="Adresse"
+                                      }
+                                      return(
+                                        
+                                        <GridItem xs={6} sm={6} md={6} key={index}>
+                                        {input!="birthDay"&&input!="bankCardNumber"&&input!="bankCardExpirationDate"&&input!="bankCardCode"?
+                                          <div style={{margin:'3%'}}>
+                                            <span style={{marginRight:'0%'}}>
+                                            <strong>{ label }</strong>
+                                            <input 
+                                                className='input_content' 
+                                                name={name}
+                                                onChange={handleChangeUpdate}
+                                                type={type} 
+                                                placeholder={label} 
+                                                value={updateStudent[input]}
 
-                                            style={{width:'30%'}}
-                                            />
-                                        </span>
-                                       <span><strong>Prenom :</strong>
-                                       <input 
-                                           className='input_content' 
-                                           type='text' 
-                                           onChange={handleChange}
-                                           placeholder="Enter Votre prénom" 
-                                           value={user&&user.currentUser.firstName}
-
-                                           
-                                       />
-                                       </span>
-                                      </div>
+                                                style={{
+                                                  width:'100%',
+                                                  borderBottom:`${
+                                                        input==="lastName"&&formErrors.lastName?'2px solid #C84941':
+                                                        input==="firstName"&&formErrors.firstName?'2px solid #C84941':
+                                                        input==="username"&&formErrors.username?'2px solid #C84941':
+                                                        input==="phoneNumber"&&formErrors.phoneNumber?'2px solid #C84941':                                
+                                                
+                                                        '2px solid #002495'}`,
+                                                }}
+                                                />
+                                                {formErrors && (
+                                                                    <div>
+                                                                        <div style={{color:"red",fontSize:"12px"}}>
+                                                                         {
+                                                                         input==="lastName"?formErrors.lastName:
+                                                                         input==="firstName"?formErrors.firstName:
+                                                                         input==="username"?formErrors.username:
+                                                                         input==="phoneNumber"?formErrors.phoneNumber:
+                                                                         
+                                                                         
+                                                                         ""}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                            </span>
+                                          </div>:""}
                                        
                                      </GridItem>
+                                            )
+                                    })}
+                                    </>
+                                  
                                    </GridContainer>
 
-                                   <GridContainer>
-                                     <GridItem xs={12} sm={12} md={12}>
-                                     <div style={{margin:'3%'}}>
-                                         <span style={{marginRight:'5%'}}><strong>
-                                         Email :</strong>
-                                         <input 
-                                           className='input_content' 
-                                           type='email'
-                                           onChange={handleChange}
-                                           placeholder="Entrer votre adresse email" 
-                                           value={user&&user.currentUser.email}
-
-                                        />
-                                        </span>
-                                       <span><strong>Tel :</strong>
-                                       <input 
-                                         className='input_content' 
-                                         type='text' 
-                                         onChange={handleChange}
-                                         placeholder="Entrer votre Numéro" 
-                                         value={user&&user.currentUser.phoneNumber}
-
-                                       />
-
-                                       </span>
-                                      </div>
-                                      
-                                     </GridItem>
-                                   </GridContainer>
-
-                                   <GridContainer>
-                                     
-                                     <GridItem xs={12} sm={12} md={12}>
-                                     <div style={{margin:'3%'}}>
-                                        <span><strong>Niveau :</strong>{user&&user.currentUser.level}</span>
-                                      </div>
-                                       
-                                     </GridItem>
-                                   </GridContainer>
                                 </fieldset>
                             </GridItem>
                         </GridContainer>
@@ -435,6 +685,14 @@ const dispatch= useDispatch()
                     </div>
 		)
 }
-export default AccountContent;
+const mapStateToProps=(state)=>{
+  return{
+      isLoggedIn: state.authReducer.isLoggedIn,
+      error: state.authReducer.error,
+      user: state.authReducer.user,
+      updatePayload: state.authReducer.updatePayload
+  };
+};
+export default connect(mapStateToProps)(AccountContent);
 
 

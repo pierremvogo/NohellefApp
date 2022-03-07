@@ -138,10 +138,7 @@ const Login = ({error,
                 let userType = response.data.currentUser.type; 
                 response.data.redirect = 
                                   userType==="0" ?"/student/dashboard":
-                                  userType==="1" ?"/parent/dashboard":
-                                  userType==="2" ?"/tutor/dashboard":
-                                  userType==="3" ?"/admin/dashboard":
-                                  userType==="4" ?"/admin/sup/dashboard":"/"
+                                  userType==="1" ?"/parent/dashboard":"/"
                 localStorage.setItem('user', JSON.stringify(response.data));
                 dispatch(authLoginSuccess(response.data));
                 history.push(response.data.redirect);

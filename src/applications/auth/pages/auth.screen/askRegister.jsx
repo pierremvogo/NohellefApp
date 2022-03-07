@@ -13,6 +13,7 @@ import smileauth from '../../../../assets/images/dashboard/smileauth.png';
 import logoImage from '../../../../assets/images/im10.png';
 import mpay from '../../../../assets/images/dashboard/mpay.png';
 import divid from '../../../../assets/images/dashboard/divid.png';
+import './auth.screen.css';
 
 import ask1 from '../../../../assets/images/home/ask1.png';
 import ask2 from '../../../../assets/images/home/ask2.png';
@@ -214,7 +215,7 @@ const AskRegister = ({error,
                                                 <span className="text" style={{marginLeft:'25%'}}>Je suis Apprenant</span>
                                             </div>
                                            
-                                          </div>
+                                    </div>
                                     </GridItem>
                                   </GridContainer>
 

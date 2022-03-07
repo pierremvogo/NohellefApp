@@ -1,11 +1,12 @@
 const ROUTES = {
     HOME : "/",
     LOGIN : "/auth/login",
-    LOGIN_OTHERS : "/others/auth/login",
+    LOGIN_OTHERS : "/login/adm-tutor",
     REGISTER_SUPADMIN : "/auth/sup/admin/register",
     FORGOT_PASSWORD : "/auth/forgot",
     RESET_PASSWORD : "/reset-password",
     CONFIRM_EMAIL: "/active-account",
+    CONFIRM_CHANGE_EMAIL: "/confirm-email",
     STUDENT : "/student/dashboard",
     TUTOR : "/tutor/dashboard",
     PARENT : "/parent/dashboard",

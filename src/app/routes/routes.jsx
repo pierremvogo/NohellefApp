@@ -1,25 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { useEffect ,Suspense, lazy} from 'react';
 import { Switch, Route, Router, Redirect, useHistory, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PrivateRoute from './private.routes';
 import PublicRoute from './public.routes';
 import ProtectedRoute from './public.routes';
 import ROUTES from './path.routes';
+import LoadingApp from '../components/loadingApp/loading.jsx';
 //import { ContextProvider } from '../../SocketContext.js';
 
-import Home from '../../applications/home/pages/home.screen/home';
-import StudentPage from '../../applications/student/pages/dashboard.screen/dashboard.jsx';
-import AdminPage from '../../applications/admin/pages/dashboard.screen/dashboard.jsx';
-import SupAdminPage from '../../applications/supadmin/pages/dashboard.screen/dashboard.jsx';
-import ParentPage from '../../applications/parent/pages/dashboard.screen/dashboard.jsx';
-import TutorPage from '../../applications/tutor/pages/dashboard.screen/dashboard.jsx';
-import Login from '../../applications/auth/pages/auth.screen/login.screen.jsx';
-import LoginOthers from '../../applications/auth/pages/auth.screen/loginOthers.screen.jsx';
-import RegisterSupAdmin from '../../applications/auth/pages/auth.screen/registerSupAdmin.jsx';
-import ForgotPassword from '../../applications/auth/pages/auth.screen/forgotPassword.screen.jsx';
-import ResetPassword from '../../applications/auth/pages/auth.screen/resetPassword.screen.jsx';
-import ConfirmEmail from '../../applications/auth/pages/auth.screen/confirmEmail.jsx';
+const Home = lazy(() => import('../../applications/home/pages/home.screen/home'));
+const StudentPage = lazy(() => import('../../applications/student/pages/dashboard.screen/dashboard.jsx'));
+const AdminPage = lazy(() => import('../../applications/admin/pages/dashboard.screen/dashboard.jsx'));
+const SupAdminPage = lazy(() => import('../../applications/supadmin/pages/dashboard.screen/dashboard.jsx'));
+const ParentPage = lazy(() => import('../../applications/parent/pages/dashboard.screen/dashboard.jsx'));
+const TutorPage = lazy(() => import('../../applications/tutor/pages/dashboard.screen/dashboard.jsx'));
+const Login = lazy(() => import('../../applications/auth/pages/auth.screen/login.screen.jsx'));
+const LoginOthers = lazy(() => import('../../applications/auth/pages/auth.screen/loginOthers.screen.jsx'));
+const RegisterSupAdmin = lazy(() => import('../../applications/auth/pages/auth.screen/registerSupAdmin.jsx'));
+const ForgotPassword = lazy(() => import('../../applications/auth/pages/auth.screen/forgotPassword.screen.jsx'));
+const ResetPassword = lazy(() => import('../../applications/auth/pages/auth.screen/resetPassword.screen.jsx'));
+const ConfirmEmail = lazy(() => import('../../applications/auth/pages/auth.screen/confirmEmail.jsx'));
+const ConfirmChangeEmail = lazy(() => import('../../applications/auth/pages/auth.screen/confirmChangeEmail.jsx'));
 //import VideoChat from '../../applications/videoChat/pages/videoChat.screen/videoChat.screen.jsx';
+
+
 
 const MainRoute = ({user,redirect,isRestricted = false}) =>{
     const urlpath = window.location.pathname;
@@ -31,16 +35,14 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
     console.log(urlpath);
        
     useEffect(() => {
-        if(user){
-            if(user.currentUser.type != 0 && urlpath===ROUTES.STUDENT){
-                history.push(ROUTES.HOME);
-            }else if(user.currentUser.type != 1 && urlpath===ROUTES.PARENT){
+        if(user&&user.currentUser){
+            if(user.currentUser.type != 1 && urlpath===ROUTES.PARENT){
                 history.push(ROUTES.HOME);
             }else if(user.currentUser.type != 2 && urlpath===ROUTES.TUTOR){
                 history.push(ROUTES.HOME);
-            }else if(user.currentUser.type != 3 && urlpath===ROUTES.ADMIN){
+            }else if(user.currentUser.type != 3 && urlpath===ROUTES.SUP_ADMIN){
                 history.push(ROUTES.HOME);
-            }else if(user.currentUser.type != 4 && urlpath===ROUTES.SUP_ADMIN){
+            }else if(user.currentUser.type != 4 && urlpath===ROUTES.ADMIN){
                 history.push(ROUTES.HOME);
             }
         }
@@ -59,6 +61,7 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
         }
     }, []);
     return(
+        <Suspense fallback={<LoadingApp isShow={'flex'} />}>
         <Switch>
          
         {user&&user.accessToken&&user.currentUser.type==="0" &&(
@@ -88,16 +91,16 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
         {user&&user.accessToken&&user.currentUser.type==="3" &&(
             <Route 
                 exact
-                path={ROUTES.ADMIN}> 
-                <AdminPage />
+                path={ROUTES.SUP_ADMIN}> 
+                 <SupAdminPage />
             </Route>
         )}
 
         {user&&user.accessToken&&user.currentUser.type==="4" &&(
             <Route 
                 exact
-                path={ROUTES.SUP_ADMIN}> 
-                <SupAdminPage />
+                path={ROUTES.ADMIN}> 
+                <AdminPage />
             </Route>
         )}
 
@@ -136,6 +139,12 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
                         component={ConfirmEmail}
                         path={ROUTES.CONFIRM_EMAIL} 
                     />
+
+                    <Route 
+                        exact
+                        component={ConfirmChangeEmail}
+                        path={ROUTES.CONFIRM_CHANGE_EMAIL} 
+                    />
                     {/*<ContextProvider>
                         <Route 
                             exact
@@ -145,6 +154,7 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
                     </ContextProvider>*/}
           
         </Switch>
+        </Suspense>
 
     )
 }

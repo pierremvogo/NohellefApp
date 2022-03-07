@@ -9,6 +9,7 @@ export default axios.create({
     baseURL: "http://38.242.220.206:6051/api/v1",
     headers: {
         "Content-type": "application/json",
-         "Authorization": 'Bearer '+token,
+         Authorization: 'Bearer ' + token,
     }
 });
+

@@ -5,21 +5,16 @@ class AuthService {
     loginUser(payload) {
         return http.post("/auth/login", payload);
     }
+    loginAdmin(payload) {
+        return http.post("/admin/users/admin-login", payload);
+    }
+
+    confirmAdminLogin(code) {
+        return http.get(`/admin/users/confirm-admin-login/${code}`);
+    }
 
     registerUser(payload) {
         return http.post("/auth/register", payload);
-    }
-
-    getUserById(id) {
-        return http.get(`/users/${id}`);
-    }
-
-    getAllTutor() {
-      return http.get(`/users/list/tutors`);
-    }
-
-    assignTutorToStudent(studentId,tutorId) {
-        return http.put(`/users/set-tutor/${studentId}/${tutorId}`);
     }
 
     activeAccount(token) {
@@ -45,9 +40,8 @@ class AuthService {
     unLockAccount(id) {
         return http.put(`/auth/unlock-account/${id}`);
     }
-
-    closeAccount(id) {
-        return http.put(`/auth/close-account/${id}`);
+    adminCreateUser(payload) {
+        return http.put(`/admin/users/create-user`, payload);
     }
 
 }

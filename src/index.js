@@ -8,8 +8,6 @@ import store from './redux/store';
 import './assets/css/index.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
-
-
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
@@ -20,6 +18,7 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

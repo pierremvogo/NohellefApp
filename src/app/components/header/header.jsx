@@ -9,6 +9,8 @@ import hamburg from '../../../assets/header/hamburg.png';
 import im5 from '../../../assets/images/im5.png';
 import GridItem from "../Grid/GridItem.js";
 import GridContainer from "../Grid/GridContainer.js";
+import Hidden from "@material-ui/core/Hidden";
+import { Dropdown } from 'react-bootstrap';
 import './header.styles.css';
 import Modals from '../modals/modal';
 import Button from '../buttons/button';
@@ -23,11 +25,46 @@ const Header = ({
                 onChildClickRegister,
                 isDashboard,
                 isHome})  =>{
+    const [isSmallScreen, setIsSmallScreen] = useState(false);
 
     useEffect(()=>{
-        console.log("Width window");
-        console.log(window.screen.width);
+       let phoneScreen = window.matchMedia("(max-width: 768px)");
+       let tabletScreen = window.matchMedia("(max-width: 992px) and (min-width: 780px)");
+       let laptopScreen = window.matchMedia("(max-width: 1200px) and (min-width: 992px)");
+       let desktopScreen = window.matchMedia("(min-width: 1200px)");
+
+       responsiveHeader("phone",phoneScreen);
+       responsiveHeader("tablet",tabletScreen);
+       responsiveHeader("laptop",laptopScreen);
+       responsiveHeader("desktop",desktopScreen);
     },[])
+
+    const responsiveHeader = (type,screen) => {
+        switch(type){
+            case 'phone':
+                if(screen.matches){
+                     setIsSmallScreen(true);
+                }
+                break;
+            case 'tablet':
+                if(screen.matches){
+                    setIsSmallScreen(true);
+                }
+                break;
+            case 'laptop':
+                if(screen.matches){
+                    setIsSmallScreen(false);
+                }
+                break;
+            case 'desktop':
+                if(screen.matches){
+                    setIsSmallScreen(false);
+                }
+                break;
+                default:
+                    break;
+        }
+    }
    
     const clickHandlerConnexion=(e)=>{
             onChildClickConnexion(e.target.name);
@@ -122,7 +159,7 @@ const Header = ({
     
 
                         <GridContainer>
-                        <GridItem xs={3} sm={3} md={3} style={{backgroundColor:'#FFFFFF'}}>
+                       {!isSmallScreen? <GridItem xs={3} sm={3} md={3} style={{backgroundColor:'#FFFFFF',height:'10px'}}>
                         <div style={{fontSize: 2+'em'}} className="sidebar-brand d-flex align-items-center justify-content-center">    
                             
                             <div className="sidebar-brand-icon  mr-5" style={{
@@ -142,33 +179,37 @@ const Header = ({
                             <div className="sidebar-brand-icon"></div>        
                             <div className="sidebar-brand-text mx-3"><sup></sup></div>
                         </div>
-                        </GridItem>
+                        </GridItem>:''}
 
-
-                       {window.screen.width >= 1157? <GridItem xs={9} sm={9} md={9} style={{backgroundColor:'#FFFFFF',height:'10%'}}>
-                        <ul className="displayNavItem" style={{marginLeft:`${isDashboard? '35%' :'0%'}`, fontFamily:'sans-serif'}}>
-                            {isDashboard?
-                            <span className="nav-menu" onClick={()=>console.log('')}>Dashboard</span>  : ''}
-
-                            <span id="dash1" className="nav-menu" onClick={()=>changeStyle1('dash1')}>Qui sommes nous?</span> 
-
-                            <span id="dash2" className="nav-menu" onClick={()=>changeStyle1('dash2')}>Nos classes</span> 
-
-                            {isDashboard?'':<span id="dash3" className="nav-menu" onClick={()=>changeStyle1('dash3')}>Nos Enseignants</span>}
-                            {!isDashboard?'':<span  className="nav-menu" onClick={()=>console.log('')}>Nos matières</span>}
-                            <span id="dash4" className="nav-menu" onClick={()=>changeStyle1('dash4')}>Nos offres</span>
+                      {!isSmallScreen?<GridItem xs={9} sm={9} md={9} style={{backgroundColor:'#FFFFFF',height:'10px'}}>
+                        <ul style={{fontFamily:'sans-serif'}}>
+                        
+                             
+                                    <span id="dash1" className="nav-menu" onClick={()=>changeStyle1('dash1')}>Qui sommes nous?</span> 
+                               
+                               
+                                    <span id="dash2" className="nav-menu" onClick={()=>changeStyle1('dash2')}>Nos classes</span> 
+                             
                             
-                            {isDashboard?'': !user?(<span className="nav-menu" style={{
+                                    <span id="dash3" className="nav-menu" onClick={()=>changeStyle1('dash3')}>Nos Enseignants</span>
+                          
+                            
+                                    <span id="dash4" className="nav-menu" onClick={()=>changeStyle1('dash4')}>Nos offres</span>
+                           
+
+                            {!user?(<span className="nav-menu" style={{
                                 borderRadius:"5px 5px 5px 5px",
                                 textAlign:'center',
                                 backgroundColor:'#8399FF',
                                 width:'15%',
+                                fontSize: '1vw',
                                 padding:'2.5px'}} 
                                 onClick={(e)=>clickHandlerConnexion(e)}>Connexion</span>):
                             (<span className="nav-menu" style={{
                                 borderRadius:"5px 5px 5px 5px",
                                 textAlign:'center',
                                 backgroundColor:'#8399FF',
+                                fontSize: '1vw',
                                 width:'15%',
                                 padding:'2.5px'}} 
                                 onClick={()=>disconnectUser()}>Deconnexion</span>) 
@@ -176,16 +217,18 @@ const Header = ({
                             }
 
                                 
-                            {isDashboard?'': <span className="nav-menu" style={{
+                             <span className="nav-menu" style={{
                                 borderRadius:"5px 5px 5px 5px",
                                 textAlign:'center',
                                 backgroundColor:'#C84941',
+                                fontSize: '1vw',
                                 width:'15%',
                                 padding:'2.5px'}} 
-                                onClick={(e)=>clickHandlerRegister(e)}>Inscription</span>}    
+                                onClick={(e)=>clickHandlerRegister(e)}>Inscription</span> 
                             
-                             <span style={{cursor:"pointer",marginLeft:"5%"}} onClick={(e)=>gotoDashboard(e)}>
+                            <span style={{cursor:"pointer",marginLeft:"3%"}} onClick={(e)=>gotoDashboard(e)}>
                              <Avatar 
+                                style={{marginTop:'2%'}}
                                 size="40"
                                 round={true}
                                 src={im5}
@@ -193,8 +236,103 @@ const Header = ({
                              /></span>
 
                         </ul>
-                        </GridItem>:""}
+                        </GridItem>:
 
+                         <GridItem xs={12} sm={12} md={12} style={{backgroundColor:'#FFFFFF',height:'70px'}}>
+                                        <Dropdown>
+                                                    <Dropdown.Toggle
+                                                    variant="warning btn-sm"
+                                                    style={{
+                                                        borderColor:'#fff',
+                                                        backgroundColor:'#fff',
+                                                        }}>
+                                                    
+                                                        <Avatar 
+                                                            size="30"
+                                                            round={false}
+                                                            src={hamburg}
+                                                            name='logo'
+                                                        />
+                                                    </Dropdown.Toggle>
+
+                                                    <Dropdown.Menu>
+                                                        <Dropdown.Item href="#" style={{backgroundColor:'#E9ECEF'}}>
+                                                            <Avatar 
+                                                                size="120"
+                                                                round={true}
+                                                                src={logoImage}
+                                                                name=''
+                                                            />
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item>
+                                                                  <span id="dash1" onClick={()=>changeStyle1('dash1')}>Qui sommes nous?</span> 
+                                                         
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item>
+                   
+                                                                  <span id="dash2"  onClick={()=>changeStyle1('dash2')}>Nos classes</span> 
+                                                           
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item>
+                                                                 <span id="dash3" onClick={()=>changeStyle1('dash3')}>Nos Enseignants</span>
+                                                    
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item>
+                                                                <span id="dash4" onClick={()=>changeStyle1('dash4')}>Nos offres</span>
+                                                    
+                                                        </Dropdown.Item>
+
+                                                        <Dropdown.Item>
+                                                                 {!user?(<div  style={{
+                                                                    borderRadius:"5px 5px 5px 5px",
+                                                                    textAlign:'center',
+                                                                    backgroundColor:'#8399FF',
+                                                                    width:'100%',
+                                                                    fontSize: '100%',
+                                                                    padding:'2.5px'
+                                                                    }} 
+                                                                    onClick={(e)=>clickHandlerConnexion(e)}>Connexion</div>):
+                                                                (<div  style={{
+                                                                    borderRadius:"5px 5px 5px 5px",
+                                                                    textAlign:'center',
+                                                                    backgroundColor:'#8399FF',
+                                                                    fontSize: '100%',
+                                                                    width:'100%',
+                                                                    padding:'2.5px',
+                                                                    }} 
+                                                                    onClick={()=>disconnectUser()}>Deconnexion</div>) 
+
+                                                                }
+                                                    
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item>
+                                                                <div style={{
+                                                                    borderRadius:"5px 5px 5px 5px",
+                                                                    textAlign:'center',
+                                                                    backgroundColor:'#C84941',
+                                                                    fontSize: '100%',
+                                                                    width:'100%',
+                                                                    padding:'2.5px'}} 
+                                                                    onClick={(e)=>clickHandlerRegister(e)}>Inscription</div>
+                                                    
+                                                        </Dropdown.Item>
+
+                                                        <Dropdown.Item>
+                                                               <span style={{cursor:"pointer",marginLeft:"3%"}} onClick={(e)=>gotoDashboard(e)}>
+                                                                 <Avatar 
+                                                                    style={{marginTop:'2%'}}
+                                                                    size="40"
+                                                                    round={true}
+                                                                    src={im5}
+                                                                    name='Mon Compte'
+                                                                 /></span>
+                                                    
+                                                        </Dropdown.Item>
+
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                        </GridItem>}
+                
                         </GridContainer>
                      
        

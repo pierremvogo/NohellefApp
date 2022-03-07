@@ -14,8 +14,10 @@ const INITIAL_STATE = user ?
                                 changePayload: null,
                                 changesForm: null,
                                 resetPayload: null,
+                                adminPayload: null,
                                 isShowMessage: false,
                                 confirmEmail: null,
+                                updatePayload: null,
                                 isRegister: false,
                                 loginsForm: null,
                                 registersForm: null,
@@ -33,7 +35,9 @@ const INITIAL_STATE = user ?
                                 confirmEmail: null,
                                 isRegister: false,
                                 resetToken: null,
+                                updatePayload: null,
                                 resetPayload: null,
+                                adminPayload: null,
                                 isShowMessage: false,
                                 user: null
                             };
@@ -123,6 +127,18 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 isShowMessage: false,
                 tokenPayload: null,
             };
+        case types.CODE_ADMIN_SUCCESS:
+            return {
+                ...state,
+                error: null,
+                adminPayload: action.payload,
+            };
+        case types.CODE_ADMIN_FAILED:
+            return {
+                ...state,
+                error: action.message,
+                adminPayload: null,
+            };
 
         case types.CONFIRM_EMAIL_SUCCESS:
             return {
@@ -184,6 +200,18 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 changesForm: action.formData,
+            };
+        case types.UPDATE_SUCCESS:
+            return {
+                ...state,
+                updatePayload: action.payload,
+                error: null,
+            };
+        case types.UPDATE_FAILED:
+            return {
+                ...state,
+                updatePayload: null,
+                error: action.message,
             };
         default:
             return state;

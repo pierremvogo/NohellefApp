@@ -32,6 +32,16 @@ export const authgetResetTokenFailed = (message) => ({
     message,
 });
 
+export const authgetCodeAdminFailed = (message) => ({
+    type: types.CODE_ADMIN_FAILED,
+    message,
+});
+
+export const authgetCodeAdminSuccess = (payload) => ({
+    type: types.CODE_ADMIN_SUCCESS,
+    payload,
+});
+
 export const authResetFailed = (message) => ({
     type: types.RESET_FAILED,
     message,
@@ -95,5 +105,15 @@ export const authRegisterSuccess = (payload) => ({
 export const authRegisterFailed = (message) => ({
     type: types.REGISTER_FAILED,
     message
+});
+
+export const authUpdateFailed = (message) => ({
+    type: types.UPDATE_FAILED,
+    message
+});
+
+export const authUpdateSuccess = (payload) => ({
+    type: types.UPDATE_SUCCESS,
+    payload
 });
 

@@ -750,16 +750,14 @@ const DashboardParent = ({user}) => {
                          <GridItem xs={12} sm={12} md={2}>
                                         <Dropdown style={{top:'-15px'}}>
                                                     <Dropdown.Toggle
-                                                    variant="secondary btn-sm"
+                                                    variant="warning btn-sm"
                                                     style={{
-                                                        width:'0%',
-
                                                         borderColor:'#fff',
                                                         backgroundColor:'#fff',
-                                                        borderRadius:'20%'}}>
+                                                        }}>
                                                     
                                                         <Avatar 
-                                                            size="50"
+                                                            size="30"
                                                             round={true}
                                                             src={im5}
                                                             name='logo'

@@ -68,7 +68,7 @@ const DashboardSupAdmin = () => {
     const [isAbonnementContent, setIsAbonnementContent] = useState(false);
     const [isAchatContent, setIsAchatContent] = useState(false);
     const [isApprenantContent, setIsApprenantContent] = useState(false);
-    const [isTuteurContent, setIsTuteurContent] = useState(true);
+    const [isTuteurContent, setIsTuteurContent] = useState(false);
     const [isPublicityContent, setIsPublicityContent] = useState(false);
     const [isAchatC, setIsAchatC] = useState(false);
     const [countBadge, setCountBadge] = useState(1);
@@ -609,16 +609,14 @@ function menuToggle(){
                          <GridItem xs={12} sm={12} md={2}>
                                         <Dropdown style={{top:'-15px'}}>
                                                     <Dropdown.Toggle
-                                                    variant="secondary btn-sm"
+                                                    variant="warning btn-sm"
                                                     style={{
-                                                        width:'0%',
-
                                                         borderColor:'#fff',
                                                         backgroundColor:'#fff',
-                                                        borderRadius:'20%'}}>
+                                                        }}>
                                                     
                                                         <Avatar 
-                                                            size="50"
+                                                            size="30"
                                                             round={true}
                                                             src={im5}
                                                             name='logo'

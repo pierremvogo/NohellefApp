@@ -23,6 +23,7 @@ import {NotificationManager,NotificationContainer} from 'react-notifications';
 //import io from 'socket.io-client';
 import Chat from "../../../app/components/chat/chat.jsx"
 import Adress from './adress.jsx';
+import userService from  '../../services/user.service'; 
 
 
 
@@ -51,10 +52,6 @@ const AdminContent = () => {
     const [isAdress, setIsAdress] = useState(false);
 
     useEffect(()=>{
-      /*socket.on('id', (status)=>{
-            setStatusConnection(status);
-            console.log("MYid",status);
-        })*/
         setPosts(data);
         return function cleanup () {
             return;
@@ -81,6 +78,33 @@ const AdminContent = () => {
     const handleCallback = (childData) =>{
            
          }
+
+    const getAdminUsers = () => {
+    let user =  {
+      "types": [
+        null
+      ],
+      "disponibility": {},
+      "specialities": [
+        "string"
+      ],
+      "levels": [
+        null
+      ],
+      "permissions": [
+        null
+      ],
+      "parentIds": [
+        "string"
+      ],
+      "status": [
+        null
+      ],
+      "emailConfirmed": true
+    }
+      userService.listAndFiltersUsers()
+
+    }
 
   const ModalChat = () => {
     return(

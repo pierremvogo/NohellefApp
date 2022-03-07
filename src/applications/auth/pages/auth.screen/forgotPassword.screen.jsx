@@ -100,6 +100,7 @@ const ForgotPassword = ({error,tokenPayload}) => {
    const onChangeForgotPassword = (e) => {
         setForgotPasswordForm({...forgotPasswordForm,  [e.target.name]: e.target.value })
         setFormErrors(validateForm(forgotPasswordForm));
+        dispatch(authgetResetTokenFailed(null));
         }
 
 
@@ -108,7 +109,6 @@ const ForgotPassword = ({error,tokenPayload}) => {
         setFormErrors(validateForm(forgotPasswordForm));
         if(Object.keys(formErrors).length === 0 && submited){
             setFormErrors({});
-            setErrorMessage(true);
             handleLoading(true);
             console.log("MY FORGOT PASSWORD FORM");
             console.log(forgotPasswordForm.email);
@@ -251,10 +251,10 @@ const ForgotPassword = ({error,tokenPayload}) => {
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={6}>
                                     
-                                    <div style={{cursor:'pointer',
+                                    <div onClick={onSubmit} style={{cursor:'pointer',
                                           margin:'20% 0% 5% 0%',
                                           textAlign:'center'}}>
-                                      <div onClick={onSubmit} style={{
+                                      <div  style={{
                                           backgroundColor: '#4b9960',
                                           borderRadius: '15px',
                                           borderBottom: '4px solid #002495',
@@ -275,7 +275,7 @@ const ForgotPassword = ({error,tokenPayload}) => {
                                     </GridItem>
                                     <GridItem xs={12} sm={12} md={6}>
                                     
-                                    <div style={{cursor:'pointer',
+                                    <div onClick={()=>{history.push("/")}} style={{cursor:'pointer',
                                           margin:'20% 0% 5% 0%',
                                           textAlign:'center'}}>
                                       <div style={{
@@ -292,7 +292,7 @@ const ForgotPassword = ({error,tokenPayload}) => {
                                           paddingTop:'8%'
                                         }}>
                                 
-                                <span className="text" onClick={()=>{history.push("/")}} style={{fontSize:'100%',color:'white'}}>Annuler</span>
+                                <span className="text"  style={{fontSize:'100%',color:'white'}}>Annuler</span>
                               </div>
                                     </div>
                                       
@@ -300,7 +300,7 @@ const ForgotPassword = ({error,tokenPayload}) => {
                                   </GridContainer>
                                   <GridContainer>
                           <GridItem xs={12} sm={12} md={12}>
-                            {errorMessage && error && (
+                            {error && (
                                     <div className="form-group">
                                     {error.data&&(<div className="alert alert-danger" style={{width:"50%",fontSize:'0.7em',margin:'0% 25% 0% 25%'}} role="alert">
                                                 {error.data.message}
