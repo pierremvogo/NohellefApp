@@ -18,6 +18,7 @@ import { authgetCodeAdminSuccess,authgetCodeAdminFailed,authSetLoginForm } from 
 import { getUserSuccess,getUserFailed } from '../../../redux/reducer/actions/users';
 import userService from '../../../services/user.service';
 import authService from '../../../services/auth.service'; 
+import adminService from '../../../services/admin.service'; 
 import './login.screen.css';
 import AskRegister from '../../../auth/pages/auth.screen/askRegister.jsx';
 import Loader from 'react-loader-spinner';
@@ -133,7 +134,7 @@ const LoginOthers = ({error,loginsForm,adminPayload}) => {
         if(Object.keys(formErrors).length === 0 && submited){
             dispatch(authSetLoginForm(loginForm));
             handleLoading(true,'login');
-            authService.loginAdmin(loginForm)
+            adminService.login(loginForm)
             .then((response) => {
                 handleLoading(false,'login'); 
                 dispatch(authgetCodeAdminFailed(null));

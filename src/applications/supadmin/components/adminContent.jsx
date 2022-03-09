@@ -437,7 +437,7 @@ const AdminContent = () => {
 
               {currentPosts.map((post,index)=>{
                 return(
-                  <tr>
+                  <tr key={index}>
                     
                     <td><Avatar 
                             size="45"

@@ -232,13 +232,13 @@ const ModalLoading = () => {
                                           id="oldPassword"
                                           type="text"
                                           name="oldPassword"                             
-                                          label="Votre Ancien Mot de passe"
+                                          label="Votre Nouveau Mot de passe"
                                       }
                                       else if(input==="newPassword"){
                                           id="newPassword"
                                           type="text"
                                           name="newPassword"                             
-                                          label="Votre Nouveau Mot de passe"
+                                          label="Confirmez Nouveau mot de passe"
                                       }
                                     return(
                                     <GridContainer>

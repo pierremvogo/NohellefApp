@@ -44,7 +44,7 @@ const AccountContent = ({error,user,updatePayload}) => {
             username:  user?user.currentUser.username:"",
             phoneNumber: user?user.currentUser.phoneNumber:"",
             city: user?user.currentUser.city:"",
-            address: user?user.currentUser.address:"",
+            email: user?user.currentUser.email:"",
             }
 
             )
@@ -367,7 +367,7 @@ const dispatch= useDispatch()
             birthDay: user&&user.currentUser.birthDay,
             phoneNumber: updateStudent.phoneNumber,
             city: updateStudent.city,
-            address: updateStudent.address,
+            address: user&&user.currentUser.address,
             bankCardNumber: user&&user.currentUser.paymentCards[0].bankCardNumber,
             bankCardExpirationDate: user&&user.currentUser.paymentCards[0].bankCardExpirationDate,
             bankCardCode: user&&user.currentUser.paymentCards[0].bankCardCode,
@@ -567,11 +567,11 @@ const dispatch= useDispatch()
                                           type="text"
                                           name="city"                            
                                           label="Ville"
-                                      }else if(input==='address'){
-                                          id="address"
+                                      }else if(input==='email'){
+                                          id="email"
                                           type="text"
-                                          name="address"                             
-                                          label="Adresse"
+                                          name="email"                             
+                                          label="Email"
                                       }
                                       return(
                                         
@@ -581,6 +581,7 @@ const dispatch= useDispatch()
                                             <span style={{marginRight:'0%'}}>
                                             <strong>{ label }</strong>
                                             <input 
+                                                disabled={input==="email"?true:false}
                                                 className='input_content' 
                                                 name={name}
                                                 onChange={handleChangeUpdate}

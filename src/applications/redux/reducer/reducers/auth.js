@@ -18,6 +18,7 @@ const INITIAL_STATE = user ?
                                 isShowMessage: false,
                                 confirmEmail: null,
                                 updatePayload: null,
+                                tutorCreateMessage: null,
                                 isRegister: false,
                                 loginsForm: null,
                                 registersForm: null,
@@ -31,6 +32,7 @@ const INITIAL_STATE = user ?
                                 changesForm: null,
                                 error: null,
                                 loginsForm: null,
+                                tutorCreateMessage: null,
                                 registersForm: null,
                                 confirmEmail: null,
                                 isRegister: false,
@@ -74,6 +76,7 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 loading: false,
                 isRegister: false,
                 isShowMessage: true,
+                tutorCreateMessage: null,
                 error: action.message
             }
         case types.LOGIN_SUCCESS:
@@ -96,7 +99,6 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 loading: false,
                 isShowMessage: true,
                 error: action.message,
-                user: null
             };
         case types.RESET_SUCCESS:
             return {
@@ -212,6 +214,18 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 updatePayload: null,
                 error: action.message,
+            };
+        case types.SHARE_USER:
+            return {
+                ...state,
+                user: action.payload,
+                error: null,
+            };
+        case types.CREATE_TUTOR_SUCCESS:
+            return {
+                ...state,
+                tutorCreateMessage: action.message,
+                error: null,
             };
         default:
             return state;

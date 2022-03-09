@@ -117,3 +117,12 @@ export const authUpdateSuccess = (payload) => ({
     payload
 });
 
+export const shareUser = (payload) => ({
+    type: types.SHARE_USER,
+    payload
+});
+
+export const authTutorCreateSuccess = (message) => ({
+    type: types.CREATE_TUTOR_SUCCESS,
+    message
+});

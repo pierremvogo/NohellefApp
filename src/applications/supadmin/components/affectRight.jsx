@@ -18,7 +18,7 @@ import Footer from "../../../app/components/footer/footer.jsx";
 import ins2 from '../../../assets/images/home/ins2.png';
 import Avatar   from 'react-avatar';
 
-const AffectRigth = ({error,adminName}) => {
+const AffectRigth = ({error,adminName,onChildCloseModal}) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     const [loginForm, setLoginForm] = useState({username: "", password: "", remember: false})
@@ -39,6 +39,10 @@ const AffectRigth = ({error,adminName}) => {
         setResetPasswordForm({...resetPasswordForm,  [e.target.name]: e.target.value })
         setformError(null)
     }
+
+    function closeModal(e){
+      onChildCloseModal(e.target.name);
+  }
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -73,7 +77,7 @@ const AffectRigth = ({error,adminName}) => {
 
                         <GridContainer>
                           <GridItem xs={12} sm={12} md={12}>
-                           
+                           <span className='close' style={{fontSize:'2%'}} onClick={(e)=>closeModal(e)}>&times;</span>
                           </GridItem>
                         </GridContainer>
 

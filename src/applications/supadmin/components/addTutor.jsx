@@ -17,17 +17,34 @@ import GridContainer from "../../../app/components/Grid/GridContainer.js";
 import Footer from "../../../app/components/footer/footer.jsx";
 import ins2 from '../../../assets/images/home/ins2.png';
 import Avatar   from 'react-avatar';
+import adminService from '../../services/admin.service';
+import Loader from 'react-loader-spinner';
+import {    authRegisterSuccess, 
+            authRegisterFailed, 
+            authShowMessage, 
+            authSetRegisterForm,
+            authTutorCreateSuccess } from '../../redux/reducer/actions/auth';
 
-const AddTutor = ({error}) => {
+const AddTutor = ({error,
+                    registersForm,
+                    onChildCloseModal,
+                    onchildOpenLoading,
+                    tutorCreateMessage}) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     const [registerTutorForm, setRegisterTutorForm] = useState(
-                        {
-                            name: "", 
-                            surname: "", 
+                        registersForm?registersForm:{
+                            firstName: "",
+                            lastName: "",
                             email: "",
-                            phone: "",
-                            macAddress: ""
+                            username: "",
+                            password: "",
+                            confirm_password:"",
+                            phoneNumber: "",
+                            city: "",
+                            birthDay: "",
+                            address: "",
+                            specialities: [""]
                         }   );
     const [errorMessage, setErrorMessage] = useState(false);
     const [isLoginForm, setIsLoginForm] = useState(true);
@@ -35,6 +52,8 @@ const AddTutor = ({error}) => {
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [resetPasswordForm,setResetPasswordForm] = useState({email: ""});
     const [tooltipOpen, setTooltipOpen] = useState(false)
+    const [showModalLoading, setShowModalLoading] = useState(false);
+    const [displayLoading, setDisplayLoading] = useState("flex");
     const history = useHistory()
     const dispatch= useDispatch()
 
@@ -43,27 +62,28 @@ const AddTutor = ({error}) => {
     const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const regexPassword = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
     const regexPhoneNumber = /^(\++237[\s.-]?)+\(?6[5-9]{1}[0-9]{1}[\s.-]?[0-9]{3}[\s.-]?([0-9]{3})\)?/;
+    const regexBirthDay = /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/;
 
     Object.keys(values).map((input,index)=>{
         switch(input) {
-            case 'name':
+            case 'firstName':
                 if(!values[input]){
-                    errorsValidation.name = "Le Nom est requis";
+                    errorsValidation.firstName = "Le Nom est requis";
 
                 }else if(values[input].length < 4){
-                    errorsValidation.name = "Le nom doit avoir au moins 4 lettres";
+                    errorsValidation.firstName = "Le nom doit avoir au moins 4 lettres";
                 }else{
-                    
+                    setSubmited(true);
                 }
                 break;
-            case 'surname':
+            case 'lastName':
                 if(!values[input]){
-                    errorsValidation.surname = "Le Prénom est requis";
+                    errorsValidation.lastName = "Le Prénom est requis";
 
                 }else if(values[input].length < 4){
-                    errorsValidation.surname = "Le Prénom doit avoir au moins 4 lettres";
+                    errorsValidation.lastName = "Le Prénom doit avoir au moins 4 lettres";
                 }else{
-                    
+                    setSubmited(true);
                 }
                 break;
             case 'email':
@@ -72,28 +92,70 @@ const AddTutor = ({error}) => {
                 }else if(!regexEmail.test(values[input])){
                     errorsValidation.email= "Adresse Email invalide";
                 }else{
-                    
+                    setSubmited(true);
                 }
                 break;
-            case 'phone':
+            case 'phoneNumber':
                 if(!values[input]){
-                    errorsValidation.phone = "Numero de Téléphone requis";
+                    errorsValidation.phoneNumber = "Numero de Téléphone requis";
                 }else if(values[input].length === 13 || values[input].length === 9 ){
                         if(!regexPhoneNumber.test(values[input])){
-                            errorsValidation.phone = "Numéro de Téléphone invalide";
+                            errorsValidation.phoneNumber = "Numéro de Téléphone invalide";
                         }else{
-                            
+                            setSubmited(true);
                         }
                 }
                 else{
-                   errorsValidation.phone = "Format de Numéro invalide"; 
+                   errorsValidation.phoneNumber = "Format de Numéro invalide"; 
                 }
                 break;
-            case 'macAddress':
+            case 'username':
                 if(!values[input]){
-                    errorsValidation.macAddress = "L'Adresse MAC est requise";
+                    errorsValidation.username = "Nom d'utilisateur requis";
+
+                }else if(values[input].length < 4){
+                    errorsValidation.username = "Nom d'utilisateur avec au moins 4 lettres";
                 }else{
-                    
+                    setSubmited(true);
+                }
+                break;
+             case 'birthDay':
+                if(!values[input]){
+                    errorsValidation.birthDay = "Date de naissance requise";
+                }else if(!regexBirthDay.test(values[input]) ){
+                    errorsValidation.birthDay = "Format invalide";
+                }else{
+                    setSubmited(true);     
+                }
+                break;
+            case 'specialities':
+                console.log("SPECIALITIES VALUES");
+                console.log(values);
+                console.log("SPECIALITIES VALUES");
+                for(var i of values[input]){
+                    if(!i){
+                        errorsValidation.specialities = "Spécialité Obligatoire";
+                    }else{
+                        setSubmited(true);     
+                   }
+                } 
+                break;
+            case 'password':
+                if(!values[input]){
+                    errorsValidation.password = "Le mot de passe est requis";
+                }else if(!regexPassword.test(values[input])){
+                    errorsValidation.password = "mot de passe avec au moins 8 caractères,une majuscule,une minuscule et un chiffre";
+                }else{
+                    setSubmited(true);
+                }
+                break;
+            case 'confirm_password':
+                if(!values[input]){
+                    errorsValidation.confirm_password = "Veuillez confirmer le mot de passe";
+                }else if(values['password'] != values[input]){
+                    errorsValidation.confirm_password = "Confirmation de mot de passe invalide";
+                }else{
+                    setSubmited(true);
                 }
                 break;
                 default:
@@ -105,14 +167,30 @@ const AddTutor = ({error}) => {
        return errorsValidation;       
   }
 
+  const handleLoading = (isShow) => {
+    onchildOpenLoading(isShow);
+  }
+
+  function closeModal(e){
+      dispatch(authTutorCreateSuccess(null));
+      onChildCloseModal(e.target.name);
+  }
+
     
 
     const onChangeRegisterTutor = (e) => {
-        setRegisterTutorForm({...registerTutorForm,  [e.target.name]: e.target.value });
+        setRegisterTutorForm({...registerTutorForm,  
+                                [e.target.name]: e.target.name==="specialities"?
+                                Array.from(e.target.selectedOptions, item => item.value):
+                                e.target.value });
         setFormErrors(validateForm(registerTutorForm));
-        console.log(registerTutorForm);
+        dispatch(authRegisterFailed(null)); 
+        dispatch(authSetRegisterForm(registerTutorForm));
+        console.log(registerTutorForm); 
+        }
+        
 
-    }
+    
 
     const onChangeResetPassword = (e) => {
         setResetPasswordForm({...resetPasswordForm,  [e.target.name]: e.target.value })
@@ -121,14 +199,64 @@ const AddTutor = ({error}) => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        setFormErrors(validateForm(registerTutorForm));
-        if (submited) { return } 
+        let tutorRegister = {
+                            firstName: registerTutorForm.firstName,
+                            lastName: registerTutorForm.lastName,
+                            email: registerTutorForm.email,
+                            username: registerTutorForm.username,
+                            password: registerTutorForm.password,
+                            phoneNumber: registerTutorForm.phoneNumber,
+                            city: registerTutorForm.city,
+                            birthDay: registerTutorForm.birthDay,
+                            address: registerTutorForm.address,
+                            userType: "2",
+                            specialities: registerTutorForm.specialities}
+                         
+       setFormErrors(validateForm(registerTutorForm));
+       if(Object.keys(formErrors).length === 0 && submited){
+            dispatch(authSetRegisterForm(registerTutorForm));
+            handleLoading(true);
+            console.log("form Tutor register");
+            console.log(tutorRegister);
+            adminService.createUser(tutorRegister)
+            .then((response) => {
+                    dispatch(authSetRegisterForm(null));
+                    dispatch(authRegisterFailed(null));
+                    dispatch(authTutorCreateSuccess("Tutor Created Successfully, an Email has been sent to him"));
+                    console.log("Response register tutor success");
+                    console.log(response.data);
+                    handleLoading(false);
+                    
+                   
+
+            })
+            .catch((error) => {
+                handleLoading(false);
+                console.log("Error  Register tutor");
+                if(error.response === undefined){
+                    dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                }else{
+                    dispatch(authRegisterFailed(error.response));
+                console.log(error.response);
+                
+                }
+            });
+        }
+        else{
+            dispatch(authRegisterFailed(null));
+            handleLoading(false);
+            return; 
+        }
         
-        setSubmited(true);
+       
     }
 	return(
 
-        <div style={{backgroundColor:'#ffce52',borderRadius:'25px 25px 25px 25px'}}>
+        <div style={{
+                backgroundColor:'#ffce52',
+                borderRadius:'25px 25px 25px 25px',
+                width: '50%',
+                }}>
                     <GridContainer>
                      <GridItem xs={12} sm={12} md={12}>
                         <GridContainer>
@@ -139,8 +267,19 @@ const AddTutor = ({error}) => {
                         </GridContainer>
 
                         <GridContainer>
+                          <GridItem xs={12} sm={12} md={12} style={{textAlign:'right'}}>
+                           <span style={{fontSize:'20px',cursor:'pointer', marginRight:'2%'}}  onClick={(e)=>closeModal(e)}>&times;</span>
+                          </GridItem>
+                        </GridContainer>
+                        <GridContainer>
                           <GridItem xs={12} sm={12} md={12}>
-                           
+                          
+                            {tutorCreateMessage&&
+                                (<div className="alert alert-success" style={{width:"100%",fontSize:'1em',textAlign:'center'}} role="alert">
+                                            {tutorCreateMessage}
+                                 </div>)
+                            }
+                          
                           </GridItem>
                         </GridContainer>
 
@@ -149,10 +288,10 @@ const AddTutor = ({error}) => {
                               <div style={{
                                 
                                 borderRadius:'25px 25px 25px 25px',
-                                width:'100%',
-                                height:'360px',
-                                backgroundColor:'#ffce52',
-                                margin:'5%',
+                                width:'90%',
+                                height:'100%',
+                                
+                                margin:'3%',
                                 padding:'2%'
                               }}>
                                 <GridContainer>
@@ -175,35 +314,103 @@ const AddTutor = ({error}) => {
                                   <GridContainer>
                                       {Object.keys(registerTutorForm).map((input,index)=>{
                                         let id,type,name,label
-                                        if(input==="name"){
-                                            id="name";
+                                        if(input==="firstName"){
+                                            id="firstName";
                                             type="text";
-                                            name="name";
+                                            name="firstName";
                                             label="Nom"
-                                        }else if(input==="surname"){
-                                            id="surname";
+                                        }else if(input==="lastName"){
+                                            id="lastName";
                                             type="text";
-                                            name="surname";
+                                            name="lastName";
                                             label="Prénom";
                                         }else if(input==="email"){
                                             id="email";
                                             type="email";
                                             name="email";
                                             label="Email";
-                                        }else if(input==="phone"){
-                                            id="phone";
+                                        }else if(input==="phoneNumber"){
+                                            id="phoneNumber";
                                             type="text";
-                                            name="phone";
+                                            name="phoneNumber";
                                             label="Téléphone";
                                         }
-                                        else if(input==="macAddress"){
-                                            id="macAddress";
+                                        else if(input==="username"){
+                                            id="username";
                                             type="text";
-                                            name="macAddress";
-                                            label="Adresse MAC";
+                                            name="username";
+                                            label="Nom d'utilisateur";
+                                        }
+                                        else if(input==="birthDay"){
+                                            id="birthDay";
+                                            type="text";
+                                            name="birthDay";
+                                            label="Date de Naissance";
+                                        }
+                                        else if(input==='address'){
+                                          id="address"
+                                          type="text"
+                                          name="address"                             
+                                          label="Adresse"
+                                        }
+                                        else if(input==='city'){
+                                          id="city"
+                                          type="text"
+                                          name="city"                             
+                                          label="Ville"
+                                        }
+                                        else if(input==="password"){
+                                          id="password"
+                                          type="password"
+                                          name="password"                             
+                                          label="Mot de passe"
+                                        }
+                                        else if(input==="confirm_password"){
+                                          id="confirm_password"
+                                          type="password"
+                                          name="confirm_password"                             
+                                          label="Confirmer mot de passe"
                                         }
                                         return(
-                                            <GridItem xs={12} sm={12} md={input==="macAddress"?12:6} key={index}>
+                                            <>
+                                            {input!="userType"?
+                                                input==="specialities"?
+                                                <GridItem xs={12} sm={6} md={4} key={index} style={{fontSize:'90%'}}>
+                                                Spécialités
+                                                    <div>
+                                                      <select 
+                                                         name="specialities" 
+                                                         onChange={onChangeRegisterTutor}
+                                                         value={registerTutorForm[input]}
+                                                         id="specialities"
+
+                                                         style={{
+                                                            width:'100%',
+                                                            height:'41px',
+                                                            border:`${
+                                                            input==="specialities"&&formErrors.specialities?'2px solid #C84941':
+                                                            '2px solid #002495'}`
+                                                            }}
+                                                            multiple>
+                                                        <option value="fr">Français</option>
+                                                        <option value="eng">Anglais</option>
+                                                        <option value="maths">Mathématiques</option>
+                                                        <option value="phy">Physiques</option>
+                                                        <option value="info">Informatique</option>
+                                                        <option value="ing">Science de l'ingénieur</option>
+                                                      </select>
+                                                      {formErrors && (
+                                                                    <div>
+                                                                        <div style={{color:"red",fontSize:"12px"}}>
+                                                                         {
+                                                                         input==="specialities"?formErrors.specialities:
+                                                                         ""}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                    </div>
+                                                </GridItem>
+                                            :<GridItem xs={6} sm={6} md={4} key={index} style={{fontSize:'90%'}}>
                                             {label}
                                               <div style={{margin:'0% 0% 5% 0%',width:'100%'}}>
                                                   <input 
@@ -215,11 +422,14 @@ const AddTutor = ({error}) => {
 
                                                     style={{
                                                         border:`${
-                                                        input==="name"&&formErrors.name?'2px solid #C84941':
-                                                        input==="surname"&&formErrors.surname?'2px solid #C84941':
+                                                        input==="firstName"&&formErrors.firstName?'2px solid #C84941':
+                                                        input==="lastName"&&formErrors.lastName?'2px solid #C84941':
                                                         input==="email"&&formErrors.email?'2px solid #C84941':
-                                                        input==="phone"&&formErrors.phone?'2px solid #C84941':
-                                                        input==="macAddress"&&formErrors.macAddress?'2px solid #C84941':
+                                                        input==="username"&&formErrors.username?'2px solid #C84941':
+                                                        input==="phoneNumber"&&formErrors.phoneNumber?'2px solid #C84941':
+                                                        input==="birthDay"&&formErrors.birthDay?'2px solid #C84941':
+                                                        input==="password"&&formErrors.password?'2px solid #C84941':
+                                                        input==="confirm_password"&&formErrors.confirm_password?'2px solid #C84941':
                                                         
                                                         '2px solid #002495'}`,
                                                         width:'100%',
@@ -235,19 +445,23 @@ const AddTutor = ({error}) => {
                                                                     <div>
                                                                         <div style={{color:"red",fontSize:"12px"}}>
                                                                          {
-                                                                         input==="name"?formErrors.name:
-                                                                         input==="surname"?formErrors.surname:
+                                                                         input==="firstName"?formErrors.firstName:
+                                                                         input==="lastName"?formErrors.lastName:
                                                                          input==="email"?formErrors.email:
-                                                                         input==="phone"?formErrors.phone:
-                                                                         input==="macAddress"?formErrors.macAddress:
-                                                                         
-                                                                         
+                                                                         input==="username"?formErrors.username:
+                                                                         input==="phoneNumber"?formErrors.phoneNumber:
+                                                                         input==="birthDay"?formErrors.birthDay:
+                                                                         input==="password"?formErrors.password:
+                                                                         input==="confirm_password"?formErrors.confirm_password:
+
                                                                          ""}
                                                                         </div>
                                                                     </div>
                                                                 )}
                                               </div>
-                                            </GridItem>
+                                            </GridItem>:""}
+                                            
+                                            </>
                                             )
                                       })}
                                   </GridContainer>
@@ -261,21 +475,35 @@ const AddTutor = ({error}) => {
                                       <div style={{
                                           backgroundColor: '#4b9960',
                                           borderRadius: '15px',
-                                          borderBottom: '5px solid #002495',
-                                          borderRight:  '5px solid #002495',
+                                          borderBottom: '3px solid #002495',
+                                          borderRight:  '3px solid #002495',
                                           borderTop: '1px solid #002495',
                                           borderLeft:  '1px solid #002495',
                                           height: '55px',
                                           width: '100%',
                                           cursor: 'pointer',
                                           textAlign:'center',
-                                          paddingTop:'3%'
+                                          paddingTop:'2%'
                                         }}>
                                 
-                                <span className="text" style={{fontSize:'1.2vw',color:'white'}}>Enregistrer</span>
+                                <span className="text" style={{fontSize:'100%',color:'white'}}>Enregistrer</span>
                               </div>
                                     </div>
                                       
+                                    </GridItem>
+                                  </GridContainer>
+                                  <GridContainer>
+                                    <GridItem xs={12} sm={12} md={12}>
+                                      {error && (
+                                            <div className="form-group">
+                                                {error.data&&(<div className="alert alert-danger" style={{width:"50%",fontSize:'0.7em',margin:'0% 25% 0% 25%'}} role="alert">
+                                                        {error.data.message}
+                                                </div>)}
+                                                {!error.data&&(<div className="alert alert-danger" style={{width:"50%",fontSize:'0.7em',margin:'0% 25% 0% 25%'}} role="alert">
+                                                        {error}
+                                                </div>)}
+                                            </div>
+                                        )}
                                     </GridItem>
                                   </GridContainer>
                                   </form>
@@ -293,4 +521,15 @@ const AddTutor = ({error}) => {
 			 </div>
 		)
 }
-export default AddTutor;
+const mapStateToProps=(state)=>{
+  return{
+      isLoggedIn: state.authReducer.isLoggedIn,
+      error: state.authReducer.error,
+      loading: state.authReducer.loading,
+      tutorCreateMessage: state.authReducer.tutorCreateMessage,
+      isShowMessage: state.authReducer.isShowMessage,
+      registersForm: state.authReducer.registersForm,
+      user: state.authReducer.user
+  };
+};
+export default connect(mapStateToProps)(AddTutor);

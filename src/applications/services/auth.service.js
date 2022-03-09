@@ -5,38 +5,24 @@ class AuthService {
     loginUser(payload) {
         return http.post("/auth/login", payload);
     }
-    loginAdmin(payload) {
-        return http.post("/admin/users/admin-login", payload);
-    }
-
-    confirmAdminLogin(code) {
-        return http.get(`/admin/users/confirm-admin-login/${code}`);
-    }
-
     registerUser(payload) {
         return http.post("/auth/register", payload);
     }
-
     activeAccount(token) {
         return http.get(`/auth/active-account/${token}`);
     }
-
     getForgotPasswordToken(email) {
         return http.get(`/auth/password-forgot/${email}`);
     }
-
     resetPassword(token,payload) {
         return http.patch(`/auth/reset-password/${token}`, payload);
     }
-
     changePassword(id,payload) {
         return http.patch(`/auth/change-password/${id}`, payload);
     }
-
     lockAccount(id) {
         return http.put(`/auth/lock-account/${id}`);
     }
-
     unLockAccount(id) {
         return http.put(`/auth/unlock-account/${id}`);
     }

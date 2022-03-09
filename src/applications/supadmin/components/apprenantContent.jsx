@@ -24,6 +24,7 @@ import chat from '../../../assets/images/dashboard/chat2.png';
 import {NotificationManager,NotificationContainer} from 'react-notifications';
 //import io from 'socket.io-client';
 import Chat from "../../../app/components/chat/chat.jsx"
+import adminService from '../../services/admin.service';
 
 
 //const socket = io.connect("http://localhost:3001");
@@ -49,11 +50,9 @@ const ApprenantContent = () => {
      const [statusConnection,setStatusConnection] = useState(false);
 
   useEffect(()=>{
-    /*socket.on('id', (status)=>{
-            setStatusConnection(status);
-            console.log("MYid",status);
-        })*/
+    getListStudent();
     setPosts(data);
+
     return function cleanup () {
             return;
         }
@@ -67,8 +66,45 @@ const ApprenantContent = () => {
       setDisplayAsk("flex",setShowChatModal(true),setRemoteUsername(nameUser));
     }
     
+  const getListStudent = () => {
+    let filterPayload = {
+      types: [
+              "0"
+             ],
+      disponibility: {},
+      specialities: [
+                      ""
+                    ],
+      levels: [
+                null
+              ],
+      permissions: [
+                    null
+                   ],
+      parentIds: [
+                  ""
+                 ],
+      status: [
+                null
+              ],
+      emailConfirmed: true
 
-const handleChange = (checked) => {
+    }
+
+    adminService.listAndFiltersUsers(filterPayload)
+    .then((response) => {
+              console.log("Successful get Student User");
+              console.log(response);
+
+            })
+            .catch((error) => {
+              console.log("Error get Student user");
+              console.log(error);
+            });
+
+  }  
+
+  const handleChange = (checked) => {
     setChecked(checked)
   }
 
@@ -265,7 +301,7 @@ const handleChange = (checked) => {
 
               {currentPosts.map((post,index)=>{
                 return(
-                  <tr>
+                  <tr key={index}>
                     
                     <td><Avatar 
                                                 size="45"

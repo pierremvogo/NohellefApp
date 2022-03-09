@@ -58,6 +58,7 @@ import RegisterStudent from '../../../auth/pages/auth.screen/registerStudent.jsx
 import RegisterParent from '../../../auth/pages/auth.screen/registerParent.jsx';
 import PartialLogin from '../../../auth/pages/auth.screen/partialLogin.jsx';
 import Pagination from '../../component/pagination.jsx';
+import { shareUser } from '../../../redux/reducer/actions/auth';
 
 //#273941
 const Home = ({user}) => {
@@ -93,11 +94,12 @@ const Home = ({user}) => {
 
 
     useEffect(()=>{
+        dispatch(shareUser(user&&user));
         setPosts(data);
         let phoneScreen = window.matchMedia("(max-width: 768px)");
-       let tabletScreen = window.matchMedia("(max-width: 992px) and (min-width: 780px)");
-       let laptopScreen = window.matchMedia("(max-width: 1200px) and (min-width: 992px)");
-       let desktopScreen = window.matchMedia("(min-width: 1200px)");
+        let tabletScreen = window.matchMedia("(max-width: 992px) and (min-width: 780px)");
+        let laptopScreen = window.matchMedia("(max-width: 1200px) and (min-width: 992px)");
+        let desktopScreen = window.matchMedia("(min-width: 1200px)");
 
        responsiveHome("phone",phoneScreen);
        responsiveHome("tablet",tabletScreen);
@@ -615,6 +617,10 @@ const ModalPartialLogin = () => {
     dispatch(authSetRegisterForm(null));
     dispatch(authSetLoginForm(null));
     dispatch(authLoginFailed(null));
+
+    if(user){
+
+    }
 
     if(content == 'home'){
     setShowRegisterStudentModal(false,

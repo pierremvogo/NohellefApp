@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect } from 'react';
-
+import { useHistory } from 'react-router-dom';
 import Avatar   from 'react-avatar';
 import Button from '../../../../app/components/buttons/button';
 import { ProSidebar, SidebarHeader, SidebarFooter, SidebarContent } from 'react-pro-sidebar';
@@ -75,7 +75,7 @@ const DashboardSupAdmin = () => {
     const [showBadge, setShowBadge] = useState(false);
 
     const [isFormule, setIsFormule] = useState(false);
-
+    const history = useHistory();
 
     useEffect(()=>{
         var element1 = document.getElementById("myDiv1");
@@ -110,6 +110,40 @@ const DashboardSupAdmin = () => {
             return;
         }
     },[])
+    const handlerAccount = () => {
+        element.style.backgroundColor = "#dd1b16";
+            setIsTuteurContent(false,
+                    setIsAbonnementContent(false),
+                    setIsAchatContent(true),
+                    setIsAdminContent(false),
+                    setIsApprenantContent(false),
+                    setIsPublicityContent(false),
+                    setIsAchatC(false),
+                    setIsFormule(false),)
+            let element = document.getElementById("myDiv8");
+            element.style.backgroundColor = "#dd1b16";
+            let tab = [
+                document.getElementById('myDiv1'),
+                document.getElementById('myDiv2'),
+                document.getElementById('myDiv3'),
+                document.getElementById('myDiv4'),
+                document.getElementById('myDiv5'),
+                document.getElementById('myDiv6'),
+                document.getElementById('myDiv7'),
+            ]
+            for(var i of tab){
+                i.style.backgroundColor = ""
+            }
+  }
+  const disconnectUser = () => {
+    localStorage.removeItem("user");
+    window.location.reload();
+    return false;
+   }
+   const goToHome = () => {
+    history.push("/");
+    window.location.reload();
+    return false;   }
 
 
 function menuToggle(){
@@ -362,6 +396,7 @@ function menuToggle(){
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
+                document.getElementById('dash5'),
                 
             ]
             for(var i of tab){
@@ -378,6 +413,7 @@ function menuToggle(){
                 document.getElementById('dash1'),
                 document.getElementById('dash3'),
                 document.getElementById('dash4'),
+                document.getElementById('dash5'),
                 
             ]
             for(var i of tab){
@@ -394,6 +430,7 @@ function menuToggle(){
                 document.getElementById('dash1'),
                 document.getElementById('dash2'),
                 document.getElementById('dash4'),
+                document.getElementById('dash5'),
                 
             ]
             for(var i of tab){
@@ -410,6 +447,24 @@ function menuToggle(){
                 document.getElementById('dash1'),
                 document.getElementById('dash2'),
                 document.getElementById('dash3'),
+                document.getElementById('dash5'),
+               
+            ]
+            for(var i of tab){
+                i.style.borderRadius = ""
+                i.style.width = ""
+                i.style.border = ""
+            }
+        }
+        else if(id=="dash5"){
+            element.style.borderRadius = "3px 3px 3px 3px";
+            element.style.width = "100%";
+            element.style.border = "2px solid #DD1B16";
+            let tab = [
+                document.getElementById('dash1'),
+                document.getElementById('dash2'),
+                document.getElementById('dash3'),
+                document.getElementById('dash4'),
                
             ]
             for(var i of tab){
@@ -625,13 +680,19 @@ function menuToggle(){
 
                                                     <Dropdown.Menu style={{backgroundColor:'#F8D04E',borderRadius:'10%'}}>
                                                         <Dropdown.Item href="#" >
-                                                            <div style={{marginBottom:'5%'}}>
+                                                            <div style={{marginBottom:'5%'}} onClick={()=>goToHome()}>
+                                                                   
+                                                                    <u>Acceuil</u>
+                                                            </div>
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item href="#" >
+                                                            <div style={{marginBottom:'5%'}} onClick={handlerAccount}>
                                                                     <img src={acc} width='15%'/>
                                                                     <u>Mon compte</u>
                                                             </div>
                                                         </Dropdown.Item>
                                                         <Dropdown.Item href="#">
-                                                            <div>
+                                                            <div onClick={()=>disconnectUser()}>
                                                                 <img src={dic} width='15%'/>
                                                                 <u>Se déconnecter</u>
                                                             </div>

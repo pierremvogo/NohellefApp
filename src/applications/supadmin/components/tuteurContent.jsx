@@ -29,6 +29,7 @@ import {NotificationManager,NotificationContainer} from 'react-notifications';
 //import io from 'socket.io-client';
 import Chat from "../../../app/components/chat/chat.jsx"
 import AffectRight from './affectRight.jsx';
+import Loader from 'react-loader-spinner';
 
 //const socket = io.connect("http://localhost:3001");
 const TuteurContent = () => {
@@ -52,6 +53,8 @@ const TuteurContent = () => {
     const [statusConnection,setStatusConnection] = useState(false);
     const [isAdd,setIsAdd] = useState(false);
     const [adminName, setAdminName] = useState('');
+    const [showModalLoading, setShowModalLoading] = useState(false);
+    const [displayLoading, setDisplayLoading] = useState("flex");
 
 
 	useEffect(()=>{
@@ -82,6 +85,44 @@ const TuteurContent = () => {
       setShowEditModal(true,setDisplayAsk("flex"));
     }
 
+    const ModalLoading = () => {
+    
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            display: displayLoading,
+            zIndex: "900000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+            <div
+                style={{
+                    width: "10%",
+                    height: "30%",
+                    zIndex: "300000",
+                    display: "flex",
+                    position: "absolute",
+                    top: "30%",
+                    left: "48%"
+                }}
+                >
+                <Loader type="Oval" color="#2BAD60" height="100" width="70" />
+            </div>
+          
+      </div>
+    )
+  };
+  const handleLoading = (isShow) => {
+    setShowModalLoading(isShow);
+  }
+
     const ModalContentEdit  = () => {
     return(
       <div className="modal-content" id='cont'
@@ -90,7 +131,7 @@ const TuteurContent = () => {
             height: "100%",
             justifyContent: "center",
             display: displayAsk,
-            //alignItems: "center",
+            alignItems: "center",
             zIndex: "300000",
             position: "absolute",
             overflow: "hidden",
@@ -100,13 +141,13 @@ const TuteurContent = () => {
             left:"0px",
             }}
       >
-           <div className="contain" id='myContain'>
-                <div style={{display:'inline-block', margin:'0% 30% 0% 30%', fontSize:'100%',width:'35%'}}>
-                    <span className='close' onClick={()=>closeModal()}>&times;</span>
-                    {isAdd?<AddTutor />:<AffectRight adminName={adminName}/>}  
-                </div>
+           
+                    
+        {isAdd?<AddTutor onChildCloseModal={closeModal} onchildOpenLoading={handleLoading} />:
+        <AffectRight onChildCloseModal={closeModal} adminName={adminName}/>}  
                
-            </div>
+               
+           
           
       </div>
     )
@@ -375,7 +416,7 @@ const TuteurContent = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 	return(
 			<div className="container" style={{margin:'5% 0% 0% 0%'}}>
-
+       {showModalLoading? <ModalLoading />: ''}
 			 {showEditModal? <ModalContentEdit /> :'' } 
        {showChatModal? <ModalChat  />  : ''}
 			 <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
@@ -450,7 +491,7 @@ const TuteurContent = () => {
 
               {currentPosts.map((post,index)=>{
                 return(
-                  <tr>
+                  <tr key={index}>
                     
                     <td><Avatar 
                             size="45"

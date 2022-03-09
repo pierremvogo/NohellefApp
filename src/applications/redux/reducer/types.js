@@ -40,5 +40,10 @@ export const types =  {
     UPDATE_SUCCESS: 'UPDATE_SUCCESS',
     UPDATE_FAILED: ' UPDATE_FAILED',
 
+    SHARE_USER: 'SHARE_USER',
+
+    CREATE_TUTOR_SUCCESS: 'CREATE_TUTOR_SUCCESS',
+    
+
     
 };

@@ -18,6 +18,7 @@ import Avatar   from 'react-avatar';
 import './login.screen.css';
 import { authConfirmEmailSuccess,authConfirmEmailFailed } from '../../../redux/reducer/actions/auth';
 import authService from '../../../services/auth.service'; 
+import adminService from '../../../services/admin.service'; 
 import Loader from 'react-loader-spinner';
 
 const ConfirmEmail = ({error,confirmEmail}) => {
@@ -145,7 +146,7 @@ const ModalLoading = () => {
                 dispatch(authConfirmEmailFailed(error.response));
                 }
             })):
-            (authService.confirmAdminLogin(code)
+            (adminService.confirmLogin(code)
             .then((response) => {
                     dispatch(authConfirmEmailFailed(null));
                     dispatch(authConfirmEmailSuccess(response.data.message));
@@ -160,6 +161,7 @@ const ModalLoading = () => {
                     handleLoading(false);
                     history.push(response.data.redirect);
                     window.location.reload();
+                    return;
                     
                 
 
