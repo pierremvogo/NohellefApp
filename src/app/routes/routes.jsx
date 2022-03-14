@@ -21,6 +21,10 @@ const ForgotPassword = lazy(() => import('../../applications/auth/pages/auth.scr
 const ResetPassword = lazy(() => import('../../applications/auth/pages/auth.screen/resetPassword.screen.jsx'));
 const ConfirmEmail = lazy(() => import('../../applications/auth/pages/auth.screen/confirmEmail.jsx'));
 const ConfirmChangeEmail = lazy(() => import('../../applications/auth/pages/auth.screen/confirmChangeEmail.jsx'));
+
+const RegisterStudent = lazy(() => import('../../applications/auth/pages/auth.screen/registerStudent.jsx'));
+const RegisterParent = lazy(() => import('../../applications/auth/pages/auth.screen/registerParent.jsx'));
+
 //import VideoChat from '../../applications/videoChat/pages/videoChat.screen/videoChat.screen.jsx';
 
 
@@ -118,8 +122,26 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
 
                     <Route 
                         exact
+                        component={Login}
+                        path={ROUTES.LOGIN} 
+                    />
+
+                    <Route 
+                        exact
                         component={RegisterSupAdmin}
                         path={ROUTES.REGISTER_SUPADMIN} 
+                    />
+
+                    <Route 
+                        exact
+                        component={RegisterStudent}
+                        path={ROUTES.REGISTER_STUDENT} 
+                    />
+
+                    <Route 
+                        exact
+                        component={RegisterParent}
+                        path={ROUTES.REGISTER_PARENT} 
                     />
 
                     <Route 

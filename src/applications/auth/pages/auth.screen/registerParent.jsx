@@ -18,19 +18,19 @@ import mpay from '../../../../assets/images/dashboard/mpay.png';
 import divid from '../../../../assets/images/dashboard/divid.png'
 import GridContainer from "../../../../app/components/Grid/GridContainer.js";
 import Footer from "../../../../app/components/footer/footer.jsx";
+import CustomDatePicker from "../../../../app/components/DatePicker/datePicker.js";
 import Avatar   from 'react-avatar';
 import Select from 'react-select';
 import ReactTooltip from 'react-tooltip';
 import { authRegisterSuccess, authRegisterFailed, authShowMessage, authSetRegisterForm } from '../../../redux/reducer/actions/auth';
 import authService from '../../../services/auth.service'; 
+import Loader from 'react-loader-spinner';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 const RegisterParent = ({error,
                          user,
                          registersForm,
-                         onChildCloseModal,
-                         onChildLoading,
-                         onChildClickLogin,
-                         onChildLoginNewUser
                          }) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
@@ -46,15 +46,17 @@ const RegisterParent = ({error,
             password:"",
             confirm_password:"",
             numCardNumber:"",
-            cardExpireMonth:"1",
+            cardExpireMonth:"",
             cardExpireYear:"",
             cardCode:""})
+    const [startDate, setStartDate] = useState(new Date());
     const [isLoginForm, setIsLoginForm] = useState(true);
     const [formErrors, setFormErrors] = useState({});
-   
+    const [displayAsk, setDisplayAsk] = useState("flex");
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [resetPasswordForm,setResetPasswordForm] = useState({email: ""});
     const [tooltipOpen, setTooltipOpen] = useState(false);
+     const [showModalLoading, setShowModalLoading] = useState(false);
     const [sm,setSm] = useState(12);
     const [md, setMd] = useState(4);
     const history = useHistory()
@@ -63,19 +65,66 @@ const RegisterParent = ({error,
     useEffect(()=>{
 
     },[])
-    const clickHandlerCloseModal=(e)=>{
-            onChildCloseModal(e.target.name);
+
+
+    const ModalLoading = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "10000%",
+            display: displayAsk,
+            zIndex: "900000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+            <div
+                style={{
+                    width: "10%",
+                    height: "30%",
+                    zIndex: "300000",
+                    display: "flex",
+                    position: "fixed",
+                    top: "35%",
+                    left: "44%"
+                }}
+                >
+               
+                    <Loader type="Oval" color="#2BAD60" height="100" width="70" />
+                
+            </div>
+          
+      </div>
+    )
+  };
+  const onChangeDate = (date) => {
+        setStartDate(date);
+        date = formatDate(date);
+        console.log("MY DATE PICKER");
+        registerParent.birthDay = date;
+        console.log(date);
     }
-    
-    const clickHandlerConnectModal=(e)=>{
-        onChildClickLogin(e.target.name);
+
+    function formatDate(date) {
+        var month = '' + (date.getMonth() + 1),
+            day = '' + date.getDate(),
+            year = date.getFullYear();
+
+        if (month.length < 2) 
+            month = '0' + month;
+        if (day.length < 2) 
+            day = '0' + day;
+
+        return [year, month, day].join('-');
     }
-    const handleLoading = (isShow,type) => {
-        onChildLoading(isShow,type);
-    }
-    const loginNewUser = (e) => {
-        onChildLoginNewUser(e);
-    }
+  const handleLoading = (isShow) => {
+    setShowModalLoading(isShow);
+  }
     
     const options = [
     { value: 'chocolate', label: 'Niveau1' },
@@ -86,7 +135,7 @@ const RegisterParent = ({error,
     const errorsValidation = {};
     const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const regexPassword = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
-    const regexPhoneNumber = /^(\++237[\s.-]?)+\(?6[5-9]{1}[0-9]{1}[\s.-]?[0-9]{3}[\s.-]?([0-9]{3})\)?/;
+    const regexPhoneNumber = /^(\++[0-9]+[\s.-]?)?([0-9]+)+\)?/;
     const regexBirthDay = /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/;
     Object.keys(values).map((input,index)=>{
         switch(input) {
@@ -184,6 +233,13 @@ const RegisterParent = ({error,
                     setSubmited(true)
                 }
                 break;
+            case 'cardExpireMonth':
+                if(!values[input]){
+                    errorsValidation.cardExpireMonth = "Mois d'expiration requis";
+                }else{
+                    setSubmited(true)
+                }
+                break;
             case 'cardCode':
                 if(!values[input]){
                     errorsValidation.cardCode = "code requis pour votre carte";
@@ -206,6 +262,10 @@ const RegisterParent = ({error,
         dispatch(authSetRegisterForm(registerParent));
         console.log(registerParent);
     }
+    const handleCancel = () => {
+        dispatch(authSetRegisterForm(null));
+        history.push("/");
+    }
    const onSubmit = (e) => {
     e.preventDefault();
         let parentRegister = {
@@ -227,8 +287,7 @@ const RegisterParent = ({error,
         setFormErrors(validateForm(registerParent));
         if(Object.keys(formErrors).length === 0 && submited){
             dispatch(authSetRegisterForm(registerParent));
-
-            handleLoading(true,'rp');
+            handleLoading(true);
             console.log("form Parent register");
             console.log(parentRegister);
             authService.registerUser(parentRegister)
@@ -237,7 +296,7 @@ const RegisterParent = ({error,
                     dispatch(authRegisterFailed(response));
                     console.log("Response register parent  not success");
                     console.log(response);
-                    handleLoading(false,'rp'); 
+                    handleLoading(false); 
                 }else{
                     dispatch(authSetRegisterForm(null));
                     dispatch(authRegisterSuccess(response.data));
@@ -245,14 +304,14 @@ const RegisterParent = ({error,
 
                     console.log("Response register parent success");
                     console.log(response.data);
-                    handleLoading(false,'rp');
-                    loginNewUser(e);
+                    handleLoading(false);
+                    history.push("/?query=l");
                     
                 }   
 
             })
             .catch((error) => {
-                handleLoading(false,'rp');
+                handleLoading(false);
                 console.log("Error  Register parent");
                 if(error.response === undefined){
                     dispatch(authRegisterFailed("Network Error, possible you are not connected"));
@@ -265,18 +324,22 @@ const RegisterParent = ({error,
         }
         else{
             dispatch(authRegisterFailed(null));
-            handleLoading(false,'rp');
+            handleLoading(false);
             return; 
         }
     }
     return(
-
+        <div>
+        {showModalLoading? <ModalLoading />: ''}
         <div style={{backgroundColor:'#FBAB0D',
                      borderRadius:'25px 25px 25px 25px',
                      width:'50%',
-                     position: 'fixed'
+                     height:'100%',
+                     margin: '5% 5% 0% 25%',
+                     position: "relative"
                      
                      }}>
+                     {showModalLoading? <ModalLoading />: ''}
                     <GridContainer>
                      <GridItem xs={12} sm={12} md={12}>
                         <GridContainer>
@@ -300,16 +363,16 @@ const RegisterParent = ({error,
                                 width:'100%',
                                 height:'100%',
                                 backgroundColor:'#ffce52',
-                                padding:'1% 5% 2% 5%'
+                                padding:'1% 5% 5% 5%'
                                 
                               }}>
                                 <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                       
                                      <div style={{margin:'0% 0% 1% 0%',cursor:'pointer'}}>
-                                         <span style={{float:'left',marginRight:'2%'}} onClick={(e)=>clickHandlerConnectModal(e)}>Se connecter</span>
-                                         <span style={{color:'blue'}}><u>S'inscrire</u></span>
-                                         <span className='close' style={{float:'right', fontSize:'30px'}} onClick={(e)=>clickHandlerCloseModal(e)}>&times;</span>
+                                         <span style={{float:'left',marginRight:'2%'}} onClick={(e)=>history.push('/?query=login')}><u>Se connecter</u></span>
+                             
+                                         <span className='close' style={{float:'right', fontSize:'30px'}}></span>
                                      </div>
                                     </GridItem>
                                   </GridContainer>
@@ -402,18 +465,23 @@ const RegisterParent = ({error,
                                         {input!="numCardNumber"&&input!="cardExpireMonth"&&input!="cardExpireYear"&&input!="cardCode"?
                                         <div style={{width:'100%',cursor:'pointer', fontSize:'90%'}}>
                                             {label}
-                                         <input 
-                                            type={type} 
-                                            id={id}
-                                            name={name} 
-                                            placeholder={input==="birthDay"?"YYYY-MM-DD":""}
-                                            value={registerParent[input]}
-                                            onChange={onChangeRegisterParent}
-                                            autoComplete="off"
+                                        {input==="birthDay"? 
+                                            <DatePicker
+                                                selected={startDate} 
+                                                onChange={(date) => onChangeDate(date)} 
+                                            />:
+                                            <input 
+                                                type={type} 
+                                                id={id}
+                                                name={name} 
+                                                placeholder={""}
+                                                value={registerParent[input]}
+                                                onChange={onChangeRegisterParent}
+                                                autoComplete="off"
 
 
-                                            style={{
-                                                border:`${
+                                                style={{
+                                                    border:`${
                                                         input==="name"&&formErrors.name?'2px solid #C84941':
                                                         input==="surname"&&formErrors.surname?'2px solid #C84941':
                                                         input==="email"&&formErrors.email?'2px solid #C84941':
@@ -426,7 +494,8 @@ const RegisterParent = ({error,
                                                         '2px solid #002495'}`,
                                                 width:'100%',
                                                 height:'40px'}}
-                                         />
+                                         />}
+                         
                                          
                                                                 {formErrors && (
                                                                     <div>
@@ -530,6 +599,15 @@ const RegisterParent = ({error,
                                                     <option value="novembre">Novembre</option>
                                                     <option value="decembre">Décembre</option>
                                                 </select>
+                                                 {formErrors && (
+                                                                    <div>
+                                                                        <div style={{color:"red",fontSize:"12px"}}>
+                                                                         {
+                                                                         input==="cardExpireMonth"?formErrors.cardExpireMonth:
+                                                                         ""}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
                                                 </div>: input==="cardExpireYear"?
                                                 <div style={{fontSize:'90%'}}>
                                                   Année d'expiration
@@ -601,10 +679,10 @@ const RegisterParent = ({error,
                                   </GridContainer>
 
                                   <GridContainer>
-                                    <GridItem xs={12} sm={12} md={12}>
+                                    <GridItem xs={12} sm={6} md={6}>
                                     
                                     <div onClick={onSubmit} style={{cursor:'pointer',
-                                          margin:'5% 20% 0% 20%',
+                                          margin:'5% 0% 0% 0%',
                                           textAlign:'center'}}>
                                       <div style={{
                                           backgroundColor: '#4285f4',
@@ -626,6 +704,31 @@ const RegisterParent = ({error,
                                     </div>
                                       
                                     </GridItem>
+
+                                     <GridItem xs={12} sm={6} md={6}>
+                                    
+                                    <div onClick={handleCancel} style={{cursor:'pointer',
+                                          margin:'5% 0% 0% 0%',
+                                          textAlign:'center'}}>
+                                      <div style={{
+                                          backgroundColor: '#4285f4',
+                                          borderRadius: '15px',
+                                          borderBottom: '3px solid #ff3838',
+                                          borderRight:  '3px solid #ff3838',
+                                          borderTop: '1px solid #ff3838',
+                                          borderLeft:  '1px solid #ff3838',
+                                          height: '55px',
+                                          width: '100%',
+                                          cursor: 'pointer',
+                                          textAlign:'center',
+                                          paddingTop:'2%'
+                                        }}>
+                                
+                                <span className="text" style={{fontSize:'20px',color:'white'}}>Annuler</span>
+                              </div>
+                                    </div>
+                                      
+                                    </GridItem>
                                   </GridContainer>
                                   
                     
@@ -639,6 +742,7 @@ const RegisterParent = ({error,
 
                     </GridContainer>
                     
+             </div>
              </div>
         )
 }

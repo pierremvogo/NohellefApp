@@ -3,6 +3,8 @@ const ROUTES = {
     LOGIN : "/auth/login",
     LOGIN_OTHERS : "/login/adm-tutor",
     REGISTER_SUPADMIN : "/auth/sup/admin/register",
+    REGISTER_STUDENT : "/auth/student/register",
+    REGISTER_PARENT : "/auth/parent/register",
     FORGOT_PASSWORD : "/auth/forgot",
     RESET_PASSWORD : "/reset-password",
     CONFIRM_EMAIL: "/active-account",

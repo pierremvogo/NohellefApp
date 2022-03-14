@@ -23,13 +23,13 @@ import {    authRegisterSuccess,
             authRegisterFailed, 
             authShowMessage, 
             authSetRegisterForm,
-            authTutorCreateSuccess } from '../../redux/reducer/actions/auth';
+            authCreateSuccess } from '../../redux/reducer/actions/auth';
 
 const AddTutor = ({error,
                     registersForm,
                     onChildCloseModal,
                     onchildOpenLoading,
-                    tutorCreateMessage}) => {
+                    createSuccessMessage}) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     const [registerTutorForm, setRegisterTutorForm] = useState(
@@ -172,7 +172,7 @@ const AddTutor = ({error,
   }
 
   function closeModal(e){
-      dispatch(authTutorCreateSuccess(null));
+      dispatch(authCreateSuccess(null));
       onChildCloseModal(e.target.name);
   }
 
@@ -185,7 +185,6 @@ const AddTutor = ({error,
                                 e.target.value });
         setFormErrors(validateForm(registerTutorForm));
         dispatch(authRegisterFailed(null)); 
-        dispatch(authSetRegisterForm(registerTutorForm));
         console.log(registerTutorForm); 
         }
         
@@ -222,7 +221,7 @@ const AddTutor = ({error,
             .then((response) => {
                     dispatch(authSetRegisterForm(null));
                     dispatch(authRegisterFailed(null));
-                    dispatch(authTutorCreateSuccess("Tutor Created Successfully, an Email has been sent to him"));
+                    dispatch(authCreateSuccess("Tutor Created Successfully, an Email has been sent to him"));
                     console.log("Response register tutor success");
                     console.log(response.data);
                     handleLoading(false);
@@ -274,9 +273,9 @@ const AddTutor = ({error,
                         <GridContainer>
                           <GridItem xs={12} sm={12} md={12}>
                           
-                            {tutorCreateMessage&&
+                            {createSuccessMessage&&
                                 (<div className="alert alert-success" style={{width:"100%",fontSize:'1em',textAlign:'center'}} role="alert">
-                                            {tutorCreateMessage}
+                                            {createSuccessMessage}
                                  </div>)
                             }
                           
@@ -526,7 +525,7 @@ const mapStateToProps=(state)=>{
       isLoggedIn: state.authReducer.isLoggedIn,
       error: state.authReducer.error,
       loading: state.authReducer.loading,
-      tutorCreateMessage: state.authReducer.tutorCreateMessage,
+      createSuccessMessage: state.authReducer.createSuccessMessage,
       isShowMessage: state.authReducer.isShowMessage,
       registersForm: state.authReducer.registersForm,
       user: state.authReducer.user

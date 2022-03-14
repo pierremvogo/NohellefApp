@@ -216,7 +216,7 @@ const Login = ({error,
                                       
                                      <div style={{margin:"0% 0% 10% 0%"}}>
                                          <span style={{color:'blue',margin:'5%'}}><strong>Connexion</strong></span>
-                                         <span className='close' style={{fontSize:"1.5em"}} onClick={()=>clickCloseModal('home')}>&times;</span>
+                                         <span className='close' style={{fontSize:"1.5em"}} onClick={()=>clickCloseModal()}>&times;</span>
                                      </div>
                                     </GridItem>
 

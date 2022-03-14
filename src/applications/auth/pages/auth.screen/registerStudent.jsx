@@ -20,26 +20,27 @@ import Avatar   from 'react-avatar';
 import Select from 'react-select';
 import ReCAPTCHA from "react-google-recaptcha";
 import ReactTooltip from 'react-tooltip';
+import CustomDatePicker from "../../../../app/components/DatePicker/datePicker.js";
 import { authRegisterSuccess,
          authRegisterFailed,
          authShowMessage,
+         authSetLoginForm,
          authSetRegisterForm } from '../../../redux/reducer/actions/auth';
 import { getUserSuccess,getUserFailed } from '../../../redux/reducer/actions/users';
 import authService from '../../../services/auth.service'; 
+import Loader from 'react-loader-spinner';
+import PartialLogin from '../../../auth/pages/auth.screen/partialLogin.jsx';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 const RegisterStudent = ({  error,
                             user,
                             registersForm,
-                            onChildCloseModal,
-                            onChildLoading,
-                            onChildClickLogin,
-                            onChildRequireParent,
-                            onChildLoginNewUser
                             }) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     
-   const [registerStudent, setRegisterStudent] = useState(registersForm?registersForm:
+    const [registerStudent, setRegisterStudent] = useState(registersForm?registersForm:
            {confirm_age:false, 
             level:"",
             name:"",
@@ -59,16 +60,22 @@ const RegisterStudent = ({  error,
             cardCode:"",
             check_Condition:false});
     const [isLoginForm, setIsLoginForm] = useState(true);
+     const [datePick, setDatePick] = useState("");
     const [formErrors, setFormErrors] = useState({});
-
+    const [showModalPartial, setShowModalPartial] = useState(false);
+    const [studentRegist, setStudentRegist] = useState({});
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [resetPasswordForm,setResetPasswordForm] = useState({email: ""});
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [checkboxAge, setCheckboxAge] = useState(false);
     const [checkboxCondition, setCheckboxCondition] = useState(false);
+    const [showModalLoading, setShowModalLoading] = useState(false);
+    const [displayAsk, setDisplayAsk] = useState("flex");
+    const [startDate, setStartDate] = useState(new Date());
     const history = useHistory()
     const dispatch= useDispatch()
     const inputRef = useRef(null);
+
 
     useEffect(()=>{
         console.log(formErrors);
@@ -76,28 +83,120 @@ const RegisterStudent = ({  error,
         console.log(registerStudent);
     }
     },[formErrors]);
+
+
+    const onChangeDate = (date) => {
+        setStartDate(date);
+        date = formatDate(date);
+        console.log("MY DATE PICKER");
+        registerStudent.birthDay = date;
+        console.log(date);
+    }
+
+    function formatDate(date) {
+        var month = '' + (date.getMonth() + 1),
+            day = '' + date.getDate(),
+            year = date.getFullYear();
+
+        if (month.length < 2) 
+            month = '0' + month;
+        if (day.length < 2) 
+            day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
     
-    const clickHandlerCloseModal=(e)=>{
-        onChildCloseModal(e.target.name);
-    }
-    const clickHandlerConnectModal=(e)=>{
-        onChildClickLogin(e.target.name);
-    }
-    const clickHandlerRequireParent=(student)=>{
-        onChildRequireParent(student);
-    }
-    const handleLoading = (isShow,result,type) => {
-        onChildLoading(isShow,result,type);
-    }
-    const loginNewUser = (e) => {
-        onChildLoginNewUser(e.target.name);
-    }
+  const ModalPartialLogin = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "transparent",
+            top:"0px",
+            left:"0px",
+            bottom:'0px',
+            right:'0'
+            }}
+      >
+            <div className="containlog" id='myContain'>
+                <div style={{display:'inline-block', fontSize:'100%', width:'100%'}}>
+                    <span className='close' style={{fontSize:'30px'}} onClick={(e)=>closeModal(e)}>&times;</span>
+                    <PartialLogin  
+                            onChildLoading={handleLoading} 
+                            onChildCloseModal={closeModal}
+                            studentForRegister={studentRegist} />
+                </div>
+                
+            </div>
+          
+      </div>
+    )
+  };
+   
+   const closeModal = (e) => {
+    dispatch(authSetLoginForm(null));
+    setShowModalPartial(false);
+   }
+
+     const ModalLoading = () => {
+    
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "10000%",
+            display: displayAsk,
+            zIndex: "900000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            right:"0px",
+            bottom:"0px",
+            }}
+      >
+            <div
+                style={{
+                    width: "10%",
+                    height: "30%",
+                    zIndex: "300000",
+                    display: "flex",
+                    position: "fixed",
+                    top: "35%",
+                    left: "44%"
+                }}
+                >
+               
+                    <Loader type="Oval" color="#2BAD60" height="100" width="70" />
+                
+            </div>
+          
+      </div>
+    )
+  };
+  const handleLoading = (isShow) => {
+    setShowModalLoading(isShow);
+  }
+
+  const handleCancel = () => {
+    dispatch(authSetRegisterForm(null));
+    history.push("/");
+  }
      
     const validateForm = (values) => {
     const errorsValidation = {};
     const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const regexPassword = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
-    const regexPhoneNumber = /^(\++237[\s.-]?)+\(?6[5-9]{1}[0-9]{1}[\s.-]?[0-9]{3}[\s.-]?([0-9]{3})\)?/;
+    const regexPhoneNumber = /^(\++[0-9]+[\s.-]?)?([0-9]+)+\)?/;
     const regexBirthDay = /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/;
     Object.keys(values).map((input,index)=>{
         switch(input) {
@@ -267,10 +366,10 @@ const RegisterStudent = ({  error,
     }
         setFormErrors(validateForm(registerStudent));
         if(Object.keys(formErrors).length === 0 && submited){
+            if(registerStudent.check_Condition){
             dispatch(authSetRegisterForm(registerStudent));
-
             if(registerStudent.confirm_age){
-            handleLoading(true,'rs');
+            handleLoading(true);
             console.log("form Student register");
             console.log(studentRegister);
             authService.registerUser(studentRegister)
@@ -280,7 +379,7 @@ const RegisterStudent = ({  error,
 
                     console.log("Response register student  not success");
                     console.log(response);
-                    handleLoading(false,'rs'); 
+                    handleLoading(false); 
                     
                 }else{
                     dispatch(authRegisterFailed(null));
@@ -289,13 +388,13 @@ const RegisterStudent = ({  error,
 
                     console.log("Response register student success");
                     console.log(response.data);
-                    handleLoading(false,'rs');
-                    loginNewUser(e);
+                    handleLoading(false);
+                    history.push("/?query=l");
                     
                 } 
             })
             .catch((error) => {
-                handleLoading(false,'rs');
+                handleLoading(false);
                 console.log("Error  Register student");
                 if(error.response === undefined){
                     dispatch(authRegisterFailed("Network Error, possible you are not connected"));
@@ -305,22 +404,29 @@ const RegisterStudent = ({  error,
                 }
             });
         }else{
-            clickHandlerRequireParent(studentRegister);
+            setShowModalPartial(true,setStudentRegist(studentRegister));
         }
             
         }else{
+            dispatch(authRegisterFailed("Please Accept Terms and Conditions of confidentiality")) ;
+        }}else{
             dispatch(authRegisterFailed(null));
-            handleLoading(false,'rs');
+            handleLoading(false);
             return; 
         }
+            
         
     }
     return(
-
+        <div>
+        {showModalLoading? <ModalLoading />: ''}
+        {showModalPartial? <ModalPartialLogin />: ''}
         <div style={{backgroundColor:'#FBAB0D',
                      borderRadius:'25px 25px 25px 25px',
                      width:'50%',
-                     position: "fixed"
+                     height:'100%',
+                     margin: '2% 5% 0% 25%',
+                     position: "relative"
                      
                      }}>
                     <GridContainer>
@@ -341,16 +447,16 @@ const RegisterStudent = ({  error,
                                 width:'100%',
                                 height:'100%',
                                 backgroundColor:'#FBAB0D',
-                                padding:'1% 5% 2% 5%'
+                                padding:'1% 5% 5% 5%'
                                 
                               }}>
                                 <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                       
                                      <div style={{margin:'0% 0% 1% 0%',cursor:'pointer', fontSize:'100%'}}>
-                                         <span style={{float:'left',marginRight:'2%'}} onClick={(e)=>clickHandlerConnectModal(e)}>Se connecter</span>
-                                         <span style={{color:'blue'}}><u>S'inscrire</u></span>
-                                         <span className='close' style={{float:'right',fontSize:'30px'}} onClick={(e)=>clickHandlerCloseModal(e)}>&times;</span>
+                                         <span style={{float:'left',marginRight:'2%'}} onClick={(e)=>history.push('/?query=login')}><u>Se connecter</u></span>
+                     
+                                         <span className='close' style={{float:'right',fontSize:'30px'}}></span>
                                      </div>
                                     </GridItem>
                                   </GridContainer>
@@ -555,9 +661,13 @@ const RegisterStudent = ({  error,
                                                 onChange={onChange}
                                             />*/}
                                          </div>
-                                         : <div><input 
+                                         : <div>{input==="birthDay"?
+                                            <DatePicker
+                                                selected={startDate} 
+                                                onChange={(date) => onChangeDate(date)} 
+                                            /> : <input 
                                             type={type} 
-                                            placeholder={input==="birthDay"?"YYYY-MM-DD":""}
+                                            placeholder={""}
                                             id={id}
                                             name={name} 
                                             value={registerStudent[input]}
@@ -578,7 +688,7 @@ const RegisterStudent = ({  error,
                                                         '2px solid #002495'}`,
                                                 width:'100%',
                                                 height:'40px'}}
-                                            />
+                                            />}
 
                                         
                                                                 {formErrors && (
@@ -821,10 +931,10 @@ const RegisterStudent = ({  error,
                                   </GridContainer>
 
                                   <GridContainer>
-                                    <GridItem xs={12} sm={12} md={12}>
+                                    <GridItem xs={12} sm={6} md={6}>
                                     
                                     <div onClick={onSubmit} style={{cursor:'pointer',
-                                          margin:'0% 20% 0% 20%',
+                                          margin:'0% 0% 0% 0%',
                                           textAlign:'center'}}>
                                       <div style={{
                                           backgroundColor: '#5271ff',
@@ -845,6 +955,30 @@ const RegisterStudent = ({  error,
                                     </div>
                                       
                                     </GridItem>
+                                    <GridItem xs={12} sm={6} md={6}>
+                                    
+                                    <div onClick={handleCancel} style={{cursor:'pointer',
+                                          margin:'0% 0% 0% 0%',
+                                          textAlign:'center'}}>
+                                      <div style={{
+                                          backgroundColor: '#5271ff',
+                                          borderRadius: '15px',
+                                          borderBottom: '5px solid #002495',
+                                          borderRight:  '5px solid #002495',
+                                          borderTop: '1px solid #002495',
+                                          borderLeft:  '1px solid #002495',
+                                          height: '50px',
+                                          width: '100%',
+                                          cursor: 'pointer',
+                                          textAlign:'center',
+                                          paddingTop:'2%'
+                                        }}>
+                                
+                                <span className="text" style={{fontSize:'20px',color:'white'}}>Annuler</span>
+                              </div>
+                                    </div>
+                                      
+                                    </GridItem>
                                   </GridContainer>
 
                     
@@ -858,6 +992,7 @@ const RegisterStudent = ({  error,
 
                     </GridContainer>
                     
+             </div>
              </div>
         )
 }

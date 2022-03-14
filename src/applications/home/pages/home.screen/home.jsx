@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../../../../app/components/buttons/button';
 import {connect, useSelector,useDispatch} from 'react-redux';
-import { Link, Redirect, useHistory, useParams} from 'react-router-dom';
+import { Link, Redirect, useHistory, useLocation, useParams} from 'react-router-dom';
 /*import userService from '../../../services/user.service';
 import {authLogout} from '../../../auth/redux/reducer/actions/auth';
 import AuthLogin from '../../../auth/pages/auth.screen/auth_login';
@@ -73,7 +73,7 @@ const Home = ({user}) => {
     const [showModalPartial, setShowModalPartial] = useState(false);
     const [isRegister, setIsRegister] = useState(false);
     const [position, setPosition] = useState(0);
-
+    const [isHome, setIsHome] = useState("");
     const [studentForRegister, setStudentForRegister] = useState({});
     const [successMessage, setSuccessMessage] = useState("");
 
@@ -89,11 +89,19 @@ const Home = ({user}) => {
     const [posts, setPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [postPerPage] = useState(3);
-    
+
+    const search = useLocation().search;
+    const query = new URLSearchParams(search).get('query');
 
 
 
     useEffect(()=>{
+        if(query=="login"){
+            outPutEventConnexion();
+        }else if(query=="l"){
+            setIsRegister(true);
+            outPutEventConnexion();    
+        }
         dispatch(shareUser(user&&user));
         setPosts(data);
         let phoneScreen = window.matchMedia("(max-width: 768px)");
@@ -275,6 +283,7 @@ const Home = ({user}) => {
     }
 
     const outPutLogin=(e)=> {
+        setIsHome("");
         setShowRegisterStudentModal(false,
             setShowLoginModal(true),
             setShowAskModal(false),
@@ -617,13 +626,16 @@ const ModalPartialLogin = () => {
     dispatch(authSetRegisterForm(null));
     dispatch(authSetLoginForm(null));
     dispatch(authLoginFailed(null));
-
-    if(user){
-
-    }
-
-    if(content == 'home'){
+    history.push("/");
+    if(isHome == 'home'){
     setShowRegisterStudentModal(false,
+            setShowLoginModal(false),
+            setShowAskModal(false),
+            setShowModalLoading(false),
+            setShowModalPartial(false),
+            setShowRegisterParentModal(false))
+    }else if(content==="ask"){
+        setShowRegisterStudentModal(false,
             setShowLoginModal(false),
             setShowAskModal(false),
             setShowModalLoading(false),
@@ -642,6 +654,7 @@ const ModalPartialLogin = () => {
   }
 
     const outPutEventConnexion=(e)=> {
+        setIsHome("home");
         setShowRegisterStudentModal(false,
             setShowLoginModal(true),
             setShowAskModal(false),

@@ -66,8 +66,8 @@ const Header = ({
         }
     }
    
-    const clickHandlerConnexion=(e)=>{
-            onChildClickConnexion(e.target.name);
+    const clickHandlerConnexion=(isHome)=>{
+            onChildClickConnexion(isHome);
     }
     const history = useHistory();
 
@@ -204,7 +204,7 @@ const Header = ({
                                 width:'15%',
                                 fontSize: '1vw',
                                 padding:'2.5px'}} 
-                                onClick={(e)=>clickHandlerConnexion(e)}>Connexion</span>):
+                                onClick={()=>clickHandlerConnexion('home')}>Connexion</span>):
                             (<span className="nav-menu" style={{
                                 borderRadius:"5px 5px 5px 5px",
                                 textAlign:'center',

@@ -18,7 +18,8 @@ const INITIAL_STATE = user ?
                                 isShowMessage: false,
                                 confirmEmail: null,
                                 updatePayload: null,
-                                tutorCreateMessage: null,
+                                paymentRessource: null,
+                                createSuccessMessage: null,
                                 isRegister: false,
                                 loginsForm: null,
                                 registersForm: null,
@@ -30,9 +31,10 @@ const INITIAL_STATE = user ?
                                 isRestricted: false,
                                 changePayload: null,
                                 changesForm: null,
+                                paymentRessource: null,
                                 error: null,
                                 loginsForm: null,
-                                tutorCreateMessage: null,
+                                createSuccessMessage: null,
                                 registersForm: null,
                                 confirmEmail: null,
                                 isRegister: false,
@@ -221,10 +223,16 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 user: action.payload,
                 error: null,
             };
-        case types.CREATE_TUTOR_SUCCESS:
+        case types.CREATE_SUCCESS:
             return {
                 ...state,
-                tutorCreateMessage: action.message,
+                createSuccessMessage: action.message,
+                error: null,
+            };
+        case types.SHARE_PAYMENT_RESSOURCE:
+            return {
+                ...state,
+                paymentRessource: action.payload,
                 error: null,
             };
         default:

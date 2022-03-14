@@ -27,16 +27,14 @@ import AskRegister from '../../../auth/pages/auth.screen/askRegister.jsx';
 import ReactTooltip from 'react-tooltip';
 import Loader from 'react-loader-spinner';
 
+
 const PartialLogin = ({error,
-                      user,
+                       user,
                       loginsForm,
                       onChildLoading,
-                      loading,
-                      onChildPartialLogin,
                       onChildCloseModal,
-                      onChildSharedParentId,
                       studentForRegister,
-                      onChildLoginNewUser
+                      
                     }) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
@@ -60,23 +58,15 @@ const PartialLogin = ({error,
     }, [formErrors]);
 
   
-const clickHandlerRequireParent=(isShowPartial)=>{
-        onChildPartialLogin(isShowPartial);
-    }
-const closePartialModal=(e)=>{
+  const handleLoading = (isShow) => {
+    onChildLoading(isShow);
+  }
+  const closePartialModal = (e) => {
     onChildCloseModal(e.target.name);
-}
-const clickHandlerShareParentId=(parentId)=>{
-        onChildSharedParentId(parentId);
-    }
-const handleLoading = (isShow,type) => {
-        onChildLoading(isShow,type);
-    }
-const loginNewUser = (e) => {
-    onChildLoginNewUser(e.target.name);
-}
+  }
+  
 
-  const validateForm = (values) => {
+    const validateForm = (values) => {
     const errorsValidation = {};
     const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const regexPassword = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
@@ -132,7 +122,7 @@ const loginNewUser = (e) => {
                     dispatch(authRegisterFailed(response));
                     console.log("Response partial not success");
                     console.log(response);
-                    handleLoading(false,'rs'); 
+                    handleLoading(false); 
                   
                 }else{
                     dispatch(authRegisterFailed(null));
@@ -140,14 +130,14 @@ const loginNewUser = (e) => {
                     
                     console.log("Response partial success");
                     console.log(response);
-                    handleLoading(false,'rs');  
-                    loginNewUser(e);
+                    handleLoading(false);  
+                    history.push("/?query=l");
                      
                 }   
             })
             .catch((error) => {
                 dispatch(authRegisterFailed(error.response));
-                handleLoading(false,'rs');
+                handleLoading(false);
                 console.log("Error register partial");
                 console.log(error.response);
                
@@ -161,7 +151,7 @@ const loginNewUser = (e) => {
         setFormErrors(validateForm(loginForm));
         if(Object.keys(formErrors).length === 0 && submited){
             dispatch(authSetLoginForm(loginForm));
-            handleLoading(true,'rs');
+            handleLoading(true);
             console.log(loginForm);
             authService.loginUser(loginForm)
             .then((response) => {
@@ -174,7 +164,7 @@ const loginNewUser = (e) => {
                 
             })
             .catch((error) => {
-                handleLoading(false,'rs');
+                handleLoading(false);
                 console.log("Error Partial login");
                 if(error.response === undefined){
                     dispatch(authLoginFailed("Network Error, possible you are not connected"));
@@ -185,7 +175,7 @@ const loginNewUser = (e) => {
             });
         }else{
             dispatch(authLoginFailed(null));
-            handleLoading(false,'rs');
+            handleLoading(false);
             return; 
         }
     }

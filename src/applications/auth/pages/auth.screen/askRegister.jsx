@@ -74,9 +74,11 @@ const AskRegister = ({error,
 
 
      const clickHandlerStudentRegister=(e)=>{
+            changeStyle("myDiv1");
             onChildClickStudentRegister(e.target.name);
     }
     const clickHandlerParentRegister=(e)=>{
+            changeStyle("myDiv3")
             onChildClickParentRegister(e.target.name);
     }
 
@@ -192,9 +194,8 @@ const AskRegister = ({error,
                                     <GridItem xs={12} sm={12} md={12}>
                                       
                                      <div style={{margin:'2% 0% 5% 0%',cursor:'pointer'}}>
-                                         <span onClick={(e)=>clickHandlerLogin(e)} style={{float:'left',marginRight:'5%'}}>Se connecter</span>
-                                         <span onClick={(e)=>openRegisterUser(e)} style={{color:'blue'}}><u>S'inscrire</u></span>
-                                         <span className='close' style={{fontSize:"1.5em"}} onClick={()=>clickCloseModal('home')}>&times;</span>
+                                         <span onClick={(e)=>clickHandlerLogin(e)} style={{float:'left',marginRight:'5%'}}><u>Se connecter</u></span>
+                                         <span className='close' style={{fontSize:"1.5em"}} onClick={()=>clickCloseModal('ask')}>&times;</span>
                                      </div>
                                     </GridItem>
                                   </GridContainer>
@@ -209,7 +210,7 @@ const AskRegister = ({error,
 
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12} style={{margin:'0% 10% 1% 10%'}}>
-                                      <div className="side-content" id="myDiv1" onClick={()=>changeStyle('myDiv1')}>
+                                      <div className="side-content" id="myDiv1" onClick={()=>history.push('/auth/student/register')}>
                                             <div style={{padding:'3%',display:'inline-block'}}>
                                                 <img src={ask1} width='10%' />
                                                 <span className="text" style={{marginLeft:'25%'}}>Je suis Apprenant</span>
@@ -234,7 +235,7 @@ const AskRegister = ({error,
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12} style={{margin:'0% 10% 1% 10%'}}>
                                     
-                                     <div className="side-content" id="myDiv3" onClick={()=>changeStyle('myDiv3')}>
+                                     <div className="side-content" id="myDiv3" onClick={()=>history.push('/auth/parent/register')}>
                                             <div style={{padding:'3%',display:'inline-block'}}>
                                                <img src={ask3} width='10%' />
                                                <span className="text" style={{marginLeft:'30%'}}>Je suis Parent</span>
