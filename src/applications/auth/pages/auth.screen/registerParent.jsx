@@ -135,7 +135,7 @@ const RegisterParent = ({error,
     const errorsValidation = {};
     const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const regexPassword = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
-    const regexPhoneNumber = /^(\++[0-9]+[\s.-]?)?([0-9]+)+\)?/;
+    const regexPhoneNumber = /^(\++[0-9]{3}[\s.-]?)?([0-9]+)+\)?/;
     const regexBirthDay = /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/;
     Object.keys(values).map((input,index)=>{
         switch(input) {
@@ -181,15 +181,10 @@ const RegisterParent = ({error,
             case 'phone':
                 if(!values[input]){
                     errorsValidation.phone = "Numero de Téléphone requis";
-                }else if(values[input].length === 13 || values[input].length === 9 ){
-                        if(!regexPhoneNumber.test(values[input])){
-                            errorsValidation.phone = "Numéro de Téléphone invalide";
-                        }else{
-                             setSubmited(true)
-                        }
-                }
-                else{
-                   errorsValidation.phone = "Format de Numéro invalide"; 
+                }else if(!regexPhoneNumber.test(values[input])){
+                    errorsValidation.phone = "Numéro de Téléphone invalide";
+                }else{
+                     setSubmited(true)
                 }
                 break;
             case 'birthDay':
