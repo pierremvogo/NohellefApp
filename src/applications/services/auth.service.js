@@ -8,6 +8,9 @@ class AuthService {
     registerUser(payload) {
         return http.post("/auth/register", payload);
     }
+    activeAccountEmail(email) {
+        return http.get(`/auth/active-account-email/${email}`);
+    }
     activeAccount(token) {
         return http.get(`/auth/active-account/${token}`);
     }
@@ -21,13 +24,10 @@ class AuthService {
         return http.patch(`/auth/change-password/${id}`, payload);
     }
     lockAccount(id) {
-        return http.put(`/auth/lock-account/${id}`);
+        return http.patch(`/auth/lock-account/${id}`);
     }
     unLockAccount(id) {
-        return http.put(`/auth/unlock-account/${id}`);
-    }
-    adminCreateUser(payload) {
-        return http.put(`/admin/users/create-user`, payload);
+        return http.patch(`/auth/unlock-account/${id}`);
     }
 
 }

@@ -12,6 +12,7 @@ import smileauth from '../../../../assets/images/dashboard/smileauth.png';
 import logoImage from '../../../../assets/images/im10.png';
 import ins1 from '../../../../assets/images/home/ins1.png';
 import ins2 from '../../../../assets/images/home/ins2.png';
+import backRegister from '../../../../assets/images/backRegister.jpg';
 import mpay from '../../../../assets/images/dashboard/mpay.png';
 import divid from '../../../../assets/images/dashboard/divid.png';
 import GridContainer from "../../../../app/components/Grid/GridContainer.js";
@@ -358,6 +359,7 @@ const RegisterStudent = ({  error,
             parentId: "",
             birthDay: registerStudent.birthDay,
             userType: "0",
+            level: registerStudent.level,
     }
         setFormErrors(validateForm(registerStudent));
         if(Object.keys(formErrors).length === 0 && submited){
@@ -414,13 +416,14 @@ const RegisterStudent = ({  error,
     }
     return(
         <div>
+
         {showModalLoading? <ModalLoading />: ''}
         {showModalPartial? <ModalPartialLogin />: ''}
         <div style={{backgroundColor:'#FBAB0D',
                      borderRadius:'25px 25px 25px 25px',
                      width:'50%',
                      height:'100%',
-                     margin: '2% 5% 0% 25%',
+                     margin: '5% 5% 0% 25%',
                      position: "relative"
                      
                      }}>
@@ -528,13 +531,13 @@ const RegisterStudent = ({  error,
                                                             }}
                                                             >
                                                         <option value=""></option>
-                                                        <option value="sixieme">6ieme</option>
-                                                        <option value="cinquieme">5ieme</option>
-                                                        <option value="quatrieme">4ieme</option>
-                                                        <option value="troisieme">3ieme</option>
-                                                        <option value="seconde">2nd</option>
-                                                        <option value="premiere">1ere</option>
-                                                        <option value="terminale">Tle</option>
+                                                        <option value="0">6ieme</option>
+                                                        <option value="1">5ieme</option>
+                                                        <option value="2">4ieme</option>
+                                                        <option value="3">3ieme</option>
+                                                        <option value="4">2nd</option>
+                                                        <option value="5">1ere</option>
+                                                        <option value="6">Tle</option>
                                                       </select>
                                                       {formErrors && (
                                                                     <div>
@@ -718,177 +721,6 @@ const RegisterStudent = ({  error,
                                         )
                                         
                                       })} 
-                                  </GridContainer>
-
-
-
-
-
-
-
-                                   <GridContainer>
-                                    <GridItem xs={12} sm={12} md={12}>
-                                       <div style={{
-                                        margin:'0% 2% 0% 0%',
-                                        color:'blue',
-                                        fontSize:'1.5vw'}}><strong style={{marginRight:'2%'}}>Informations bancaire</strong>
-                                         <img src={mpay} width='5%'/>
-                                        </div>
-                                            
-                                    </GridItem>
-                                  </GridContainer>
-
-
-
-
-                                  <GridContainer>
-                                  {Object.keys(registerStudent).map((input,index)=>{
-                                    let id,label, type, name; 
-                                        if(input==="numCardNumber"){
-                                          id="numCardNumber"
-                                          type="text"
-                                          name="numCardNumber"                                 
-                                          label="Numéro de carte"
-                                      }else if(input==='cardExpireMonth'){
-                                          id="cardExpireMonth"
-                                          type="text"
-                                          name="cardExpireMonth"                            
-                                          label="MM"
-                                      }else if(input==="cardExpireYear"){
-                                          id="cardExpireYear"
-                                          type="text"
-                                          name="cardExpireYear"                             
-                                          label="YY"
-                                      }
-                                      else if(input==="cardCode"){
-                                          id="cardCode"
-                                          type="text"
-                                          name="cardCode"                             
-                                          label="Code"
-                                      }else{
-                                        return;
-                                      }
-                                      return(
-                                        <GridItem xs={12} sm={6} md={3} key={index} style={{fontSize:'90%'}}> 
-                            
-                                            {input==="numCardNumber"||input==="cardExpireMonth"||input==="cardExpireYear"||input==="cardCode"?
-                                           
-                                            input==="cardExpireMonth"?
-
-                                                <div>
-                                                  Mois d'expiration
-                                                <select 
-                                                    name={name}
-                                                    onChange={onChangeRegisterStudent}
-                                                    value={registerStudent[input]} 
-                                                    id={id}
-
-                                                    style={{
-                                                            width:'100%',
-                                                            height:'40px',
-                                                            border:`${
-                                                            input==="cardExpireMonth"&&formErrors.cardExpireMonth?'2px solid #C84941':
-                                                            '2px solid #002495'}`
-                                                            }}
-
-                                                    >
-                                                    <option value=""></option>
-                                                    <option value="janvier">Janvier</option>
-                                                    <option value="fevrier">Février</option>
-                                                    <option value="mars">Mars</option>
-                                                    <option value="avril">Avril</option>
-                                                    <option value="mai">Mai</option>
-                                                    <option value="juin">Juin</option>
-                                                    <option value="juillet">Juillet</option>
-                                                    <option value="aout">Août</option>
-                                                    <option value="septembre">Septembre</option>
-                                                    <option value="octobre">Octobre</option>
-                                                    <option value="novembre">Novembre</option>
-                                                    <option value="decembre">Décembre</option>
-                                                </select>
-                                                {formErrors && (
-                                                                    <div>
-                                                                        <div style={{color:"red",fontSize:"12px"}}>
-                                                                         {
-                                                                         input==="cardExpireMonth"?formErrors.cardExpireMonth:
-                                                                         ""}
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                </div>: input==="cardExpireYear"?
-                                                <div>
-                                                  Année d'expiration
-                                                  <input 
-                                                    type={type} 
-                                                    id={id}
-                                                    name={name}
-                                                    value={registerStudent[input]}
-                                                    onChange={onChangeRegisterStudent}
-                                                    placeholder={label}
-                                                    autoComplete="off"
-
-                                                    style={{
-                                                    border:`${
-                                                        input==="cardExpireYear"&&formErrors.cardExpireYear?'2px solid #C84941':
-                                                        '2px solid #002495'}`,
-                                                    width:'100%',
-                                                    height:'40px'}}
-                                                /> 
-                                                {error && (
-                                                        <div className="form-group">
-                                                              <div style={{color:"red"}}>
-                                                                  {error.message}
-                                                              </div>
-                                                        </div>
-                                                                )}
-                                                                {formErrors && (
-                                                                    <div>
-                                                                        <div style={{color:"red",fontSize:"12px"}}>
-                                                                         {
-                                                                         input==="cardExpireYear"?formErrors.cardExpireYear:
-                                                                         ""}
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                </div>
-
-                                            :<div style={{width:'100%',cursor:'pointer',fontSize:'90%'}}>
-                                              {label}
-                                                <input 
-                                                    type={type} 
-                                                    id={id}
-                                                    name={name}
-                                                    value={registerStudent[input]}
-                                                    onChange={onChangeRegisterStudent}
-                                                    autoComplete="off"
-
-                                                    style={{
-                                                    border:`${
-                                                        input==="numCardNumber"&&formErrors.numCardNumber?'2px solid #C84941':
-                                                        input==="cardCode"&&formErrors.cardCode?'2px solid #C84941':
-                                                        '2px solid #002495'}`,
-                                                    width:'100%',
-                                                    height:'40px'}}
-                                                /> 
-                                               
-                                                                {formErrors && (
-                                                                    <div>
-                                                                        <div style={{color:"red",fontSize:"12px"}}>
-                                                                         {
-                                                                         input==="numCardNumber"?formErrors.numCardNumber:
-                                                                         input==="cardCode"?formErrors.cardCode:
-                                                                         ""}
-                                                                        </div>
-                                                                    </div>
-                                                                )} 
-                                            </div>
-
-                                        :""}
-                                     
-                                        </GridItem>
-
-                                        )
-                                  })}
                                   </GridContainer>
 
 

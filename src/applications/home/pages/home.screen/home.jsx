@@ -98,9 +98,11 @@ const Home = ({user}) => {
     useEffect(()=>{
         if(query=="login"){
             outPutEventConnexion();
-        }else if(query=="l"){
+        }else if(query=="l" && !user){
             setIsRegister(true);
             outPutEventConnexion();    
+        }else{
+            return;
         }
         dispatch(shareUser(user&&user));
         setPosts(data);

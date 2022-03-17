@@ -11,6 +11,9 @@ class UsersServices {
     filterTutors(payload) {
         return http.post(`/users/filter/tutors`, payload);
     }
+    getTutorSpeciality(tutorId) {
+        return http.get(`/users/tutor-specialities/${tutorId}`);
+    }
     assignTutorToStudent(studentId,tutorId) {
         return http.patch(`/users/set-tutor/${studentId}/${tutorId}`);
     }

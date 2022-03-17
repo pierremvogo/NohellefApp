@@ -30,6 +30,46 @@ class AdminService {
         return http.delete(`/admin/tutor-specialities/${tutorId}/${code}`);
     }
 
+    createCourse(payload) {
+        return http.post(`/admin/courses`, payload);
+    }
+
+    editCourse(id,payload) {
+        return http.put(`/admin/courses/${id}`, payload);
+    }
+
+    deleteCourse(id) {
+        return http.delete(`/admin/courses/${id}`);
+    }
+
+    createQuiz(payload) {
+        return http.post(`/admin/course-exercices`, payload);
+    }
+
+    addQuizQuestion(exerciseId,payload) {
+        return http.post(`/admin/quiz-add-question/${exerciseId}`, payload);
+    }
+
+    editQuizQuestion(questionId,questionText) {
+        return http.patch(`/admin/quiz-edit-question-text/${questionId}/${questionText}`);
+    }
+
+    deleteQuizQuestion(id) {
+        return http.delete(`/admin/quiz-delete-question/${id}`);
+    }
+
+    answerToQuestion(questionId,payload) {
+        return http.post(`/admin/quiz-add-question-answer/${questionId}`, payload);
+    }
+
+    editAnswerToQuestion(answerId,answerText) {
+        return http.patch(`/admin/quiz-edit-anwser-text/${answerId}/${answerText}`);
+    }
+
+    deleteQuizAnswer(id) {
+        return http.delete(`/admin/quiz-delete-answer/${id}`);
+    }
+
 }
 
 export default new AdminService;
