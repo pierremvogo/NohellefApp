@@ -368,9 +368,6 @@ const dispatch= useDispatch()
             phoneNumber: updateStudent.phoneNumber,
             city: updateStudent.city,
             address: user&&user.currentUser.address,
-            bankCardNumber: user&&user.currentUser.paymentCards[0].bankCardNumber,
-            bankCardExpirationDate: user&&user.currentUser.paymentCards[0].bankCardExpirationDate,
-            bankCardCode: user&&user.currentUser.paymentCards[0].bankCardCode,
           }
    setFormErrors(validateForm(updateStudent));
    if(Object.keys(formErrors).length === 0 && submited){

@@ -27,6 +27,8 @@ import authService from '../../../services/auth.service';
 import Loader from 'react-loader-spinner';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 
 const RegisterParent = ({error,
                          user,
@@ -45,11 +47,9 @@ const RegisterParent = ({error,
             address:"",
             password:"",
             confirm_password:"",
-            numCardNumber:"",
-            cardExpireMonth:"",
-            cardExpireYear:"",
-            cardCode:""})
+            })
     const [startDate, setStartDate] = useState(new Date());
+    const [phoneValue, setPhoneValue] = useState("");
     const [isLoginForm, setIsLoginForm] = useState(true);
     const [formErrors, setFormErrors] = useState({});
     const [displayAsk, setDisplayAsk] = useState("flex");
@@ -65,6 +65,14 @@ const RegisterParent = ({error,
     useEffect(()=>{
 
     },[])
+
+     const onChangePhone = (number) => {
+        setPhoneValue(number);
+        console.log("my phone number");
+        console.log(phoneValue);
+        registerParent.phone = phoneValue;
+        console.log(registerParent.phone);
+    }
 
 
     const ModalLoading = () => {
@@ -269,7 +277,7 @@ const RegisterParent = ({error,
             email: registerParent.email,
             username: registerParent.username,
             password: registerParent.password,
-            phoneNumber: registerParent.phone,
+            phoneNumber: "+"+registerParent.phone,
             city: registerParent.ville,
             address: registerParent.address,
             bankCardNumber: registerParent.numCardNumber,
@@ -464,6 +472,17 @@ const RegisterParent = ({error,
                                             <DatePicker
                                                 selected={startDate} 
                                                 onChange={(date) => onChangeDate(date)} 
+                                            />: input==="phone"?
+                                            <PhoneInput
+                                              country={'cm'}
+                                              value={phoneValue}
+                                              onChange={(phone) => onChangePhone(phone)}
+                                              inputStyle={{
+                                                width: "100%",
+                                                height:'40px',
+                                                color:'black',
+                                                
+                                            }}
                                             />:
                                             <input 
                                                 type={type} 

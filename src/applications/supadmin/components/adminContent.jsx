@@ -24,6 +24,7 @@ import {NotificationManager,NotificationContainer} from 'react-notifications';
 import Chat from "../../../app/components/chat/chat.jsx"
 import Adress from './adress.jsx';
 import userService from  '../../services/user.service'; 
+import Loader from 'react-loader-spinner';
 
 
 
@@ -50,6 +51,8 @@ const AdminContent = () => {
     const [statusConnection,setStatusConnection] = useState(false);
     const [tutorName,setTutorName] = useState("");
     const [isAdress, setIsAdress] = useState(false);
+    const [displayLoading, setDisplayLoading] = useState("flex");
+    const [showModalLoading, setShowModalLoading] = useState(false);
 
     useEffect(()=>{
         setPosts(data);
@@ -105,6 +108,43 @@ const AdminContent = () => {
       userService.listAndFiltersUsers()
 
     }
+    const ModalLoading = () => {
+    
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            display: displayLoading,
+            zIndex: "900000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+            <div
+                style={{
+                    width: "10%",
+                    height: "30%",
+                    zIndex: "300000",
+                    display: "flex",
+                    position: "absolute",
+                    top: "30%",
+                    left: "48%"
+                }}
+                >
+                <Loader type="Oval" color="#2BAD60" height="100" width="70" />
+            </div>
+          
+      </div>
+    )
+  };
+  const handleLoading = (isShow) => {
+    setShowModalLoading(isShow);
+  }
 
   const ModalChat = () => {
     return(
@@ -337,7 +377,7 @@ const AdminContent = () => {
             height: "100%",
             justifyContent: "center",
             display: displayAsk,
-            //alignItems: "center",
+            alignItems: "center",
             zIndex: "300000",
             position: "absolute",
             overflow: "hidden",
@@ -347,13 +387,13 @@ const AdminContent = () => {
             left:"0px",
             }}
       >
-           <div className="contain" id='myContain'>
-                <div style={{display:'inline-block', margin:'0% 30% 0% 30%', fontSize:'100%',width:'35%'}}>
-                    <span className='close' onClick={()=>closeModal()}>&times;</span>
-                     {isAdress?<Adress tutorName={tutorName}/>: <AddAdmin /> }
-                </div>
+           
+        {isAdress?
+          <Adress tutorName={tutorName}/>:
+          <AddAdmin onChildCloseModal={closeModal} onchildOpenLoading={handleLoading} /> }
                
-            </div>
+               
+            
           
       </div>
     )
@@ -366,6 +406,7 @@ const AdminContent = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   return(
       <div className="container" style={{backgroundColor:'#eeeeee'}}>
+      {showModalLoading? <ModalLoading />: ''}
       {showEditModal? <ModalContentEdit /> :'' }
       {showChatModal? <ModalChat />  : ''}
        <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>

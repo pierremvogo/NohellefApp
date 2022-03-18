@@ -60,6 +60,14 @@ const AskRegister = ({error,
         setShowAskRegister(true,setShowRegisterStudent(false));
     }
 
+    const handleRegisterParent = () => {
+        history.push('/auth/parent/register');
+    }
+
+    const handleRegisterStudent = () => { 
+        history.push('/auth/student/register');
+    }
+
     const clickCloseModal = (content) => {
         onChildCloseModal(content);
     }
@@ -210,7 +218,7 @@ const AskRegister = ({error,
 
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12} style={{margin:'0% 10% 1% 10%'}}>
-                                      <div className="side-content" id="myDiv1" onClick={()=>history.push('/auth/student/register')}>
+                                      <div className="side-content" id="myDiv1" onClick={handleRegisterStudent}>
                                             <div style={{padding:'3%',display:'inline-block'}}>
                                                 <img src={ask1} width='10%' />
                                                 <span className="text" style={{marginLeft:'25%'}}>Je suis Apprenant</span>
@@ -235,7 +243,7 @@ const AskRegister = ({error,
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12} style={{margin:'0% 10% 1% 10%'}}>
                                     
-                                     <div className="side-content" id="myDiv3" onClick={()=>history.push('/auth/parent/register')}>
+                                     <div className="side-content" id="myDiv3" onClick={handleRegisterParent}>
                                             <div style={{padding:'3%',display:'inline-block'}}>
                                                <img src={ask3} width='10%' />
                                                <span className="text" style={{marginLeft:'30%'}}>Je suis Parent</span>

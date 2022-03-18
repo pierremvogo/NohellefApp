@@ -32,7 +32,10 @@ import authService from '../../../services/auth.service';
 import Loader from 'react-loader-spinner';
 import PartialLogin from '../../../auth/pages/auth.screen/partialLogin.jsx';
 import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
+
+
 
 const RegisterStudent = ({  error,
                             user,
@@ -55,10 +58,6 @@ const RegisterStudent = ({  error,
             password:"",
             confirm_password:"",
             recapchatCode:"",
-            numCardNumber:"",
-            cardExpireMonth:"",
-            cardExpireYear:"",
-            cardCode:"",
             check_Condition:false});
     const [isLoginForm, setIsLoginForm] = useState(true);
      const [datePick, setDatePick] = useState("");
@@ -73,6 +72,7 @@ const RegisterStudent = ({  error,
     const [showModalLoading, setShowModalLoading] = useState(false);
     const [displayAsk, setDisplayAsk] = useState("flex");
     const [startDate, setStartDate] = useState(new Date());
+    const [phoneValue, setPhoneValue] = useState("");
     const history = useHistory()
     const dispatch= useDispatch()
     const inputRef = useRef(null);
@@ -105,6 +105,14 @@ const RegisterStudent = ({  error,
             day = '0' + day;
 
         return [year, month, day].join('-');
+    }
+
+    const onChangePhone = (number) => {
+        setPhoneValue(number);
+        console.log("my phone number");
+        console.log(phoneValue);
+        registerStudent.phone = phoneValue;
+        console.log(registerStudent.phone);
     }
     
   const ModalPartialLogin = () => {
@@ -276,37 +284,9 @@ const RegisterStudent = ({  error,
                     setSubmited(true);
                 }
                 break;
-            case 'numCardNumber':
-                if(!values[input]){
-                    errorsValidation.numCardNumber = "Le numéro de la carte est requis";
-                }else{
-                    setSubmited(true);
-                }
-                break;
-            case 'cardExpireYear':
-                if(!values[input]){
-                    errorsValidation.cardExpireYear = "Année d'expiration requise";
-                }else{
-                    setSubmited(true);
-                }
-                break;
-            case 'cardCode':
-                if(!values[input]){
-                    errorsValidation.cardCode = "code requis pour votre carte";
-                }else{
-                    setSubmited(true);
-                }
-                break;
             case 'level':
                 if(!values[input]){
                     errorsValidation.level = "Votre Niveau est requis";
-                }else{
-                    setSubmited(true);
-                }
-                break;
-            case 'cardExpireMonth':
-                if(!values[input]){
-                    errorsValidation.cardExpireMonth = "Mois d'expiration requis";
                 }else{
                     setSubmited(true);
                 }
@@ -350,7 +330,7 @@ const RegisterStudent = ({  error,
             email: registerStudent.email,
             username: registerStudent.username,
             password: registerStudent.password,
-            phoneNumber: registerStudent.phone,
+            phoneNumber: "+"+registerStudent.phone,
             city: registerStudent.ville,
             address: registerStudent.address,
             bankCardNumber: registerStudent.numCardNumber,
@@ -660,10 +640,31 @@ const RegisterStudent = ({  error,
                                             />*/}
                                          </div>
                                          : <div>{input==="birthDay"?
+                                            <div>
+                                            <style>
+                                                {`.date-picker input {
+                                                  width: 100%,
+                                                  height: 40px
+                                                }`}
+                                            </style>
                                             <DatePicker
                                                 selected={startDate} 
                                                 onChange={(date) => onChangeDate(date)} 
-                                            /> : <input 
+                                                wrapperClassName="date-picker"
+                                            /></div> : input==="phone"?
+                                            <PhoneInput
+                                              country={'cm'}
+                                              value={phoneValue}
+                                              onChange={(phone) => onChangePhone(phone)}
+                                              inputStyle={{
+                                                width: "100%",
+                                                height:'40px',
+                                                color:'black',
+                                                '&:focus': {
+                                                    borderColor: 'red'
+                                                }
+                                            }}
+                                            />: <input 
                                             type={type} 
                                             placeholder={""}
                                             id={id}

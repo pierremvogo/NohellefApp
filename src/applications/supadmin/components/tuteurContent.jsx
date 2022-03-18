@@ -145,10 +145,7 @@ const TuteurContent = () => {
                     
         {isAdd?<AddTutor onChildCloseModal={closeModal} onchildOpenLoading={handleLoading} />:
         <AffectRight onChildCloseModal={closeModal} adminName={adminName}/>}  
-               
-               
-           
-          
+         
       </div>
     )
   };

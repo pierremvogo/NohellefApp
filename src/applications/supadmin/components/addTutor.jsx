@@ -18,12 +18,17 @@ import Footer from "../../../app/components/footer/footer.jsx";
 import ins2 from '../../../assets/images/home/ins2.png';
 import Avatar   from 'react-avatar';
 import adminService from '../../services/admin.service';
+import authService from '../../services/auth.service';
 import Loader from 'react-loader-spinner';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 import {    authRegisterSuccess, 
             authRegisterFailed, 
             authShowMessage, 
             authSetRegisterForm,
             authCreateSuccess } from '../../redux/reducer/actions/auth';
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 
 const AddTutor = ({error,
                     registersForm,
@@ -33,15 +38,15 @@ const AddTutor = ({error,
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     const [registerTutorForm, setRegisterTutorForm] = useState(
-                        registersForm?registersForm:{
+                            registersForm?registersForm:{
                             firstName: "",
                             lastName: "",
                             email: "",
                             username: "",
                             password: "",
                             confirm_password:"",
-                            phoneNumber: "",
                             city: "",
+                            phoneNumber: "",
                             birthDay: "",
                             address: "",
                             specialities: [""]
@@ -54,6 +59,8 @@ const AddTutor = ({error,
     const [tooltipOpen, setTooltipOpen] = useState(false)
     const [showModalLoading, setShowModalLoading] = useState(false);
     const [displayLoading, setDisplayLoading] = useState("flex");
+    const [startDate, setStartDate] = useState(new Date());
+    const [phoneValue, setPhoneValue] = useState("");
     const history = useHistory()
     const dispatch= useDispatch()
 
@@ -95,18 +102,13 @@ const AddTutor = ({error,
                     setSubmited(true);
                 }
                 break;
-            case 'phoneNumber':
+            case 'phone':
                 if(!values[input]){
-                    errorsValidation.phoneNumber = "Numero de Téléphone requis";
-                }else if(values[input].length === 13 || values[input].length === 9 ){
-                        if(!regexPhoneNumber.test(values[input])){
-                            errorsValidation.phoneNumber = "Numéro de Téléphone invalide";
-                        }else{
-                            setSubmited(true);
-                        }
-                }
-                else{
-                   errorsValidation.phoneNumber = "Format de Numéro invalide"; 
+                    errorsValidation.phone = "Numero de Téléphone requis";
+                }else if(!regexPhoneNumber.test(values[input])){
+                    errorsValidation.phone = "Numéro de Téléphone invalide";
+                }else{
+                     setSubmited(true)
                 }
                 break;
             case 'username':
@@ -170,11 +172,39 @@ const AddTutor = ({error,
   const handleLoading = (isShow) => {
     onchildOpenLoading(isShow);
   }
+  const onChangePhone = (number) => {
+        setPhoneValue(number);
+        console.log("my phone number");
+        console.log(phoneValue);
+        registerTutorForm.phoneNumber = phoneValue;
+        console.log(registerTutorForm.phoneNumber);
+    }
 
   function closeModal(e){
       dispatch(authCreateSuccess(null));
       onChildCloseModal(e.target.name);
   }
+
+  const onChangeDate = (date) => {
+        setStartDate(date);
+        date = formatDate(date);
+        console.log("MY DATE PICKER");
+        registerTutorForm.birthDay = date;
+        console.log(date);
+    }
+
+    function formatDate(date) {
+        var month = '' + (date.getMonth() + 1),
+            day = '' + date.getDate(),
+            year = date.getFullYear();
+
+        if (month.length < 2) 
+            month = '0' + month;
+        if (day.length < 2) 
+            day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
 
     
 
@@ -225,9 +255,7 @@ const AddTutor = ({error,
                     console.log("Response register tutor success");
                     console.log(response.data);
                     handleLoading(false);
-                    
-                   
-
+            
             })
             .catch((error) => {
                 handleLoading(false);
@@ -252,8 +280,6 @@ const AddTutor = ({error,
 	return(
 
         <div style={{
-                backgroundColor:'#ffce52',
-                borderRadius:'25px 25px 25px 25px',
                 width: '50%',
                 }}>
                     <GridContainer>
@@ -265,34 +291,34 @@ const AddTutor = ({error,
                           </GridItem>
                         </GridContainer>
 
-                        <GridContainer>
-                          <GridItem xs={12} sm={12} md={12} style={{textAlign:'right'}}>
-                           <span style={{fontSize:'20px',cursor:'pointer', marginRight:'2%'}}  onClick={(e)=>closeModal(e)}>&times;</span>
-                          </GridItem>
-                        </GridContainer>
-                        <GridContainer>
-                          <GridItem xs={12} sm={12} md={12}>
-                          
-                            {createSuccessMessage&&
-                                (<div className="alert alert-success" style={{width:"100%",fontSize:'1em',textAlign:'center'}} role="alert">
-                                            {createSuccessMessage}
-                                 </div>)
-                            }
-                          
-                          </GridItem>
-                        </GridContainer>
+                        
 
                         <GridContainer>
                           <GridItem xs={12} sm={12} md={12}>
                               <div style={{
-                                
+                                backgroundColor:'#ffce52',
                                 borderRadius:'25px 25px 25px 25px',
-                                width:'90%',
+                                width:'100%',
                                 height:'100%',
                                 
-                                margin:'3%',
+                                margin:'4%',
                                 padding:'2%'
                               }}>
+                              <GridContainer>
+                                  <GridItem xs={12} sm={12} md={12} style={{textAlign:'right'}}>
+                                   <span style={{fontSize:'20px',cursor:'pointer', marginRight:'2%'}}  onClick={(e)=>closeModal(e)}>&times;</span>
+                                  </GridItem>
+                              </GridContainer>
+                              <GridContainer>
+                                  <GridItem xs={12} sm={12} md={12}>
+                                    {createSuccessMessage&&
+                                        (<div className="alert alert-success" style={{width:"100%",fontSize:'1em',textAlign:'center'}} role="alert">
+                                                    {createSuccessMessage}
+                                         </div>)
+                                    }
+                                  
+                                  </GridItem>
+                                </GridContainer>
                                 <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                       
@@ -301,7 +327,7 @@ const AddTutor = ({error,
                                             <div style={{
                                                 margin:'2% 2% 0% 0%',
                                                 color:'blue',
-                                                fontSize:'1.2vw'}}><strong style={{marginRight:'2%'}}>Informations personnelles</strong> 
+                                                fontSize:'1.2vw'}}><strong style={{marginRight:'2%'}}>Informations personnelles Tuteur</strong> 
                                                 <img src={ins2} width='10%'/>
                                             </div>
                                         
@@ -412,15 +438,30 @@ const AddTutor = ({error,
                                             :<GridItem xs={6} sm={6} md={4} key={index} style={{fontSize:'90%'}}>
                                             {label}
                                               <div style={{margin:'0% 0% 5% 0%',width:'100%'}}>
-                                                  <input 
-                                                    type={type}
-                                                    id={id}
-                                                    name={name}
-                                                    onChange={onChangeRegisterTutor}
-                                                    value={registerTutorForm[input]}   
+                                                  {input==="birthDay"?
+                                                  <DatePicker
+                                                    selected={startDate} 
+                                                    onChange={(date) => onChangeDate(date)} 
+                                                  />: input==="phoneNumber"?
+                                                   <PhoneInput
+                                                      country={'cm'}
+                                                      value={phoneValue}
+                                                      onChange={(phone) => onChangePhone(phone)}
+                                                      inputStyle={{
+                                                        width: "100%",
+                                                        height:'40px',
+                                                        color:'black',
+                                                        
+                                                    }}
+                                                    />:<input 
+                                                        type={type}
+                                                        id={id}
+                                                        name={name}
+                                                        onChange={onChangeRegisterTutor}
+                                                        value={registerTutorForm[input]}   
 
-                                                    style={{
-                                                        border:`${
+                                                        style={{
+                                                            border:`${
                                                         input==="firstName"&&formErrors.firstName?'2px solid #C84941':
                                                         input==="lastName"&&formErrors.lastName?'2px solid #C84941':
                                                         input==="email"&&formErrors.email?'2px solid #C84941':
@@ -432,7 +473,7 @@ const AddTutor = ({error,
                                                         
                                                         '2px solid #002495'}`,
                                                         width:'100%',
-                                                        height:'40px'}}/>
+                                                        height:'40px'}}/> }
                                                         {errorMessage && error && (
                                                         <div className="form-group">
                                                               <div style={{color:"red"}}>
