@@ -40,7 +40,9 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
        
     useEffect(() => {
         if(user&&user.currentUser){
-            if(user.currentUser.type != 1 && urlpath===ROUTES.PARENT){
+            if(user.currentUser.type != 0 && urlpath===ROUTES.STUDENT){
+                history.push(ROUTES.HOME);
+            }else if(user.currentUser.type != 1 && urlpath===ROUTES.PARENT){
                 history.push(ROUTES.HOME);
             }else if(user.currentUser.type != 2 && urlpath===ROUTES.TUTOR){
                 history.push(ROUTES.HOME);
