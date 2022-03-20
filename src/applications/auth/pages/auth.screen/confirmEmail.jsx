@@ -155,8 +155,8 @@ const ModalLoading = () => {
                     let userType = response.data.currentUser.type; 
                     response.data.redirect =
                                   userType==="2" ?"/tutor/dashboard":
-                                  userType==="3" ?"/admin/sup/dashboard":
-                                  userType==="4" ?"/admin/dashboard":"/"
+                                  userType==="3" ?"/admin/dashboard":
+                                  userType==="4" ?"/admin/sup/dashboard":"/"
                     localStorage.setItem('user', JSON.stringify(response.data));
                     handleLoading(false);
                     history.push(response.data.redirect);

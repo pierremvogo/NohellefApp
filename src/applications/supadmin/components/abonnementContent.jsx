@@ -2,6 +2,7 @@ import react from 'react';
 import GridItem from "../../../app/components/Grid/GridItem.js";
 import GridContainer from "../../../app/components/Grid/GridContainer.js";
 import Card from "../../../app/components/Card/Card.js";
+import {connect, useSelector, useDispatch} from 'react-redux';
 import CardHeader from "../../../app/components/Card/CardHeader.js";
 import CardBody from "../../../app/components/Card/CardBody.js";
 import React,{useState,useEffect} from 'react';
@@ -24,13 +25,19 @@ import chat from '../../../assets/images/dashboard/chat2.png';
 import {NotificationManager,NotificationContainer} from 'react-notifications';
 //import io from 'socket.io-client';
 import Chat from "../../../app/components/chat/chat.jsx"
+import adminService from '../../services/admin.service';
+import {    authRegisterSuccess, 
+            authRegisterFailed, 
+            authShowMessage, 
+            authSetRegisterForm,
+            shareParentUser } from '../../redux/reducer/actions/auth';
 
 
 //const socket = io.connect("http://localhost:3001");
-const AbonnementContent = () => {
+const AbonnementContent = ({userParent}) => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postPerPage] = useState(3);
+  const [postPerPage] = useState(4);
   const [display, setDisplay] = useState("flex");
   const [showEditModal,setShowEditModal] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -45,18 +52,37 @@ const AbonnementContent = () => {
     const [parentId, setParentId] = useState("parent");
     const [supAdminId, setSupAdminId] = useState("supadmin");
     const [room, setRoom] = useState(parentId+supAdminId);
-     const [statusConnection,setStatusConnection] = useState(false);
+    const [statusConnection,setStatusConnection] = useState(false);
+
+    const dispatch = useDispatch();
 
   useEffect(()=>{
-    /*socket.on('id', (status)=>{
-            setStatusConnection(status);
-            console.log("MYid",status);
-        })*/
-     setPosts(data);
+     getParents();
+     console.log("My user Parent from API");
+     console.log(userParent);
      return function cleanup () {
             return;
         }
   },[])
+
+  const getParents = () => {
+    const filterPayload = {
+                      types: [
+                        "1",
+                      ]
+                    }
+    adminService.listAndFiltersUsers(filterPayload)
+        .then((response)=> {
+            console.log("Response for get Parent user");
+            console.log(response.data.users);
+            dispatch(shareParentUser(response.data.users));
+        })
+        .catch((error)=> {
+            console.log("Error Response for get Parent user");
+            console.log(error);
+            dispatch(shareParentUser(null));
+        })
+}
 
   const handleChange = (checked) => {
     setChecked(checked)
@@ -229,7 +255,7 @@ const AbonnementContent = () => {
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost,indexOfLastPost);
+  const currentPosts = userParent&&userParent.slice(indexOfFirstPost,indexOfLastPost);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   return(
       <div className="container" style={{margin:'5% 0% 0% 0%'}}>
@@ -287,23 +313,23 @@ const AbonnementContent = () => {
               </thead>
               <tbody>
 
-              {currentPosts.map((post,index)=>{
+              {currentPosts&&currentPosts.map((post,index)=>{
                 return(
-                  <tr>
+                  <tr key={index}>
                     
                     <td><Avatar 
-                                                size="45"
-                                                round={true}
-                                                src={post.userProfile}
-                                                name='logo'
-                                            /></td>
-                    <td>{post.userName}</td>
-                    <td>{post.userSurname}</td>
-                    <td>{post.userEmail}</td>
-                    <td>{post.userPhone}</td>
-                    <td>{post.userCity}</td>
-                    <td>{post.userAddress}</td> 
-                    <td style={{cursor:'pointer'}} onClick={()=>openModal(post.userName)}><img src={post.userChat} width='45%'/></td>  
+                              size="45"
+                              round={true}
+                              src={im5}
+                              name='logo'
+                        /></td>
+                    <td>{post.firstName}</td>
+                    <td>{post.lastName}</td>
+                    <td>{post.email}</td>
+                    <td>{post.phoneNumber}</td>
+                    <td>{post.city}</td>
+                    <td>{post.address}</td> 
+                    <td style={{cursor:'pointer'}} onClick={()=>openModal(post.firstName)}><img src={chat} width='45%'/></td>  
                   
                   </tr>
                   )
@@ -317,7 +343,7 @@ const AbonnementContent = () => {
                       <GridItem xs={12} sm={12} md={12}>
                         <Pagination 
                           postsPerPage={postPerPage} 
-                          totalPosts={posts.length} 
+                          totalPosts={userParent&&userParent.length} 
                           paginate={paginate}
                         />
                       </GridItem>
@@ -325,6 +351,13 @@ const AbonnementContent = () => {
                     </div>
     )
 }
-export default  AbonnementContent
+const mapStateToProps=(state)=>{
+  return{
+      isLoggedIn: state.authReducer.isLoggedIn,
+      error: state.authReducer.error,
+      userParent: state.authReducer.userParent,   
+  };
+};
+export default  connect(mapStateToProps)(AbonnementContent)
 
 

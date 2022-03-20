@@ -129,5 +129,22 @@ export const authCreateSuccess = (message) => ({
 
 export const sharePaymentRessource = (payload) => ({
     type: types.SHARE_PAYMENT_RESSOURCE,
-    payload
+    payload,
 });
+
+export const shareStudentUser = (payload) => ({
+    type: types.SHARE_STUDENT_USER,
+    payload,
+})
+export const shareParentUser = (payload) => ({
+    type: types.SHARE_PARENT_USER,
+    payload,
+})
+export const shareTutorUser = (payload) => ({
+    type: types.SHARE_TUTOR_USER,
+    payload,
+})
+export const shareAdminUser = (payload) => ({
+    type: types.SHARE_ADMIN_USER,
+    payload,
+})

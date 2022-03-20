@@ -46,9 +46,9 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
                 history.push(ROUTES.HOME);
             }else if(user.currentUser.type != 2 && urlpath===ROUTES.TUTOR){
                 history.push(ROUTES.HOME);
-            }else if(user.currentUser.type != 3 && urlpath===ROUTES.SUP_ADMIN){
+            }else if(user.currentUser.type != 3 && urlpath===ROUTES.ADMIN){
                 history.push(ROUTES.HOME);
-            }else if(user.currentUser.type != 4 && urlpath===ROUTES.ADMIN){
+            }else if(user.currentUser.type != 4 && urlpath===ROUTES.SUP_ADMIN){
                 history.push(ROUTES.HOME);
             }
         }
@@ -97,16 +97,16 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
         {user&&user.accessToken&&user.currentUser.type==="3" &&(
             <Route 
                 exact
-                path={ROUTES.SUP_ADMIN}> 
-                 <SupAdminPage />
+                path={ROUTES.ADMIN}> 
+                <AdminPage />
             </Route>
         )}
 
         {user&&user.accessToken&&user.currentUser.type==="4" &&(
             <Route 
                 exact
-                path={ROUTES.ADMIN}> 
-                <AdminPage />
+                path={ROUTES.SUP_ADMIN}> 
+                <SupAdminPage />
             </Route>
         )}
 

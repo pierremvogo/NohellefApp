@@ -2,6 +2,7 @@ import react from 'react';
 import GridItem from "../../../app/components/Grid/GridItem.js";
 import GridContainer from "../../../app/components/Grid/GridContainer.js";
 import Card from "../../../app/components/Card/Card.js";
+import {connect, useSelector, useDispatch} from 'react-redux';
 import CardHeader from "../../../app/components/Card/CardHeader.js";
 import CardBody from "../../../app/components/Card/CardBody.js";
 import React,{useState,useEffect} from 'react';
@@ -25,11 +26,18 @@ import Chat from "../../../app/components/chat/chat.jsx"
 import Adress from './adress.jsx';
 import userService from  '../../services/user.service'; 
 import Loader from 'react-loader-spinner';
+import adminService from '../../services/admin.service';
+import authService from '../../services/auth.service';
+import {    authRegisterSuccess, 
+            authRegisterFailed, 
+            authShowMessage, 
+            authSetRegisterForm,
+            shareAdminUser } from '../../redux/reducer/actions/auth';
 
 
 
 //const socket = io.connect("http://localhost:3001");
-const AdminContent = () => {
+const AdminContent = ({userAdmin}) => {
   const [posts, setPosts] = useState([]);
   const [loading, serLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -53,20 +61,45 @@ const AdminContent = () => {
     const [isAdress, setIsAdress] = useState(false);
     const [displayLoading, setDisplayLoading] = useState("flex");
     const [showModalLoading, setShowModalLoading] = useState(false);
+    const dispatch = useDispatch();
 
     useEffect(()=>{
-        setPosts(data);
+       getAdmins();
+       console.log("My user Admin from API");
+       console.log(userAdmin);
         return function cleanup () {
             return;
         }
       
     },[])
 
-    
+    const getAdmins = () => {
+      const filterPayload = {
+                        types: [
+                          "3",
+                        ]
+                      }
+      adminService.listAndFiltersUsers(filterPayload)
+          .then((response)=> {
+              console.log("Response for get Amin user");
+              console.log(response.data.users);
+              dispatch(shareAdminUser(response.data.users));
+          })
+          .catch((error)=> {
+              console.log("Error Response for get Admin user");
+              console.log(error);
+              dispatch(shareAdminUser(null));
+        })
+    }
 
   function closeModal(){
    
       setDisplayAsk("none",setShowEditModal(false));
+  }
+
+  const onChangeSearch = (record) => {
+    console.log("My record");
+    console.log(record);
   }
 
   const openModal=(isAdress,nameTutor)=> {
@@ -82,32 +115,6 @@ const AdminContent = () => {
            
          }
 
-    const getAdminUsers = () => {
-    let user =  {
-      "types": [
-        null
-      ],
-      "disponibility": {},
-      "specialities": [
-        "string"
-      ],
-      "levels": [
-        null
-      ],
-      "permissions": [
-        null
-      ],
-      "parentIds": [
-        "string"
-      ],
-      "status": [
-        null
-      ],
-      "emailConfirmed": true
-    }
-      userService.listAndFiltersUsers()
-
-    }
     const ModalLoading = () => {
     
     return(
@@ -145,6 +152,44 @@ const AdminContent = () => {
   const handleLoading = (isShow) => {
     setShowModalLoading(isShow);
   }
+
+   const handleLockAccount = (id) => {
+        authService.lockAccount(id)
+        .then((response)=>{
+          console.log("Account Lock successfull");
+          console.log(response);
+        })
+        .catch((error)=>{
+          console.log("Error lock account");
+          console.log(error);
+        })
+    }
+
+    const handleUnLockAccount = (id) => {
+        authService.unLockAccount(id)
+        .then((response)=>{
+          console.log("Account UnLock successfull");
+          console.log(response);
+        })
+        .catch((error)=>{
+          console.log("Error Unlock account");
+          console.log(error);
+        })
+    }
+
+   const onChangeCheckbox = (e) => {
+        if(e.target.checked){
+          console.log("IS check");
+          console.log(e.target.checked);
+          console.log(e.target.value);
+          handleLockAccount(e.target.value);
+        }else{
+          console.log("IS Not check");
+          console.log(e.target.checked);
+          console.log(e.target.value);
+          handleUnLockAccount(e.target.value);
+        }
+    }
 
   const ModalChat = () => {
     return(
@@ -193,182 +238,6 @@ const AdminContent = () => {
       </div>
     )
   };
-   let data = [
-    {
-      id: 1,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"85-c6-98-78-a3",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: ipa,
-      adminChat: chat
-    },
-    {
-      id: 2,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"85-c6-98-78-a3",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: ipa,
-      adminChat: chat
-    },
-    {
-      id: 3,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"85-c6-98-78-a3",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: ipa,
-      adminChat: chat
-    },
-    {
-      id: 4,
-     userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"85-c6-98-78-a3",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: ipa,
-      adminChat: chat
-    },
-    {
-      id: 5,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"85-c6-98-78-a3",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: ipa,
-      adminChat: chat
-    },
-    {
-      id: 6,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: ipa,
-      adminChat: chat
-    },
-    
-    {
-      id: 7,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: ipa,
-      adminChat: chat
-    },
-    
-    {
-      id: 8,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: ipa,
-      adminChat: chat
-    },
-    
-    {
-      id: 9,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: ipa,
-      adminChat: chat
-    },
-    
-    {
-      id: 10,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: ipa,
-      adminChat: chat
-    },
-    {
-      id: 11,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-     adminAffect: ipa,
-      adminChat: chat
-    },
-    {
-      id: 12,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: ipa,
-      adminChat: chat
-    },
-    {
-      id: 13,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-     adminAffect: ipa,
-      adminChat: chat
-    },
-    {
-      id: 14,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: ipa,
-      adminChat: chat
-    },
-    {
-      id: 15,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: ipa,
-      adminChat: chat
-    },
-    {
-      id: 16,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: ipa,
-      adminChat: chat
-    },
-    {
-      id: 17,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: ipa,
-      adminChat: chat
-    },
-  ];
    const ModalContentEdit  = () => {
     return(
       <div className="modal-content" id='cont'
@@ -390,7 +259,10 @@ const AdminContent = () => {
            
         {isAdress?
           <Adress tutorName={tutorName}/>:
-          <AddAdmin onChildCloseModal={closeModal} onchildOpenLoading={handleLoading} /> }
+          <AddAdmin 
+              onChildCloseModal={closeModal} 
+              onchildOpenLoading={handleLoading}
+              onChildGetAdminUser={getAdmins} /> }
                
                
             
@@ -402,10 +274,10 @@ const AdminContent = () => {
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost,indexOfLastPost);
+  const currentPosts = userAdmin&&userAdmin.slice(indexOfFirstPost,indexOfLastPost);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   return(
-      <div className="container" style={{backgroundColor:'#eeeeee'}}>
+      <div className="container" style={{margin:'0% 0% 0% 0%'}}>
       {showModalLoading? <ModalLoading />: ''}
       {showEditModal? <ModalContentEdit /> :'' }
       {showChatModal? <ModalChat />  : ''}
@@ -421,8 +293,9 @@ const AdminContent = () => {
                                  <ReactSearchBox
                                     placeholder="Rechercher"
                                     value="Doe"
-                                    data={data}
+                                    data={userAdmin&&userAdmin.length!=0?userAdmin:[]}
                                     callback={(record) => console.log(record)}
+                                    onChange={onChangeSearch}
                                   />
                             </div>
                         </GridItem>
@@ -476,22 +349,28 @@ const AdminContent = () => {
               </thead>
               <tbody>
 
-              {currentPosts.map((post,index)=>{
+              {currentPosts&&currentPosts.map((post,index)=>{
                 return(
                   <tr key={index}>
                     
                     <td><Avatar 
                             size="45"
                             round={true}
-                            src={post.userProfile}
+                            src={im5}
                             name='logo'
                           /></td>
-                    <td>{post.adminName}</td>
-                    <td>{post.adminEmail}</td>
-                    <td>{post.adminRights}</td>
-                    <td>{post.adminActivate}</td>
-                    <td onClick={()=>{openModal('adress',post.adminName)}}><img style={{cursor:'pointer'}} src={post.adminAffect} width='15%'/></td>  
-                    <td onClick={()=>{openModal('chat',post.adminName)}}><img style={{cursor:'pointer'}} src={post.adminChat} width='60%'/></td>
+                    <td>{post.firstName}</td>
+                    <td>{post.email}</td>
+                    <td>{post.ipAddress}</td>
+                    <td><input 
+                            type='checkbox' 
+                            name="confirm_age"
+                            id="confirm_age"
+                            value={post.id}
+                            onChange={onChangeCheckbox}
+                          /></td>
+                    <td onClick={()=>{openModal('adress',post.firstName)}}><img style={{cursor:'pointer'}} src={affect} width='15%'/></td>  
+                    <td onClick={()=>{openModal('chat',post.firstName)}}><img style={{cursor:'pointer'}} src={chat} width='60%'/></td>
                   </tr>
                   )
               })}
@@ -502,7 +381,7 @@ const AdminContent = () => {
                       <GridItem xs={12} sm={12} md={12}>
                         <Pagination 
                           postsPerPage={postPerPage} 
-                          totalPosts={posts.length} 
+                          totalPosts={userAdmin&&userAdmin.length} 
                           paginate={paginate}
                         />
                       </GridItem>
@@ -510,6 +389,13 @@ const AdminContent = () => {
                     </div>
     )
 }
-export default AdminContent;
+const mapStateToProps=(state)=>{
+  return{
+      isLoggedIn: state.authReducer.isLoggedIn,
+      error: state.authReducer.error,
+      userAdmin: state.authReducer.userAdmin,   
+  };
+};
+export default connect(mapStateToProps)(AdminContent);
 
 

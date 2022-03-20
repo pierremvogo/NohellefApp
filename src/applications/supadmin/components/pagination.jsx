@@ -7,7 +7,7 @@ const Pagination = ({postsPerPage, totalPosts, paginate}) => {
 		pageNumbers.push(i);
 	}
 	return (
-		<nav style={{marginLeft:'35%'}}>
+		<nav>
 			
 			<ul className="pagination">
 				{pageNumbers.map((number,index)=>{

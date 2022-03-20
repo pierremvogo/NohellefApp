@@ -1,6 +1,7 @@
 import react from 'react';
 import GridItem from "../../../app/components/Grid/GridItem.js";
 import GridContainer from "../../../app/components/Grid/GridContainer.js";
+import {connect, useSelector, useDispatch} from 'react-redux';
 import Card from "../../../app/components/Card/Card.js";
 import CardHeader from "../../../app/components/Card/CardHeader.js";
 import CardBody from "../../../app/components/Card/CardBody.js";
@@ -25,13 +26,18 @@ import {NotificationManager,NotificationContainer} from 'react-notifications';
 //import io from 'socket.io-client';
 import Chat from "../../../app/components/chat/chat.jsx"
 import adminService from '../../services/admin.service';
+import {    authRegisterSuccess, 
+            authRegisterFailed, 
+            authShowMessage, 
+            authSetRegisterForm,
+            shareStudentUser } from '../../redux/reducer/actions/auth';
 
 
 //const socket = io.connect("http://localhost:3001");
-const ApprenantContent = () => {
+const ApprenantContent = ({userStudent}) => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postPerPage] = useState(3);
+  const [postPerPage] = useState(4);
   const [display, setDisplay] = useState("flex");
   const [showEditModal,setShowEditModal] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -47,16 +53,36 @@ const ApprenantContent = () => {
     const [studentId, setStudentId] = useState("student");
     const [supAdminId, setSupAdminId] = useState("supadmin");
     const [room, setRoom] = useState(studentId+supAdminId);
-     const [statusConnection,setStatusConnection] = useState(false);
+    const [statusConnection,setStatusConnection] = useState(false);
+    const dispatch =  useDispatch();
 
   useEffect(()=>{
-    getListStudent();
-    setPosts(data);
+    getStudents();
+    console.log("My user Student from API");
+    console.log(userStudent);
 
     return function cleanup () {
             return;
         }
   },[])
+  const getStudents = () => {
+    const filterPayload = {
+                      types: [
+                        "0",
+                      ]
+                    }
+    adminService.listAndFiltersUsers(filterPayload)
+        .then((response)=> {
+            console.log("Response for get student user");
+            console.log(response.data.users);
+            dispatch(shareStudentUser(response.data.users));
+        })
+        .catch((error)=> {
+            console.log("Error Response for get Student  user");
+            console.log(error);
+            dispatch(shareStudentUser(null));
+        })
+}
 
   function closeModal(){
       setShowChatModal(false,setDisplayAsk("none")); 
@@ -66,43 +92,7 @@ const ApprenantContent = () => {
       setDisplayAsk("flex",setShowChatModal(true),setRemoteUsername(nameUser));
     }
     
-  const getListStudent = () => {
-    let filterPayload = {
-      types: [
-              "0"
-             ],
-      disponibility: {},
-      specialities: [
-                      ""
-                    ],
-      levels: [
-                null
-              ],
-      permissions: [
-                    null
-                   ],
-      parentIds: [
-                  ""
-                 ],
-      status: [
-                null
-              ],
-      emailConfirmed: true
-
-    }
-
-    adminService.listAndFiltersUsers(filterPayload)
-    .then((response) => {
-              console.log("Successful get Student User");
-              console.log(response);
-
-            })
-            .catch((error) => {
-              console.log("Error get Student user");
-              console.log(error);
-            });
-
-  }  
+ 
 
   const handleChange = (checked) => {
     setChecked(checked)
@@ -240,12 +230,12 @@ const ApprenantContent = () => {
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost,indexOfLastPost);
+  const currentPosts = userStudent&&userStudent.slice(indexOfFirstPost,indexOfLastPost);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   return(
       <div className="container" style={{margin:'5% 0% 0% 0%'}}>
       {showChatModal? <ModalChat />  : ''}
-       <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
+       <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
 
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             <div style={{display:'inline-block',color:'#5271ff',margin:'2%'}}>
@@ -282,7 +272,7 @@ const ApprenantContent = () => {
                       </GridItem>
                     </GridContainer>
 
-                    <GridContainer style={{backgroundColor:'#eeeeee',width:'95%'}}> 
+        <GridContainer style={{backgroundColor:'#eeeeee',width:'95%'}}> 
         <Table striped bordered hover variant="secondary">
               <thead>
                 <tr>
@@ -293,30 +283,28 @@ const ApprenantContent = () => {
                   <th>Téléphone</th>
                   <th>Ville</th>
                   <th>Adresse</th>
-                  <th>Code</th>
                   <th>Chat</th>
                 </tr>
               </thead>
               <tbody>
 
-              {currentPosts.map((post,index)=>{
+              {currentPosts&&currentPosts.map((post,index)=>{
                 return(
                   <tr key={index}>
                     
                     <td><Avatar 
                                                 size="45"
                                                 round={true}
-                                                src={post.userProfile}
+                                                src={im5}
                                                 name='logo'
                                             /></td>
-                    <td>{post.userName}</td>
-                    <td>{post.userSurname}</td>
-                    <td>{post.userEmail}</td>
-                    <td>{post.userPhone}</td>
-                    <td>{post.userCity}</td>
-                    <td>{post.userAddress}</td>  
-                    <td>{post.userCode}</td>
-                    <td onClick={()=>{openModal(post.userName)}}><img style={{cursor:'pointer'}} src={post.userChat} width='45%' /></td>
+                    <td>{post.firstName}</td>
+                    <td>{post.lastName}</td>
+                    <td>{post.email}</td>
+                    <td>{post.phoneNumber}</td>
+                    <td>{post.city}</td>
+                    <td>{post.address}</td>  
+                    <td onClick={()=>{openModal(post.firstName)}}><img style={{cursor:'pointer'}} src={chat} width='45%' /></td>
                   </tr>
                   )
               })}
@@ -329,7 +317,7 @@ const ApprenantContent = () => {
                       <GridItem xs={12} sm={12} md={12}>
                         <Pagination 
                           postsPerPage={postPerPage} 
-                          totalPosts={posts.length} 
+                          totalPosts={userStudent&&userStudent.length} 
                           paginate={paginate}
                         />
                       </GridItem>
@@ -337,6 +325,13 @@ const ApprenantContent = () => {
                     </div>
     )
 }
-export default  ApprenantContent
+const mapStateToProps=(state)=>{
+  return{
+      isLoggedIn: state.authReducer.isLoggedIn,
+      error: state.authReducer.error,
+      userStudent: state.authReducer.userStudent,   
+  };
+};
+export default  connect(mapStateToProps)(ApprenantContent)
 
 

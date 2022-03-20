@@ -32,6 +32,9 @@ class UsersServices {
     addNewPaymentCard(id,payload) {
         return http.post(`/users/${id}/payment-cards`, payload);
     }
+    editPaymentCard(id,payload) {
+        return http.put(`/users/paymentCards/${id}`, payload);
+    }
     deleteUserPaymentCard(id) {
         return http.delete(`/users/paymentCards/${id}`);
     }

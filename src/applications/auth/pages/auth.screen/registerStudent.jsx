@@ -154,6 +154,8 @@ const RegisterStudent = ({  error,
     setShowModalPartial(false);
    }
 
+   
+
      const ModalLoading = () => {
     
     return(

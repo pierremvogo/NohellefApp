@@ -31,6 +31,7 @@ import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 
 const AddTutor = ({error,
+                    onChildGetTutorUser,
                     registersForm,
                     onChildCloseModal,
                     onchildOpenLoading,
@@ -172,6 +173,9 @@ const AddTutor = ({error,
   const handleLoading = (isShow) => {
     onchildOpenLoading(isShow);
   }
+  const handleGetTutorUser = (e) => {
+      onChildGetTutorUser(e.target.name);
+  }
   const onChangePhone = (number) => {
         setPhoneValue(number);
         console.log("my phone number");
@@ -181,6 +185,7 @@ const AddTutor = ({error,
     }
 
   function closeModal(e){
+      handleGetTutorUser(e);
       dispatch(authCreateSuccess(null));
       onChildCloseModal(e.target.name);
   }
@@ -264,7 +269,7 @@ const AddTutor = ({error,
                     dispatch(authRegisterFailed("Network Error, possible you are not connected"));
                 }else{
                     dispatch(authRegisterFailed(error.response));
-                console.log(error.response);
+                    console.log(error.response);
                 
                 }
             });

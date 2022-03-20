@@ -16,14 +16,29 @@ class CourseService {
     createNote(payload) {
         return http.post(`/course-notes`, payload);
     }
-    getNotesByStudentId(studentId) {
+    getNoteByStudentId(studentId) {
         return http.get(`/course-notes/${studentId}`);
+    }
+    filterStudentNote(studentId) {
+        return http.post(`/course-notes/${studentId}/filter`);
     }
     editNote(id,payload) {
         return http.patch(`/course-notes/${id}`, payload);
     }
-    editNote(id,payload) {
+    deleteNote(id) {
         return http.delete(`/course-notes/${id}`);
+    }
+    createCourseNoteComment(payload) {
+        return http.post(`/course-notes/comments`, payload);
+    }
+    getCommentByCourseNote(courseNoteId) {
+        return http.get(`/course-notes/comments/${courseNoteId}`);
+    }
+    editNoteComment(NoteCommentId) {
+        return http.patch(`/course-notes/comments/${NoteCommentId}`);
+    }
+    deleteNoteComment(id) {
+        return http.delete(`/course-notes/comments/${id}`);
     }
 
     //for course Exercices
@@ -41,8 +56,8 @@ class CourseService {
     getCommentByCourseId(courseId) {
         return http.get(`/course-comments/${courseId}`);
     }
-    editComment(id) {
-        return http.patch(`/course-comments/${id}`);
+    editComment(id, payload) {
+        return http.patch(`/course-comments/${id}`, payload);
     }
     deleteComment(id) {
         return http.delete(`/course-comments/${id}`);

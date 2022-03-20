@@ -31,6 +31,7 @@ import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 
 const AddAdmin = ({error,
+                    onChildGetAdminUser,
                     registersForm,
                     onChildCloseModal,
                     onchildOpenLoading,
@@ -173,6 +174,11 @@ const AddAdmin = ({error,
   const handleLoading = (isShow) => {
     onchildOpenLoading(isShow);
   }
+
+  const handleGetAdminUser = (e) => {
+      onChildGetAdminUser(e.target.name);
+  }
+
   const onChangePhone = (number) => {
         setPhoneValue(number);
         console.log("my phone number");
@@ -182,6 +188,7 @@ const AddAdmin = ({error,
     }
 
   function closeModal(e){
+      handleGetAdminUser(e)
       dispatch(authCreateSuccess(null));
       onChildCloseModal(e.target.name);
   }
@@ -239,7 +246,7 @@ const AddAdmin = ({error,
                             city: registerAdminForm.city,
                             birthDay: registerAdminForm.birthDay,
                             address: registerAdminForm.address,
-                            userType: "4",
+                            userType: "3",
                             specialities: registerAdminForm.specialities
                         }
                          

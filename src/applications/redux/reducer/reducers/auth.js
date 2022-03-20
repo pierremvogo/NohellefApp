@@ -19,6 +19,10 @@ const INITIAL_STATE = user ?
                                 confirmEmail: null,
                                 updatePayload: null,
                                 paymentRessource: null,
+                                userStudent: null,
+                                userTutor: null,
+                                userAdmin: null,
+                                userParent: null,
                                 createSuccessMessage: null,
                                 isRegister: false,
                                 loginsForm: null,
@@ -38,6 +42,10 @@ const INITIAL_STATE = user ?
                                 registersForm: null,
                                 confirmEmail: null,
                                 isRegister: false,
+                                userStudent: null,
+                                userTutor: null,
+                                userAdmin: null,
+                                userParent: null,
                                 resetToken: null,
                                 updatePayload: null,
                                 resetPayload: null,
@@ -233,6 +241,30 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 paymentRessource: action.payload,
+                error: null,
+            };
+        case types.SHARE_STUDENT_USER:
+            return {
+                ...state,
+                userStudent: action.payload,
+                error: null,
+            };
+        case types.SHARE_PARENT_USER:
+            return {
+                ...state,
+                userParent: action.payload,
+                error: null,
+            };
+        case types.SHARE_TUTOR_USER:
+            return {
+                ...state,
+                userTutor: action.payload,
+                error: null,
+            };
+        case types.SHARE_ADMIN_USER:
+            return {
+                ...state,
+                userAdmin: action.payload,
                 error: null,
             };
         default:

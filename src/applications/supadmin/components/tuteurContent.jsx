@@ -2,6 +2,7 @@ import react from 'react';
 import GridItem from "../../../app/components/Grid/GridItem.js";
 import GridContainer from "../../../app/components/Grid/GridContainer.js";
 import Card from "../../../app/components/Card/Card.js";
+import {connect, useSelector, useDispatch} from 'react-redux';
 import CardHeader from "../../../app/components/Card/CardHeader.js";
 import CardBody from "../../../app/components/Card/CardBody.js";
 import React,{useState,useEffect} from 'react';
@@ -30,12 +31,18 @@ import {NotificationManager,NotificationContainer} from 'react-notifications';
 import Chat from "../../../app/components/chat/chat.jsx"
 import AffectRight from './affectRight.jsx';
 import Loader from 'react-loader-spinner';
+import adminService from '../../services/admin.service';
+import {    authRegisterSuccess, 
+            authRegisterFailed, 
+            authShowMessage, 
+            authSetRegisterForm,
+            shareTutorUser } from '../../redux/reducer/actions/auth';
 
 //const socket = io.connect("http://localhost:3001");
-const TuteurContent = () => {
-	const [posts, setPosts] = useState([]);
-	const [currentPage, setCurrentPage] = useState(2);
-	const [postPerPage] = useState(3);
+const TuteurContent = ({userTutor}) => {
+	const [posts, setPosts] = useState(userTutor);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [postPerPage] = useState(4);
 	const [display, setDisplay] = useState("flex");
 	const [showEditModal,setShowEditModal] = useState(false);
 	const [checked, setChecked] = useState(false);
@@ -55,18 +62,34 @@ const TuteurContent = () => {
     const [adminName, setAdminName] = useState('');
     const [showModalLoading, setShowModalLoading] = useState(false);
     const [displayLoading, setDisplayLoading] = useState("flex");
+    const dispatch = useDispatch();
 
 
 	useEffect(()=>{
-   /* socket.on('id', (status)=>{
-            setStatusConnection(status);
-            console.log("MYid",status);
-        })*/
-		setPosts(data);
+    getTutors();
+    console.log("My user Tutor from API");
     return function cleanup () {
             return;
         }
 	},[])
+  const getTutors = () => {
+    const filterPayload = {
+                      types: [
+                        "2",
+                      ]
+                    }
+    adminService.listAndFiltersUsers(filterPayload)
+        .then((response)=> {
+            console.log("Response for get Tutor user");
+            console.log(response.data.users);
+            dispatch(shareTutorUser(response.data.users));
+        })
+        .catch((error)=> {
+            console.log("Error Response for get Tutor user");
+            console.log(error);
+            dispatch(shareTutorUser(null));
+        })
+}
 
 	const handleChange = (checked) => {
 		setChecked(checked)
@@ -143,8 +166,16 @@ const TuteurContent = () => {
       >
            
                     
-        {isAdd?<AddTutor onChildCloseModal={closeModal} onchildOpenLoading={handleLoading} />:
-        <AffectRight onChildCloseModal={closeModal} adminName={adminName}/>}  
+        {isAdd?
+          <AddTutor 
+            onChildCloseModal={closeModal} 
+            onchildOpenLoading={handleLoading}
+            onChildGetTutorUser={getTutors} 
+          />:
+          <AffectRight 
+            onChildCloseModal={closeModal} 
+            adminName={adminName}
+          />}  
          
       </div>
     )
@@ -409,7 +440,7 @@ const TuteurContent = () => {
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost,indexOfLastPost);
+  const currentPosts = userTutor&&userTutor.slice(indexOfFirstPost,indexOfLastPost);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 	return(
 			<div className="container" style={{margin:'5% 0% 0% 0%'}}>
@@ -478,7 +509,7 @@ const TuteurContent = () => {
                   <th>Picture</th>
                   <th>Nom</th>
                   <th>Adresse Mail</th>
-                  <th>Droits</th>
+                  <th>Number</th>
                   <th>Activer / Desactiver</th>
                   <th>Affecter un droit</th>
                   <th>Chat</th>
@@ -486,22 +517,22 @@ const TuteurContent = () => {
               </thead>
               <tbody>
 
-              {currentPosts.map((post,index)=>{
+              {currentPosts&&currentPosts.map((post,index)=>{
                 return(
                   <tr key={index}>
                     
                     <td><Avatar 
                             size="45"
                             round={true}
-                            src={post.userProfile}
+                            src={im5}
                             name='logo'
                           /></td>
-                    <td>{post.adminName}</td>
-                    <td>{post.adminEmail}</td>
-                    <td>{post.adminRights}</td>
-                    <td>{post.adminActivate}</td>
-                    <td onClick={()=>{openModal('affect',post.adminName)}}><img style={{cursor:'pointer'}} src={post.adminAffect} width='20%'/></td>  
-                    <td onClick={()=>console.log("tr")}><img style={{cursor:'pointer'}} src={post.adminChat} width='50%'/></td>
+                    <td>{post.firstName}</td>
+                    <td>{post.email}</td>
+                    <td>{post.phoneNumber}</td>
+                    <td><input type='checkbox' /></td>
+                    <td onClick={()=>{openModal('affect',post.firstName)}}><img style={{cursor:'pointer'}} src={affect} width='20%'/></td>  
+                    <td onClick={()=>console.log("tr")}><img style={{cursor:'pointer'}} src={chat} width='50%'/></td>
                   </tr>
                   )
               })}
@@ -513,7 +544,7 @@ const TuteurContent = () => {
                     	<GridItem xs={12} sm={12} md={12}>
                     		<Pagination 
 	                    		postsPerPage={postPerPage} 
-	                    		totalPosts={posts.length} 
+	                    		totalPosts={userTutor&&userTutor.length} 
 	                    		paginate={paginate}
                     		/>
                     	</GridItem>
@@ -521,6 +552,13 @@ const TuteurContent = () => {
                     </div>
 		)
 }
-export default TuteurContent
+const mapStateToProps=(state)=>{
+  return{
+      isLoggedIn: state.authReducer.isLoggedIn,
+      error: state.authReducer.error,
+      userTutor: state.authReducer.userTutor,   
+  };
+};
+export default connect(mapStateToProps)(TuteurContent)
 
 

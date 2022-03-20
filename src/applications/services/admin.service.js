@@ -3,10 +3,10 @@ import http from '../../http-common';
 class AdminService {
 
     login(payload) {
-        return http.post("/admin/users/admin-login", payload);
+        return http.post("/admin/users/admin-tutor-login", payload);
     }
     confirmLogin(code) {
-        return http.get(`/admin/users/confirm-admin-login/${code}`);
+        return http.get(`/admin/users/confirm-admin-tutor-login/${code}`);
     }
     loginInTutorAccount(tutorId) {
         return http.get(`/admin/login-tutor-account/${tutorId}`);
@@ -42,8 +42,12 @@ class AdminService {
         return http.delete(`/admin/courses/${id}`);
     }
 
-    createQuiz(payload) {
+    createCourseExercice(payload) {
         return http.post(`/admin/course-exercices`, payload);
+    }
+
+    setCourseExercice(exerciseId,payload) {
+        return http.patch(`/admin/course-exercices/${exerciseId}`, payload);
     }
 
     addQuizQuestion(exerciseId,payload) {

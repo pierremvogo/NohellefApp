@@ -1,5 +1,6 @@
 import React, {useContext, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import {connect, useSelector, useDispatch} from 'react-redux';
 import Avatar   from 'react-avatar';
 import Button from '../../../../app/components/buttons/button';
 import { ProSidebar, SidebarHeader, SidebarFooter, SidebarContent } from 'react-pro-sidebar';
@@ -59,11 +60,14 @@ import {NotificationManager,NotificationContainer} from 'react-notifications';
 import Chat from "../../../../app/components/chat/chat.jsx";
 import badge from '../../../../assets/images/dashboard/badge.png';
 import ScrollToBottom from "react-scroll-to-bottom";
+import adminService from '../../../services/admin.service';
 /*import { SocketContext } from '../../../../SocketContext.js';
 import ShareSessionId from "../../../../app/components/ShareSessionId/ShareSessionId.jsx";*/
 //5271ff 
 //ffce52 
-const DashboardSupAdmin = () => {
+
+
+const DashboardSupAdmin = ({userRessource}) => {
     const [isAdminContent, setIsAdminContent] = useState(true);
     const [isAbonnementContent, setIsAbonnementContent] = useState(false);
     const [isAchatContent, setIsAchatContent] = useState(false);
@@ -76,6 +80,7 @@ const DashboardSupAdmin = () => {
 
     const [isFormule, setIsFormule] = useState(false);
     const history = useHistory();
+    const dispatch= useDispatch();
 
     useEffect(()=>{
         var element1 = document.getElementById("myDiv1");
@@ -703,12 +708,12 @@ function menuToggle(){
                        
                     </GridContainer>
 
-                          {isAdminContent?<AdminContent  />:''}
-                          {isAbonnementContent?<AbonnementContent  />:''}
+                          {isAdminContent?<AdminContent />:''}
+                          {isAbonnementContent?<AbonnementContent />:''}
                           {isAchatContent?<AchatContent />:''}
                           {isApprenantContent?<ApprenantContent />:''}
                           {isTuteurContent?<TuteurContent />:''}
-                          {isPublicityContent?<PublicityContent />:''}
+                          {isPublicityContent?<PublicityContent  />:''}
                           {isAchatC?<AchatC />:''}
                           {isFormule?<FormuleAbonnement />:''}
                          
@@ -723,4 +728,11 @@ function menuToggle(){
     
         )
 }
-export default DashboardSupAdmin;
+const mapStateToProps=(state)=>{
+  return{
+      isLoggedIn: state.authReducer.isLoggedIn,
+      error: state.authReducer.error,
+      userRessource: state.authReducer.userRessource,   
+  };
+};
+export default connect(mapStateToProps)(DashboardSupAdmin);
