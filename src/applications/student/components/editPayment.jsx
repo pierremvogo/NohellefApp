@@ -24,6 +24,8 @@ import Avatar   from 'react-avatar';
 import userService from '../../services/user.service';
 
 const EditPayment = ({user,error,
+                        isUpdate,
+                        idUp,
                         onChildCloseModal,
                         registersForm,
                         onchildOpenLoading,
@@ -43,6 +45,7 @@ const EditPayment = ({user,error,
     const [resetPasswordForm,setResetPasswordForm] = useState({email: ""});
     const [tooltipOpen, setTooltipOpen] = useState(false)
     const [formErrors, setFormErrors] = useState({});
+    const [isUpdateCard, setIsUpdateCard] = useState(isUpdate);
     const history = useHistory()
     const dispatch= useDispatch()
 
@@ -104,6 +107,7 @@ const EditPayment = ({user,error,
 
     const closeModal = (e) => {
         handleGetPaymentRessource(e);
+        setIsUpdateCard(false);
         dispatch(authCreateSuccess(null));
         dispatch(authSetRegisterForm(null));
         onChildCloseModal(e.target.name);
@@ -118,6 +122,9 @@ const EditPayment = ({user,error,
         dispatch(authRegisterFailed(null)); 
         console.log(paymentForm);
     }
+
+
+
     const onSubmit = (e) => {
         e.preventDefault();
         let paymentRegister = {
@@ -130,14 +137,14 @@ const EditPayment = ({user,error,
        if(Object.keys(formErrors).length === 0 && submited){
             dispatch(authSetRegisterForm(paymentForm));
             handleLoading(true);
-            console.log("form Tutor register");
+            console.log("Payment Card");
             console.log(paymentRegister);
             userService.addNewPaymentCard(user&&user.currentUser.id, paymentRegister)
             .then((response) => {
                     dispatch(authSetRegisterForm(null));
                     dispatch(authRegisterFailed(null));
                     dispatch(authCreateSuccess("Payment Card Added Successfully"));
-                    console.log("Response register tutor success");
+                    console.log("Response Payment Card Added success");
                     console.log(response.data);
                     handleLoading(false);
             })
@@ -160,6 +167,40 @@ const EditPayment = ({user,error,
         }
         
        
+    }
+
+    const handleUpdate = (e) => {
+        e.preventDefault();
+        let paymentRegister = {
+                              bankCardNumber: paymentForm.numCardNumber,
+                              bankCardExpirationDate: paymentForm.cardExpireYear+"-"+paymentForm.cardExpireMonth,
+                              bankCardCode: paymentForm.cardCode
+                              }
+            dispatch(authSetRegisterForm(paymentForm));
+            handleLoading(true);
+            console.log("form Tutor register");
+            console.log(paymentRegister);
+            userService.editPaymentCard(idUp&&idUp, paymentRegister)
+            .then((response) => {
+                    dispatch(authSetRegisterForm(null));
+                    dispatch(authRegisterFailed(null));
+                    dispatch(authCreateSuccess("Payment Card Update Successfully"));
+                    console.log("Response payment update success");
+                    console.log(response.data);
+                    handleLoading(false);
+            })
+            .catch((error) => {
+                handleLoading(false);
+                console.log("Error  Payment Card Added");
+                if(error.response === undefined){
+                    dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                }else{
+                    dispatch(authRegisterFailed(error.response));
+                    console.log(error.response);
+                
+                }
+            });
+
     }
 
 
@@ -359,7 +400,7 @@ const EditPayment = ({user,error,
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                     
-                                    <div onClick={onSubmit} style={{cursor:'pointer',
+                                    <div onClick={isUpdateCard? handleUpdate: onSubmit} style={{cursor:'pointer',
                                           margin:'5% 0% 5% 0%',
                                           textAlign:'center'}}>
                                       <div style={{
@@ -376,12 +417,13 @@ const EditPayment = ({user,error,
                                           paddingTop:'3%'
                                         }}>
                                 
-                                <span className="text" style={{fontSize:'100%',color:'white'}}>Ajouter</span>
+                                <span className="text" style={{fontSize:'100%',color:'white'}}>{isUpdateCard?"Mettre à jour":"Ajouter"}</span>
                               </div>
                                     </div>
                                       
                                     </GridItem>
                                   </GridContainer>
+
                                    <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                       {error && (

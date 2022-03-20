@@ -40,11 +40,13 @@ const PaymentResourseContent = ({user,paymentRessource}) => {
   const [display, setDisplay] = useState("flex");
   const [showEditModal,setShowEditModal] = useState(false);
   const [paymentData,setPaymentData] = useState([]);
-   const [showModalLoading, setShowModalLoading] = useState(false);
-   const [showModalDelete, setShowModalDelete] = useState(false);
-   const [displayAsk, setDisplayAsk] = useState("flex");
-   const [payId,setPayId] = useState("");
+  const [showModalLoading, setShowModalLoading] = useState(false);
+  const [showModalDelete, setShowModalDelete] = useState(false);
+  const [displayAsk, setDisplayAsk] = useState("flex");
+  const [payId,setPayId] = useState("");
   const dispatch= useDispatch();
+  const [isUpdatePayment, setIsUpdatePayment] = useState(false);
+  const [idUpdate, setIdUpdate] = useState("");
 
 
   const ModalContentEdit  = () => {
@@ -70,14 +72,17 @@ const PaymentResourseContent = ({user,paymentRessource}) => {
         <EditPayment onChildCloseModal={closeModal} 
                      onchildOpenLoading={handleLoading}
                      onChildGetPayment={handleGetPaymentRessource} 
+                     isUpdate={isUpdatePayment}
+                     idUp={idUpdate}
                      /> 
-          
-                
-        
-          
       </div>
     )
   };
+
+  const handleUpdate = (isUpdate,id) => {
+    setIsUpdatePayment(isUpdate);
+    setIdUpdate(id);
+  }
 
   const ModalDeletePaymentCard  = () => {
     return(
@@ -147,8 +152,11 @@ const PaymentResourseContent = ({user,paymentRessource}) => {
     )
   };
 
+  
+
  function closeModal(){
     handleGetPaymentRessource();
+    handleUpdate(false,"");
     const paymentCards = JSON.parse(localStorage.getItem('paymentCards'));
     setDisplay("none",setShowEditModal(false),setShowModalDelete(false));
   }
@@ -156,6 +164,7 @@ const PaymentResourseContent = ({user,paymentRessource}) => {
   const openModal=(isUpdate,dataPayment)=> {
     setDisplay("flex",setShowEditModal(true));
     if(isUpdate=="yess"){
+      handleUpdate(true,dataPayment.id);
       dispatch(authSetRegisterForm({
           numCardNumber:dataPayment.bankCardNumber,
           cardExpireMonth:dataPayment.bankCardExpirationDate.substring(5),
