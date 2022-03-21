@@ -1,32 +1,44 @@
-
-.topbar{
-    height: 10vh;
-}
-.dashboard-container__button {
+.side-content{
+    margin-bottom: 2%;
+    background-color: #c7d0d8;
+    border-radius: 15px;
+    border-bottom: 2px solid blue;
+    border-right:  2px solid blue;
+    height: 53px;
     width: 100%;
-    margin: 10px auto;
-    background-color: green;
-    padding: 5px 70px;
-    color: 'white;';
-    font-family: "Poppins Medium", sans-serif;
-    font-size: 20px;
-    border: 5;
-    border-radius: 100px 50px 50px 50px;
     cursor: pointer;
-    text-align: center;
 }
-.custom-modal-style{
-    width: 150px;
+.side-content:focus{
+    background-color: red;
+}
+.side-header{
+    text-align: center;
+    margin-bottom: 5%;
+}
+.text{
+    font-size: 90%;
+    color: black;
+}
+.dash-navitem{
+    font-size: 100%;
+    text-align: center;
+    cursor: pointer;
+}
+.dash-navitem:hover{
+    border-radius: 3px 3px 3px 3px;
+    width: 100%;
+    border: 2px solid #DD1B16;
+}
+.test-class{
+    height: 45px;
 }
 
 .action .menu{
     position: absolute;
- 
-    top: 100%;
+    top: 40%;
     right: 60px;
     padding: 10px 20px;
-    font-size: 1vw;
-    background: #F8DB52;
+    background: #fff;
     width: 150px;
     box-sizing: 0 5px 25px rgba(0,0,0,0.1);
     border-radius: 15px;

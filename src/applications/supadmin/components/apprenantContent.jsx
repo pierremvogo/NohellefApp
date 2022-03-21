@@ -163,67 +163,6 @@ const ApprenantContent = ({userStudent}) => {
   
 
     let data = [
-    {
-      id: 1,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userCity:"Yaoundé",
-      userAddress: "Rue 5874",
-      userCode: '125635',
-      userChat: chat
-    },
-    {
-      id: 2,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userCity:"Yaoundé",
-      userAddress: "Rue 5874",
-      userCode: '125635',
-      userChat: chat
-    },
-    {
-      id: 3,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userCity:"Yaoundé",
-      userAddress: "Rue 5874",
-      userCode: '125635',
-      userChat: chat
-    },
-    {
-      id: 4,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userCity:"Yaoundé",
-      userAddress: "Rue 5874",
-      userCode: '125635',
-      userChat: chat
-    },
-    {
-      id: 5,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userCity:"Yaoundé",
-      userAddress: "Rue 5874",
-      userCode: '125635',
-      userChat: chat
-    },
-    
     
    
   ];
@@ -313,7 +252,7 @@ const ApprenantContent = ({userStudent}) => {
           </GridContainer>
 
       
-                    <GridContainer style={{backgroundColor:'#eeeeee',width:'95%'}}>
+                    <GridContainer style={{backgroundColor:'#eeeeee',width:'95%', overFlowY:"scroll"}}>
                       <GridItem xs={12} sm={12} md={12}>
                         <Pagination 
                           postsPerPage={postPerPage} 

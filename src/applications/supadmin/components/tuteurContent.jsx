@@ -32,6 +32,7 @@ import Chat from "../../../app/components/chat/chat.jsx"
 import AffectRight from './affectRight.jsx';
 import Loader from 'react-loader-spinner';
 import adminService from '../../services/admin.service';
+import authService from '../../services/auth.service';
 import {    authRegisterSuccess, 
             authRegisterFailed, 
             authShowMessage, 
@@ -42,7 +43,7 @@ import {    authRegisterSuccess,
 const TuteurContent = ({userTutor}) => {
 	const [posts, setPosts] = useState(userTutor);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [postPerPage] = useState(4);
+	const [postPerPage] = useState(3);
 	const [display, setDisplay] = useState("flex");
 	const [showEditModal,setShowEditModal] = useState(false);
 	const [checked, setChecked] = useState(false);
@@ -94,6 +95,43 @@ const TuteurContent = ({userTutor}) => {
 	const handleChange = (checked) => {
 		setChecked(checked)
 	}
+  const handleLockAccount = (id) => {
+        authService.lockAccount(id)
+        .then((response)=>{
+          console.log("Account Lock successfull");
+          console.log(response);
+        })
+        .catch((error)=>{
+          console.log("Error lock account");
+          console.log(error);
+        })
+    }
+
+    const handleUnLockAccount = (id) => {
+        authService.unLockAccount(id)
+        .then((response)=>{
+          console.log("Account UnLock successfull");
+          console.log(response);
+        })
+        .catch((error)=>{
+          console.log("Error Unlock account");
+          console.log(error);
+        })
+    }
+
+   const onChangeCheckbox = (e) => {
+        if(e.target.checked){
+          console.log("IS check");
+          console.log(e.target.checked);
+          console.log(e.target.value);
+          handleLockAccount(e.target.value);
+        }else{
+          console.log("IS Not check");
+          console.log(e.target.checked);
+          console.log(e.target.value);
+          handleUnLockAccount(e.target.value);
+        }
+    }
 
   function closeModal(){
       setDisplay("none",setShowEditModal(false));
@@ -261,180 +299,7 @@ const TuteurContent = ({userTutor}) => {
 
 
     let data = [
-    {
-      id: 1,
-      userProfile: im5,
-      adminName:"Merlin",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
-    {
-      id: 2,
-      userProfile: im5,
-      adminName:"Paul",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
-    {
-      id: 3,
-      userProfile: im5,
-      adminName:"Emaus",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
-    {
-      id: 4,
-     userProfile: im5,
-      adminName:"Albert",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
-    {
-      id: 5,
-      userProfile: im5,
-      adminName:"copenhague",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
-    {
-      id: 6,
-      userProfile: im5,
-      adminName:"Luis",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
     
-    {
-      id: 7,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
-    
-    {
-      id: 8,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
-    
-    {
-      id: 9,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
-    
-    {
-      id: 10,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
-    {
-      id: 11,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
-    {
-      id: 12,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
-    {
-      id: 13,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
-    {
-      id: 14,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
-    {
-      id: 15,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
-    {
-      id: 16,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
-    {
-      id: 17,
-      userProfile: im5,
-      adminName:"mvogo",
-      adminEmail:"mvogopierre129@gmail.com",
-      adminRights:"Tous les droits",
-      adminActivate: <input type='checkbox' />,
-      adminAffect: affect,
-      adminChat: chat
-    },
   ];
 
   // Get current posts
@@ -530,7 +395,13 @@ const TuteurContent = ({userTutor}) => {
                     <td>{post.firstName}</td>
                     <td>{post.email}</td>
                     <td>{post.phoneNumber}</td>
-                    <td><input type='checkbox' /></td>
+                    <td><input 
+                            type='checkbox' 
+                            name="confirm_age"
+                            id="confirm_age"
+                            value={post.id}
+                            onChange={onChangeCheckbox}
+                          /></td>
                     <td onClick={()=>{openModal('affect',post.firstName)}}><img style={{cursor:'pointer'}} src={affect} width='20%'/></td>  
                     <td onClick={()=>console.log("tr")}><img style={{cursor:'pointer'}} src={chat} width='50%'/></td>
                   </tr>
