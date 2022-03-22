@@ -280,7 +280,7 @@ const ApprenantContent = ({userStudent}) => {
   const onChangeSearch = (record) => {
     let filter, table, tr, td, tdId, i, txtValue;
     filter = record.toLowerCase();
-    table = document.getElementById("adminTable");
+    table = document.getElementById("studentTable");
     tr = table.getElementsByTagName("tr");
     for (i=0; i<tr.length; i++){
       td = tr[i].getElementsByTagName("td")[1];
@@ -419,7 +419,7 @@ const ApprenantContent = ({userStudent}) => {
                     </GridContainer>
 
         <GridContainer style={{backgroundColor:'#eeeeee',width:'95%'}}> 
-        <Table striped bordered hover variant="secondary">
+        <Table striped bordered hover variant="secondary" id="studentTable">
               <thead>
                 <tr>
                   <th>Picture</th>
