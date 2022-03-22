@@ -251,16 +251,14 @@ const RegisterStudent = ({  error,
                 }
                 break;
             case 'phone':
-                if(values[input].length >= 9 ){
-                        if(!regexPhoneNumber.test(values[input])){
-                            errorsValidation.phone = "Numéro de Téléphone invalide";
-                        }else{
-                             setSubmited(true)
-                        }
+                if(!values[input]){
+                    errorsValidation.phone = "Numéro de Téléphone requis";
+                }else if(values[input].length < 9){
+                    errorsValidation.phone = "Format de Numéro invalide";           
+                }else{
+                    setSubmited(true)
                 }
-                else{
-                   errorsValidation.phone = "Format de Numéro invalide"; 
-                }
+                break;
                 break;
             case 'ville':
                 if(!values[input]){

@@ -231,6 +231,24 @@ const AbonnementContent = ({userParent}) => {
     )
   };
 
+  const onChangeSearch = (record) => {
+    let filter, table, tr, td, tdId, i, txtValue;
+    filter = record.toLowerCase();
+    table = document.getElementById("adminTable");
+    tr = table.getElementsByTagName("tr");
+    for (i=0; i<tr.length; i++){
+      td = tr[i].getElementsByTagName("td")[1];
+      if(td) {
+        txtValue = td.textContent
+        if(txtValue.toLowerCase().indexOf(filter) > -1){
+          tr[i].style.display = "";
+        }else{
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+
   const closeLockUnlockModal = () => {
       dispatch(authCreateSuccess(null));
       dispatch(authRegisterFailed(null));
@@ -357,10 +375,10 @@ const AbonnementContent = ({userParent}) => {
                         <GridItem xs={12} sm={12} md={4} style={{marginTop:'2%'}}>
                            <div style={{border:'2px solid #0069D9', width:'110%'}}>
                                  <ReactSearchBox
-                                    placeholder="Rechercher"
+                                    placeholder="Search By Parent Name"
                                     value="Doe"
                                     data={data}
-                                    callback={(record) => console.log(record)}
+                                    onChange={onChangeSearch}
                                   />
                             </div>
                         </GridItem>

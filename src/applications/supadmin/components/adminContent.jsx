@@ -65,6 +65,7 @@ const AdminContent = ({userAdmin}) => {
     const [displayLoading, setDisplayLoading] = useState("flex");
     const [showModalLoading, setShowModalLoading] = useState(false);
     const [showModalLockUnLock, setShowModalLockUnLock] = useState(false);
+    const [currentPageAssociate, setCurrentPageAssociate] = useState("");
     const dispatch = useDispatch();
 
     useEffect(()=>{
@@ -102,8 +103,21 @@ const AdminContent = ({userAdmin}) => {
   }
 
   const onChangeSearch = (record) => {
-    console.log("My record");
-    console.log(record);
+    let filter, table, tr, td, tdId, i, txtValue;
+    filter = record.toLowerCase();
+    table = document.getElementById("adminTable");
+    tr = table.getElementsByTagName("tr");
+    for (i=0; i<tr.length; i++){
+      td = tr[i].getElementsByTagName("td")[1];
+      if(td) {
+        txtValue = td.textContent
+        if(txtValue.toLowerCase().indexOf(filter) > -1){
+          tr[i].style.display = "";
+        }else{
+          tr[i].style.display = "none";
+        }
+      }
+    }
   }
 
   const openModal=(isAdress,nameAdmin)=> {
@@ -363,9 +377,9 @@ const AdminContent = ({userAdmin}) => {
                         <GridItem xs={12} sm={12} md={4} style={{marginTop:'5%'}}>
                             <div style={{border:'2px solid #0069D9', width:'110%'}}>
                                  <ReactSearchBox
-                                    placeholder="Rechercher"
+                                    placeholder="Search by Administrator Name"
                                     value="Doe"
-                                    data={userAdmin&&userAdmin.length!=0?userAdmin:[]}
+                                    
                                     callback={(record) => console.log(record)}
                                     onChange={onChangeSearch}
                                   />
@@ -407,7 +421,7 @@ const AdminContent = ({userAdmin}) => {
                     </GridContainer>
 
       <GridContainer style={{backgroundColor:'#eeeeee',width:'95%'}}> 
-        <Table striped bordered hover variant="secondary">
+        <Table striped bordered hover variant="secondary" id="adminTable">
               <thead>
                 <tr>
                   <th>Picture</th>

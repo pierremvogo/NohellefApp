@@ -104,16 +104,14 @@ const AddTutor = ({error,
                 }
                 break;
             case 'phoneNumber':
-                if(values[input].length >= 9  ){
-                        if(!regexPhoneNumber.test(values[input])){
-                            errorsValidation.phoneNumber = "Numéro de Téléphone invalide";
-                        }else{
-                             setSubmited(true)
-                        }
+                if(!values[input]){
+                    errorsValidation.phoneNumber = "Numéro de Téléphone requis";
+                }else if(values[input].length < 9){
+                    errorsValidation.phoneNumber = "Format de Numéro invalide";           
+                }else{
+                    setSubmited(true)
                 }
-                else{
-                   errorsValidation.phoneNumber = "Format de Numéro invalide"; 
-                }
+                break;
                 break;
             case 'city':
                 if(!values[input]){
