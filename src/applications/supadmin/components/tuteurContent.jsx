@@ -21,6 +21,7 @@ import Pagination from './pagination.jsx';
 import Switch from "react-switch";
 import edit from '../../../assets/images/dashboard/edit.png';
 import affect from '../../../assets/images/dashboard/affect.png';
+import ip from '../../../assets/images/dashboard/ip.png';
 import im5 from '../../../assets/images/im5.png';
 import chat from '../../../assets/images/dashboard/chat2.png';
 import {Table} from 'react-bootstrap';
@@ -29,7 +30,8 @@ import './admin.css';
 import {NotificationManager,NotificationContainer} from 'react-notifications';
 //import io from 'socket.io-client';
 import Chat from "../../../app/components/chat/chat.jsx"
-import AffectRight from './affectRight.jsx';
+import LockUnlockAccount from "../../../app/components/lockUnlock/lockUnlockAccount.jsx"
+import Adress from './adress.jsx';
 import Loader from 'react-loader-spinner';
 import adminService from '../../services/admin.service';
 import authService from '../../services/auth.service';
@@ -37,6 +39,7 @@ import {    authRegisterSuccess,
             authRegisterFailed, 
             authShowMessage, 
             authSetRegisterForm,
+            authCreateSuccess,
             shareTutorUser } from '../../redux/reducer/actions/auth';
 
 //const socket = io.connect("http://localhost:3001");
@@ -60,9 +63,11 @@ const TuteurContent = ({userTutor}) => {
     const [room, setRoom] = useState(adminId+supAdminId);
     const [statusConnection,setStatusConnection] = useState(false);
     const [isAdd,setIsAdd] = useState(false);
-    const [adminName, setAdminName] = useState('');
+    const [tutorNamed, setTutorNamed] = useState('');
+    const [tutorIds, setTutorIds] = useState("");
     const [showModalLoading, setShowModalLoading] = useState(false);
     const [displayLoading, setDisplayLoading] = useState("flex");
+    const [showModalLockUnLock, setShowModalLockUnLock] = useState(false);
     const dispatch = useDispatch();
 
 
@@ -96,31 +101,61 @@ const TuteurContent = ({userTutor}) => {
 		setChecked(checked)
 	}
   const handleLockAccount = (id) => {
+        handleLoading(true);
         authService.lockAccount(id)
         .then((response)=>{
+          handleLoading(false);
           console.log("Account Lock successfull");
+          dispatch(authRegisterFailed(null));
+          dispatch(authCreateSuccess("Account Lock successfull"));
+          openModalLockUnlock();
           console.log(response);
         })
         .catch((error)=>{
           console.log("Error lock account");
+          handleLoading(false);
+          if(error.response === undefined){
+                    dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                    openModalLockUnlock();
+                }else{
+                    dispatch(authRegisterFailed(error.response));
+                    openModalLockUnlock();
+                    console.log(error.response);
+                
+                }
           console.log(error);
         })
     }
 
     const handleUnLockAccount = (id) => {
+        handleLoading(true);
         authService.unLockAccount(id)
         .then((response)=>{
+          handleLoading(false);
           console.log("Account UnLock successfull");
+          dispatch(authRegisterFailed(null));
+          dispatch(authCreateSuccess("Account UnLock successfull"));
+          openModalLockUnlock();
           console.log(response);
         })
         .catch((error)=>{
+          handleLoading(false);
           console.log("Error Unlock account");
+          if(error.response === undefined){
+                    dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                    openModalLockUnlock();
+                }else{
+                    dispatch(authRegisterFailed(error.response));
+                    openModalLockUnlock();
+                    console.log(error.response);
+                
+                }
           console.log(error);
         })
     }
 
    const onChangeCheckbox = (e) => {
-        if(e.target.checked){
+        if(!e.target.checked){
           console.log("IS check");
           console.log(e.target.checked);
           console.log(e.target.value);
@@ -137,11 +172,12 @@ const TuteurContent = ({userTutor}) => {
       setDisplay("none",setShowEditModal(false));
   }
 
-  const openModal=(isAffect,nameAdmin)=> {
+
+  const openModal=(isAffect,nameTutor,idTutor)=> {
      if(isAffect=="add"){
       setIsAdd(true);
     }else{
-      setIsAdd(false,setAdminName(nameAdmin));
+      setIsAdd(false,setTutorNamed(nameTutor),setTutorIds(idTutor));
     }
       setShowEditModal(true,setDisplayAsk("flex"));
     }
@@ -184,6 +220,41 @@ const TuteurContent = ({userTutor}) => {
     setShowModalLoading(isShow);
   }
 
+  const ModalLockUnlock  = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+       <LockUnlockAccount onChildCloseModal={closeLockUnlockModal} />  
+         
+      </div>
+    )
+  };
+
+  const closeLockUnlockModal = () => {
+      dispatch(authCreateSuccess(null));
+      dispatch(authRegisterFailed(null));
+      getTutors();
+      setDisplayAsk("none", setShowModalLockUnLock(false));
+  }
+
+  const openModalLockUnlock = () => {
+    setDisplayAsk("flex", setShowModalLockUnLock(true));
+  }
+
     const ModalContentEdit  = () => {
     return(
       <div className="modal-content" id='cont'
@@ -210,9 +281,12 @@ const TuteurContent = ({userTutor}) => {
             onchildOpenLoading={handleLoading}
             onChildGetTutorUser={getTutors} 
           />:
-          <AffectRight 
+          <Adress
             onChildCloseModal={closeModal} 
-            adminName={adminName}
+            onChildModalLoading={handleLoading}
+            tutorName={tutorNamed}
+            tutorId={tutorIds}
+            onChildGetTutor={getTutors}
           />}  
          
       </div>
@@ -312,6 +386,7 @@ const TuteurContent = ({userTutor}) => {
        {showModalLoading? <ModalLoading />: ''}
 			 {showEditModal? <ModalContentEdit /> :'' } 
        {showChatModal? <ModalChat  />  : ''}
+       {showModalLockUnLock? <ModalLockUnlock /> : ''}
 			 <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
 
                         <GridItem xs={12} sm={12} md={3}>
@@ -376,7 +451,8 @@ const TuteurContent = ({userTutor}) => {
                   <th>Adresse Mail</th>
                   <th>Number</th>
                   <th>Activer / Desactiver</th>
-                  <th>Affecter un droit</th>
+                  <th>Mode de connexion</th>
+                  <th>Modifier Mode de connexion</th>
                   <th>Chat</th>
                 </tr>
               </thead>
@@ -393,16 +469,18 @@ const TuteurContent = ({userTutor}) => {
                             name='logo'
                           /></td>
                     <td>{post.firstName}</td>
-                    <td>{post.email}</td>
+                    <td>{post.email}    {post.emailConfirmed?<span>&#10003;</span>:""}</td>
                     <td>{post.phoneNumber}</td>
                     <td><input 
+                            style={{cursor:'pointer'}}
                             type='checkbox' 
-                            name="confirm_age"
                             id="confirm_age"
                             value={post.id}
+                            checked={post.status===1}
                             onChange={onChangeCheckbox}
                           /></td>
-                    <td onClick={()=>{openModal('affect',post.firstName)}}><img style={{cursor:'pointer'}} src={affect} width='20%'/></td>  
+                    <td>{post.connectionMode}</td>
+                    <td onClick={()=>{openModal('affect',post.firstName,post.id)}}><img style={{cursor:'pointer'}} src={ip} width='20%'/></td>  
                     <td onClick={()=>console.log("tr")}><img style={{cursor:'pointer'}} src={chat} width='50%'/></td>
                   </tr>
                   )

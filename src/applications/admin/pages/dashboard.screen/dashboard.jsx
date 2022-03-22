@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect } from 'react';
-
+import { useHistory } from 'react-router-dom';
 import Avatar   from 'react-avatar';
 import Button from '../../../../app/components/buttons/button';
 import { ProSidebar, SidebarHeader, SidebarFooter, SidebarContent } from 'react-pro-sidebar';
@@ -82,6 +82,7 @@ const DashboardAdmin = () => {
     const [statusConnection,setStatusConnection] = useState(false);
     const [me, setMe] = useState('');
 
+    const history = useHistory();
 
 /*const joinRoom = () => {
        const userData = {
@@ -94,6 +95,7 @@ const DashboardAdmin = () => {
         }
         
     }*/
+
     useEffect(()=>{
         /*joinRoom();
 
@@ -146,6 +148,28 @@ const DashboardAdmin = () => {
         }
 
     },[])
+
+    const handlerAccount = () => {
+            setIsTuteurContent(false,
+                    setIsAbonnementContent(true),
+                    setIsAchatContent(false),
+                    setIsAdminContent(false),
+                    setIsApprenantContent(false),
+                    setIsPublicityContent(false),
+                    )
+            let element = document.getElementById("myDiv4");
+            element.style.backgroundColor = "#dd1b16";
+            let tab = [
+                document.getElementById('myDiv1'),
+                document.getElementById('myDiv2'),
+                document.getElementById('myDiv3'),
+                document.getElementById('myDiv5'),
+              
+            ]
+            for(var i of tab){
+                i.style.backgroundColor = ""
+            }
+  }
 
 
     const ModalChat = () => {
@@ -209,6 +233,15 @@ const DashboardAdmin = () => {
                     setShowBadge(false);
                 }setShowChatModal(true, setDisplayAsk("flex")); 
               }
+const disconnectUser = () => {
+    localStorage.removeItem("user");
+    window.location.reload();
+    return false;
+   }
+   const goToHome = () => {
+    history.push("/");
+    window.location.reload();
+    return false;   }
 
 function menuToggle(){
         const toggleMenu = document.querySelector('.menu');
@@ -583,13 +616,19 @@ function menuToggle(){
 
                                                     <Dropdown.Menu style={{backgroundColor:'#F8D04E',borderRadius:'10%'}}>
                                                         <Dropdown.Item href="#" >
-                                                            <div style={{marginBottom:'5%'}}>
+                                                            <div style={{marginBottom:'5%'}} onClick={()=>goToHome()}>
+                                                                   
+                                                                    <u>Acceuil</u>
+                                                            </div>
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item href="#" >
+                                                            <div style={{marginBottom:'5%'}} onClick={handlerAccount}>
                                                                     <img src={acc} width='15%'/>
                                                                     <u>Mon compte</u>
                                                             </div>
                                                         </Dropdown.Item>
                                                         <Dropdown.Item href="#">
-                                                            <div>
+                                                            <div onClick={()=>disconnectUser()}>
                                                                 <img src={dic} width='15%'/>
                                                                 <u>Se déconnecter</u>
                                                             </div>

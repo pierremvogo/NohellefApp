@@ -87,7 +87,7 @@ const dispatch= useDispatch()
                 }
                 break;
             case 'phoneNumber':
-                if(values[input].length === 13 || values[input].length === 9 ){
+                if(values[input].length >= 13 || values[input].length >= 9 ){
                         if(!regexPhoneNumber.test(values[input])){
                             errorsValidation.phoneNumber = "Numéro de Téléphone invalide";
                         }else{
@@ -253,7 +253,7 @@ const dispatch= useDispatch()
 			<div className="container" style={{backgroundColor:'#eeeeee'}}>
       {showEditModal? <ModalContentEdit /> :'' } 
       {showModalLoading? <ModalLoading />: ''}
-			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
+			 <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
                             <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
                                 Mon compte

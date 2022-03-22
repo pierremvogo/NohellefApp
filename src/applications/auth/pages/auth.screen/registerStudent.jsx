@@ -251,12 +251,31 @@ const RegisterStudent = ({  error,
                 }
                 break;
             case 'phone':
+                if(values[input].length >= 9 ){
+                        if(!regexPhoneNumber.test(values[input])){
+                            errorsValidation.phone = "Numéro de Téléphone invalide";
+                        }else{
+                             setSubmited(true)
+                        }
+                }
+                else{
+                   errorsValidation.phone = "Format de Numéro invalide"; 
+                }
+                break;
+            case 'ville':
                 if(!values[input]){
-                    errorsValidation.phone = "Numero de Téléphone requis";
-                }else if(!regexPhoneNumber.test(values[input])){
-                    errorsValidation.phone = "Numéro de Téléphone invalide";
+                    errorsValidation.ville = "La Ville est requise";
+
                 }else{
-                    setSubmited(true);
+                     setSubmited(true)
+                }
+                break;
+            case 'address':
+                if(!values[input]){
+                    errorsValidation.address = "L'adresse' est requise";
+
+                }else{
+                     setSubmited(true)
                 }
                 break;
             case 'birthDay':
@@ -654,6 +673,7 @@ const RegisterStudent = ({  error,
                                                 onChange={(date) => onChangeDate(date)} 
                                                 wrapperClassName="date-picker"
                                             /></div> : input==="phone"?
+                                            <div>
                                             <PhoneInput
                                               country={'cm'}
                                               value={phoneValue}
@@ -662,11 +682,12 @@ const RegisterStudent = ({  error,
                                                 width: "100%",
                                                 height:'40px',
                                                 color:'black',
-                                                '&:focus': {
-                                                    borderColor: 'red'
-                                                }
+                                                border:`${
+                                                        input==="phone"&&formErrors.phone?'2px solid #C84941':
+                                                        '2px solid #002495'}`,
                                             }}
-                                            />: <input 
+                                            /></div>: 
+                                            <input 
                                             type={type} 
                                             placeholder={""}
                                             id={id}
@@ -682,6 +703,8 @@ const RegisterStudent = ({  error,
                                                         input==="email"&&formErrors.email?'2px solid #C84941':
                                                         input==="username"&&formErrors.username?'2px solid #C84941':
                                                         input==="phone"&&formErrors.phone?'2px solid #C84941':
+                                                        input==="ville"&&formErrors.ville?'2px solid #C84941':
+                                                        input==="address"&&formErrors.address?'2px solid #C84941':
                                                         input==="birthDay"&&formErrors.birthDay?'2px solid #C84941':
                                                         input==="password"&&formErrors.password?'2px solid #C84941':
                                                         input==="confirm_password"&&formErrors.confirm_password?'2px solid #C84941':
@@ -701,6 +724,8 @@ const RegisterStudent = ({  error,
                                                                          input==="email"?formErrors.email:
                                                                          input==="username"?formErrors.username:
                                                                          input==="phone"?formErrors.phone:
+                                                                         input==="ville"?formErrors.ville:
+                                                                         input==="address"?formErrors.address:
                                                                          input==="birthDay"?formErrors.birthDay:
                                                                          input==="password"?formErrors.password:
                                                                          input==="confirm_password"?formErrors.confirm_password:

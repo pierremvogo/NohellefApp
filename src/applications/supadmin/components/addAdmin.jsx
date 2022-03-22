@@ -104,11 +104,30 @@ const AddAdmin = ({error,
                     setSubmited(true);
                 }
                 break;
-            case 'phone':
+            case 'phoneNumber':
+                if(values[input].length >= 9  ){
+                        if(!regexPhoneNumber.test(values[input])){
+                            errorsValidation.phoneNumber = "Numéro de Téléphone invalide";
+                        }else{
+                             setSubmited(true)
+                        }
+                }
+                else{
+                   errorsValidation.phoneNumber = "Format de Numéro invalide"; 
+                }
+                break;
+            case 'city':
                 if(!values[input]){
-                    errorsValidation.phone = "Numero de Téléphone requis";
-                }else if(!regexPhoneNumber.test(values[input])){
-                    errorsValidation.phone = "Numéro de Téléphone invalide";
+                    errorsValidation.city = "La Ville est requise";
+
+                }else{
+                     setSubmited(true)
+                }
+                break;
+            case 'address':
+                if(!values[input]){
+                    errorsValidation.address = "L'adresse' est requise";
+
                 }else{
                      setSubmited(true)
                 }
@@ -242,7 +261,7 @@ const AddAdmin = ({error,
                             email: registerAdminForm.email,
                             username: registerAdminForm.username,
                             password: registerAdminForm.password,
-                            phoneNumber: registerAdminForm.phoneNumber,
+                            phoneNumber: "+"+registerAdminForm.phoneNumber,
                             city: registerAdminForm.city,
                             birthDay: registerAdminForm.birthDay,
                             address: registerAdminForm.address,
@@ -460,6 +479,9 @@ const AddAdmin = ({error,
                                                         width: "100%",
                                                         height:'40px',
                                                         color:'black',
+                                                        border:`${
+                                                            input==="phone"&&formErrors.phone?'2px solid #C84941':
+                                                            '2px solid #002495'}`,
                                                         
                                                     }}
                                                     />:<input 
@@ -476,6 +498,8 @@ const AddAdmin = ({error,
                                                         input==="email"&&formErrors.email?'2px solid #C84941':
                                                         input==="username"&&formErrors.username?'2px solid #C84941':
                                                         input==="phoneNumber"&&formErrors.phoneNumber?'2px solid #C84941':
+                                                        input==="city"&&formErrors.city?'2px solid #C84941':
+                                                        input==="address"&&formErrors.address?'2px solid #C84941':
                                                         input==="birthDay"&&formErrors.birthDay?'2px solid #C84941':
                                                         input==="password"&&formErrors.password?'2px solid #C84941':
                                                         input==="confirm_password"&&formErrors.confirm_password?'2px solid #C84941':
@@ -499,6 +523,8 @@ const AddAdmin = ({error,
                                                                          input==="email"?formErrors.email:
                                                                          input==="username"?formErrors.username:
                                                                          input==="phoneNumber"?formErrors.phoneNumber:
+                                                                         input==="city"?formErrors.city:
+                                                                         input==="address"?formErrors.address:
                                                                          input==="birthDay"?formErrors.birthDay:
                                                                          input==="password"?formErrors.password:
                                                                          input==="confirm_password"?formErrors.confirm_password:

@@ -21,7 +21,7 @@ import Avatar   from 'react-avatar';
 const AffectRigth = ({error,adminName,onChildCloseModal}) => {
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
-    const [loginForm, setLoginForm] = useState({username: "", password: "", remember: false})
+    const [rightForm, setRightForm] = useState({adminName: adminName, rightContent: ""})
     const [isLoginForm, setIsLoginForm] = useState(true);
     const [formError, setformError] = useState(null);
     const [isForgotPassword, setIsForgotPassword] = useState(false);
@@ -32,8 +32,8 @@ const AffectRigth = ({error,adminName,onChildCloseModal}) => {
 
     
 
-    const onChangeLogin = (e) => {
-        setLoginForm({...loginForm,  [e.target.name]: e.target.value })}
+    const onChangeRight = (e) => {
+        setRightForm({...rightForm,  [e.target.name]: e.target.value })}
 
     const onChangeResetPassword = (e) => {
         setResetPasswordForm({...resetPasswordForm,  [e.target.name]: e.target.value })
@@ -45,27 +45,11 @@ const AffectRigth = ({error,adminName,onChildCloseModal}) => {
   }
 
     const onSubmit = (e) => {
-        e.preventDefault();
-        if (submited) { return } 
-        if(isLoginForm) {
-            if(loginForm.username.trim()=='admin'&&loginForm.password.trim()=='admin'){
-              
-                history.push('/admin/dashboard');
-            }else if(loginForm.username.trim()=='stud'&&loginForm.password.trim()=='stud'){
-             
-                history.push('/student/dashboard');
-            }else if(loginForm.username.trim()=='tutor'&&loginForm.password.trim()=='tutor'){
-               
-                history.push('/tutor/dashboard');
-            }
-               
-             //dispatch(authSignIn({...loginForm, redirect: history.location.state?.pathname || 'dashboard'}));
-        } 
-        setSubmited(true);
+        
     }
 	return(
 
-        <div style={{backgroundColor:'#ffce52',borderRadius:'25px 25px 25px 25px'}}>
+        <div style={{borderRadius:'25px 25px 25px 25px'}}>
                     <GridContainer>
                      <GridItem xs={12} sm={12} md={12}>
                         <GridContainer>
@@ -75,11 +59,7 @@ const AffectRigth = ({error,adminName,onChildCloseModal}) => {
                           </GridItem>
                         </GridContainer>
 
-                        <GridContainer>
-                          <GridItem xs={12} sm={12} md={12}>
-                           <span className='close' style={{fontSize:'2%'}} onClick={(e)=>closeModal(e)}>&times;</span>
-                          </GridItem>
-                        </GridContainer>
+
 
                         <GridContainer>
                           <GridItem xs={12} sm={12} md={12}>
@@ -92,6 +72,11 @@ const AffectRigth = ({error,adminName,onChildCloseModal}) => {
                                 margin:'5%',
                                 padding:'2%'
                               }}>
+                                <GridContainer>
+                                    <GridItem xs={12} sm={12} md={12}>
+                                        <span className='close' style={{fontSize:'20px',cursor:'pointer'}} onClick={(e)=>closeModal(e)}>&times;</span>
+                                    </GridItem>
+                                </GridContainer>
                                 <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                       
@@ -108,42 +93,44 @@ const AffectRigth = ({error,adminName,onChildCloseModal}) => {
                                     </GridItem>
                                   </GridContainer>
 
-                                                 <GridContainer>
-                                    <GridItem xs={12} sm={12} md={12}>
-                                        <GridContainer>
-                                            <GridItem xs={12} sm={12} md={12} style={{margin:'10% 0% 0% 0%'}}>
-                                            Nom de l'administrateur
-                                                
-                                          <input type='text' value={adminName}   style={{
-                                           
-                                            border:'2px solid #002495',
-                                            width:'100%',
-                                            height:'40px'}}/>
-                                   
-                                            </GridItem>
-                                           
-                                          
-                                        </GridContainer>
-
-                                       
-                                    </GridItem>
-                                  </GridContainer>
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
-                                        <GridContainer>
-                                            <GridItem xs={12} sm={12} md={12} style={{margin:'10% 0% 0% 0%'}}>
-                                            Définir le droit
-                                                
-                                          <input type='text'   style={{
-                                           
-                                            border:'2px solid #002495',
-                                            width:'100%',
-                                            height:'40px'}}/>
-                                   
-                                            </GridItem>
-                                           
-                                          
-                                        </GridContainer>
+                                       {Object.keys(rightForm).map((input,index)=>{
+                                        let label,name,type,id;
+                                        if(input==="adminName"){
+                                            label="Nom de l'administrateur";
+                                            name="adminName";
+                                            type="text";
+                                            id="adminName";
+                                        }else if(input==="rightContent"){
+                                            label="Définir le droit";
+                                            name="rightContent";
+                                            type="text";
+                                            id="rightContent";
+                                        }
+                                        return(
+                                            <GridContainer key={index}>
+                                                <GridItem xs={12} sm={12} md={12} style={{margin:'5% 0% 0% 0%'}}>
+                                                {label}
+                                                    
+                                              <input 
+                                                 type={type}
+                                                 value={rightForm[input]}  
+                                                 name={name}
+                                                 onChange={onChangeRight}
+
+                                                 style={{
+                                                    border:'2px solid #002495',
+                                                    width:'100%',
+                                                    height:'40px'}}/>
+                                       
+                                                </GridItem>
+                                               
+                                              
+                                            </GridContainer>
+                                            )
+                                       })}
+                                        
 
                                        
                                     </GridItem>
@@ -152,8 +139,8 @@ const AffectRigth = ({error,adminName,onChildCloseModal}) => {
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                     
-                                    <div style={{cursor:'pointer',
-                                          margin:'5% 0% 5% 0%',
+                                    <div onClick={onSubmit} style={{cursor:'pointer',
+                                          margin:'10% 0% 5% 0%',
                                           textAlign:'center'}}>
                                       <div style={{
                                           backgroundColor: '#4b9960',

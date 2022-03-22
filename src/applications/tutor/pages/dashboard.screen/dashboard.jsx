@@ -1,5 +1,6 @@
 import React, {useContext, useRef, useState, useEffect } from 'react';
 import './dashboard.css';
+import { useHistory } from 'react-router-dom';
 import Avatar   from 'react-avatar';
 import Button from '../../../../app/components/buttons/button';
 import { ProSidebar, SidebarHeader, SidebarFooter, SidebarContent } from 'react-pro-sidebar';
@@ -83,6 +84,7 @@ import mychat from "../../../../assets/images/dashboard/mychat.png";
     const [statusConnection,setStatusConnection] = useState(false);
     const [me, setMe] = useState('');
     const [dataList,setDataList] = useState([]);
+    const history = useHistory();
 
    /* const joinRoom = () => {
     const userData = {
@@ -162,6 +164,30 @@ import mychat from "../../../../assets/images/dashboard/mychat.png";
         } 
     },[]);
 
+     const handlerAccount = () => {
+            setIsCourseContent(false,
+                    setIsAccountContent(true),
+                    setIsHistoryContent(false),
+                    setIsPaymentContent(false),
+                    setIsConferenceContent(false),
+                    setIsPaymentResourceContent(false),
+                    setIsChooseTutorContent(false),
+                    setIsContactHelpContent(false))
+            let element = document.getElementById("myDiv5");
+            element.style.backgroundColor = "#dd1b16";
+            let tab = [
+                document.getElementById('myDiv1'),
+                document.getElementById('myDiv2'),
+                document.getElementById('myDiv3'),
+                document.getElementById('myDiv4'),
+                document.getElementById('myDiv6'),
+                document.getElementById('myDiv7'),
+            ]
+            for(var i of tab){
+                i.style.backgroundColor = ""
+            }
+  }
+
      const handleChat = () => {
         setShowChatModal(true,setShowBadge(false),setDisplayAsk("flex"));
      }
@@ -214,7 +240,15 @@ import mychat from "../../../../assets/images/dashboard/mychat.png";
   };
 
 
-
+const disconnectUser = () => {
+    localStorage.removeItem("user");
+    window.location.reload();
+    return false;
+   }
+   const goToHome = () => {
+    history.push("/");
+    window.location.reload();
+    return false;   }
  
 
 const ModalChat = () => {
@@ -425,9 +459,9 @@ const ModalChat = () => {
         else if(id=="myDiv5"){
             element.style.backgroundColor = "#dd1b16";
             setIsCourseContent(false,
-                    setIsAccountContent(false),
+                    setIsAccountContent(true),
                     setIsHistoryContent(false),
-                    setIsPaymentContent(true),
+                    setIsPaymentContent(false),
                     setIsConferenceContent(false),
                     setIsPaymentResourceContent(false),
                     setIsChooseTutorContent(false),
@@ -705,9 +739,18 @@ const ModalChat = () => {
                       </GridContainer>
 
                       <GridContainer>
-                            <GridItem xs={12} sm={12} md={12}>
-                               <div id="myDiv5" >
-                               </div>
+                           <GridItem xs={12} sm={12} md={12}>
+                               <div className="side-content" id="myDiv5" onClick={()=>changeStyle('myDiv5')}>
+                                <div style={{padding:'3%',display:'inline-block'}}>
+                                    <Avatar 
+                                        size="40"
+                                        round={false}
+                                        src={d7}
+                                        name='logo'
+                                    />
+                                </div>
+                                <span className="text">Mon Compte</span>
+                              </div>
                             </GridItem>
 
                       </GridContainer>
@@ -767,7 +810,7 @@ const ModalChat = () => {
                         <GridItem xs={12} sm={12} md={2}>
                              <div id="dash5" className='dash-navitem' onClick={()=>changeStyle1('dash5')}>Nos Enseignants</div>
                         </GridItem>
-                         <GridItem xs={12} sm={12} md={2}>
+                          <GridItem xs={12} sm={12} md={2}>
                                         <Dropdown style={{top:'-15px'}}>
                                                     <Dropdown.Toggle
                                                     variant="warning btn-sm"
@@ -785,9 +828,20 @@ const ModalChat = () => {
                                                     </Dropdown.Toggle>
 
                                                     <Dropdown.Menu style={{backgroundColor:'#F8D04E',borderRadius:'10%'}}>
-                                                       
+                                                        <Dropdown.Item href="#" >
+                                                            <div style={{marginBottom:'5%'}} onClick={()=>goToHome()}>
+                                                                   
+                                                                    <u>Acceuil</u>
+                                                            </div>
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item href="#" >
+                                                            <div style={{marginBottom:'5%'}} onClick={handlerAccount}>
+                                                                    <img src={acc} width='15%'/>
+                                                                    <u>Mon compte</u>
+                                                            </div>
+                                                        </Dropdown.Item>
                                                         <Dropdown.Item href="#">
-                                                            <div>
+                                                            <div onClick={()=>disconnectUser()}>
                                                                 <img src={dic} width='15%'/>
                                                                 <u>Se déconnecter</u>
                                                             </div>
@@ -808,14 +862,7 @@ const ModalChat = () => {
                         <GridItem xs={12} sm={12} md={3}>
                             
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={3}>
-                        <div style={{margin:'0% 0% 0% 15%'}}>
-                            <div className="icon-button" onClick={handleChat}>
-                                <img src={mychat} width="50%" />
-                                {showBadge?<div className="icon-button__badge">{countBadge}</div>:""}
-                            </div>
-                        </div>
-                        </GridItem>
+                        
                     </GridContainer>
 
                           {isCourseContent?<CourseContent />:''}

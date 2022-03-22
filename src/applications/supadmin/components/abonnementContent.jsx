@@ -23,12 +23,16 @@ import './admin.css';
 import {Table} from 'react-bootstrap';
 import chat from '../../../assets/images/dashboard/chat2.png';
 import {NotificationManager,NotificationContainer} from 'react-notifications';
+import Loader from 'react-loader-spinner';
 //import io from 'socket.io-client';
 import Chat from "../../../app/components/chat/chat.jsx"
 import adminService from '../../services/admin.service';
+import authService from '../../services/auth.service';
+import LockUnlockAccount from "../../../app/components/lockUnlock/lockUnlockAccount.jsx"
 import {    authRegisterSuccess, 
             authRegisterFailed, 
             authShowMessage, 
+            authCreateSuccess,
             authSetRegisterForm,
             shareParentUser } from '../../redux/reducer/actions/auth';
 
@@ -53,6 +57,9 @@ const AbonnementContent = ({userParent}) => {
     const [supAdminId, setSupAdminId] = useState("supadmin");
     const [room, setRoom] = useState(parentId+supAdminId);
     const [statusConnection,setStatusConnection] = useState(false);
+    const [showModalLoading, setShowModalLoading] = useState(false);
+    const [displayLoading, setDisplayLoading] = useState("flex");
+    const [showModalLockUnLock, setShowModalLockUnLock] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -93,7 +100,147 @@ const AbonnementContent = ({userParent}) => {
     toggleMenu.classList.toggle('active')
   }
 
-  
+   const ModalLoading = () => {
+    
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            display: displayLoading,
+            zIndex: "900000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+            <div
+                style={{
+                    width: "10%",
+                    height: "30%",
+                    zIndex: "300000",
+                    display: "flex",
+                    position: "absolute",
+                    top: "30%",
+                    left: "48%"
+                }}
+                >
+                <Loader type="Oval" color="#2BAD60" height="100" width="70" />
+            </div>
+          
+      </div>
+    )
+  };
+  const handleLoading = (isShow) => {
+    setShowModalLoading(isShow);
+  }
+
+  const handleLockAccount = (id) => {
+        handleLoading(true);
+        authService.lockAccount(id)
+        .then((response)=>{
+          handleLoading(false);
+          console.log("Account Lock successfull");
+          dispatch(authRegisterFailed(null));
+          dispatch(authCreateSuccess("Account Lock successfull"));
+          openModalLockUnlock();
+          console.log(response);
+        })
+        .catch((error)=>{
+          console.log("Error lock account");
+          handleLoading(false);
+          if(error.response === undefined){
+                    dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                    openModalLockUnlock();
+                }else{
+                    dispatch(authRegisterFailed(error.response));
+                    openModalLockUnlock();
+                    console.log(error.response);
+                
+                }
+          console.log(error);
+        })
+    }
+
+    const handleUnLockAccount = (id) => {
+        handleLoading(true);
+        authService.unLockAccount(id)
+        .then((response)=>{
+          handleLoading(false);
+          console.log("Account UnLock successfull");
+          dispatch(authRegisterFailed(null));
+          dispatch(authCreateSuccess("Account UnLock successfull"));
+          openModalLockUnlock();
+          console.log(response);
+        })
+        .catch((error)=>{
+          handleLoading(false);
+          console.log("Error Unlock account");
+          if(error.response === undefined){
+                    dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                    openModalLockUnlock();
+                }else{
+                    dispatch(authRegisterFailed(error.response));
+                    openModalLockUnlock();
+                    console.log(error.response);
+                
+                }
+          console.log(error);
+        })
+    }
+
+   const onChangeCheckbox = (e) => {
+        if(!e.target.checked){
+          console.log("IS check");
+          console.log(e.target.checked);
+          console.log(e.target.value);
+          handleLockAccount(e.target.value);
+        }else{
+          console.log("IS Not check");
+          console.log(e.target.checked);
+          console.log(e.target.value);
+          handleUnLockAccount(e.target.value);
+        }
+    }
+
+
+  const ModalLockUnlock  = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+       <LockUnlockAccount onChildCloseModal={closeLockUnlockModal} />  
+         
+      </div>
+    )
+  };
+
+  const closeLockUnlockModal = () => {
+      dispatch(authCreateSuccess(null));
+      dispatch(authRegisterFailed(null));
+      getParents();
+      setDisplayAsk("none", setShowModalLockUnLock(false));
+  }
+
+  const openModalLockUnlock = () => {
+    setDisplayAsk("flex", setShowModalLockUnLock(true));
+  }
 
    const ModalContentEdit  = () => {
     return(
@@ -188,69 +335,6 @@ const AbonnementContent = ({userParent}) => {
     }
 
     let data = [
-    {
-      id: 1,
-      userProfile: im5,
-      userName:"pirate",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userCity:"Yaoundé",
-      userAddress: "Rue 5874",
-      userCode: '125635',
-      userChat: chat
-    },
-    {
-      id: 2,
-      userProfile: im5,
-      userName:"Jean",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userCity:"Yaoundé",
-      userAddress: "Rue 5874",
-      userCode: '125635',
-      userChat: chat
-    },
-    {
-      id: 3,
-      userProfile: im5,
-      userName:"Pierre",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userCity:"Yaoundé",
-      userAddress: "Rue 5874",
-      userCode: '125635',
-      userChat: chat
-    },
-    {
-      id: 4,
-      userProfile: im5,
-      userName:"mvogo",
-      userSurname:"Andre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userCity:"Yaoundé",
-      userAddress: "Rue 5874",
-      userCode: '125635',
-      userChat: chat
-    },
-    {
-      id: 5,
-      userProfile: im5,
-      userName:"appolinaire",
-      userSurname:"pierre",
-      userEmail:"mvogopierre129@gmail.com",
-      userPhone:"698114902",
-      userCity:"Yaoundé",
-      userAddress: "Rue 5874",
-      userCode: '125635',
-      userChat: chat
-    },
-    
-    
-   
   ];
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
@@ -260,6 +344,8 @@ const AbonnementContent = ({userParent}) => {
   return(
       <div className="container" style={{margin:'5% 0% 0% 0%'}}>
       {showChatModal? <ModalChat />  : ''}
+       {showModalLoading? <ModalLoading />: ''}
+       {showModalLockUnLock? <ModalLockUnlock /> : ''}
        <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
 
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
@@ -307,13 +393,15 @@ const AbonnementContent = ({userParent}) => {
                   <th>Email</th>
                   <th>Téléphone</th>
                   <th>Ville</th>
-                  <th>Adresse</th>
+                  <th>Activer / Desactiver</th>
+                  <th>Nb. Apprenants</th>
                   <th>Chat</th>
                 </tr>
               </thead>
               <tbody>
 
               {currentPosts&&currentPosts.map((post,index)=>{
+
                 return(
                   <tr key={index}>
                     
@@ -325,10 +413,18 @@ const AbonnementContent = ({userParent}) => {
                         /></td>
                     <td>{post.firstName}</td>
                     <td>{post.lastName}</td>
-                    <td>{post.email}</td>
+                    <td>{post.email}    {post.emailConfirmed?<span>&#10003;</span>:""}</td>
                     <td>{post.phoneNumber}</td>
                     <td>{post.city}</td>
-                    <td>{post.address}</td> 
+                    <td><input 
+                            style={{cursor:'pointer'}}
+                            type='checkbox' 
+                            id="confirm_age"
+                            value={post.id}
+                            checked={post.status===1}
+                            onChange={onChangeCheckbox}
+                          /></td> 
+                    <td>{post.children&&post.children.length}</td> 
                     <td style={{cursor:'pointer'}} onClick={()=>openModal(post.firstName)}><img src={chat} width='45%'/></td>  
                   
                   </tr>

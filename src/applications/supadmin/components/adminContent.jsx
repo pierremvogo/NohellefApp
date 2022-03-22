@@ -22,15 +22,18 @@ import ipa from '../../../assets/images/dashboard/ip.png';
 import AddAdmin from './addAdmin.jsx';
 import {NotificationManager,NotificationContainer} from 'react-notifications';
 //import io from 'socket.io-client';
+import AffectRight from './affectRight.jsx';
 import Chat from "../../../app/components/chat/chat.jsx"
 import Adress from './adress.jsx';
 import userService from  '../../services/user.service'; 
 import Loader from 'react-loader-spinner';
 import adminService from '../../services/admin.service';
 import authService from '../../services/auth.service';
+import LockUnlockAccount from "../../../app/components/lockUnlock/lockUnlockAccount.jsx"
 import {    authRegisterSuccess, 
             authRegisterFailed, 
             authShowMessage, 
+            authCreateSuccess,
             authSetRegisterForm,
             shareAdminUser } from '../../redux/reducer/actions/auth';
 
@@ -57,10 +60,11 @@ const AdminContent = ({userAdmin}) => {
     const [supAdminId, setSupAdminId] = useState("supadmin");
     const [room, setRoom] = useState(tutorId+supAdminId);
     const [statusConnection,setStatusConnection] = useState(false);
-    const [tutorName,setTutorName] = useState("");
+    const [adminNamed,setAdminNamed] = useState("");
     const [isAdress, setIsAdress] = useState(false);
     const [displayLoading, setDisplayLoading] = useState("flex");
     const [showModalLoading, setShowModalLoading] = useState(false);
+    const [showModalLockUnLock, setShowModalLockUnLock] = useState(false);
     const dispatch = useDispatch();
 
     useEffect(()=>{
@@ -102,11 +106,11 @@ const AdminContent = ({userAdmin}) => {
     console.log(record);
   }
 
-  const openModal=(isAdress,nameTutor)=> {
+  const openModal=(isAdress,nameAdmin)=> {
      if(isAdress=="adress"){
         setIsAdress(true)
      }else{
-      setIsAdress(false, setTutorName(nameTutor));
+      setIsAdress(false, setAdminNamed(nameAdmin));
      }
     setShowEditModal(true,setDisplayAsk("flex"));
    
@@ -154,31 +158,61 @@ const AdminContent = ({userAdmin}) => {
   }
 
    const handleLockAccount = (id) => {
+        handleLoading(true);
         authService.lockAccount(id)
         .then((response)=>{
+          handleLoading(false);
           console.log("Account Lock successfull");
+          dispatch(authRegisterFailed(null));
+          dispatch(authCreateSuccess("Account Lock successfull"));
+          openModalLockUnlock();
           console.log(response);
         })
         .catch((error)=>{
           console.log("Error lock account");
+          handleLoading(false);
+          if(error.response === undefined){
+                    dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                    openModalLockUnlock();
+                }else{
+                    dispatch(authRegisterFailed(error.response));
+                    openModalLockUnlock();
+                    console.log(error.response);
+                
+                }
           console.log(error);
         })
     }
 
     const handleUnLockAccount = (id) => {
+        handleLoading(true);
         authService.unLockAccount(id)
         .then((response)=>{
+          handleLoading(false);
           console.log("Account UnLock successfull");
+          dispatch(authRegisterFailed(null));
+          dispatch(authCreateSuccess("Account UnLock successfull"));
+          openModalLockUnlock();
           console.log(response);
         })
         .catch((error)=>{
+          handleLoading(false);
           console.log("Error Unlock account");
+          if(error.response === undefined){
+                    dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                    openModalLockUnlock();
+                }else{
+                    dispatch(authRegisterFailed(error.response));
+                    openModalLockUnlock();
+                    console.log(error.response);
+                
+                }
           console.log(error);
         })
     }
 
    const onChangeCheckbox = (e) => {
-        if(e.target.checked){
+        if(!e.target.checked){
           console.log("IS check");
           console.log(e.target.checked);
           console.log(e.target.value);
@@ -190,6 +224,41 @@ const AdminContent = ({userAdmin}) => {
           handleUnLockAccount(e.target.value);
         }
     }
+
+    const ModalLockUnlock  = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+       <LockUnlockAccount onChildCloseModal={closeLockUnlockModal} />  
+         
+      </div>
+    )
+  };
+
+  const closeLockUnlockModal = () => {
+      dispatch(authCreateSuccess(null));
+      dispatch(authRegisterFailed(null));
+      getAdmins();
+      setDisplayAsk("none", setShowModalLockUnLock(false));
+  }
+
+  const openModalLockUnlock = () => {
+    setDisplayAsk("flex", setShowModalLockUnLock(true));
+  }
 
   const ModalChat = () => {
     return(
@@ -258,7 +327,9 @@ const AdminContent = ({userAdmin}) => {
       >
            
         {isAdress?
-          <Adress tutorName={tutorName}/>:
+          <AffectRight 
+            adminName={adminNamed} 
+            onChildCloseModal={closeModal}/>:
           <AddAdmin 
               onChildCloseModal={closeModal} 
               onchildOpenLoading={handleLoading}
@@ -281,6 +352,7 @@ const AdminContent = ({userAdmin}) => {
       {showModalLoading? <ModalLoading />: ''}
       {showEditModal? <ModalContentEdit /> :'' }
       {showChatModal? <ModalChat />  : ''}
+      {showModalLockUnLock? <ModalLockUnlock /> : ''}
        <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'5%'}}>
                             <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
@@ -343,7 +415,7 @@ const AdminContent = ({userAdmin}) => {
                   <th>Adresse Mail</th>
                   <th>Adresse de connexion</th>
                   <th>Activer / Desactiver</th>
-                  <th>Définir l'adresse de connexion</th>
+                  <th>Affecter un droit</th>
                   <th>Chat</th>
                 </tr>
               </thead>
@@ -360,13 +432,14 @@ const AdminContent = ({userAdmin}) => {
                             name='logo'
                           /></td>
                     <td>{post.firstName}</td>
-                    <td>{post.email}</td>
+                    <td>{post.email}      {post.emailConfirmed?<span>&#10003;</span>:""}</td>
                     <td>{post.ipAddress}</td>
                     <td><input 
+                            style={{cursor:'pointer'}}
                             type='checkbox' 
-                            name="confirm_age"
                             id="confirm_age"
                             value={post.id}
+                            checked={post.status===1}
                             onChange={onChangeCheckbox}
                           /></td>
                     <td onClick={()=>{openModal('adress',post.firstName)}}><img style={{cursor:'pointer'}} src={affect} width='15%'/></td>  

@@ -116,7 +116,6 @@ const DashboardSupAdmin = ({userRessource}) => {
         }
     },[])
     const handlerAccount = () => {
-        element.style.backgroundColor = "#dd1b16";
             setIsTuteurContent(false,
                     setIsAbonnementContent(false),
                     setIsAchatContent(true),

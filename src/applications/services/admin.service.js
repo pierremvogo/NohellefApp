@@ -15,7 +15,7 @@ class AdminService {
         return http.post("/admin/users",payload);
     }
     changeUserConnectionMode(id,payload) {
-        return http.post(`/admin/users/change-tutor-connection-mode${id}`,payload);
+        return http.post(`/admin/users/${id}/change-tutor-connection-mode`,payload);
     }
     createUser(payload) {
         return http.post("/admin/users/create-user",payload);

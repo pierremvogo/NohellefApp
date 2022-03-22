@@ -60,6 +60,7 @@ select {
 }
 th, td{
   font-size: 75%;
+  text-align: center;
 }
 
 .joinChatContainer {
