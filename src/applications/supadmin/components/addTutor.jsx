@@ -466,7 +466,7 @@ const AddTutor = ({error,
                                                     onChange={(date) => onChangeDate(date)} 
                                                   />: input==="phoneNumber"?
                                                    <PhoneInput
-                                                      country={'cm'}
+                                                      country={'lu'}
                                                       value={phoneValue}
                                                       onChange={(phone) => onChangePhone(phone)}
                                                       inputStyle={{
