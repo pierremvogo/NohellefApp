@@ -47,6 +47,7 @@ const RegisterParent = ({error,
             address:"",
             password:"",
             confirm_password:"",
+            check_Condition:false,
             })
     const [startDate, setStartDate] = useState(new Date());
     const [phoneValue, setPhoneValue] = useState("");
@@ -274,7 +275,11 @@ const RegisterParent = ({error,
        return errorsValidation;       
   }
   const onChangeRegisterParent = (e) => {
-        setRegisterParent({...registerParent,  [e.target.name]: e.target.value })
+        setRegisterParent({...registerParent,  
+                                 [e.target.name]:
+                                 e.target.value==="checkCondition"?
+                                 e.target.checked:
+                                 e.target.value })
         setFormErrors(validateForm(registerParent));
         dispatch(authRegisterFailed(null)); 
         dispatch(authSetRegisterForm(registerParent));
@@ -304,6 +309,7 @@ const RegisterParent = ({error,
     }
         setFormErrors(validateForm(registerParent));
         if(Object.keys(formErrors).length === 0 && submited){
+            if(registerParent.check_Condition){
             dispatch(authSetRegisterForm(registerParent));
             handleLoading(true);
             console.log("form Parent register");
@@ -339,7 +345,9 @@ const RegisterParent = ({error,
                 
                 }
             });
-        }
+        }else{
+        dispatch(authRegisterFailed("Please Accept Terms and Conditions of confidentiality")) ;
+        }}    
         else{
             dispatch(authRegisterFailed(null));
             handleLoading(false);
@@ -476,6 +484,8 @@ const RegisterParent = ({error,
                                           type="password"
                                           name="confirm_password"                             
                                           label="Confirmer mot de passe"
+                                      }else{
+                                        return;
                                       }
                                       return(
 
@@ -489,7 +499,7 @@ const RegisterParent = ({error,
                                                 onChange={(date) => onChangeDate(date)} 
                                             />: input==="phone"?
                                             <PhoneInput
-                                              country={'cm'}
+                                              country={'lu'}
                                               value={phoneValue}
                                               onChange={(phone) => onChangePhone(phone)}
                                               inputStyle={{
@@ -558,6 +568,32 @@ const RegisterParent = ({error,
                                         )
                                         
                                       })} 
+                                  </GridContainer>
+                                  <GridContainer>
+                                   {Object.keys(registerParent).map((input,index)=>{
+                                    return(
+                                        <>
+                                        {input==="check_Condition"? 
+                                         <GridItem xs={12} sm={12} md={12} key={index}>
+                                           <div style={{margin:'0%'}}>
+                                              <input 
+                                                  type='checkbox'
+                                                  name="check_Condition"
+                                                  value={"checkCondition"}
+                                                  onChange={onChangeRegisterParent}
+                                                  autoComplete="off"
+
+                                                   />
+                                              <span style={{marginLeft:'2%',fontSize:'70%'}}>En cliquant sur "M'inscrire" je confirme avoir pris connaissance des termes et
+                                                conditions d'utilisation de Online Nohellef</span>
+                                          </div>
+                                        </GridItem>
+                                        : ""}
+                                        
+                                        </>
+                                        )
+                                   })}
+                                    
                                   </GridContainer>
 
                                   <GridContainer>

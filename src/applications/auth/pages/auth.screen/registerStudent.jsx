@@ -673,7 +673,7 @@ const RegisterStudent = ({  error,
                                             /></div> : input==="phone"?
                                             <div>
                                             <PhoneInput
-                                              country={'cm'}
+                                              country={'lu'}
                                               value={phoneValue}
                                               onChange={(phone) => onChangePhone(phone)}
                                               inputStyle={{
