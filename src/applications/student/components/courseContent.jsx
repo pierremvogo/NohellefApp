@@ -1,10 +1,10 @@
-import react from 'react';
+import react,{useState,useEffect} from 'react';
+import {connect, useSelector, useDispatch} from 'react-redux';
 import GridItem from "../../../app/components/Grid/GridItem.js";
 import GridContainer from "../../../app/components/Grid/GridContainer.js";
 import Card from "../../../app/components/Card/Card.js";
 import CardHeader from "../../../app/components/Card/CardHeader.js";
 import CardBody from "../../../app/components/Card/CardBody.js";
-import React,{useState,useEffect} from 'react';
 import CardAvatar from "../../../app/components/Card/CardAvatar.js";
 import CardFooter from "../../../app/components/Card/CardFooter.js";
 import { Dropdown } from 'react-bootstrap';
@@ -28,8 +28,17 @@ import vidio from '../../../assets/images/dashboard/vidio.png';
 import imgpdf from '../../../assets/images/imgpdf.png';
 import './account.css';
 import {Document, Page, pdfjs,} from 'react-pdf';
+import adminService from '../../services/admin.service';
+import authService from '../../services/auth.service';
+import courseService from '../../services/course.service';
+import {    authRegisterSuccess, 
+            authRegisterFailed, 
+            authShowMessage, 
+            authSetRegisterForm,
+            authCreateSuccess,
+            shareCourses } from '../../redux/reducer/actions/auth';
  
-const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
+const CourseContent = ({courses, onChildClickHandlerVideo,externalLinkVideo}) => {
    
 	const [posts, setPosts] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -37,13 +46,14 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
   const [displayPDF, setDisplayPDF] = useState("flex");
   const [showPDFModal,setShowPDFModal] = useState(false);
   const [linkPDF,setLinkPDF] = useState("");
-    const [numPages, setNumpages] = useState(null);
-    const [pageNumber, setPageNumber] = useState(1);
+  const [numPages, setNumpages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [showChatModal, setShowChatModal] = useState(false);
+  const [displayAsk, setDisplayAsk] = useState("none");
+  const dispatch = useDispatch();
 
-    const [showChatModal, setShowChatModal] = useState(false);
-    const [displayAsk, setDisplayAsk] = useState("none");
-    
-    const openVideoTheque = (courselink) => {
+
+  const openVideoTheque = (courselink) => {
         console.log(courselink);
         onChildClickHandlerVideo(courselink);
     }
@@ -64,6 +74,7 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
     }
 
 	useEffect(()=>{
+    getCourses()
 		setPosts(data);
 	},[])
 
@@ -110,15 +121,76 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
             left:"0px",
             }}
       >
-            <div className="contain" id='myContain'>
+            <div className="contain" id='myContain' style={{backgroundColor:'white'}}>
                 <div style={{display:'inline-block', fontSize:'100%'}}>
                    
-                </div><span className='close' onClick={()=>closeModal()}>&times;</span>
+                </div><span style={{cursor:'pointer'}} className='close' onClick={()=>closeModal()}>&times;</span>
                 <iframe src={linkPDF+"#toolbar=0"} style={{width:"70em", height:"35em"}} frameBorder="0"></iframe>
             </div>
           
       </div>
     )
+    }
+
+    const getCourses = () => {
+    const filterPayload = {
+                            specialitiesCode: [
+                              "fr",
+                              "eng",
+                              "maths",
+                              "phy",
+                              "info",
+                              "ing",
+                            ],
+                            levels: [
+                              "0",
+                              "1",
+                              "2",
+                              "3",
+                              "4",
+                              "5",
+                              "6",
+                            ],
+                            types: [
+                              "0",
+                              "1"
+                            ]
+                          }
+    courseService.filterCourses(filterPayload)
+        .then((response)=> {
+            console.log("Response for get Courses in Student");
+            console.log(response.data.courses);
+            dispatch(shareCourses(response.data.courses));
+        })
+        .catch((error)=> {
+            console.log("Error Response for get Courses in Student");
+            console.log(error);
+            dispatch(shareCourses(null));
+        })
+}
+const onChangeSearch = (record) => {
+    let filter, table, tr, td, i,input, txtValue;
+     filter = record.toUpperCase();
+
+    Object.keys(courses&&courses).map((value,index) => {
+      console.log(courses[value].title);
+      console.log(filter);
+      console.log(index);
+      if(courses[value].title.toUpperCase().indexOf(filter) > -1){
+      if(index===0 || index===1 || index===2){
+        paginate(1);
+      }else{
+        if((index%3) === 0){
+          paginate((index/3) + 1);
+        }else if(((index-1)%3) === 0){
+          paginate(((index-1)/3) + 1);
+        }else if(((index-2)%3) === 0){
+          paginate(((index-2)/3) + 1);
+        } 
+      }
+    }else{console.log("return for not match"); paginate(1); return;}
+    })
+   
     }
 
     const ModalChat = () => {
@@ -179,201 +251,12 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
   };
 
     let data = [
-    {
-      id: 1,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: pdf1
-    },
-    {
-      id: 2,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: videoLink4
-    },
-    {
-      id: 3,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: pdf2
-    },
-    {
-      id: 4,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: videoLink3
-    },
-    {
-      id: 5,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: pdf2
-    },
-    {
-      id: 6,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: pdf2
-    },
-    
-    {
-      id: 7,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: videoLink2
-    },
-    
-    {
-      id: 8,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: pdf2
-    },
-    
-    {
-      id: 9,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: videoLink3
-    },
-    
-    {
-      id: 10,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: pdf1
-    },
-    {
-      id: 11,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: videoLink
-    },
-    {
-      id: 12,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: pdf1
-    },
-    {
-      id: 13,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: pdf1
-    },
-    {
-      id: 14,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: videoLink4
-    },
-    {
-      id: 15,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: pdf1
-    },
-    {
-      id: 16,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'Video',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: videoLink3
-    },
-    {
-      id: 17,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLink: pdf1
-    },
   ];
-  const options = [
-    { value: 'francais', label: 'Français' },
-    { value: 'anglais', label: 'Anglais' },
-    { value: 'math', label: 'Mathématiques' },
-    { value: 'physique', label: 'Physiques' },
-    { value: 'info', label: 'Informatique' },
-    { value: 'ingenieur', label: "Science de l'ingénieur" }
-  ]
-  const options1 = [
-    { value: 'francais', label: 'Français' },
-    { value: 'anglais', label: 'Anglais' },
-    { value: 'math', label: 'Mathématiques' },
-    { value: 'physique', label: 'Physiques' },
-    { value: 'info', label: 'Informatique' },
-    { value: 'ingenieur', label: "Science de l'ingénieur" }
-  ]
+ 
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost,indexOfLastPost);
+  const currentPosts = courses&&courses.slice(indexOfFirstPost,indexOfLastPost);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 	return(
 			<div className="container">
@@ -394,17 +277,17 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                        <GridItem xs={12} sm={12} md={3} style={{margin:'2%'}}>
                             <div style={{border:'2px solid #0069D9', width:'110%'}}>
                                  <ReactSearchBox
-                                    placeholder="Rechercher"
+                                    placeholder="Search By Course Title"
                                     value="Doe"
                                     data={data}
-                                    callback={(record) => console.log(record)}
+                                    onChange={onChangeSearch}
                                   />
                             </div>
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                        {/*<GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                            
                             <div style={{fontSize:'1vw',marginBottom:'2%'}}>
                                <select name="pets" id="pet-select">
@@ -418,35 +301,38 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
                                 </select>
                             </div>
 
-                        </GridItem>
+                        </GridItem>*/}
                     </GridContainer>
              
 			 <GridContainer style={{backgroundColor:'#eeeeee'}}>
-			 			{currentPosts.map((post,index)=>{
+			 			{currentPosts&&currentPosts.map((post,index)=>{
 			 				return(
 			 					<GridItem xs={12} sm={12} md={3} key={post.id}>
                         
                                 <Card style={{border:"2px solid #5271ff",width:'100%'}}>
                                     <CardHeader style={{backgroundColor:'#5271ff'}}>
-                                        {post.id}-{post.courseName}
+                                       
                                     </CardHeader>
                                     <CardBody style={{width:'100%',textAlign:'center',backgroundColor:'#C7D0D8'}}>
-                                        {post.courseFormat == 'Video'?
+                                        {post.type == '1'?
                                             <img src={vidio} width='100%' height='80px'  /> : 
-                                         post.courseFormat == 'PDF'?   
+                                         post.type == '0'?   
                                             <img src={imgpdf} width='25%' height='80px' />:''}
                                     </CardBody>
-                                    <CardFooter style={{width:'100%',backgroundColor:'#ffce52'}}>
-                                        <div style={{backgroundColor:'#ffce52',width:'100%',fontSize:'70%',padding:'3%'}}>
-                                            <div><strong>Titre:</strong> {post.courseTitle}</div>
-                                            <div><strong>Description:</strong> {post.courseDescription}</div>
-                                            <div><strong>Type:</strong> {post.courseFormat}</div>
-                                            <div><strong>Niveau:</strong> {post.courseLevel}</div>
-                                            <div><strong>Sujet:</strong> {post.courseSubjet}</div>
+                                    <CardFooter style={{width:'100%',height:'180px',backgroundColor:'#ffce52'}}>
+                                        <div style={{backgroundColor:'#ffce52',width:'100%',fontSize:'80%',padding:'3%'}}>
+                                            <div><strong>Titre: </strong> {post.title}</div>
+                                            <div><strong>Description: </strong> {post.description}</div>
+                                            <div><strong>Type: </strong> {post.type==="0"?
+                                                                          "Pdf":
+                                                                          'Video'}
+                                                                        </div>
+                                            <div><strong>Niveau: </strong>{post.levels.map((value,index) =>{return(<span key={index}>{value.label.toLowerCase()}</span>)})}</div>
+                                            <div><strong>Sujet: </strong> {post.speciality.name}</div>
                                        
                                         <div style={{marginTop:'10%'}}>
                                            <span style={{float:'left',cursor:'pointer'}}>
-                                                {post.courseFormat=="Video"?
+                                                {post.type=="1"?
                                                 <div onClick={()=>openVideoTheque(post.courseLink)}><img src={eye} width='80%'/></div>:
                                                 <div onClick={()=>openModal('pdf',post.courseLink)}><img src={eye} width='80%'/></div>}
                                                 <div>voir</div>
@@ -466,7 +352,7 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
                     	<GridItem xs={12} sm={12} md={12}>
                     		<Pagination 
 	                    		postsPerPage={postPerPage} 
-	                    		totalPosts={posts.length} 
+	                    		totalPosts={courses&&courses.length} 
 	                    		paginate={paginate}
                     		/>
                     	</GridItem>
@@ -474,6 +360,12 @@ const CourseContent = ({onChildClickHandlerVideo,externalLinkVideo}) => {
                     </div>
 		)
 }
-export default CourseContent
+const mapStateToProps=(state)=>{
+  return{
+      error: state.authReducer.error,
+      courses: state.authReducer.courses,   
+  };
+};
+export default connect(mapStateToProps)(CourseContent)
 
 

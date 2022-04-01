@@ -1,10 +1,10 @@
-import react,{ createRef } from 'react';
+import react,{useState, createRef, useEffect } from 'react';
+import {connect, useSelector, useDispatch} from 'react-redux';
 import GridItem from "../../../app/components/Grid/GridItem.js";
 import GridContainer from "../../../app/components/Grid/GridContainer.js";
 import Card from "../../../app/components/Card/Card.js";
 import CardHeader from "../../../app/components/Card/CardHeader.js";
 import CardBody from "../../../app/components/Card/CardBody.js";
-import React,{useState,useEffect} from 'react';
 import CardAvatar from "../../../app/components/Card/CardAvatar.js";
 import CardFooter from "../../../app/components/Card/CardFooter.js";
 import { Dropdown } from 'react-bootstrap';
@@ -22,6 +22,15 @@ import im5 from '../../../assets/images/im5.png';
 import vidioLink4 from '../../../assets/video/testvideo4.mp4';
 import vidioLink2 from '../../../assets/video/testvideo.mp4';
 import vidioLink3 from '../../../assets/video/testvideo3.mp4';
+import adminService from '../../services/admin.service';
+import authService from '../../services/auth.service';
+import courseService from '../../services/course.service';
+import {    authRegisterSuccess, 
+            authRegisterFailed, 
+            authShowMessage, 
+            authSetRegisterForm,
+            authCreateSuccess,
+            shareCourses } from '../../redux/reducer/actions/auth';
 
 
 
@@ -37,16 +46,18 @@ import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";*
 import Pagination from './pagination.jsx';
 
 
-const ConferenceContent = ({playvideo,courseLink}) => {
+const ConferenceContent = ({courses, playvideo,courseLink}) => {
 	const [posts, setPosts] = useState([]);
 	const [loading, serLoading] = useState(false);
 	const [currentPage, setCurrentPage] = useState(2);
 	const [postPerPage, setPostPerPage] = useState(4);
   const [play,setPlay] = useState(playvideo);
-  const [vidLinks, setVidLinks] = useState(courseLink);
+  const [vidLinks, setVidLinks] = useState(courseLink?courseLink:vidioLink4);
+
+  const dispatch = useDispatch();
 
 	useEffect(()=>{
-		setPosts(data);
+    getCourses();
 	},[])
   const refMedia = createRef();
 
@@ -81,6 +92,42 @@ const ConferenceContent = ({playvideo,courseLink}) => {
 
           console.log("VIDEO pause",player)
     }
+
+    const getCourses = () => {
+    const filterPayload = {
+                            specialitiesCode: [
+                              "fr",
+                              "eng",
+                              "maths",
+                              "phy",
+                              "info",
+                              "ing",
+                            ],
+                            levels: [
+                              "0",
+                              "1",
+                              "2",
+                              "3",
+                              "4",
+                              "5",
+                              "6",
+                            ],
+                            types: [
+                              "1"
+                            ]
+                          }
+    courseService.filterCourses(filterPayload)
+        .then((response)=> {
+            console.log("Response for get Courses in Student conference");
+            console.log(response.data.courses);
+            dispatch(shareCourses(response.data.courses));
+        })
+        .catch((error)=> {
+            console.log("Error Response for get Courses in Student conference");
+            console.log(error);
+            dispatch(shareCourses(null));
+        })
+}
 
     let data = [
     {
@@ -278,7 +325,7 @@ const ConferenceContent = ({playvideo,courseLink}) => {
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost,indexOfLastPost);
+  const currentPosts = courses&&courses.slice(indexOfFirstPost,indexOfLastPost);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const outPutclickReady =(e)=>{
@@ -331,7 +378,7 @@ const ConferenceContent = ({playvideo,courseLink}) => {
                     </GridContainer>
 
 
-                    <GridContainer>
+                   {/* <GridContainer>
                       <GridItem xs={12} sm={12} md={12}>
                        <div style={{width:'100%',margin:'-25% 0% 0% 0%'}}>
                           <input type='text' placeholder='Votre commentaire'  style={{
@@ -344,16 +391,16 @@ const ConferenceContent = ({playvideo,courseLink}) => {
                       
                         
                       </GridItem>
-                    </GridContainer>
+                    </GridContainer>*/}
 
                     <GridContainer>
                       <GridItem xs={12} sm={12} md={12}>
-                        <div style={{overflow:'scroll',
+                        {/*<div style={{overflow:'scroll',
                               backgroundColor:'white',
                               width:'100%',
                               margin:'-20% 0% 0% 0%',
                               height:'150px'}}>
-                        {currentPosts.map((value,index)=>{
+                        {courses&&courses.map((value,index)=>{
                           return(
                           <GridContainer >
                             <GridItem xs={12} sm={12} md={3}>
@@ -380,7 +427,7 @@ const ConferenceContent = ({playvideo,courseLink}) => {
                         )
                         })}
 
-                        </div>
+                        </div>*/}
                         
                       </GridItem>
                     </GridContainer>
@@ -415,9 +462,9 @@ const ConferenceContent = ({playvideo,courseLink}) => {
                     <GridContainer>
                       <GridItem xs={12} sm={12} md={12} style={{overflowY:'scroll',height:'480px'}} >
                       <div style={{cursor:'pointer'}}>
-                        {posts.map((value,index)=>{
+                        {courses&&courses.map((post,index)=>{
                           return(
-                            <GridContainer>
+                            <GridContainer key={index}>
                                 <GridItem xs={12} sm={12} md={12} style={{padding:'10%'}}>
                                   <div style={{margin:'2%'}}>
                                 <GridContainer>
@@ -432,7 +479,7 @@ const ConferenceContent = ({playvideo,courseLink}) => {
                                             videoLink={value.courseLinkVideo} 
                                             vWidth={120} 
                                             vHeight={100} />*/}
-                                        <img src={value.courseLinkVideo} onClick={()=>handleopen(value.vidLink)} />
+                                        <img src={vidio} onClick={()=>handleopen(post.vidLink)} />
                                     </div>
                                   </GridItem>
                                   <GridItem xs={12} sm={12} md={6}>
@@ -441,13 +488,10 @@ const ConferenceContent = ({playvideo,courseLink}) => {
                                     display:'inline-block',
                                     height:'100px',
                                     backgroundColor:'#ffce52',
+                                    padding:'2%',
                                     fontSize:'70%'}}>
-                                     <div> Comment réussir son
-                                      exams en quatre
-                                      leçons?</div>
-                                      <div><strong>Spécialité:</strong> SVT</div>
-                                      <div><strong>Proposé par:</strong> Bekono</div>
-                                      <div><strong>Télespectateurs:</strong> 200</div>
+                                      <div> {post.title} </div>
+                                      <div><strong>Spécialité:</strong> {post.speciality.name} </div>
                                     </div>
                                   </GridItem>
                                 </GridContainer>
@@ -470,7 +514,13 @@ const ConferenceContent = ({playvideo,courseLink}) => {
             </div>
 		)
 }
-export default ConferenceContent;
+const mapStateToProps=(state)=>{
+  return{
+      error: state.authReducer.error,
+      courses: state.authReducer.courses,   
+  };
+};
+export default connect(mapStateToProps)(ConferenceContent);
 
 
 
