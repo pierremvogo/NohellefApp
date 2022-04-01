@@ -101,25 +101,34 @@ const AdminContent = ({userAdmin}) => {
    
       setDisplayAsk("none",setShowEditModal(false));
   }
+  let data = [
+    
+   
+  ];
 
   const onChangeSearch = (record) => {
-    let filter, table, tr, td, i, txtValue;
-    filter = record.toLowerCase();
-    table = document.getElementById("adminTable");
-    tr = table.getElementsByTagName("tr");
-      for (i=0; i<tr.length; i++){
-        td = tr[i].getElementsByTagName("td")[1];
-        if(td) {
-          txtValue = td.textContent || td.innerText;
-          if(txtValue.toLowerCase().indexOf(filter) > -1){
-            tr[i].style.display = "";
-          }else{
-            tr[i].style.display = "none";
-          }
-        }else{
-          
-          }
-        }
+    let filter, table, tr, td, i,input, txtValue;
+     filter = record.toUpperCase();
+
+    Object.keys(userAdmin&&userAdmin).map((value,index) => {
+      console.log(userAdmin[value].firstName);
+      console.log(filter);
+      console.log(index);
+      if(userAdmin[value].firstName.toUpperCase().indexOf(filter) > -1){
+      if(index===0 || index===1 || index===2){
+        paginate(1);
+      }else{
+        if((index%3) === 0){
+          paginate((index/3) + 1);
+        }else if(((index-1)%3) === 0){
+          paginate(((index-1)/3) + 1);
+        }else if(((index-2)%3) === 0){
+          paginate(((index-2)/3) + 1);
+        } 
+      }
+    }else{return;}
+    })
+   
     }
   
     
@@ -242,6 +251,9 @@ const AdminContent = ({userAdmin}) => {
           console.log(e.target.value);
           handleUnLockAccount(e.target.value);
         }
+    }
+    const setPageCurrent = (currentP) => {
+      setCurrentPage(currentP);
     }
 
     const ModalLockUnlock  = () => {
@@ -382,10 +394,10 @@ const AdminContent = ({userAdmin}) => {
                         <GridItem xs={12} sm={12} md={4} style={{marginTop:'5%'}}>
                             <div style={{border:'2px solid #0069D9', width:'110%'}}>
                                  <ReactSearchBox
-                                    placeholder="Search by Administrator Name"
+                                    placeholder="Search By Student Name"
+                                    disabled={userAdmin?false:true} 
                                     value="Doe"
-                                    
-                                    callback={(record) => console.log(record)}
+                                    data={data}
                                     onChange={onChangeSearch}
                                   />
                             </div>

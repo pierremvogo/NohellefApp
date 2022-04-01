@@ -41,7 +41,7 @@ import {    authRegisterSuccess,
 const AbonnementContent = ({userParent}) => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postPerPage] = useState(4);
+  const [postPerPage] = useState(3);
   const [display, setDisplay] = useState("flex");
   const [showEditModal,setShowEditModal] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -232,22 +232,29 @@ const AbonnementContent = ({userParent}) => {
   };
 
   const onChangeSearch = (record) => {
-    let filter, table, tr, td, tdId, i, txtValue;
-    filter = record.toLowerCase();
-    table = document.getElementById("parentTable");
-    tr = table.getElementsByTagName("tr");
-    for (i=0; i<tr.length; i++){
-      td = tr[i].getElementsByTagName("td")[1];
-      if(td) {
-        txtValue = td.textContent
-        if(txtValue.toLowerCase().indexOf(filter) > -1){
-          tr[i].style.display = "";
-        }else{
-          tr[i].style.display = "none";
-        }
+    let filter, table, tr, td, i,input, txtValue;
+     filter = record.toUpperCase();
+
+    Object.keys(userParent&&userParent).map((value,index) => {
+      console.log(userParent[value].firstName);
+      console.log(filter);
+      console.log(index);
+      if(userParent[value].firstName.toUpperCase().indexOf(filter) > -1){
+      if(index===0 || index===1 || index===2){
+        paginate(1);
+      }else{
+        if((index%3) === 0){
+          paginate((index/3) + 1);
+        }else if(((index-1)%3) === 0){
+          paginate(((index-1)/3) + 1);
+        }else if(((index-2)%3) === 0){
+          paginate(((index-2)/3) + 1);
+        } 
       }
+    }else{return;}
+    })
+   
     }
-  }
 
   const closeLockUnlockModal = () => {
       dispatch(authCreateSuccess(null));
@@ -376,6 +383,7 @@ const AbonnementContent = ({userParent}) => {
                            <div style={{border:'2px solid #0069D9', width:'110%'}}>
                                  <ReactSearchBox
                                     placeholder="Search By Parent Name"
+                                    disabled={userParent?false:true} 
                                     value="Doe"
                                     data={data}
                                     onChange={onChangeSearch}

@@ -8,8 +8,8 @@ class CourseService {
     getCourseById(id) {
         return http.get(`/courses/${id}`);
     }
-    filterCourses() {
-        return http.get(`/courses/filter`);
+    filterCourses(payload) {
+        return http.post(`/courses/filter`, payload);
     }
 
     //for course Notes

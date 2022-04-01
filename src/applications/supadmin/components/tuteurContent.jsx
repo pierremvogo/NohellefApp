@@ -73,7 +73,6 @@ const TuteurContent = ({userTutor}) => {
 
 	useEffect(()=>{
     getTutors();
-    console.log("My user Tutor from API");
     return function cleanup () {
             return;
         }
@@ -255,22 +254,29 @@ const TuteurContent = ({userTutor}) => {
     setDisplayAsk("flex", setShowModalLockUnLock(true));
   }
   const onChangeSearch = (record) => {
-    let filter, table, tr, td, tdId, i, txtValue;
-    filter = record.toLowerCase();
-    table = document.getElementById("tutorTable");
-    tr = table.getElementsByTagName("tr");
-    for (i=0; i<tr.length; i++){
-      td = tr[i].getElementsByTagName("td")[1];
-      if(td) {
-        txtValue = td.textContent
-        if(txtValue.toLowerCase().indexOf(filter) > -1){
-          tr[i].style.display = "";
-        }else{
-          tr[i].style.display = "none";
-        }
+    let filter, table, tr, td, i,input, txtValue;
+     filter = record.toUpperCase();
+
+    Object.keys(userTutor&&userTutor).map((value,index) => {
+      console.log(userTutor[value].firstName);
+      console.log(filter);
+      console.log(index);
+      if(userTutor[value].firstName.toUpperCase().indexOf(filter) > -1){
+      if(index===0 || index===1 || index===2){
+        paginate(1);
+      }else{
+        if((index%3) === 0){
+          paginate((index/3) + 1);
+        }else if(((index-1)%3) === 0){
+          paginate(((index-1)/3) + 1);
+        }else if(((index-2)%3) === 0){
+          paginate(((index-2)/3) + 1);
+        } 
       }
+    }else{return;}
+    })
+   
     }
-  }
 
     const ModalContentEdit  = () => {
     return(
@@ -490,7 +496,8 @@ const TuteurContent = ({userTutor}) => {
                     <td>{post.phoneNumber}</td>
                     <td><input 
                             style={{cursor:'pointer'}}
-                            type='checkbox' 
+                            type='checkbox'
+                            disabled={userTutor?false:true} 
                             id="confirm_age"
                             value={post.id}
                             checked={post.status===1}

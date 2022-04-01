@@ -144,7 +144,21 @@ export const shareTutorUser = (payload) => ({
     type: types.SHARE_TUTOR_USER,
     payload,
 })
+export const shareTutorSpecialities = (payload) => ({
+    type: types.SHARE_TUTOR_SPECIALITIES,
+    payload,
+})
 export const shareAdminUser = (payload) => ({
     type: types.SHARE_ADMIN_USER,
+    payload,
+})
+
+export const authMediaId = (payload) => ({
+    type: types.MEDIA_ID,
+    payload,
+})
+
+export const shareCourses = (payload) => ({
+    type: types.SHARE_COURSES,
     payload,
 })

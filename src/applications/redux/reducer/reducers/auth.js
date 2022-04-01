@@ -19,7 +19,10 @@ const INITIAL_STATE = user ?
                                 confirmEmail: null,
                                 updatePayload: null,
                                 paymentRessource: null,
+                                userSpecialities: null,
                                 userStudent: null,
+                                media_Id: null,
+                                courses: null,
                                 userTutor: null,
                                 userAdmin: null,
                                 userParent: null,
@@ -37,12 +40,15 @@ const INITIAL_STATE = user ?
                                 changesForm: null,
                                 paymentRessource: null,
                                 error: null,
+                                courses: null,
                                 loginsForm: null,
+                                userSpecialities: null,
                                 createSuccessMessage: null,
                                 registersForm: null,
                                 confirmEmail: null,
                                 isRegister: false,
                                 userStudent: null,
+                                media_Id: null,
                                 userTutor: null,
                                 userAdmin: null,
                                 userParent: null,
@@ -265,6 +271,24 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 userAdmin: action.payload,
+                error: null,
+            };
+        case types.SHARE_TUTOR_SPECIALITIES:
+            return {
+                ...state,
+                userSpecialities: action.payload,
+                error: null,
+            };
+        case types.MEDIA_ID:
+            return {
+                ...state,
+                media_Id: action.payload,
+                error: null,
+            };
+        case types.SHARE_COURSES:
+            return {
+                ...state,
+                courses: action.payload,
                 error: null,
             };
         default:

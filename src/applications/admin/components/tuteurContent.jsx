@@ -1,11 +1,11 @@
-import react from 'react';
+import react,{useState,useEffect} from 'react';
 import GridItem from "../../../app/components/Grid/GridItem.js";
 import GridContainer from "../../../app/components/Grid/GridContainer.js";
+import {connect, useSelector, useDispatch} from 'react-redux';
 import Card from "../../../app/components/Card/Card.js";
 import CardHeader from "../../../app/components/Card/CardHeader.js";
 import CustomSelect from "../../../app/components/select/select.jsx";
 import CardBody from "../../../app/components/Card/CardBody.js";
-import React,{useState,useEffect} from 'react';
 import CardAvatar from "../../../app/components/Card/CardAvatar.js";
 import CardFooter from "../../../app/components/Card/CardFooter.js";
 import { Dropdown } from 'react-bootstrap';
@@ -20,27 +20,48 @@ import Avatar   from 'react-avatar';
 import Pagination from './pagination.jsx';
 import Switch from "react-switch";
 import edit from '../../../assets/images/dashboard/edit.png';
+import videoIcon from '../../../assets/icons/videoIcon.png';
+import pdfIcon from '../../../assets/icons/pdfIcon.png';
 import Select from 'react-select';
 import './admin.css';
 import {Table} from 'react-bootstrap';
+import Loader from 'react-loader-spinner';
+import trash from '../../../assets/images/dashboard/trash.png';
+import DeleteCourse from './askForDelete.jsx';
 import AddCourse from './addCourse.jsx';
+import adminService from '../../services/admin.service';
+import authService from '../../services/auth.service';
+import courseService from '../../services/course.service';
+import {    authRegisterSuccess, 
+            authRegisterFailed, 
+            authShowMessage, 
+            authSetRegisterForm,
+            authCreateSuccess,
+            shareCourses } from '../../redux/reducer/actions/auth';
 
-const TuteurContent = () => {
+const TuteurContent = ({courses}) => {
 	const [posts, setPosts] = useState([]);
-	const [currentPage, setCurrentPage] = useState(2);
+	const [currentPage, setCurrentPage] = useState(1);
+  const [display, setDisplay] = useState("flex");
 	const [postPerPage] = useState(3);
-	const [display, setDisplay] = useState("flex");
 	const [showEditModal,setShowEditModal] = useState(false);
 	const [checked, setChecked] = useState(false);
-  const [lessonData, setLessonData] = useState([]);
+  const [courseData, setCourseData] = useState([]);
+  const [showModalLoading, setShowModalLoading] = useState(false);
+  const [displayLoading, setDisplayLoading] = useState("flex");
+  const [courseId, setCourseId] = useState("");
+  const [showModalDelete, setShowModalDelete] = useState(false);
+  const [isAdd, setIsAdd] = useState(false);
 
 	useEffect(()=>{
-		setPosts(data);
+    getCourses();
 	},[])
 
 	const handleChange = (checked) => {
 		setChecked(checked)
 	}
+
+  const dispatch = useDispatch();
 
 	function menuToggle(){
 		const toggleMenu = document.querySelector('.menu');
@@ -65,17 +86,53 @@ const TuteurContent = () => {
             left:"0px",
             }}
       >
-           <div className="contain" id='myContain'>
-                <div style={{display:'inline-block', margin:'3%', fontSize:'100%', width:'170%'}}>
-                    <span className='close' onClick={()=>closeModal()}>&times;</span>
-                    <AddCourse lessonData={lessonData} /> 
-                </div>
-               
-            </div>
-          
+        
+          <AddCourse 
+                      onChildCloseModal={closeModal} 
+                      courseData={courseData}
+                      isAdd={isAdd}
+                      onchildOpenLoading={handleLoading} /> 
+              
+      
       </div>
     )
   };
+
+  const ModalDeleteCourse  = () => {
+    return(
+      <div className="" id='cont'
+        style={{
+            width: "100%",
+            height:"100%",
+            justifyContent: "center",
+            display: display,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+                    
+        <DeleteCourse  onChildCloseModal={closeModal} 
+                       onchildOpenLoading={handleLoading}
+                       idCourse={courseId} /> 
+            
+      </div>
+    )
+  };
+
+  const openModalDelete = (id) => {
+      setCourseId(id);
+      setDisplay("flex",
+        setShowEditModal(false),
+        setShowModalDelete(true));
+    }
+
+
   
   function checkUser(id)
     {
@@ -89,95 +146,134 @@ const TuteurContent = () => {
     };
 
   function closeModal(){
-    setDisplay("none",setShowEditModal(false));
+    getCourses();
+    setDisplay("none",setShowEditModal(false),setShowModalDelete(false));
   }
 
-  const openModal=(isUpdate,dataLesson)=> {
+  const openModal=(isUpdate,dataCourse)=> {
     if(isUpdate=="yess"){
-      setLessonData(dataLesson);
+      setCourseData(dataCourse);
+      setIsAdd(false);
     }else{
-      setLessonData([]);
+      setCourseData([]);
+      setIsAdd(true);
     }
-    setDisplay("flex",setShowEditModal(true));
+    setDisplay("flex",setShowEditModal(true),setShowModalDelete(false));
     }
+   
 
     const checkbox =()=>{
       return(
         <input type="checkbox" />);
     }
 
+     const ModalLoading = () => {
+    
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            display: displayLoading,
+            zIndex: "900000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+            <div
+                style={{
+                    width: "10%",
+                    height: "30%",
+                    zIndex: "300000",
+                    display: "flex",
+                    position: "absolute",
+                    top: "30%",
+                    left: "48%"
+                }}
+                >
+                <Loader type="Oval" color="#2BAD60" height="100" width="70" />
+            </div>
+          
+      </div>
+    )
+  };
+  const handleLoading = (isShow) => {
+    setShowModalLoading(isShow);
+  }
+
+  const getCourses = () => {
+    const filterPayload = {
+                            specialitiesCode: [
+                              "fr",
+                              "eng",
+                              "maths",
+                              "phy",
+                              "info",
+                              "ing",
+                            ],
+                            levels: [
+                              "0",
+                              "1",
+                              "2",
+                              "3",
+                              "4",
+                              "5",
+                              "6",
+                            ],
+                            types: [
+                              "0",
+                              "1"
+                            ]
+                          }
+    courseService.filterCourses(filterPayload)
+        .then((response)=> {
+            console.log("Response for get Courses");
+            console.log(response.data.courses);
+            dispatch(shareCourses(response.data.courses));
+        })
+        .catch((error)=> {
+            console.log("Error Response for get Courses");
+            console.log(error);
+            dispatch(shareCourses(null));
+        })
+}
+ const onChangeSearch = (record) => {
+    let filter, table, tr, td, i,input, txtValue;
+     filter = record.toUpperCase();
+
+    Object.keys(courses&&courses).map((value,index) => {
+      console.log(courses[value].title);
+      console.log(filter);
+      console.log(index);
+      if(courses[value].title.toUpperCase().indexOf(filter) > -1){
+      if(index===0 || index===1 || index===2){
+        paginate(1);
+      }else{
+        if((index%3) === 0){
+          paginate((index/3) + 1);
+        }else if(((index-1)%3) === 0){
+          paginate(((index-1)/3) + 1);
+        }else if(((index-2)%3) === 0){
+          paginate(((index-2)/3) + 1);
+        } 
+      }
+    }else{return;}
+    })
+   
+    }
+
 
     let data = [
-    {
-      id: 1,
-      courseName: 'Algèbre linéaire',
-      nbLesson:'10',
-      tutorName:"mvogo",
-      speciality:"Mathematiques",
-      activate: <input type="checkbox" />,
-      edit: edit,
-    },
-    {
-      id: 2,
-      courseName: 'Algèbre linéaire',
-      nbLesson:'10',
-      tutorName:"mvogo",
-      speciality:"Mathematiques",
-      activate:<input type="checkbox" />,
-      edit: edit,
-    },
-    {
-      id: 3,
-      courseName: 'Algèbre linéaire',
-       nbLesson:'10',
-      tutorName:"mvogo",
-      speciality:"Mathematiques",
-      activate:<input type="checkbox" />,
-      edit: edit,
-    },
-    {
-      id: 4,
-     courseName: 'Algèbre linéaire',
-      nbLesson:'10',
-      tutorName:"mvogo",
-      speciality:"Mathematiques",
-      activate:<input type="checkbox" />,
-      edit: edit,
-    },
-    {
-      id: 5,
-     courseName: 'Algèbre linéaire',
-      nbLesson:'10',
-      tutorName:"mvogo",
-      speciality:"Mathematiques",
-      activate:<input type="checkbox" />,
-      edit: edit,
-    },
-    {
-      id: 6,
-      courseName: 'Algèbre linéaire',
-       nbLesson:'10',
-      tutorName:"mvogo",
-      speciality:"Mathematiques",
-      activate:<input type="checkbox" />,
-      edit: edit,
-    },
-    
-    {
-      id: 7,
-      courseName: 'Algèbre linéaire',
-       nbLesson:'10',
-      tutorName:"mvogo",
-      speciality:"Mathematiques",
-      activate:<input type="checkbox" />,
-      edit: edit,
-    },
   
   ];
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost,indexOfLastPost);
+  const currentPosts = courses&&courses.slice(indexOfFirstPost,indexOfLastPost);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const options = [
     { value: 'francais', label: 'Français' },
@@ -189,9 +285,10 @@ const TuteurContent = () => {
   ]
 	return(
 			<div className="container" style={{margin:'5% 0% 0% 0%'}}>
-
+      {showModalLoading? <ModalLoading />: ''}
 			{showEditModal? <ModalContentEdit /> :'' } 
-			 <GridContainer style={{textAlign:'left',fontSize:'1.2vw'}}>
+      {showModalDelete? <ModalDeleteCourse />: ''}
+			 <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
 
                         <GridItem xs={12} sm={12} md={3}>
                             <div style={{display:'inline-block',color:'#5271ff',margin:'2%'}}>
@@ -199,32 +296,29 @@ const TuteurContent = () => {
                             </div>
                             
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
-                           
-                        </GridItem>
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
-                             <div style={{border:'2px solid #0069D9', width:'110%'}}>
+                        
+                        <GridItem xs={12} sm={12} md={6} style={{marginTop:'0%'}}>
+                             <div style={{border:'2px solid #0069D9', width:'100%'}}>
                                  <ReactSearchBox
-                                    placeholder="Rechercher"
+                                    placeholder="Search By Course Title"
                                     value="Doe"
                                     data={data}
-                                    callback={(record) => console.log(record)}
+                                    onChange={onChangeSearch}
                                   />
                             </div>
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
+                        {/*<GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
                             <div style={{width:'100%',fontSize:'1vw'}}>
                                <select name="pets" id="pet-select">
-                                    <option value="">Spécialité</option>
-                                    <option value="dog">Français</option>
-                                    <option value="cat">Anglais</option>
-                                    <option value="hamster">Mathématiques</option>
-                                    <option value="parrot">Physiques</option>
-                                    <option value="spider">Informatique</option>
-                                    <option value="goldfish">Science de l'ingénieur</option>
+                                    <option value="fr">Français</option>
+                                    <option value="eng">Anglais</option>
+                                    <option value="maths">Mathématiques</option>
+                                    <option value="phy">Physiques</option>
+                                    <option value="info">Informatique</option>
+                                    <option value="ing">Science de l'ingénieur</option>
                                 </select>
                             </div>
-                        </GridItem>
+                        </GridItem>*/}
                     </GridContainer>
 
                     <GridContainer>
@@ -258,27 +352,39 @@ const TuteurContent = () => {
         <Table striped bordered hover variant="secondary">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Nom du cours</th>
-                  <th>Unités d'apprentissage</th>
-                   <th>Spécialité</th>
-                   <th>Nom du Tuteur</th>
-                  <th>Activé</th>
+                  <th>Titre</th>
+                  <th>Spécialité</th>
+                  <th>Type</th>
+                  <th>Niveau</th>
+                  <th>Nb. Leçons</th>
+                  <th>Activé/Désactivé</th>
                   <th>Editer</th>
+                  <th>Supprimer</th>
                 </tr>
               </thead>
               <tbody>
-              {currentPosts.map((post,index)=>{
+              {currentPosts&&currentPosts.map((post,index)=>{
                 return(
-                  <tr>
-                    <td>{post.id}</td>
-                    <td>{post.courseName}</td>
-                    <td>{post.nbLesson}</td>
-                     <td>{post.speciality}</td>
-                    <td>{post.tutorName}</td>
-                   
-                    <td>{post.activate}</td>
-                    <td style={{cursor:'pointer'}} onClick={()=>openModal("yess",post)}><img src={post.edit} width='25%'/></td>
+                  <tr key={index}>
+                    <td>{post.title}</td>
+                    <td>{post.speciality.name}</td>
+                    <td>{post.type==="0"?
+                        <img src={pdfIcon} width='45%'/>:
+                        <img src={videoIcon} width='45%'/>}
+                    </td>
+                    <td>{post.levels.map((value,index) =>{return(<span key={index}>{value.label.toLowerCase()}</span>)})}</td>
+                    <td>{post.media}</td>
+                  
+                    <td><input type="checkbox" /></td>
+                    <td style={{cursor:'pointer'}} onClick={()=>openModal("yess",post)}><img src={edit} width='30%'/></td>
+                    <td>
+                        <img 
+                            onClick={()=>openModalDelete(post.id)}
+                            src={trash} 
+                            width='10%' 
+                            style={{cursor:'pointer'}}
+                        />
+                    </td>
                   </tr>
                   )
               })}
@@ -292,7 +398,7 @@ const TuteurContent = () => {
                     		<div style={{ height: 150, width: '100%' }}>
                           <Pagination 
                           postsPerPage={postPerPage} 
-                          totalPosts={posts.length} 
+                          totalPosts={courses&&courses.length} 
                           paginate={paginate}
                         />
                         </div>
@@ -301,6 +407,12 @@ const TuteurContent = () => {
         </div>
 		)
 }
-export default TuteurContent
+const mapStateToProps=(state)=>{
+  return{
+      error: state.authReducer.error,
+      courses: state.authReducer.courses,   
+  };
+};
+export default connect(mapStateToProps)(TuteurContent);
 
 

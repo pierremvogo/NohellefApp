@@ -26,5 +26,6 @@
 	opacity: 1;
 }
 th, td{
-	font-size: 75%;
+  font-size: 75%;
+  text-align: center;
 }
