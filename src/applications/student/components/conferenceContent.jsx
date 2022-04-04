@@ -52,7 +52,7 @@ const ConferenceContent = ({courses, playvideo,courseLink}) => {
 	const [currentPage, setCurrentPage] = useState(2);
 	const [postPerPage, setPostPerPage] = useState(4);
   const [play,setPlay] = useState(playvideo);
-  const [vidLinks, setVidLinks] = useState(courseLink?courseLink:vidioLink4);
+  const [vidLinks, setVidLinks] = useState(courseLink?courseLink:"http://38.242.220.206:6051/medias/videos/1649076894140-123.mp4");
 
   const dispatch = useDispatch();
 
@@ -68,7 +68,7 @@ const ConferenceContent = ({courses, playvideo,courseLink}) => {
   }
   
   function handleopen(links){
-        setPlay(true);
+        setPlay(false);
         setVidLinks(links);
   }
 
@@ -80,20 +80,20 @@ const ConferenceContent = ({courses, playvideo,courseLink}) => {
     setPlay(false);
   }
 
-    const  onPlayerReady = (player) => {
+  const  onPlayerReady = (player) => {
           console.log("VIDEO READY",player)
     }
 
-    const  onVideoPlay = (duration) => {
+  const  onVideoPlay = (duration) => {
           console.log("VIDEO Play",duration)
     }
 
-    const  onVideoPause = (player) => {
+  const  onVideoPause = (player) => {
 
           console.log("VIDEO pause",player)
     }
 
-    const getCourses = () => {
+  const getCourses = () => {
     const filterPayload = {
                             specialitiesCode: [
                               "fr",
@@ -130,197 +130,7 @@ const ConferenceContent = ({courses, playvideo,courseLink}) => {
 }
 
     let data = [
-    {
-      id: 1,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink4
-    },
-    {
-      id: 2,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink2
-    },
-    {
-      id: 3,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink3
-    },
-    {
-      id: 4,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink4
-    },
-    {
-      id: 5,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink3
-    },
-    {
-      id: 6,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink2
-    },
-    
-    {
-      id: 7,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink2
-    },
-    
-    {
-      id: 8,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink2
-    },
-    
-    {
-      id: 9,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink2
-    },
-    
-    {
-      id: 10,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink2
-    },
-    {
-      id: 11,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink2
-    },
-    {
-      id: 12,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink2
-    },
-    {
-      id: 13,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink2
-    },
-    {
-      id: 14,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink3
-    },
-    {
-      id: 15,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink3
-    },
-    {
-      id: 16,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink3
-    },
-    {
-      id: 17,
-      courseName: "Algèbre Linéaire",
-      courseTitle: "Cours de mathématiques",
-      courseDescription: "Ce cours est destiné au étudiant en algèbre, son contenu s'articule sur Espace vectoriel, Matrix et Equation multidimentionnelle",
-      courseFormat:'PDF',
-      courseLevel:'Niveau 8',
-      courseSubjet:'Mathématiques',
-      courseLinkVideo: vidio,
-      vidLink: vidioLink3
-    },
+   
   ];
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;

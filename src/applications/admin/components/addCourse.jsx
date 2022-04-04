@@ -50,8 +50,8 @@ const AddCourse = ({error,
     const [registerCourseForm, setRegisterCourseForm] = useState(
                             registersForm?registersForm:{
                             courseName:courseData?courseData.title:"",
-                            courseSpeciality:"",
-                            courseLevel:"",
+                            courseSpeciality:courseData.speciality?courseData.speciality.code:"",
+                            courseLevel:courseData.levels? courseData.levels.map((value,index) =>{return(value.level)}):"",
                             courseDescription:courseData?courseData.description:"",
                         } );
     const [errorMessage, setErrorMessage] = useState(false);
@@ -119,24 +119,37 @@ const AddCourse = ({error,
   }
 
   const handleUpdateCourse = (e) => {
+    let mediaData =  {
+          subDir: null,
+          name: todoList.name.split('.').shift(),
+          hashname: todoList.contentRaw,
+          extension: todoList.name.split('.').pop(),
+          size: todoList.size,
+          type: todoList.name.split('.').pop()==='pdf'?"0":"1"
+        }
        e.preventDefault(); 
-       setFormErrors(validateForm(registerCourseForm));
-       if(Object.keys(formErrors).length === 0 && submited){
-                dispatch(authSetRegisterForm(registerCourseForm));
+        setFormErrors(validateForm(registerCourseForm));
+        dispatch(authSetRegisterForm(registerCourseForm));
+            if(todoList.name != ""){
                 handleLoading(true);
                 console.log("form Course register");
-                adminService.editCourse(courseData.id,{
+                mediaService.createMedia(mediaData)
+                .then((response) => {
+                    console.log("Successful create Media");
+                   // dispatch(authMediaId(response.data.id))
+                    console.log(response.data);
+                    adminService.editCourse(courseData.id,{
                                           title: registerCourseForm.courseName,
                                           description: registerCourseForm.courseDescription,
                                           type: todoList.name.split('.').pop()==='pdf'?"0":"1",
                                           specialityCode: registerCourseForm.courseSpeciality,
-                                          mediaId: "",
+                                          mediaId: response.data.id,
                                           levels: registerCourseForm.courseLevel
                                         })
                 .then((response) => {
                         dispatch(authSetRegisterForm(null));
                         dispatch(authRegisterFailed(null));
-                        dispatch(authCreateSuccess("Course has been edit Successfully"));
+                        dispatch(authCreateSuccess("Course has been Update Successfully"));
                         console.log("Response register course success");
                         console.log(response.data);
                         handleLoading(false);
@@ -144,7 +157,7 @@ const AddCourse = ({error,
                 })
                 .catch((error) => {
                     handleLoading(false);
-                    console.log("Error  Register Course");
+                    console.log("Error  Update Course");
                     if(error.response === undefined){
                         dispatch(authRegisterFailed("Network Error, possible you are not connected"));
                     }else{
@@ -153,17 +166,56 @@ const AddCourse = ({error,
                     
                     }
                 });
+                })
+                .catch((error) => {
+                   handleLoading(false);
+                        console.log("Error Register Media");
+                        if(error.response === undefined){
+                            dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                        }else{
+                            dispatch(authRegisterFailed(error.response));
+                            console.log(error.response);
+                        
+                        }
+                })
 
                 
             }else{
-                dispatch(authRegisterFailed(null));
-                handleLoading(false);
-                return; 
+                handleLoading(true);
+                adminService.editCourse(courseData.id,{
+                                          title: registerCourseForm.courseName,
+                                          description: registerCourseForm.courseDescription,
+                                          type: todoList.name.split('.').pop()==='pdf'?"0":"1",
+                                          specialityCode: registerCourseForm.courseSpeciality,
+                                          levels: registerCourseForm.courseLevel
+                                        })
+                .then((response) => {
+                        dispatch(authSetRegisterForm(null));
+                        dispatch(authRegisterFailed(null));
+                        dispatch(authCreateSuccess("Course has been Update Successfully"));
+                        console.log("Response register course success");
+                        console.log(response.data);
+                        handleLoading(false);
+                
+                })
+                .catch((error) => {
+                    handleLoading(false);
+                    console.log("Error  Update Course");
+                    if(error.response === undefined){
+                        dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                    }else{
+                        dispatch(authRegisterFailed(error.response));
+                        console.log(error.response);
+                    
+                    }
+                });
             }
-  }
+
+      }
 
   useEffect(()=>{
-    
+    console.log("My course data");
+    console.log(courseData);
     },[])
 
   const handleLoading = (isShow) => {
@@ -176,6 +228,8 @@ const AddCourse = ({error,
 
   function closeModal(e){
       dispatch(authCreateSuccess(null));
+      dispatch(authSetRegisterForm(null));
+      dispatch(authRegisterFailed(null));
       onChildCloseModal(e.target.name);
   }
 
@@ -191,6 +245,7 @@ const AddCourse = ({error,
     }
 
     const onChangeUploadFile = (e) => {
+        courseData.media = null;
         const reader = new FileReader();
         const file = e.target.files[0];
         console.log("my file video");
@@ -257,36 +312,6 @@ const AddCourse = ({error,
         setFormErrors(null)
     }
 
-    const handleCreateMedia = (e) => {
-       let mediaData =  {
-          subDir: null,
-          name: todoList.name.split('.').shift(),
-          hashname: todoList.contentRaw,
-          extension: todoList.name.split('.').pop(),
-          size: todoList.size,
-          type: todoList.name.split('.').pop()==='pdf'?"0":"1"
-        }
-        console.log("my todo list Media");
-        console.log(mediaData);
-        handleLoading(true);
-        mediaService.createMedia(mediaData)
-        .then((response) => {
-            console.log("Successful create Media");
-            dispatch(authMediaId(response.data.id))
-            console.log(response.data);
-        })
-        .catch((error) => {
-           handleLoading(false);
-                console.log("Error Register Media");
-                if(error.response === undefined){
-                    dispatch(authRegisterFailed("Network Error, possible you are not connected"));
-                }else{
-                    dispatch(authRegisterFailed(error.response));
-                    console.log(error.response);
-                
-                }
-        })
-    }
 
     const onSubmit = (e) => {
         let mediaData =  {
@@ -299,9 +324,8 @@ const AddCourse = ({error,
         }
        e.preventDefault(); 
        setFormErrors(validateForm(registerCourseForm));
-       if(Object.keys(formErrors).length === 0 && submited){
+        dispatch(authSetRegisterForm(registerCourseForm));
             if(todoList.name != ""){
-                dispatch(authSetRegisterForm(registerCourseForm));
                 handleLoading(true);
                 console.log("form Course register");
 
@@ -355,14 +379,6 @@ const AddCourse = ({error,
             }else{
                 dispatch(authRegisterFailed("You have to add lesson for this Course"));
             }
-
-            }
-            
-        else{
-            dispatch(authRegisterFailed(null));
-            handleLoading(false);
-            return; 
-        }
         
        
     }
@@ -605,7 +621,7 @@ const AddCourse = ({error,
                                                        
                                                         <div>
                                                                 <div onClick={handleClickFileInput} class="text-xs font-weight-bold text-center" style={{fontSize:'100%',color:"blue"}}>
-                                                                 <u>Ajouter une Leçon</u>
+                                                                 {isAdd? <u>Ajouter une Leçon</u>:<u>Modifier la Leçon</u>}
                                                                 <input 
                                                                   type="file" 
                                                                   accept="application/pdf, video/*"
@@ -626,7 +642,8 @@ const AddCourse = ({error,
                                     
 
                                   </GridContainer>
-                                  <GridContainer>
+                                  
+                                    <GridContainer>
                                       <GridItem xs={12} sm={12} md={12} style={{marginTop:'2%'}}>
                                       <table className='table'>
                                 <thead>
@@ -641,18 +658,29 @@ const AddCourse = ({error,
                                           
                                              <tr>
                                                     <td>
+                                                        {courseData.media?courseData.media.name<=24?
+                                                            courseData.media.name.split(".").shift():courseData.media.name.substr(0,24)+"...":""}
                                                         {todoList.name.length <= 24? 
-                                                            todoList.name.split(".").shift():todoList.name.substr(0,24)+"..." }
+                                                            todoList.name.split(".").shift():todoList.name.substr(0,24)+"..."}
                                                     </td>
-                                                    <td>{ todoList.size != 0? toFixedIfNecessary(todoList.size/1000/1000, 2) + ' MB' : ''} </td>
-                                                    <td>{ todoList.type === "mp4"? <img src={videoIcon} width='20%' />: todoList.type === "pdf"? <img src={pdfIcon} width='20%' />:""} </td>
+                                                    <td>{courseData.media?toFixedIfNecessary(courseData.media.size/1000/1000, 2) + ' MB':""}
+                                                        {todoList.size != 0? toFixedIfNecessary(todoList.size/1000/1000, 2) + ' MB' : ''} 
+
+                                                    </td>
+                                                    <td>{courseData.media?courseData.media.type==="0"?<img src={pdfIcon} width='20%' />:
+                                                                                                <img src={videoIcon} width='20%' />:""}
+                                                         { todoList.type === "mp4"?<img src={videoIcon} width='20%' />: 
+                                                           todoList.type === "pdf"? <img src={pdfIcon} width='20%' />:""} 
+
+                                                    </td>
                                                     <td><i className="far fa-window-close" style={{ fontSize:25+'px',color:'#17879C',cursor:'pointer' }}/></td>
-                                                </tr>
+                                            </tr>
                                           
                                 </tbody>
                             </table>
                                     </GridItem>
                                   </GridContainer>
+                                  
 
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>

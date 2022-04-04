@@ -19,6 +19,7 @@ import ReactSearchBox from "react-search-box";
 import Avatar   from 'react-avatar';
 import Pagination from './pagination.jsx';
 import Switch from "react-switch";
+import add from '../../../assets/images/dashboard/add.png';
 import edit from '../../../assets/images/dashboard/edit.png';
 import videoIcon from '../../../assets/icons/videoIcon.png';
 import pdfIcon from '../../../assets/icons/pdfIcon.png';
@@ -241,6 +242,47 @@ const TuteurContent = ({courses}) => {
             dispatch(shareCourses(null));
         })
 }
+
+const getCourseBySpecialities = (e) => {
+  console.log("My speciality code");
+  console.log(e.target.value);
+  const filterPayload = {
+                            specialitiesCode: [
+                                  e.target.value != 0 && 
+                                  e.target.value ==="fr"||
+                                  e.target.value ==="eng"||
+                                  e.target.value ==="maths"||
+                                  e.target.value ==="phy"||
+                                  e.target.value ==="info"||
+                                  e.target.value ==="ing"?e.target.value:"fr"
+
+                            ],
+                            levels: [
+                              e.target.value != 0 && 
+                                  e.target.value !="fr"||
+                                  e.target.value !="eng"||
+                                  e.target.value !="maths"||
+                                  e.target.value !="phy"||
+                                  e.target.value !="info"||
+                                  e.target.value !="ing"?e.target.value:"0",
+                            ],
+                            types: [
+                              "0",
+                              "1"
+                            ]
+                          }
+    courseService.filterCourses(filterPayload)
+        .then((response)=> {
+            console.log("Response for get Courses by specialities");
+            console.log(response.data.courses);
+            dispatch(shareCourses(response.data.courses));
+        })
+        .catch((error)=> {
+            console.log("Error Response for get Courses by specialities");
+            console.log(error);
+            dispatch(shareCourses(null));
+        })
+}
  const onChangeSearch = (record) => {
     let filter, table, tr, td, i,input, txtValue;
      filter = record.toUpperCase();
@@ -297,7 +339,7 @@ const TuteurContent = ({courses}) => {
                             
                         </GridItem>
                         
-                        <GridItem xs={12} sm={12} md={6} style={{marginTop:'0%'}}>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
                              <div style={{border:'2px solid #0069D9', width:'100%'}}>
                                  <ReactSearchBox
                                     placeholder="Search By Course Title"
@@ -307,9 +349,30 @@ const TuteurContent = ({courses}) => {
                                   />
                             </div>
                         </GridItem>
-                        {/*<GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
                             <div style={{width:'100%',fontSize:'1vw'}}>
-                               <select name="pets" id="pet-select">
+                               <select 
+                                  name="specialities" 
+                                  id="pet-select"
+                                  onChange={getCourseBySpecialities}>
+                                    <option value="">Niveau</option>
+                                    <option value="0">6ieme</option>
+                                    <option value="1">5ieme</option>
+                                    <option value="2">4ieme</option>
+                                    <option value="3">3ieme</option>
+                                    <option value="4">2nd</option>
+                                    <option value="5">1ere</option>
+                                    <option value="6">Tle</option>
+                                </select>
+                            </div>
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
+                            <div style={{width:'100%',fontSize:'1vw'}}>
+                               <select 
+                                  name="specialities" 
+                                  id="pet-select"
+                                  onChange={getCourseBySpecialities}>
+                                    <option value="">Spécialités</option>
                                     <option value="fr">Français</option>
                                     <option value="eng">Anglais</option>
                                     <option value="maths">Mathématiques</option>
@@ -318,7 +381,7 @@ const TuteurContent = ({courses}) => {
                                     <option value="ing">Science de l'ingénieur</option>
                                 </select>
                             </div>
-                        </GridItem>*/}
+                        </GridItem>
                     </GridContainer>
 
                     <GridContainer>
@@ -354,10 +417,10 @@ const TuteurContent = ({courses}) => {
                 <tr>
                   <th>Titre</th>
                   <th>Spécialité</th>
-                  <th>Type</th>
                   <th>Niveau</th>
-                  <th>Nb. Leçons</th>
-                  <th>Activé/Désactivé</th>
+                  <th>Leçon</th>
+                  <th>Type</th>
+                  {/*<th>Activé/Désactivé</th>*/}
                   <th>Editer</th>
                   <th>Supprimer</th>
                 </tr>
@@ -368,14 +431,15 @@ const TuteurContent = ({courses}) => {
                   <tr key={index}>
                     <td>{post.title}</td>
                     <td>{post.speciality.name}</td>
-                    <td>{post.type==="0"?
+                    <td>{post.levels.map((value,index) =>{return(<div key={index}>{value.level}</div>)})}</td>
+                     <td>{post.media?post.media.name.length <= 30? 
+                                post.media.name:post.media.name.substr(0,30)+"...":""}</td>
+                    <td>{post.media&&post.media.extension==="pdf"?
                         <img src={pdfIcon} width='45%'/>:
-                        <img src={videoIcon} width='45%'/>}
+                        post.media&&post.media.extension==="mp4"?
+                        <img src={videoIcon} width='45%'/>:""}
                     </td>
-                    <td>{post.levels.map((value,index) =>{return(<span key={index}>{value.label.toLowerCase()}</span>)})}</td>
-                    <td>{post.media}</td>
-                  
-                    <td><input type="checkbox" /></td>
+                    {/*<td><input type="checkbox" /></td>*/}
                     <td style={{cursor:'pointer'}} onClick={()=>openModal("yess",post)}><img src={edit} width='30%'/></td>
                     <td>
                         <img 

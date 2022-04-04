@@ -125,7 +125,7 @@ const CourseContent = ({courses, onChildClickHandlerVideo,externalLinkVideo}) =>
                 <div style={{display:'inline-block', fontSize:'100%'}}>
                    
                 </div><span style={{cursor:'pointer'}} className='close' onClick={()=>closeModal()}>&times;</span>
-                <iframe src={linkPDF+"#toolbar=0"} style={{width:"70em", height:"35em"}} frameBorder="0"></iframe>
+                <iframe allowfullscreen src={`http://38.242.220.206:6051/medias/docs/${linkPDF}` +"#toolbar=0"} style={{width:"70em", height:"35em"}} frameBorder="0"></iframe>
             </div>
           
       </div>
@@ -327,14 +327,21 @@ const onChangeSearch = (record) => {
                                                                           "Pdf":
                                                                           'Video'}
                                                                         </div>
-                                            <div><strong>Niveau: </strong>{post.levels.map((value,index) =>{return(<span key={index}>{value.label.toLowerCase()}</span>)})}</div>
+                                            <div><strong>Niveau: </strong>{post.levels.map((value,index) =>{return(<span key={index}>{
+                                                                                value.level==="0"?"six_secondary":
+                                                                                value.level==="1"?"five_secondary":
+                                                                                value.level==="2"?"four_secondary":
+                                                                                value.level==="3"?"three_secondary":
+                                                                                value.level==="4"?"second_secondary":
+                                                                                value.level==="5"?"first_secondary":
+                                                                                "terminal_secondary"}</span>)})}</div>
                                             <div><strong>Sujet: </strong> {post.speciality.name}</div>
                                        
                                         <div style={{marginTop:'10%'}}>
                                            <span style={{float:'left',cursor:'pointer'}}>
                                                 {post.type=="1"?
                                                 <div onClick={()=>openVideoTheque(post.courseLink)}><img src={eye} width='80%'/></div>:
-                                                <div onClick={()=>openModal('pdf',post.courseLink)}><img src={eye} width='80%'/></div>}
+                                                <div onClick={()=>openModal('pdf',post.media.hashname)}><img src={eye} width='80%'/></div>}
                                                 <div>voir</div>
                                             </span>
                                            

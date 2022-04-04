@@ -507,7 +507,7 @@ const TuteurContent = ({userTutor,userSpecialities}) => {
                           /></td>
                     <td>{post.firstName}</td>
                     <td>{post.email}    {post.emailConfirmed?<span>&#10003;</span>:""}</td>
-                    <td>{userSpecialities&&userSpecialities[index].name}</td>
+                    <td>{post.specialities.map((value,index) =>{return(<div key={index}>{value.name.toLowerCase()}</div>)})}</td>
                     <td>{post.students.length != 0?post.students.length:<img onClick={()=>openModalPartial(post.id)} style={{cursor:'pointer'}} src={add} width='25px' />}</td> 
                     <td>{post.connectionMode}</td>
                     <td onClick={()=>{openModal('affect',post.firstName,post.id)}}><img style={{cursor:'pointer'}} src={ip} width='20%'/></td>  
