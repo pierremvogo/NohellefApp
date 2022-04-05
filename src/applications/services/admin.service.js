@@ -30,6 +30,11 @@ class AdminService {
         return http.delete(`/admin/tutor-specialities/${tutorId}/${code}`);
     }
 
+     assignAdminPermission(adminId,payload) {
+        return http.post(`/admin/assign-admin-permission/${adminId}/`, payload);
+    }
+
+
     createCourse(payload) {
         return http.post(`/admin/courses`, payload);
     }
@@ -72,6 +77,15 @@ class AdminService {
 
     deleteQuizAnswer(id) {
         return http.delete(`/admin/quiz-delete-answer/${id}`);
+    }
+    validateQuizComment(commentId,payload) {
+        return http.patch(`/admin/comments/${commentId}/validate`, payload);
+    }
+    filterMeeting(payload) {
+        return http.post(`/admin/meetings/filters`, payload);
+    }
+    filterAbonnement(payload) {
+        return http.post(`/admin/abonnements/filter`, payload);
     }
 
 }

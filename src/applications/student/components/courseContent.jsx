@@ -40,9 +40,9 @@ import {    authRegisterSuccess,
  
 const CourseContent = ({courses, onChildClickHandlerVideo,externalLinkVideo}) => {
    
-	const [posts, setPosts] = useState([]);
-	const [currentPage, setCurrentPage] = useState(1);
-	const [postPerPage] = useState(4);
+  const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postPerPage] = useState(4);
   const [displayPDF, setDisplayPDF] = useState("flex");
   const [showPDFModal,setShowPDFModal] = useState(false);
   const [linkPDF,setLinkPDF] = useState("");
@@ -74,7 +74,7 @@ const CourseContent = ({courses, onChildClickHandlerVideo,externalLinkVideo}) =>
     }
 
 	useEffect(()=>{
-    getCourses()
+        getCourses()
 		setPosts(data);
 	},[])
 
@@ -164,6 +164,46 @@ const CourseContent = ({courses, onChildClickHandlerVideo,externalLinkVideo}) =>
         })
         .catch((error)=> {
             console.log("Error Response for get Courses in Student");
+            console.log(error);
+            dispatch(shareCourses(null));
+        })
+}
+const getCourseBySpecialities = (e) => {
+  console.log("My speciality code");
+  console.log(e.target.value);
+  const filterPayload = {
+                            specialitiesCode: [
+                                  e.target.value != 0 && 
+                                  e.target.value ==="fr"||
+                                  e.target.value ==="eng"||
+                                  e.target.value ==="maths"||
+                                  e.target.value ==="phy"||
+                                  e.target.value ==="info"||
+                                  e.target.value ==="ing"?e.target.value:"fr"
+
+                            ],
+                            levels: [
+                              e.target.value != 0 && 
+                                  e.target.value !="fr"||
+                                  e.target.value !="eng"||
+                                  e.target.value !="maths"||
+                                  e.target.value !="phy"||
+                                  e.target.value !="info"||
+                                  e.target.value !="ing"?e.target.value:"0",
+                            ],
+                            types: [
+                              "0",
+                              "1"
+                            ]
+                          }
+    courseService.filterCourses(filterPayload)
+        .then((response)=> {
+            console.log("Response for get Courses by specialities");
+            console.log(response.data.courses);
+            dispatch(shareCourses(response.data.courses));
+        })
+        .catch((error)=> {
+            console.log("Error Response for get Courses by specialities");
             console.log(error);
             dispatch(shareCourses(null));
         })
@@ -263,7 +303,7 @@ const onChangeSearch = (record) => {
             {showChatModal? <ModalChat />  : ''}
             {showPDFModal? <ModalOpenPDF />  : ''}
 			 <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
+                        <GridItem xs={12} sm={12} md={3} style={{margin:"5% 0% 5% 0%"}}>
                             <div style={{display:'inline-block',color:'red',margin:'2%'}}>
                                 Tous les cours
                             </div>
@@ -274,10 +314,7 @@ const onChangeSearch = (record) => {
                                 name='logo'
                             />
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
-                            
-                        </GridItem>
-                        <GridItem xs={12} sm={12} md={3} style={{margin:'2%'}}>
+                        <GridItem xs={12} sm={12} md={3} style={{margin:"5% 0% 5% 0%"}}>
                             <div style={{border:'2px solid #0069D9', width:'110%'}}>
                                  <ReactSearchBox
                                     placeholder="Search By Course Title"
@@ -287,21 +324,39 @@ const onChangeSearch = (record) => {
                                   />
                             </div>
                         </GridItem>
-                        {/*<GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
-                           
-                            <div style={{fontSize:'1vw',marginBottom:'2%'}}>
-                               <select name="pets" id="pet-select">
-                                    <option value="">Spécialité</option>
-                                    <option value="dog">Français</option>
-                                    <option value="cat">Anglais</option>
-                                    <option value="hamster">Mathématiques</option>
-                                    <option value="parrot">Physiques</option>
-                                    <option value="spider">Informatique</option>
-                                    <option value="goldfish">Science de l'ingénieur</option>
+                        <GridItem xs={12} sm={12} md={3} style={{margin:"5% 0% 5% 0%"}}>
+                            <div style={{width:'100%',fontSize:'100%'}}>
+                               <select 
+                                  name="specialities" 
+                                  id="pet-select"
+                                  onChange={getCourseBySpecialities}>
+                                    <option value="">Niveau</option>
+                                    <option value="0">6ieme</option>
+                                    <option value="1">5ieme</option>
+                                    <option value="2">4ieme</option>
+                                    <option value="3">3ieme</option>
+                                    <option value="4">2nd</option>
+                                    <option value="5">1ere</option>
+                                    <option value="6">Tle</option>
                                 </select>
                             </div>
-
-                        </GridItem>*/}
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={3} style={{margin:"5% 0% 5% 0%"}}>
+                            <div style={{width:'100%',fontSize:'100%'}}>
+                               <select 
+                                  name="specialities" 
+                                  id="pet-select"
+                                  onChange={getCourseBySpecialities}>
+                                    <option value="">Spécialités</option>
+                                    <option value="fr">Français</option>
+                                    <option value="eng">Anglais</option>
+                                    <option value="maths">Mathématiques</option>
+                                    <option value="phy">Physiques</option>
+                                    <option value="info">Informatique</option>
+                                    <option value="ing">Science de l'ingénieur</option>
+                                </select>
+                            </div>
+                        </GridItem>
                     </GridContainer>
              
 			 <GridContainer style={{backgroundColor:'#eeeeee'}}>
@@ -314,18 +369,18 @@ const onChangeSearch = (record) => {
                                        
                                     </CardHeader>
                                     <CardBody style={{width:'100%',textAlign:'center',backgroundColor:'#C7D0D8'}}>
-                                        {post.type == '1'?
+                                        {post.media.extension == 'mp4'?
                                             <img src={vidio} width='100%' height='80px'  /> : 
-                                         post.type == '0'?   
+                                         post.media.extension == 'pdf'?   
                                             <img src={imgpdf} width='25%' height='80px' />:''}
                                     </CardBody>
                                     <CardFooter style={{width:'100%',height:'180px',backgroundColor:'#ffce52'}}>
                                         <div style={{backgroundColor:'#ffce52',width:'100%',fontSize:'80%',padding:'3%'}}>
                                             <div><strong>Titre: </strong> {post.title}</div>
                                             <div><strong>Description: </strong> {post.description}</div>
-                                            <div><strong>Type: </strong> {post.type==="0"?
-                                                                          "Pdf":
-                                                                          'Video'}
+                                            <div><strong>Type: </strong> {post.media.extension==="pdf"?
+                                                                          "Pdf":post.media.extension==="mp4"?
+                                                                          'Video':""}
                                                                         </div>
                                             <div><strong>Niveau: </strong>{post.levels.map((value,index) =>{return(<span key={index}>{
                                                                                 value.level==="0"?"six_secondary":
@@ -339,9 +394,10 @@ const onChangeSearch = (record) => {
                                        
                                         <div style={{marginTop:'10%'}}>
                                            <span style={{float:'left',cursor:'pointer'}}>
-                                                {post.type=="1"?
-                                                <div onClick={()=>openVideoTheque(post.courseLink)}><img src={eye} width='80%'/></div>:
-                                                <div onClick={()=>openModal('pdf',post.media.hashname)}><img src={eye} width='80%'/></div>}
+                                                {post.media.extension==="mp4"?
+                                                <div onClick={()=>openVideoTheque(post.media.hashname)}><img src={eye} width='80%'/></div>:
+                                                post.media.extension==="pdf"?
+                                                <div onClick={()=>openModal('pdf',post.media.hashname)}><img src={eye} width='80%'/></div>:""}
                                                 <div>voir</div>
                                             </span>
                                            

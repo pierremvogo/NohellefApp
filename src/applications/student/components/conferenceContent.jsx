@@ -52,11 +52,13 @@ const ConferenceContent = ({courses, playvideo,courseLink}) => {
 	const [currentPage, setCurrentPage] = useState(2);
 	const [postPerPage, setPostPerPage] = useState(4);
   const [play,setPlay] = useState(playvideo);
-  const [vidLinks, setVidLinks] = useState(courseLink?courseLink:"http://38.242.220.206:6051/medias/videos/1649076894140-123.mp4");
+  const [vidLinks, setVidLinks] = useState(courseLink?`http://38.242.220.206:6051/medias/videos/${courseLink}`:"http://38.242.220.206:6051/medias/videos/1649076894140-123.mp4");
 
   const dispatch = useDispatch();
 
 	useEffect(()=>{
+    console.log("Vid vid links");
+     console.log(vidLinks);
     getCourses();
 	},[])
   const refMedia = createRef();
@@ -68,8 +70,8 @@ const ConferenceContent = ({courses, playvideo,courseLink}) => {
   }
   
   function handleopen(links){
-        setPlay(false);
-        setVidLinks(links);
+        setPlay(true);
+        setVidLinks(`http://38.242.220.206:6051/medias/videos/${links}`);
   }
 
   const handlePause = (pause) => {
@@ -175,6 +177,8 @@ const ConferenceContent = ({courses, playvideo,courseLink}) => {
 
                         }}>
                             <ReactPlayer 
+                              config={{ file: { attributes: { controlsList: 'nodownload' } } }}
+                              onContextMenu={e => e.preventDefault()}
                               url={vidLinks}
                               playing={play}
                               controls={true}
@@ -271,9 +275,11 @@ const ConferenceContent = ({courses, playvideo,courseLink}) => {
 
                     <GridContainer>
                       <GridItem xs={12} sm={12} md={12} style={{overflowY:'scroll',height:'480px'}} >
-                      <div style={{cursor:'pointer'}}>
+                      <div>
                         {courses&&courses.map((post,index)=>{
                           return(
+                            <>
+                            {post.media.extension === "mp4"?
                             <GridContainer key={index}>
                                 <GridItem xs={12} sm={12} md={12} style={{padding:'10%'}}>
                                   <div style={{margin:'2%'}}>
@@ -282,6 +288,7 @@ const ConferenceContent = ({courses, playvideo,courseLink}) => {
                                     <div style={{
                                     display:'inline-block',
                                     width:'100%',
+                                    cursor: 'pointer',
                                     height:'95px',
                                     backgroundColor:'white',
                                     fontSize:'100%'
@@ -289,7 +296,7 @@ const ConferenceContent = ({courses, playvideo,courseLink}) => {
                                             videoLink={value.courseLinkVideo} 
                                             vWidth={120} 
                                             vHeight={100} />*/}
-                                        <img src={vidio} onClick={()=>handleopen(post.vidLink)} />
+                                        <img src={vidio} onClick={()=>handleopen(post.media.hashname)} />
                                     </div>
                                   </GridItem>
                                   <GridItem xs={12} sm={12} md={6}>
@@ -300,8 +307,8 @@ const ConferenceContent = ({courses, playvideo,courseLink}) => {
                                     backgroundColor:'#ffce52',
                                     padding:'2%',
                                     fontSize:'70%'}}>
-                                      <div> {post.title} </div>
-                                      <div><strong>Spécialité:</strong> {post.speciality.name} </div>
+                                      <div><strong>Title: </strong> {post.title} </div>
+                                      <div><strong>Spécialité: </strong> {post.speciality.name} </div>
                                     </div>
                                   </GridItem>
                                 </GridContainer>
@@ -309,6 +316,8 @@ const ConferenceContent = ({courses, playvideo,courseLink}) => {
                              </div>
                                 </GridItem>
                             </GridContainer>
+                            :""}
+                            </>
                             )
                         })}
                         </div>

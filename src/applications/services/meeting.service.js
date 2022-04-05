@@ -11,8 +11,14 @@ class MeetingService {
     editMeeting(meetingId,payload) {
         return http.patch(`/meetings${meetingId}`, payload);
     }
-    getMeetingByOwn(ownerId) {
-        return http.get(`/meetings/list/${ownerId}`);
+    getMeetingByTutorIdOrStudentId(userId) {
+        return http.get(`/meetings/list/${userId}`);
+    }
+    addMeetingRecordFile(meetingId,mediaId) {
+        return http.get(`/meetings/${meetingId}/add-media/${mediaId}`);
+    }
+    getMeetingRecordFile(meetingId) {
+        return http.get(`/meetings/${meetingId}/recorded-files`);
     }
   
 }
