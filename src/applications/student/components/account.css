@@ -25,6 +25,10 @@ legend{
 input:focus{
     outline: none;
 }
+th, td{
+  font-size: 50%;
+  text-align: center;
+}
 select {
     font-size: .9rem;
     padding: 2px 5px;
