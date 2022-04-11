@@ -12,6 +12,7 @@ const INITIAL_STATE = user ?
                                 error: null,
                                 resetToken: null,
                                 changePayload: null,
+                                horaireUser: null,
                                 changesForm: null,
                                 resetPayload: null,
                                 adminPayload: null,
@@ -41,6 +42,7 @@ const INITIAL_STATE = user ?
                                 paymentRessource: null,
                                 error: null,
                                 courses: null,
+                                horaireUser: null,
                                 loginsForm: null,
                                 userSpecialities: null,
                                 createSuccessMessage: null,
@@ -289,6 +291,12 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 courses: action.payload,
+                error: null,
+            };
+        case types.SHARE_HORAIRE_USER:
+            return {
+                ...state,
+                horaireUser: action.payload,
                 error: null,
             };
         default:

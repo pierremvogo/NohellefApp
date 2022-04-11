@@ -162,3 +162,8 @@ export const shareCourses = (payload) => ({
     type: types.SHARE_COURSES,
     payload,
 })
+
+export const shareHoraireUser = (payload) => ({
+    type: types.SHARE_HORAIRE_USER,
+    payload,
+})

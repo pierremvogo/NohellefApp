@@ -418,7 +418,8 @@ const getCourseBySpecialities = (e) => {
                   <th>Titre</th>
                   <th>Spécialité</th>
                   <th>Niveau</th>
-                  <th>Leçon</th>
+                  <th>Nb.Leçon</th>
+                  <th>Ajouter Leçon</th>
                   <th>Type</th>
                   {/*<th>Activé/Désactivé</th>*/}
                   <th>Editer</th>
@@ -434,11 +435,13 @@ const getCourseBySpecialities = (e) => {
                     <td>{post.levels.map((value,index) =>{return(<div key={index}>{value.level}</div>)})}</td>
                      <td>{post.media?post.media.name.length <= 30? 
                                 post.media.name:post.media.name.substr(0,30)+"...":""}</td>
+                     <td>{post.levels.map((value,index) =>{return(<div key={index}>{value.level}</div>)})}</td>
                     <td>{post.media&&post.media.extension==="pdf"?
                         <img src={pdfIcon} width='45%'/>:
                         post.media&&post.media.extension==="mp4"?
                         <img src={videoIcon} width='45%'/>:""}
                     </td>
+
                     {/*<td><input type="checkbox" /></td>*/}
                     <td style={{cursor:'pointer'}} onClick={()=>openModal("yess",post)}><img src={edit} width='30%'/></td>
                     <td>

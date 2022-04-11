@@ -32,6 +32,7 @@ import authService from '../../../services/auth.service';
 import Loader from 'react-loader-spinner';
 import PartialLogin from '../../../auth/pages/auth.screen/partialLogin.jsx';
 import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 

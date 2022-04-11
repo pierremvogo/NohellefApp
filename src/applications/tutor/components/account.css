@@ -25,3 +25,7 @@ legend{
 input:focus{
     outline: none;
 }
+th, td{
+  font-size: 85%;
+  text-align: center;
+}

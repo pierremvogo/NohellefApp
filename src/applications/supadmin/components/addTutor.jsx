@@ -267,26 +267,23 @@ const AddTutor = ({error,
        if(Object.keys(formErrors).length === 0 && submited){
             dispatch(authSetRegisterForm(registerTutorForm));
             handleLoading(true);
-            console.log("form Tutor register");
-            console.log(tutorRegister);
             adminService.createUser(tutorRegister)
             .then((response) => {
                     dispatch(authSetRegisterForm(null));
                     dispatch(authRegisterFailed(null));
                     dispatch(authCreateSuccess("Tutor Created Successfully, an Email has been sent to him"));
-                    console.log("Response register tutor success");
-                    console.log(response.data);
+
                     handleLoading(false);
             
             })
             .catch((error) => {
                 handleLoading(false);
-                console.log("Error  Register tutor");
+                
                 if(error.response === undefined){
                     dispatch(authRegisterFailed("Network Error, possible you are not connected"));
                 }else{
                     dispatch(authRegisterFailed(error.response));
-                    console.log(error.response);
+                 
                 
                 }
             });

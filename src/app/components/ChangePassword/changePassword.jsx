@@ -28,8 +28,8 @@ const ChangePassword = ({error,
     const [submited, setSubmited] = useState(false);
     const [changeForm, setChangeForm] = useState(changesForm?changesForm:{
                                                  currentPassword: "",
-                                                 oldPassword: "",
-                                                 newPassword: ""});
+                                                 newPassword: "",
+                                                 newPasswordConfirmation: ""});
     const [isLoginForm, setIsLoginForm] = useState(true);
     const [formErrors, setFormErrors] = useState({})
     const [isForgotPassword, setIsForgotPassword] = useState(false);
@@ -101,20 +101,20 @@ const ModalLoading = () => {
                     setSubmited(true)
                 }
                 break;
-            case 'oldPassword':
+            case 'newPassword':
                 if(!values[input]){
-                    errorsValidation.oldPassword = "L'Ancien mot de passe est requis";
+                    errorsValidation.newPassword = "L'Ancien mot de passe est requis";
                 }else if(!regexPassword.test(values[input])){
-                    errorsValidation.oldPassword = "mot de passe avec au moins 8 caractères,une majuscule,une minuscule et un chiffre";
+                    errorsValidation.newPassword = "mot de passe avec au moins 8 caractères,une majuscule,une minuscule et un chiffre";
                 }else{
                     setSubmited(true)
                 }
                 break;
-            case 'newPassword':
+            case 'newPasswordConfirmation':
                 if(!values[input]){
-                    errorsValidation.newPassword = "Le Nouveau mot de passe est requis";
+                    errorsValidation.newPasswordConfirmation = "Le Nouveau mot de passe est requis";
                 }else if(!regexPassword.test(values[input])){
-                    errorsValidation.newPassword = "mot de passe avec au moins 8 caractères,une majuscule,une minuscule et un chiffre";
+                    errorsValidation.newPasswordConfirmation = "mot de passe avec au moins 8 caractères,une majuscule,une minuscule et un chiffre";
                 }else{
                     setSubmited(true)
                 }
@@ -228,16 +228,16 @@ const ModalLoading = () => {
                                           name="currentPassword"                             
                                           label="Votre Mot de passe actuel"
                                       }
-                                      else if(input==="oldPassword"){
+                                      else if(input==="newPassword"){
                                           id="oldPassword"
                                           type="text"
-                                          name="oldPassword"                             
+                                          name="newPassword"                             
                                           label="Votre Nouveau Mot de passe"
                                       }
-                                      else if(input==="newPassword"){
+                                      else if(input==="newPasswordConfirmation"){
                                           id="newPassword"
                                           type="text"
-                                          name="newPassword"                             
+                                          name="newPasswordConfirmation"                             
                                           label="Confirmez Nouveau mot de passe"
                                       }
                                     return(
@@ -255,8 +255,8 @@ const ModalLoading = () => {
                                             borderRadius:'10px',
                                             border:`${
                                                         input==="currentPassword"&&formErrors.currentPassword?'2px solid #C84941':
-                                                        input==="oldPassword"&&formErrors.oldPassword?'2px solid #C84941':
                                                         input==="newPassword"&&formErrors.newPassword?'2px solid #C84941':
+                                                        input==="newPasswordConfirmation"&&formErrors.newPasswordConfirmation?'2px solid #C84941':
                                                         '2px solid #002495'}`,
                                             width:'100%',
                                             height:'40px'}}/>
@@ -266,8 +266,8 @@ const ModalLoading = () => {
                                                                         <div style={{color:"red",fontSize:"12px"}}>
                                                                          {
                                                                          input==="currentPassword"?formErrors.currentPassword:
-                                                                         input==="oldPassword"?formErrors.oldPassword:
                                                                          input==="newPassword"?formErrors.newPassword:
+                                                                         input==="newPasswordConfirmation"?formErrors.newPasswordConfirmation:
                                                                          ""}
                                                                         </div>
                                                                     </div>

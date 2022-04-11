@@ -28,9 +28,7 @@ import {    authRegisterSuccess,
             authCreateSuccess } from '../../redux/reducer/actions/auth';
 import horaireService from '../../services/horaire.service';
 
-const EditOccupation = ({user, 
-                        error,
-                        occupationData, 
+const AddEvent= ({user, error,occupationData, 
                         registersForm,
                         onChildCloseModal,
                         createSuccessMessage, 
@@ -38,9 +36,9 @@ const EditOccupation = ({user,
     const [showPassword, setPassword] = useState(false);
     const [submited, setSubmited] = useState(false);
     const [addEventForm, setAddEventForm] = useState(registersForm?registersForm:{
-                                                    day:occupationData?occupationData.day: "",
-                                                    periodesNumbers:occupationData.periodes?occupationData.periodes.map((value,index)=>{return(value.number)}):[null],
-                                                    ownerId:occupationData?occupationData.id:"",
+                                                    day:"",
+                                                    periodesNumbers:[null],
+                                                    ownerId:"",
                                                     })
     const [isLoginForm, setIsLoginForm] = useState(true);
     const [formErrors, setFormErrors] = useState({});
@@ -56,8 +54,6 @@ const EditOccupation = ({user,
 
     useEffect(()=>{
         console.log(user);
-        console.log("My occupation data")
-        console.log(occupationData);
     },[])
 
     const onChangeHoraires = (e) => {
@@ -124,12 +120,12 @@ const EditOccupation = ({user,
         console.log(horairePayload);
         if(submited){
             handleLoading(true);
-            horaireService.editUserHoraire(occupationData&&occupationData.id,horairePayload)
+            horaireService.createNewHoraire(horairePayload)
                 .then((response)=>{
                     console.log(response.data)
                     dispatch(authSetRegisterForm(null));
                     dispatch(authRegisterFailed(null));
-                    dispatch(authCreateSuccess("Disponibility Updated Successfully"));
+                    dispatch(authCreateSuccess("Disponibility Created Successfully"));
 
                     handleLoading(false);
                 })
@@ -140,7 +136,7 @@ const EditOccupation = ({user,
                     dispatch(authRegisterFailed("Network Error, possible you are not connected"));
                 }else{
                     dispatch(authRegisterFailed(error.response));
-                    console.log("Error Updated Disponibility");
+                    console.log("Error creating Disponibility");
                     console.log(error.response); 
                 }
                 })
@@ -149,12 +145,12 @@ const EditOccupation = ({user,
                 if(Object.keys(formErrors).length === 0 && submited){
                     handleLoading(true);
                 setSubmited(true);
-                horaireService.editUserHoraire(occupationData&&occupationData.id,horairePayload)
+                horaireService.createNewHoraire(horairePayload)
                 .then((response)=>{
                     console.log(response.data)
                     dispatch(authSetRegisterForm(null));
                     dispatch(authRegisterFailed(null));
-                    dispatch(authCreateSuccess("Disponibility Updated Successfully"));
+                    dispatch(authCreateSuccess("Disponibility Created Successfully"));
 
                     handleLoading(false);
                 })
@@ -165,7 +161,7 @@ const EditOccupation = ({user,
                     dispatch(authRegisterFailed("Network Error, possible you are not connected"));
                 }else{
                     dispatch(authRegisterFailed(error.response));
-                    console.log("Error Updated Disponibility");
+                    console.log("Error creating Disponibility");
                     console.log(error.response); 
                 }
                 })
@@ -176,10 +172,12 @@ const EditOccupation = ({user,
                 return; 
         }
         
-        }  
+        }
+        
+        
     }
 
-    return(
+	return(
 
         <div style={{margin:"1% 20% 0% 0%"}}>
                     <GridContainer>
@@ -213,9 +211,9 @@ const EditOccupation = ({user,
                                            <span><i>Définissez vos heures de disponibilité</i></span>
                                         </GridItem>
                                       
-                                        <GridItem  xs={12} sm={12} md={4}  style={{textAlign:'right',cursor:'pointer'}}>
+                                      	<GridItem  xs={12} sm={12} md={4}  style={{textAlign:'right',cursor:'pointer'}}>
                                            <span  className='close' onClick={(e)=>closeModal(e)}>&times;</span>
-                                        </GridItem>
+                                      	</GridItem>
                                   </GridContainer>
 
                                   <GridContainer>
@@ -230,7 +228,7 @@ const EditOccupation = ({user,
                                 </GridContainer>
 
 
-                                  <GridContainer>
+								  <GridContainer>
 
                                   </GridContainer>
                                   <form>
@@ -379,7 +377,7 @@ const EditOccupation = ({user,
                                           paddingTop:'1%'
                                         }}>
                                 
-                                <span className="text" style={{fontSize:'100%',color:'white'}}>Mettre à Jour</span>
+                                <span className="text" style={{fontSize:'100%',color:'white'}}>Enregistrer</span>
                               </div>
                                     </div>
                                       
@@ -411,8 +409,8 @@ const EditOccupation = ({user,
 
                     </GridContainer>
                     
-             </div>
-        )
+			 </div>
+		)
 }
 const mapStateToProps=(state)=>{
   return{
@@ -422,4 +420,4 @@ const mapStateToProps=(state)=>{
       user: state.authReducer.user
   };
 };
-export default connect(mapStateToProps)(EditOccupation);
+export default connect(mapStateToProps)(AddEvent);

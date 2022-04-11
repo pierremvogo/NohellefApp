@@ -5,8 +5,8 @@ class HoraireService {
     createNewHoraire(payload) {
         return http.post("/horaires", payload);
     }
-    editUserHoraire(horaireId) {
-        return http.put(`/horaires/${horaireId}`);
+    editUserHoraire(horaireId,payload) {
+        return http.put(`/horaires/${horaireId}`, payload);
     }
     deleteHoraire(horaireId) {
         return http.delete(`/horaires/${horaireId}`);
