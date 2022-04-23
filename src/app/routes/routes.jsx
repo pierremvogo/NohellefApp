@@ -46,9 +46,13 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
                 history.push(ROUTES.HOME);
             }else if(user.currentUser.type != 2 && urlpath===ROUTES.TUTOR){
                 history.push(ROUTES.HOME);
-            }else if(user.currentUser.type != 3 && urlpath===ROUTES.ADMIN){
+            }
+
+           else if(user.currentUser.type != 3 && urlpath===ROUTES.ADMIN){
                 history.push(ROUTES.HOME);
-            }else if(user.currentUser.type != 4 && urlpath===ROUTES.SUP_ADMIN){
+            }
+
+            else if(user.currentUser.type != 4 && urlpath===ROUTES.SUP_ADMIN){
                 history.push(ROUTES.HOME);
             }
         }

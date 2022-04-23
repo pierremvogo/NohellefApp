@@ -20,6 +20,22 @@ class MeetingService {
     getMeetingRecordFile(meetingId) {
         return http.get(`/meetings/${meetingId}/recorded-files`);
     }
+
+
+    //for Meeting Messages
+    createNewMeetingMessage(payload){
+        return http.post("/meeting-messages", payload);
+    }
+    getMeetingMessageById(meetingId){
+        return http.get(`/meeting-messages/${meetingId}`);
+    }
+    editMeetingMessage(messageId,payload){
+        return http.patch(`/meeting-messages/${messageId}`, payload);
+    }
+    deleteMeetingMessage(messageId){
+        return http.delete(`/meeting-messages/${messageId}`);
+    }
+
   
 }
 

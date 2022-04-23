@@ -51,8 +51,10 @@ const AddCourse = ({error,
                             registersForm?registersForm:{
                             courseName:courseData?courseData.title:"",
                             courseSpeciality:courseData.speciality?courseData.speciality.code:"",
-                            courseLevel:courseData.levels? courseData.levels.map((value,index) =>{return(value.level)}):"",
+                            courseLevel:courseData.levels? courseData.levels.map((value,index) =>{return(value.level)}):[null],
                             courseDescription:courseData?courseData.description:"",
+                            courseChapter:courseData?courseData.chapters:"", 
+                            courseUnderChapter:courseData?courseData.underChapters:""
                         } );
     const [errorMessage, setErrorMessage] = useState(false);
     const [isLoginForm, setIsLoginForm] = useState(true);
@@ -109,6 +111,13 @@ const AddCourse = ({error,
                    }
                 }
                 break;
+            case 'courseChapter':
+                    if(!values[input]){
+                        errorsValidation.courseChapter = "Le Titre du Chapitre est requis";
+                    }else{
+                        setSubmited(true);     
+                   }
+                break;
                 default:
                     break;
     }
@@ -117,8 +126,10 @@ const AddCourse = ({error,
 
        return errorsValidation;       
   }
+  
 
   const handleUpdateCourse = (e) => {
+    e.preventDefault(); 
     let mediaData =  {
           subDir: null,
           name: todoList.name.split('.').shift(),
@@ -127,16 +138,14 @@ const AddCourse = ({error,
           size: todoList.size,
           type: todoList.name.split('.').pop()==='pdf'?"0":"1"
         }
-       e.preventDefault(); 
-        setFormErrors(validateForm(registerCourseForm));
-        dispatch(authSetRegisterForm(registerCourseForm));
+       if(submited){
             if(todoList.name != ""){
                 handleLoading(true);
                 console.log("form Course register");
                 mediaService.createMedia(mediaData)
                 .then((response) => {
                     console.log("Successful create Media");
-                   // dispatch(authMediaId(response.data.id))
+                   //dispatch(authMediaId(response.data.id))
                     console.log(response.data);
                     adminService.editCourse(courseData.id,{
                                           title: registerCourseForm.courseName,
@@ -210,6 +219,98 @@ const AddCourse = ({error,
                     }
                 });
             }
+       }else{
+        setFormErrors(validateForm(registerCourseForm));
+        if(Object.keys(formErrors).length === 0 && submited){
+             if(todoList.name != ""){
+                handleLoading(true);
+                console.log("form Course register");
+                mediaService.createMedia(mediaData)
+                .then((response) => {
+                    console.log("Successful create Media");
+                   //dispatch(authMediaId(response.data.id))
+                    console.log(response.data);
+                    adminService.editCourse(courseData.id,{
+                                          title: registerCourseForm.courseName,
+                                          description: registerCourseForm.courseDescription,
+                                          type: todoList.name.split('.').pop()==='pdf'?"0":"1",
+                                          specialityCode: registerCourseForm.courseSpeciality,
+                                          mediaId: response.data.id,
+                                          levels: registerCourseForm.courseLevel
+                                        })
+                .then((response) => {
+                        dispatch(authSetRegisterForm(null));
+                        dispatch(authRegisterFailed(null));
+                        dispatch(authCreateSuccess("Course has been Update Successfully"));
+                        console.log("Response register course success");
+                        console.log(response.data);
+                        handleLoading(false);
+                
+                })
+                .catch((error) => {
+                    handleLoading(false);
+                    console.log("Error  Update Course");
+                    if(error.response === undefined){
+                        dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                    }else{
+                        dispatch(authRegisterFailed(error.response));
+                        console.log(error.response);
+                    
+                    }
+                });
+                })
+                .catch((error) => {
+                   handleLoading(false);
+                        console.log("Error Register Media");
+                        if(error.response === undefined){
+                            dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                        }else{
+                            dispatch(authRegisterFailed(error.response));
+                            console.log(error.response);
+                        
+                        }
+                })
+
+                
+            }else{
+                handleLoading(true);
+                adminService.editCourse(courseData.id,{
+                                          title: registerCourseForm.courseName,
+                                          description: registerCourseForm.courseDescription,
+                                          type: todoList.name.split('.').pop()==='pdf'?"0":"1",
+                                          specialityCode: registerCourseForm.courseSpeciality,
+                                          levels: registerCourseForm.courseLevel
+                                        })
+                .then((response) => {
+                        dispatch(authSetRegisterForm(null));
+                        dispatch(authRegisterFailed(null));
+                        dispatch(authCreateSuccess("Course has been Update Successfully"));
+                        console.log("Response register course success");
+                        console.log(response.data);
+                        handleLoading(false);
+                
+                })
+                .catch((error) => {
+                    handleLoading(false);
+                    console.log("Error  Update Course");
+                    if(error.response === undefined){
+                        dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                    }else{
+                        dispatch(authRegisterFailed(error.response));
+                        console.log(error.response);
+                    
+                    }
+                });
+            }
+        }else{
+            setSubmited(false);
+                dispatch(authRegisterFailed(null));
+                handleLoading(false);
+                return;
+        }
+            
+       }
+        
 
       }
 
@@ -298,7 +399,8 @@ const AddCourse = ({error,
 
     const onChangeRegisterCourse = (e) => {
         setRegisterCourseForm({...registerCourseForm,  
-                                [e.target.name]:e.target.name==="courseLevel"?
+                                [e.target.name]:e.target.name==="courseLevel"
+                                ?
                                 Array.from(e.target.selectedOptions, item => item.value):
                                 e.target.value });
         setFormErrors(validateForm(registerCourseForm));
@@ -314,6 +416,7 @@ const AddCourse = ({error,
 
 
     const onSubmit = (e) => {
+        e.preventDefault(); 
         let mediaData =  {
           subDir: null,
           name: todoList.name.split('.').shift(),
@@ -322,12 +425,69 @@ const AddCourse = ({error,
           size: todoList.size,
           type: todoList.name.split('.').pop()==='pdf'?"0":"1"
         }
-       e.preventDefault(); 
-       setFormErrors(validateForm(registerCourseForm));
-        dispatch(authSetRegisterForm(registerCourseForm));
+
+        if(submited){
             if(todoList.name != ""){
                 handleLoading(true);
                 console.log("form Course register");
+                console.log(registerCourseForm);
+                mediaService.createMedia(mediaData)
+                .then((response) => {
+                    console.log("Successful create Media");
+                   // dispatch(authMediaId(response.data.id))
+                    console.log(response.data);
+                    adminService.createCourse({
+                                          title: registerCourseForm.courseName,
+                                          description: registerCourseForm.courseDescription,
+                                          type: todoList.name.split('.').pop()==='pdf'?"0":"1",
+                                          specialityCode: registerCourseForm.courseSpeciality,
+                                          mediaId: response.data.id,
+                                          levels: registerCourseForm.courseLevel
+                                        })
+                .then((response) => {
+                        dispatch(authSetRegisterForm(null));
+                        dispatch(authRegisterFailed(null));
+                        dispatch(authCreateSuccess("Course Created Successfully"));
+                        console.log("Response register course success");
+                        console.log(response.data);
+                        handleLoading(false);
+                
+                })
+                .catch((error) => {
+                    handleLoading(false);
+                    console.log("Error  Register Course");
+                    if(error.response === undefined){
+                        dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                    }else{
+                        dispatch(authRegisterFailed(error.response));
+                        console.log(error.response);
+                    
+                    }
+                });
+                })
+                .catch((error) => {
+                   handleLoading(false);
+                        console.log("Error Register Media");
+                        if(error.response === undefined){
+                            dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                        }else{
+                            dispatch(authRegisterFailed(error.response));
+                            console.log(error.response);
+                        
+                        }
+                })
+
+                
+            }else{
+                dispatch(authRegisterFailed("You have to add lesson for this Course"));
+            }
+        }else{
+            setFormErrors(validateForm(registerCourseForm));
+            if(Object.keys(formErrors).length === 0 && submited){
+            if(todoList.name != ""){
+                handleLoading(true);
+                console.log("form Course register");
+                console.log(registerCourseForm);
 
                 mediaService.createMedia(mediaData)
                 .then((response) => {
@@ -379,6 +539,16 @@ const AddCourse = ({error,
             }else{
                 dispatch(authRegisterFailed("You have to add lesson for this Course"));
             }
+            }else{
+                setSubmited(false);
+                dispatch(authRegisterFailed(null));
+                handleLoading(false);
+                return;
+            }
+            
+        }
+       
+       
         
        
     }
@@ -406,7 +576,7 @@ const AddCourse = ({error,
                                 borderRadius:'25px 25px 25px 25px',
                                 width:'100%',
                                 height:'100%',
-                                
+                                fontSize:"80%",
                                 margin:'4%',
                                 padding:'2%'
                               }}>
@@ -432,7 +602,7 @@ const AddCourse = ({error,
                                          <div>
                                             <div style={{
                                                 margin:'2% 2% 0% 0%',
-                                                color:'blue',
+                                                color:'black',
                                                 fontSize:'100%'}}><strong style={{marginRight:'2%'}}>Nouveau Cours</strong> 
                                                 <img src={ins2} width='10%'/>
                                             </div>
@@ -452,14 +622,13 @@ const AddCourse = ({error,
                                             id="courseName";
                                             type="text";
                                             name="courseName";
-                                            label="Nom du cours"
+                                            label="Titre du cours"
                                         }else if(input==="courseDescription"){
                                             id="courseDescription";
                                             type="text";
                                             name="courseDescription";
                                             label="Description du cours";
-                                        }
-                                        else if(input==="courseLevel"){
+                                        }else if(input==="courseLevel"){
                                             id="courseLevel";
                                             type="text";
                                             name="courseLevel";
@@ -469,10 +638,10 @@ const AddCourse = ({error,
                                             type="text";
                                             name="courseSpeciality";
                                             label="Spécialité du cours";
-                                        }else{return;}
+                                        }
                                         return(
                                             <>
-                                            {
+                                            { input != "courseChapter" && input != "courseUnderChapter"?
                                                 input==="courseSpeciality"?
                                                 <GridItem xs={12} sm={6} md={6} key={index} style={{fontSize:'90%'}}>
                                                 {label}
@@ -602,7 +771,7 @@ const AddCourse = ({error,
                                               
                                               
                                               </div>
-                                            </GridItem>}
+                                            </GridItem>:""}
                                             
                                             </>
                                             )
@@ -621,7 +790,7 @@ const AddCourse = ({error,
                                                        
                                                         <div>
                                                                 <div onClick={handleClickFileInput} class="text-xs font-weight-bold text-center" style={{fontSize:'100%',color:"blue"}}>
-                                                                 {isAdd? <u>Ajouter une Leçon</u>:<u>Modifier la Leçon</u>}
+                                                                 {isAdd? <u>Choisir un fichier</u>:<u>Modifier la Leçon</u>}
                                                                 <input 
                                                                   type="file" 
                                                                   accept="application/pdf, video/*"
@@ -641,6 +810,52 @@ const AddCourse = ({error,
 
                                     
 
+                                  </GridContainer>
+
+                                  <GridContainer>
+                                  {Object.keys(registerCourseForm).map((input,index)=>{
+                                    console.log("my add input");
+                                    console.log(registerCourseForm[input]);
+                                        let id,type,name,label
+                                        if(input==="courseChapter"){
+                                            id="courseChapter";
+                                            type="text";
+                                            name="courseChapter";
+                                            label="Titre du Chapitre"
+                                        }else if(input==="courseUnderChapter"){
+                                            id="courseUnderChapter";
+                                            type="text";
+                                            name="courseUnderChapter";
+                                            label="Titre du Sous Chapitre(Optionnel)";
+                                        }else{return;}
+                                    return(
+                                            <>
+                                            {input==="courseChapter" || input==="courseUnderChapter"?
+                                            <GridItem xs={12} sm={6} md={6} key={index}>
+                                            <div>
+                                                {label}
+                                                <input 
+                                                    type={type}
+                                                    id={id}
+                                                    name={name}
+                                                    onChange={onChangeRegisterCourse}
+                                                    value={registerCourseForm[input]}   
+
+                                                    style={{
+                                                        border:`${
+                                                            input==="courseChapter"&&formErrors.courseChapter?'2px solid #C84941':
+                                                            input==="courseUnderChapter"&&formErrors.courseUnderChapter?'2px solid #C84941':
+                                                            '2px solid #002495'}`,
+                                                        width:'100%',
+                                                        height:'40px'}}/>
+                                            
+                                            </div>
+                                            </GridItem>
+                                                :""}
+                                            </>
+                                        )
+                                  })}
+                                      
                                   </GridContainer>
                                   
                                     <GridContainer>
@@ -681,7 +896,7 @@ const AddCourse = ({error,
                                     </GridItem>
                                   </GridContainer>
                                   
-
+                                  
                                   <GridContainer>
                                     <GridItem xs={12} sm={12} md={12}>
                                     

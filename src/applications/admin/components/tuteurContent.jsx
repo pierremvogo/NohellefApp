@@ -30,6 +30,8 @@ import Loader from 'react-loader-spinner';
 import trash from '../../../assets/images/dashboard/trash.png';
 import DeleteCourse from './askForDelete.jsx';
 import AddCourse from './addCourse.jsx';
+import AddLesson from './addLesson.jsx';
+import AddQuiz from './addQuiz.jsx';
 import adminService from '../../services/admin.service';
 import authService from '../../services/auth.service';
 import courseService from '../../services/course.service';
@@ -54,6 +56,9 @@ const TuteurContent = ({courses}) => {
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
 
+  const [showModalAddLesson, setShowModalAddLesson] = useState(false);
+  const [showModalAddQuiz, setShowModalAddQuiz] = useState(false);
+
 	useEffect(()=>{
     getCourses();
 	},[])
@@ -69,13 +74,73 @@ const TuteurContent = ({courses}) => {
 		toggleMenu.classList.toggle('active')
 	}
 
-	 const ModalContentEdit  = () => {
+   const ModalAddLesson  = () => {
     return(
       <div className="modal-content" id='cont'
         style={{
             width: "100%",
             height: "100%",
             justifyContent: "center",
+            display: display,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+        
+          <AddLesson 
+                      onChildCloseModal={closeModal} 
+                      courseData={courseData}
+                      isAdd={isAdd}
+                      onchildOpenLoading={handleLoading} /> 
+              
+      
+      </div>
+    )
+  };
+
+   const ModalAddQuiz  = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            
+            display: display,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            //overflowY: "scroll",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+        
+          <AddQuiz
+                      onChildCloseModal={closeModal} 
+                      courseData={courseData}
+                      isAdd={isAdd}
+                      onchildOpenLoading={handleLoading} /> 
+              
+      
+      </div>
+    )
+  };
+
+
+	 const ModalContentEdit  = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
             display: display,
             alignItems: "center",
             zIndex: "300000",
@@ -133,6 +198,14 @@ const TuteurContent = ({courses}) => {
         setShowModalDelete(true));
     }
 
+  const handleAddQuiz = () => {
+    console.log("create quiz question");
+  }
+
+   const handleAddLesson = () => {
+     console.log("create Lesson for course");
+  }
+
 
   
   function checkUser(id)
@@ -148,7 +221,26 @@ const TuteurContent = ({courses}) => {
 
   function closeModal(){
     getCourses();
-    setDisplay("none",setShowEditModal(false),setShowModalDelete(false));
+    setDisplay("none",
+        setShowEditModal(false),
+        setShowModalDelete(false),
+        setShowModalAddQuiz(false),
+        setShowModalAddLesson(false),);
+  }
+
+  const openModalQuiz = () => {
+    setDisplay("flex",
+      setShowEditModal(false),
+      setShowModalDelete(false),
+      setShowModalAddQuiz(true),
+      setShowModalAddLesson(false),);
+  }
+  const openModalLesson = () => {
+    setDisplay("flex",
+      setShowEditModal(false),
+      setShowModalDelete(false),
+      setShowModalAddQuiz(false),
+      setShowModalAddLesson(true),);
   }
 
   const openModal=(isUpdate,dataCourse)=> {
@@ -330,6 +422,8 @@ const getCourseBySpecialities = (e) => {
       {showModalLoading? <ModalLoading />: ''}
 			{showEditModal? <ModalContentEdit /> :'' } 
       {showModalDelete? <ModalDeleteCourse />: ''}
+      {showModalAddQuiz? <ModalAddQuiz /> :'' } 
+      {showModalAddLesson? <ModalAddLesson />: ''}
 			 <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
 
                         <GridItem xs={12} sm={12} md={3}>
@@ -383,6 +477,53 @@ const getCourseBySpecialities = (e) => {
                             </div>
                         </GridItem>
                     </GridContainer>
+                    <GridContainer>
+                                      <GridItem xs={12} sm={12} md={6}>
+                                          <div onClick={openModalLesson} style={{cursor:'pointer',
+                                          margin:'0% 0% 5% 0%',
+                                          textAlign:'center'}}>
+                                      <div style={{
+                                          backgroundColor: '#4b9960',
+                                          borderRadius: '15px',
+                                          borderBottom: '3px solid #002495',
+                                          borderRight:  '3px solid #002495',
+                                          borderTop: '1px solid #002495',
+                                          borderLeft:  '1px solid #002495',
+                                          height: '55px',
+                                          width: '100%',
+                                          cursor: 'pointer',
+                                          textAlign:'center',
+                                          paddingTop:'2%'
+                                        }}>
+                                
+                                        <span className="text" style={{fontSize:'100%',color:'white'}}>Add lesson</span>
+                                     </div>
+                                    </div>
+                                      </GridItem>
+
+                                       <GridItem xs={12} sm={12} md={6}>
+                                          <div onClick={openModalQuiz} style={{cursor:'pointer',
+                                          margin:'0% 0% 5% 0%',
+                                          textAlign:'center'}}>
+                                      <div style={{
+                                          backgroundColor: '#4b9960',
+                                          borderRadius: '15px',
+                                          borderBottom: '3px solid #002495',
+                                          borderRight:  '3px solid #002495',
+                                          borderTop: '1px solid #002495',
+                                          borderLeft:  '1px solid #002495',
+                                          height: '55px',
+                                          width: '100%',
+                                          cursor: 'pointer',
+                                          textAlign:'center',
+                                          paddingTop:'2%'
+                                        }}>
+                                
+                                        <span className="text" style={{fontSize:'100%',color:'white'}}>Add Quiz</span>
+                                     </div>
+                                    </div>
+                                      </GridItem>
+                                  </GridContainer>
 
                     <GridContainer>
                     	<GridItem xs={12} sm={12} md={12}>
@@ -459,7 +600,6 @@ const getCourseBySpecialities = (e) => {
             </Table>
           </GridContainer>
 
-                 
                     <GridContainer>
                     	<GridItem xs={12} sm={12} md={12}>
                     		<div style={{ height: 150, width: '100%' }}>

@@ -20,23 +20,26 @@ import tu1 from '../../../assets/images/dashboard/prog.png';
 import ReactSearchBox from "react-search-box";
 import Avatar   from 'react-avatar';
 import './account.css';
+import ProgramConference from './programConference.jsx';
 import Pagination from './pagination.jsx';
 import Chat from "../../../app/components/chat/chat.jsx";
 import adminService from '../../services/admin.service';
 import authService from '../../services/auth.service';
 import userService from '../../services/user.service';
 import Choose from "../../../app/components/chooseTutor/choose.jsx";
+import meetingService from '../../services/meeting.service';
 import Loader from 'react-loader-spinner';
 import {    authRegisterSuccess, 
             authRegisterFailed, 
             authShowMessage, 
             authSetRegisterForm,
             authCreateSuccess,
+            shareTutorForStudent,
             shareTutorUser } from '../../redux/reducer/actions/auth';
 
 
 
-const ChooseTutorContent = ({user, userTutor, onChildOpenModal}) => {
+const ChooseTutorContent = ({user, userTutor, tutorForStudent, onChildOpenModal}) => {
 	const [posts, setPosts] = useState([]);
   const [posts1, setPosts1] = useState([]);
 	const [loading, serLoading] = useState(false);
@@ -53,6 +56,14 @@ const ChooseTutorContent = ({user, userTutor, onChildOpenModal}) => {
   const [displayLoading, setDisplayLoading] = useState("flex");
   const [showModalLoading, setShowModalLoading] = useState(false);
   const [showModalChooseTutor, setShowModalChooseTutor] = useState(false);
+  const [showModalConf, setShowModalConf] = useState(false);
+  const [dataTutor, setDataTutor] = useState({});
+
+  const [filterForm, setFilterForm] = useState({
+                                                  codeSpecialities: "",
+                                                  codeDays: "",
+                                                  codeHoraires: "",
+                                                })
 
   const dispatch = useDispatch();
 
@@ -60,29 +71,91 @@ const ChooseTutorContent = ({user, userTutor, onChildOpenModal}) => {
 
 	useEffect(()=>{
     getTutors();
-		setPosts(data,setPosts1(data1));
-	},[])
+	},[]);
 
   const openModal = (e) => {
     onChildOpenModal(e.target.name)
   }
+
+  const onChangeFilterForm = (e) => {
+    setFilterForm({...filterForm, 
+                                [e.target.name]: e.target.value
+                      });
+    console.log("Filter form");
+    console.log(filterForm);
+  }
+
+  const applyFilter = () => {
+    getTutorByFilter(filterForm.codeSpecialities,filterForm.codeHoraires,filterForm.codeDays);
+  }
+
+
   const getTutors = () => {
-    const filterPayload = {
-                      types: [
-                        "2",
-                      ]
-                    }
-    adminService.listAndFiltersUsers(filterPayload)
+    const filterPayload = {}
+          console.log("tutor get in student");
+          console.log(filterPayload);
+    userService.filterTutors(filterPayload)
         .then((response)=> {
+          
             console.log("Response for get Tutor user");
-            console.log(response.data.users);
+            console.log(response.data);
             dispatch(shareTutorUser(response.data.users));
+            for(var i=0; i<response.data.users.length; i++){
+              if(response.data.users[i].students &&
+                 response.data.users[i].students.length != 0){
+                for(var j=0; j<response.data.users[i].students.length ; j++){
+                  if(response.data.users[i].students[j].id === user.currentUser.id){
+                     handleGetMyTutors(response.data.users[i]);
+                  }else{
+                    console.log("not equal tutor");
+                  }
+                }
+              }
+            }
         })
         .catch((error)=> {
             console.log("Error Response for get Tutor user");
             console.log(error);
             dispatch(shareTutorUser(null));
         })
+  }
+
+  const getMeetingByTutorId = () => {
+    meetingService.getMeetingByTutorIdOrStudentId(user&&user.currentUser.id)
+    .then((response)=>{
+        console.log("meeting by tutor");
+        console.log(response.data);
+    })
+    .catch((error)=>{
+       console.log("error meeting by tutor");
+        console.log(error);
+    })
+  }
+
+  const getTutorByFilter = (f1,f2,f3) => {
+  const filterPayload = {
+                             specialities: [f1],
+                             periodes: [f2],
+                             days: [f3]
+                        }
+    userService.filterTutors(filterPayload)
+        .then((response)=> {
+            dispatch(shareTutorUser(response.data.users));
+        })
+        .catch((error)=> {
+            dispatch(shareTutorUser(null));
+        })
+ }
+
+  const handleGetMyTutors = (tutor) => {
+      setPosts1([]);
+      setPosts1(posts1.push(tutor));
+      dispatch(shareTutorForStudent(posts1));
+  }
+
+const onChangeHour = (hours) =>{
+  console.log("my hours");
+  console.log(hours)
 }
 
 const ModalChooseTutor  = () => {
@@ -114,6 +187,42 @@ const ModalChooseTutor  = () => {
       getTutors();
       setDisplayAsk("none", setShowModalChooseTutor(false));
   }
+
+  const ModalProgramConf  = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+       <ProgramConference onChildCloseModal={closeConfModal}
+                          tutorData={dataTutor}
+                          onchildOpenLoading={handleLoading} />  
+         
+      </div>
+    )
+  };
+   const closeConfModal = () => {
+      getMeetingByTutorId();
+      dispatch(authCreateSuccess(null));
+      dispatch(authRegisterFailed(null));
+      getTutors();
+      setDisplayAsk("none", setShowModalConf(false));
+  }
+
+
+
 const ModalLoading = () => {
     
     return(
@@ -152,16 +261,31 @@ const ModalLoading = () => {
     setShowModalLoading(isShow);
   }
 
+  const onChangeSearch = (record) => {
+      let filter;
+          filter = record.target.value.toUpperCase();
+      Object.keys(userTutor&&userTutor).map((value,index) => {
+        if(userTutor[value].firstName.toUpperCase().indexOf(filter) > -1){
+        if(index===0 || index===1 || index===2){
+          paginate(1);
+        }else{
+          if((index%3) === 0){
+            paginate((index/3) + 1);
+          }else if(((index-1)%3) === 0){
+            paginate(((index-1)/3) + 1);
+          }else if(((index-2)%3) === 0){
+            paginate(((index-2)/3) + 1);
+          } 
+        }
+      }else{return;}
+      })
+   
+  }
 
-const handleChooseTutor = (specility) => {
-  console.log("my tab code");
-  console.log(specility);
-  const filterPayload = {
-                            specialities: specility,
-                            studentsIds: [user&&user.currentUser.id]
-                          }
+
+const handleChooseTutor = (tutorId) => {
         handleLoading(true);
-        userService.filterTutors(filterPayload)
+        userService.assignTutorToStudent(user&&user.currentUser.id, tutorId)
         .then((response)=>{
           handleLoading(false);
           console.log("Tutor Choosed Successfully");
@@ -187,44 +311,16 @@ const handleChooseTutor = (specility) => {
     }
 
     const openModalChooseTutor= () => {
-        setDisplayAsk("flex", setShowModalChooseTutor(true));
+        setDisplayAsk("flex", setShowModalChooseTutor(true), setShowModalConf(false));
+    }
+     const openModalConf= (tutor) => {
+        setDataTutor(tutor);
+        setDisplayAsk("flex", setShowModalChooseTutor(false), setShowModalConf(true));
     }
 
-
-
+  
   let data1 = [
-      {
-      id: 1,
-      tutorName: "Mme Ngono Marthe",
-      tutorPicture: profilepic,
-      tutorSpeciality: "mathématiques",
-    },
-    {
-      id: 2,
-      tutorName: "Mme Ngono Marthe",
-      tutorPicture: profilepic,
-      tutorSpeciality: "mathématiques",
-    },
-    {
-      id: 3,
-      tutorName: "Mme Ngono Marthe",
-      tutorPicture: profilepic,
-      tutorSpeciality: "mathématiques",
-    },
-    {
-      id: 4,
-      tutorName: "Mme Ngono Marthe",
-      tutorPicture: profilepic,
-      tutorSpeciality: "mathématiques",
-    },
-    {
-      id: 5,
-      tutorName: "Mme Ngono Marthe",
-      tutorPicture: profilepic,
-      tutorSpeciality: "mathématiques",
-    },
-   
-
+  
   ];
 
     let data = [
@@ -238,7 +334,9 @@ const handleChooseTutor = (specility) => {
 
   const indexOfLastPost1 = currentPage1 * postPerPage1;
   const indexOfFirstPost1 = indexOfLastPost1 - postPerPage1;
-  const currentPosts1 = posts1.slice(indexOfFirstPost1,indexOfLastPost1);
+  const currentPosts1 = tutorForStudent&&tutorForStudent.slice(indexOfFirstPost1,indexOfLastPost1);
+
+
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const paginate1 = (pageNumber) => setCurrentPage1(pageNumber);
 
@@ -249,6 +347,7 @@ const handleChooseTutor = (specility) => {
 			<div>
        {showModalChooseTutor? <ModalChooseTutor /> : ''}
        {showModalLoading? <ModalLoading />: ''}
+       {showModalConf? <ModalProgramConf  />: ''}
 			 <GridContainer style={{fontSize:'100%'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
                             <div style={{display:'inline-block',color:'red',margin:'2%'}}>
@@ -271,9 +370,9 @@ const handleChooseTutor = (specility) => {
                             
                         </GridItem>
                     </GridContainer>
-                 {currentPosts1.map((value,index)=> {
+                 {currentPosts1&&currentPosts1.map((post,index)=> {
                   return(
-                      <GridContainer key={value.id}>
+                      <GridContainer key={index}>
                             <GridItem xs={12} sm={12} md={12}>
                               <div style={{
                               backgroundColor: '#273941',
@@ -286,16 +385,16 @@ const handleChooseTutor = (specility) => {
                               }}>
                               <GridContainer>
                                 
-                                <GridItem xs={6} sm={6} md={6}>
-                                       <div style={{margin:'2% 0% 0% 2%'}}>
-                                          <div style={{color:'white',fontSize:'90%',fontFamily:"Tahoma"}}><strong><i>Nom :</i></strong> {value.tutorName}</div>
-                                          <div style={{color:'white',fontSize:'90%'}}><strong><i>Spécialités :</i></strong> {value.tutorSpeciality}</div>
+                                <GridItem xs={9} sm={9} md={9}>
+                                        <div style={{margin:'2% 0% 0% 2%'}}>
+                                          <div style={{color:'white',fontSize:'100%',fontFamily:"Tahoma"}}><strong><i>Nom:</i></strong>  {post&&post.firstName}</div>
+                                          <div style={{color:'white',fontSize:'100%'}}><strong><i>Spécialités:</i></strong> {post&&post.specialities.map((value,index) =>{return(<span key={index}>{value.name.toLowerCase()+", "}</span>)})}</div>
                                         </div>
                                 </GridItem>
 
-                                <GridItem xs={6} sm={6} md={6} style={{textAlign:'right'}}>
-                                    <div style={{margin:'2% 0% 0% 2%',cursor: 'pointer'}}>
-                                      <img src={tu1} onClick={()=>history.push('/room/chat')} width='10%'/>
+                                <GridItem xs={3} sm={3} md={3} style={{textAlign:'right'}}>
+                                    <div style={{margin:'2% 0% 0% 2%'}}>
+                                      <img style={{cursor: 'pointer'}} src={tu1} onClick={()=>openModalConf(post)} width='30%'/>
                                     </div>
                                 </GridItem>
 
@@ -312,7 +411,7 @@ const handleChooseTutor = (specility) => {
                       <GridItem xs={12} sm={12} md={12}>
                         <Pagination 
                           postsPerPage={postPerPage1} 
-                          totalPosts={posts1.length} 
+                          totalPosts={tutorForStudent&&tutorForStudent.length} 
                           paginate={paginate1}
                         />
                       </GridItem>
@@ -337,63 +436,116 @@ const handleChooseTutor = (specility) => {
                                 name='logo'
                             />
                         </GridItem>
-                        <GridItem xs={2} sm={2} md={2} style={{marginTop:'2%'}}>
-                           <div style={{width:'100%',fontSize:'100%'}}>
-                               <input type='date' onChange={e=>setDate(e.target.value)} style={{
-                                width:'100%',
-                                height:'45px'
-                               }}/>
-                            </div>
-                        </GridItem>
-                         <GridItem xs={2} sm={2} md={2} style={{marginTop:'2%'}}>
-                             <div style={{fontSize:'100%'}}>
-                                <select name="pets" id="pet-select">
-                                    <option value="">Plage horaire</option>
-                                    <option value="dog">07h00-08h00</option>
-                                    <option value="cat">08h00 - 09h00</option>
-                                    <option value="hamster">09h00 - 10h00</option>
-                                    <option value="parrot">10h00 - 11h00</option>
-                                    <option value="spider">11h00 - 12h00</option>
-                                    <option value="goldfish">12h00 - 13h00</option>
-                                    <option value="goldfish">13h00 - 14h00</option>
-                                    <option value="goldfish">14h00 - 15h00</option>
-                                    <option value="goldfish">15h00 - 16h00</option>
-                                    <option value="goldfish">16h00 - 17h00</option>
-                                    <option value="goldfish">17h00 - 18h00</option>
-                                </select>
-                            </div>
-                        </GridItem>
-                        <GridItem xs={2} sm={2} md={2} style={{marginTop:'2%'}}>
+                        
 
-                             <div style={{border:'2px solid #0069D9', width:'110%'}}>
-                                 <ReactSearchBox
-                                    placeholder="Nom du tuteur"
-                                    value="Doe"
-                                    data={data}
-                                    callback={(record) => console.log(record)}
+                       {/* <GridItem xs={2} sm={2} md={2} style={{marginTop:'2%'}}>
+                             <div style={{fontSize:'100%'}}>
+                                 <input
+                                    style={{width:"100%",height:"44px"}}
+                                    name="search"
+                                    type="text"
+                                    placeholder="Search By Name"
+                                    disabled={userTutor?false:true}
+                                    onChange={onChangeSearch}
                                   />
                             </div>
+                        </GridItem>*/}
 
-                           
-                        </GridItem>
                         <GridItem xs={2} sm={2} md={2} style={{marginTop:'2%'}}>
                              <div style={{fontSize:'100%'}}>
-                                <select name="pets" id="pet-select">
-                                    <option value="">Spécialité</option>
-                                    <option value="dog">Français</option>
-                                    <option value="cat">Anglais</option>
-                                    <option value="hamster">Mathématiques</option>
-                                    <option value="parrot">Physiques</option>
-                                    <option value="spider">Informatique</option>
-                                    <option value="goldfish">Science de l'ingénieur</option>
+                                <select 
+                                  name="codeDays" 
+                                  onChange={onChangeFilterForm}
+                                  id="pet-select">
+                                    <option value="">Jour Disponible</option>
+                                    <option value="">  </option>
+                                    <option value="0">Lundi</option>
+                                    <option value="1">Mardi</option>
+                                    <option value="2">Mercredi</option>
+                                    <option value="3">Jeudi</option>
+                                    <option value="4">Vendredi</option>
+                                    <option value="5">Samedi</option>
+                                    <option value="6">Dimanche</option>
                                 </select>
                             </div>
+                        </GridItem>
+
+                         <GridItem xs={2} sm={2} md={2} style={{marginTop:'2%'}}>
+                             <div style={{fontSize:'100%'}}>
+                                <select 
+                                  name="codeHoraires" 
+                                  id="horaire"
+                                  onChange={onChangeFilterForm}
+                                  >
+                                    <option value="">Heure Disponible</option>
+                                    <option value="">       </option>
+                                    <option value="1">07h00-08h00</option>
+                                    <option value="2">08h00-09h00</option>
+                                    <option value="3">09h00-10h00</option>
+                                    <option value="4">10h00-11h00</option>
+                                    <option value="5">11h00-12h00</option>
+                                    <option value="6">12h00-13h00</option>
+                                    <option value="7">13h00-14h00</option>
+                                    <option value="8">14h00-15h00</option>
+                                    <option value="9">15h00-16h00</option>
+                                    <option value="10">16h00-17h00</option>
+                                    <option value="11">17h00-18h00</option>
+                                    <option value="12">18h00-19h00</option>
+                                    <option value="13">19h00-20h00</option>
+                                    <option value="14">20h00-21h00</option>
+                                    <option value="15">21h00-22h00</option>
+                                    <option value="16">22h00-23h00</option>
+                                    <option value="17">23h00-24h00</option>
+                                </select>
+                            </div>
+                        </GridItem>
+                        
+                        <GridItem xs={2} sm={2} md={2} style={{marginTop:'2%'}}>
+                             <div style={{fontSize:'100%'}}>
+                                <select 
+                                  name="codeSpecialities" 
+                                  onChange={onChangeFilterForm}
+                                  id="pet-select">
+                                    <option value="">Spécialité</option>
+                                     <option value="">     </option>
+                                    <option value="fr">Français</option>
+                                    <option value="eng">Anglais</option>
+                                    <option value="maths">Mathématiques</option>
+                                    <option value="phy">Physiques</option>
+                                    <option value="info">Informatique</option>
+                                    <option value="ing">Science de l'ingénieur</option>
+                                </select>
+                            </div>
+                        </GridItem>
+
+                        <GridItem xs={2} sm={2} md={2} style={{marginTop:'2%'}}>
+                             <div style={{cursor:'pointer',
+                                          textAlign:'center'}}>
+                                      <div style={{
+                                          backgroundColor: '#4b9960',
+                                          borderRadius: '5px',
+                                          borderBottom: '1px solid #002495',
+                                          borderRight:  '1px solid #002495',
+                                          borderTop: '1px solid #002495',
+                                          borderLeft:  '1px solid #002495',
+                                          height: '45px',
+                                          width: '100%',
+                                          cursor: 'pointer',
+                                          textAlign:'center',
+                                          paddingTop:'5%'
+                                        }} onClick={applyFilter}>
+                                
+                                <span className="text" style={{fontSize:'100%',color:'white'}}>Appliquez</span>
+                              </div>
+                          </div>
                         </GridItem>
                        
                     </GridContainer>
 
                     {currentPosts&&currentPosts.map((post,index) => {
                       return(
+                          <>
+
                           <GridContainer key={index}>
                              <GridItem xs={12} sm={12} md={12}>
                               <div style={{
@@ -405,7 +557,7 @@ const handleChooseTutor = (specility) => {
                               height: '65px',
                               marginTop:'2%',
                               width: '95%',
-                              cursor: 'pointer'
+                              
 
                               }}>
                               <GridContainer>
@@ -421,8 +573,8 @@ const handleChooseTutor = (specility) => {
                                 </GridItem>
                                 <GridItem xs={4} sm={4} md={4} style={{textAlign:'center'}}>
                                  
-                                  <div onClick={()=>handleChooseTutor(post.specialities.map((value,index) =>{return(value.code)}))} style={{margin:'2% 0% 0% 2%',cursor: 'pointer'}}>
-                                        <img src={choisir} width='70%'/>
+                                  <div onClick={()=>handleChooseTutor(post.id)} style={{margin:'2% 0% 0% 2%',cursor: 'pointer'}}>
+                                        <img style={{cursor: 'pointer'}} src={choisir} width='70%'/>
                                   </div>
                                   
                                 </GridItem>
@@ -431,6 +583,7 @@ const handleChooseTutor = (specility) => {
                               </div>
                             </GridItem>
                           </GridContainer>
+                          </>
                         )
                     })}
                      <GridContainer>
@@ -452,6 +605,7 @@ const mapStateToProps=(state)=>{
       error: state.authReducer.error,
       userTutor: state.authReducer.userTutor, 
       user: state.authReducer.user,   
+      tutorForStudent: state.authReducer.tutorForStudent,
   };
 };
 export default connect(mapStateToProps)(ChooseTutorContent);

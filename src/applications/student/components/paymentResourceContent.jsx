@@ -248,7 +248,7 @@ const PaymentResourseContent = ({user,paymentRessource}) => {
                                 
                                 <span className="text" style={{fontSize:'100%',color:'white'}}>Ajouter</span>
                               </div>
-                                    </div>
+                          </div>
                             
                         </GridItem>
                     </GridContainer>

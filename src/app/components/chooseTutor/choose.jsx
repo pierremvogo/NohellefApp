@@ -11,6 +11,7 @@ import CardFooter from "../../../app/components/Card/CardFooter.js";
 import GridItem from "../../../app/components/Grid/GridItem.js";
 import logoImage from '../../../assets/images/im10.png';
 import GridContainer from "../../../app/components/Grid/GridContainer.js";
+import {authCreateSuccess} from '../../../applications/redux/reducer/actions/auth';
 
 const Choose = ({error,
                             createSuccessMessage,
@@ -18,9 +19,12 @@ const Choose = ({error,
 
                        
                         }) => {
+    
+    const dispatch = useDispatch();
 
 
     const closeModal = (e) => {
+        dispatch(authCreateSuccess(null));
         onChildCloseModal(e.target.name);
     }
 

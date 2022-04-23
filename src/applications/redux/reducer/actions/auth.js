@@ -167,3 +167,13 @@ export const shareHoraireUser = (payload) => ({
     type: types.SHARE_HORAIRE_USER,
     payload,
 })
+
+export const shareTutorForStudent = (payload) => ({
+    type: types.SHARE_TUTOR_FOR_STUDENT,
+    payload,
+})
+
+export const shareMeetingProgramm = (payload) => ({
+    type: types.SHARE_MEETING_PROGRAMM,
+    payload,
+})

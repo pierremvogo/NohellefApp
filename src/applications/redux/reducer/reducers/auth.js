@@ -9,8 +9,10 @@ const INITIAL_STATE = user ?
                                 isLoggedIn: true,
                                 loading: false,
                                 isRestricted: true,
+                                tutorForStudent: [null],
                                 error: null,
                                 resetToken: null,
+                                meetingProgramm: null,
                                 changePayload: null,
                                 horaireUser: null,
                                 changesForm: null,
@@ -40,6 +42,8 @@ const INITIAL_STATE = user ?
                                 changePayload: null,
                                 changesForm: null,
                                 paymentRessource: null,
+                                tutorForStudent: [null],
+                                meetingProgramm: null,
                                 error: null,
                                 courses: null,
                                 horaireUser: null,
@@ -299,8 +303,23 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 horaireUser: action.payload,
                 error: null,
             };
+        case types.SHARE_TUTOR_FOR_STUDENT:
+            return {
+                ...state,
+                tutorForStudent: action.payload,
+                error: null,
+            };
+        case types.SHARE_MEETING_PROGRAMM:
+            return {
+                ...state,
+                meetingProgramm: action.payload,
+                error: null,
+            };
         default:
             return state;
     }
 }
 export default AuthReducer;
+
+
+
