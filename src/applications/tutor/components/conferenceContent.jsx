@@ -157,6 +157,7 @@ const ConferenceContent = ({user,meetingProgramm}) => {
                     </tr>
                     </td>
                     <td>
+                    
                     <tr>
                       <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
                                     return(
