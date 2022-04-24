@@ -122,68 +122,81 @@ const ConferenceContent = ({user,meetingProgramm}) => {
                   console.log(post);
                 return(
                     <tr key={index}>
-                    <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
+                    <td>
+                    <tr>
+                      <td>
+                          {post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
                                     return(
-                                        value.day==="0"? value.id : ""
+                                        value.day==="0"? post.owner.firstName : ""
                                       )
-                      }):""}
-                    </td>
-                    <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
-                                    return(
-                                        value.day==="1"? value.id : ""
-                                      )
-                      }):""}
-                    </td>
-                    <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
-                                    return(
-                                        value.day==="2"? value.id : ""
-                                      )
-                      }):""}
-                    </td>
-                    <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
-                                    return(
-                                        value.day==="3"? value.id : ""
-                                      )
-                      }):""}
-                    </td>
-                    <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
-                                    return(
-                                        value.day==="4"? value.id : ""
-                                      )
-                      }):""}
-                    </td>
-                    <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
-                                    return(
-                                        value.day==="5"? value.id : ""
-                                      )
-                      }):""}
-                    </td>
-                    <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
-                                    return(
-                                        value.day==="6"? value.id : ""
-                                      )
-                      }):""}
+                          }):""}
+                      </td>
+                      <td></td>
+                    </tr>
+
                     </td>
                     <td>
-                        {post.horaires.map((value,index) =>{return(<div key={index}>
-                          {value.number === 1? "07h00-08h00":
-                           value.number === 2? "08h00-09h00":
-                           value.number === 3? "09h00-10h00":
-                           value.number === 4? "10h00-11h00":
-                           value.number === 5? "11h00-12h00":
-                           value.number === 6? "12h00-13h00":
-                           value.number === 7? "13h00-14h00":
-                           value.number === 8? "14h00-15h00":
-                           value.number === 9? "15h00-16h00":
-                           value.number === 10? "16h00-17h00":
-                           value.number === 11? "17h00-18h00":
-                           value.number === 12? "18h00-19h00":
-                           value.number === 13? "19h00-20h00":
-                           value.number === 14? "20h00-21h00":
-                           value.number === 15? "21h00-22h00":
-                           value.number === 16? "22h00-23h00":
-                           value.number === 17? "23h00-24h00":""}  <img src={dispo} width='10%' /></div>)})}
+                    <tr>
+                    <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
+                                    return(
+                                        value.day==="1"? post.owner.firstName : ""
+                                      )
+                      }):""}</td>
+                       <td></td>
+                      </tr>
                     </td>
+                    <td>
+                    <tr>
+                       <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
+                                    return(
+                                        value.day==="2"? post.owner.firstName : ""
+                                      )
+                      }):""}
+                       </td>
+                       <td></td>
+                    </tr>
+                    </td>
+                    <td>
+                    <tr>
+                      <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
+                                    return(
+                                        value.day==="3"? post.owner.firstName : ""
+                                      )
+                      }):""}</td>
+                      <td></td>
+                    </tr>
+                    </td>
+                    <td>
+                    <tr>
+                      <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
+                                    return(
+                                        value.day==="4"? post.owner.firstName : ""
+                                      )
+                      }):""}</td>
+                      <td></td>
+                    </tr>
+                    </td>
+                    <td>
+                    <tr>
+                      <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
+                                    return(
+                                        value.day==="5"? post.owner.firstName : ""
+                                      )
+                      }):""}</td>
+                      <td></td>
+                    </tr>
+                    </td>
+                    <td>
+                    <tr>
+                      <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
+                                    return(
+                                        value.day==="6"? post.owner.firstName : ""
+                                      )
+                      }):""}</td>
+                      <td></td>
+                    </tr>
+                    </td>
+                    
                    
                   </tr>
                 )}
