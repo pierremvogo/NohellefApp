@@ -89,129 +89,150 @@ const ConferenceContent = ({user,meetingProgramm}) => {
        <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
                         <GridItem xs={12} sm={12} md={12} style={{marginTop:'2%'}}>
                             <div style={{display:'inline-block',color:'blue',margin:'2% 0% 5% 0%'}}>
-                                Votre Programme de Web-conference
+                                Vos Programmes de Web-conference
                             </div>
                             
                         </GridItem>
                         
                     </GridContainer>
              
-                    <GridContainer style={{backgroundColor:'#eeeeee'}}>
-          
-                       <GridItem xs={12} sm={12} md={12}>
+                      {currentPosts&&currentPosts.map((post,index) => {
+                      return(
+                          <>
 
+                          <GridContainer key={index}>
+                             <GridItem xs={12} sm={12} md={12}>
+                              <div style={{
+                              
+                              backgroundColor: '#4b9960',
+                              borderRadius: '15px',
+                              borderBottom: '3px solid #9aa7b2',
+                              borderRight:  '3px solid #9aa7b2',
+                              height: '120px',
+                              marginTop:'2%',
+                              width: '95%',
+                              padding:"1%"
+                              
 
-        <GridContainer style={{backgroundColor:'#eeeeee',width:'95%', fontSize:'75%'}}> 
-        <Table striped bordered hover variant="secondary">
-              <thead>
-            
-                 <tr>
-                  <th>Jours</th>
-                  <th>Heures</th>
-                  <th>Spécialité</th>
-                  <th>Nom de l'apprenant</th>
-                </tr>
-              </thead>
-              <tbody>
-
-              {currentPosts&&currentPosts.map((post,index)=>{
-                  console.log("my current posts");
-                  console.log(post);
-                return(
-                  post&&post.horaires.length != 0 ?post.horaires.map((value1,index1)=>{
-                    return(
-                        <tr key={index1}>
-                        <td>
-                    
-                          
-                                      {
-                                         value1.day === "0"?"Lundi":
-                                         value1.day === "1"?"Mardi":
-                                         value1.day === "2"?"Mercredi":
-                                         value1.day === "3"?"Jeudi":
-                                         value1.day === "4"?"Vendredi":
-                                         value1.day === "5"?"Samedi":
-                                         value1.day === "6"?"Dimanche":""}
-                                         
-                                        
-                                           
-                        </td>
-
-                        <td>
-                          
-                          {post&&post.horaires.length != 0 ?post.horaires.map((value2,index2)=>{
-                                    return(
-                                        value2.periodes.length != 0?
-                                        value2.periodes.map((value3,index3)=>{
-                                          console.log("my value2 index");
-                                          console.log(index2);
-                                          console.log(value2.periodes[index2]);
-                                          return(<div>{
-                                              value2.day === "0"?
-                                              value3.fromHour <10 || value3.toHour <10?
-                                              "0"+value3.fromHour+"h00-"+value3.toHour+"h00":
-                                              value3.fromHour+"h00-"+value3.toHour+"h00"
-
-                                            :value2.day === "1"?
-                                            value2.periodes[index3].fromHour <10 || value2.periodes[index3].toHour <10?
-                                              "0"+value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00":
-                                              value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00":
-
-
-                                            value2.day === "2"?
-                                            value2.periodes[index3].fromHour <10 || value2.periodes[index3].toHour <10?
-                                              "0"+value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00":
-                                              value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00"
-:
-
-                                            value2.day === "3"?
-                                            value2.periodes[index3].fromHour <10 || value2.periodes[index3].toHour <10?
-                                              "0"+value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00":
-                                              value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00"
- : 
-
-                                            value2.day === "4"?
-                                            value2.periodes[index3].fromHour <10 || value2.periodes[index3].toHour <10?
-                                              "0"+value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00":
-                                              value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00"
-:
-
-                                            value2.day === "5"?
-                                            value2.periodes[index3].fromHour <10 || value2.periodes[index3].toHour <10?
-                                              "0"+value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00":
-                                              value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00"
- :
-
-                                            value2.day === "6"?
-                                            value2.periodes[index3].fromHour <10 || value2.periodes[index3].toHour <10?
-                                              "0"+value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00":
-                                              value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00"
-                                             :""}</div>
+                              }}>
+                              <GridContainer>
+                                <GridItem xs={12} sm={12} md={12}>
+                                    <GridContainer>
+                                      <GridItem xs={5} sm={5} md={5}>
+                                       <div>
+                                          <div style={{color:'white',fontSize:'100%',fontFamily:"Tahoma"}}><strong><i>Code Web-conference: </i></strong>  {post.code}</div>
+                                          <div style={{color:'white',fontSize:'100%'}}><strong><i>Spécialités: </i></strong> {post.speciality.name}</div>
+                                          <div style={{color:'white',fontSize:'100%'}}><strong><i>Nom Etudiant: </i></strong> {post.owner.firstName}</div>
+                                        </div>
+                                    </GridItem>
+                                    <GridItem xs={7} sm={7} md={7} style={{fontSize:'80%'}}>
+                                        {
+                                          post.horaires.map((post1,index1)=>{
+                                                let day, periode;
+                                                  if(post1.day === "0"){
+                                                      day = "Lundi";
+                                                      periode = post1.periodes.map((post2,index2)=>{
+                                                        return(
+                                                            <span>
+                                                            {
+                                                              
+                                                              post2.fromHour+"h00-"+post2.toHour+"h00, "
+                                                            
+                                                             }
+                                                            </span>
+                                                          )
+                                                      })
+                                                  }else if(post1.day === "1"){
+                                                      day = "Mardi";
+                                                      periode = post1.periodes.map((post2,index2)=>{
+                                                        return(
+                                                            <span>
+                                                            {
+                                                              post2.fromHour+"h00-"+post2.toHour+"h00, "
+                                                            
+                                                             }
+                                                            </span>
+                                                          )
+                                                      })
+                                                  }else if(post1.day === "2"){
+                                                      day = "Mercredi";
+                                                      periode = post1.periodes.map((post2,index2)=>{
+                                                        return(
+                                                            <span>
+                                                            {
+                                                              post2.fromHour+"h00-"+post2.toHour+"h00, "
+                                                            
+                                                             }
+                                                            </span>
+                                                          )
+                                                      })
+                                                  }else if(post1.day === "3"){
+                                                      day = "Jeudi";
+                                                      periode = post1.periodes.map((post2,index2)=>{
+                                                        return(
+                                                            <span>
+                                                            {
+                                                              post2.fromHour+"h00-"+post2.toHour+"h00, "
+                                                            
+                                                             }
+                                                            </span>
+                                                          )
+                                                      })
+                                                  }else if(post1.day === "4"){
+                                                      day = "Vendredi";
+                                                      periode = post1.periodes.map((post2,index2)=>{
+                                                        return(
+                                                            <span>
+                                                            {
+                                                              post2.fromHour+"h00-"+post2.toHour+"h00, "
+                                                            
+                                                             }
+                                                            </span>
+                                                          )
+                                                      })
+                                                  }else if(post1.day === "5"){
+                                                     day = "Samedi";
+                                                     periode = post1.periodes.map((post2,index2)=>{
+                                                        return(
+                                                            <span>
+                                                            {
+                                                              post2.fromHour+"h00-"+post2.toHour+"h00, "
+                                                            
+                                                             }
+                                                            </span>
+                                                          )
+                                                      })
+                                                  }else if(post1.day === "6"){
+                                                      day = "Dimanche";
+                                                      periode = post1.periodes.map((post2,index2)=>{
+                                                        return(
+                                                            <span>
+                                                            {
+                                                              post2.fromHour+"h00-"+post2.toHour+"h00, "
+                                                            
+                                                             }
+                                                            </span>
+                                                          )
+                                                      })
+                                                }
+                                            return(
+                                                  <div style={{color:'white'}}><span style={{color:'black'}}>{ day }</span> : { periode }</div>
                                               )
-                                        }): ""
-                                      )
-                      }):""}
-                        </td>
-                        <td>
-                      {post.speciality.name}
-                    </td>
-                    <td>
-                      {post.owner.firstName}
-                    </td>
-                                     
-                      </tr>)
-                          }):""
-                    
-                    
-                 
-                      )
-                  }
-                   
-                )}
-              
-              </tbody>
-            </Table>
-          </GridContainer>
+                                          })
+                                        }
+                                    </GridItem>
+                                  </GridContainer>
+                                </GridItem>
+                                
+                              </GridContainer>
+
+                              </div>
+                            </GridItem>
+                          </GridContainer>
+                          </>
+                        )
+                    })}
+         
           <GridContainer>
               <GridItem xs={12} sm={12} md={12}>
                   <Pagination 
@@ -221,10 +242,7 @@ const ConferenceContent = ({user,meetingProgramm}) => {
                   />
               </GridItem>
           </GridContainer>
-                        </GridItem>
-              
-                    </GridContainer>
-                    
+                   
         </div>
     )
 }
