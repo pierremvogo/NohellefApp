@@ -106,13 +106,10 @@ const ConferenceContent = ({user,meetingProgramm}) => {
               <thead>
             
                  <tr>
-                  <th>Lundi</th>
-                  <th>Mardi</th>
-                  <th>Mercredi</th>
-                  <th>Jeudi</th>
-                  <th>Vendredi</th>
-                  <th>Samedi</th>
-                  <th>Dimanche</th>
+                  <th>Jours</th>
+                  <th>Heures</th>
+                  <th>Spécialité</th>
+                  <th>Nom de l'apprenant</th>
                 </tr>
               </thead>
               <tbody>
@@ -121,87 +118,97 @@ const ConferenceContent = ({user,meetingProgramm}) => {
                   console.log("my current posts");
                   console.log(post);
                 return(
-                    <tr key={index}>
-                    <td>
-                    <tr>
-                      <td>
-                          {post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
-                                    return(
-                                        value.day==="0"? post.owner.firstName : ""
-                                      )
-                          }):""}
-                      </td>
-                      <td></td>
-                    </tr>
+                  post&&post.horaires.length != 0 ?post.horaires.map((value1,index1)=>{
+                    return(
+                        <tr key={index1}>
+                        <td>
+                    
+                          
+                                      {
+                                         value1.day === "0"?"Lundi":
+                                         value1.day === "1"?"Mardi":
+                                         value1.day === "2"?"Mercredi":
+                                         value1.day === "3"?"Jeudi":
+                                         value1.day === "4"?"Vendredi":
+                                         value1.day === "5"?"Samedi":
+                                         value1.day === "6"?"Dimanche":""}
+                                         
+                                        
+                                           
+                        </td>
 
-                    </td>
-                    <td>
-                    <tr>
-                    <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
+                        <td>
+                          
+                          {post&&post.horaires.length != 0 ?post.horaires.map((value2,index2)=>{
                                     return(
-                                        value.day==="1"? post.owner.firstName : ""
-                                      )
-                      }):""}</td>
-                       <td></td>
-                      </tr>
-                    </td>
-                    <td>
-                    <tr>
-                       <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
-                                    return(
-                                        value.day==="2"? post.owner.firstName : ""
+                                        value2.periodes.length != 0?
+                                        value2.periodes.map((value3,index3)=>{
+                                          console.log("my value2 index");
+                                          console.log(index2);
+                                          console.log(value2.periodes[index2]);
+                                          return(<div>{
+                                              value2.day === "0"?
+                                              value3.fromHour <10 || value3.toHour <10?
+                                              "0"+value3.fromHour+"h00-"+value3.toHour+"h00":
+                                              value3.fromHour+"h00-"+value3.toHour+"h00"
+
+                                            :value2.day === "1"?
+                                            value2.periodes[index3].fromHour <10 || value2.periodes[index3].toHour <10?
+                                              "0"+value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00":
+                                              value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00":
+
+
+                                            value2.day === "2"?
+                                            value2.periodes[index3].fromHour <10 || value2.periodes[index3].toHour <10?
+                                              "0"+value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00":
+                                              value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00"
+:
+
+                                            value2.day === "3"?
+                                            value2.periodes[index3].fromHour <10 || value2.periodes[index3].toHour <10?
+                                              "0"+value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00":
+                                              value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00"
+ : 
+
+                                            value2.day === "4"?
+                                            value2.periodes[index3].fromHour <10 || value2.periodes[index3].toHour <10?
+                                              "0"+value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00":
+                                              value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00"
+:
+
+                                            value2.day === "5"?
+                                            value2.periodes[index3].fromHour <10 || value2.periodes[index3].toHour <10?
+                                              "0"+value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00":
+                                              value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00"
+ :
+
+                                            value2.day === "6"?
+                                            value2.periodes[index3].fromHour <10 || value2.periodes[index3].toHour <10?
+                                              "0"+value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00":
+                                              value2.periodes[index3].fromHour+"h00-"+value2.periodes[index3].toHour+"h00"
+                                             :""}</div>
+                                              )
+                                        }): ""
                                       )
                       }):""}
-                       </td>
-                       <td></td>
-                    </tr>
+                        </td>
+                        <td>
+                      {post.speciality.name}
                     </td>
                     <td>
+                      {post.owner.firstName}
+                    </td>
+                                     
+                      </tr>)
+                          }):""
                     
-                    <tr>
-                      <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
-                                    return(
-                                        value.day==="3"? post.owner.firstName : ""
-                                      )
-                      }):""}</td>
-                      <td></td>
-                    </tr>
-                    </td>
-                    <td>
-                    <tr>
-                      <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
-                                    return(
-                                        value.day==="4"? post.owner.firstName : ""
-                                      )
-                      }):""}</td>
-                      <td></td>
-                    </tr>
-                    </td>
-                    <td>
-                    <tr>
-                      <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
-                                    return(
-                                        value.day==="5"? post.owner.firstName : ""
-                                      )
-                      }):""}</td>
-                      <td></td>
-                    </tr>
-                    </td>
-                    <td>
-                    <tr>
-                      <td>{post&&post.horaires.length != 0 ?post.horaires.map((value,index)=>{
-                                    return(
-                                        value.day==="6"? post.owner.firstName : ""
-                                      )
-                      }):""}</td>
-                      <td></td>
-                    </tr>
-                    </td>
                     
+                 
+                      )
+                  }
                    
-                  </tr>
                 )}
-              )}
+              
               </tbody>
             </Table>
           </GridContainer>
