@@ -177,3 +177,10 @@ export const shareMeetingProgramm = (payload) => ({
     type: types.SHARE_MEETING_PROGRAMM,
     payload,
 })
+
+export const shareMeetTutor = (payload) => ({
+    type: types.SHARE_MEET_TUTOR,
+    payload,
+})
+
+

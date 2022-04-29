@@ -140,7 +140,7 @@ const AbonnementContent = ({userParent}) => {
 
   const handleLockAccount = (id) => {
         handleLoading(true);
-        authService.lockAccount(id)
+        adminService.lockAccount(id)
         .then((response)=>{
           handleLoading(false);
           console.log("Account Lock successfull");
@@ -167,7 +167,7 @@ const AbonnementContent = ({userParent}) => {
 
     const handleUnLockAccount = (id) => {
         handleLoading(true);
-        authService.unLockAccount(id)
+        adminService.unLockAccount(id)
         .then((response)=>{
           handleLoading(false);
           console.log("Account UnLock successfull");

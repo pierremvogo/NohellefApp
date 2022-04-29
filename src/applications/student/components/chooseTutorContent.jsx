@@ -16,12 +16,15 @@ import chat2 from '../../../assets/images/dashboard/chat2.png';
 import smile2 from '../../../assets/images/dashboard/smile2.png';
 import choisir from '../../../assets/images/dashboard/choisir.png';
 import conchat from '../../../assets/images/dashboard/conchat.png';
-import tu1 from '../../../assets/images/dashboard/prog.png';
+import prog from '../../../assets/images/dashboard/prog.png';
+import meet from '../../../assets/images/dashboard/meet.png';
 import ReactSearchBox from "react-search-box";
 import Avatar   from 'react-avatar';
 import './account.css';
 import ProgramConference from './programConference.jsx';
+import MeetProgramm from './meetProgramm.jsx';
 import Pagination from './pagination.jsx';
+import PaginateMyTutor from './paginateMyTutor.jsx';
 import Chat from "../../../app/components/chat/chat.jsx";
 import adminService from '../../services/admin.service';
 import authService from '../../services/auth.service';
@@ -35,11 +38,13 @@ import {    authRegisterSuccess,
             authSetRegisterForm,
             authCreateSuccess,
             shareTutorForStudent,
-            shareTutorUser } from '../../redux/reducer/actions/auth';
+            shareTutorUser,
+            shareMeetTutor,
+            shareMeetingProgramm } from '../../redux/reducer/actions/auth';
 
 
 
-const ChooseTutorContent = ({user, userTutor, tutorForStudent, onChildOpenModal}) => {
+const ChooseTutorContent = ({user, userTutor,tutorForStudent, onChildOpenModal}) => {
 	const [posts, setPosts] = useState([]);
   const [posts1, setPosts1] = useState([]);
 	const [loading, serLoading] = useState(false);
@@ -57,8 +62,11 @@ const ChooseTutorContent = ({user, userTutor, tutorForStudent, onChildOpenModal}
   const [showModalLoading, setShowModalLoading] = useState(false);
   const [showModalChooseTutor, setShowModalChooseTutor] = useState(false);
   const [showModalConf, setShowModalConf] = useState(false);
+  const [dataMeeting, setDataMeeting] = useState([]);
   const [dataTutor, setDataTutor] = useState({});
-
+  const [idMeet, setIdMeet] = useState([]);
+  const [showModalMeet, setShowModalMeet] = useState(false);
+  const [meetForTutor, setMeetForTutor] = useState([]);
   const [filterForm, setFilterForm] = useState({
                                                   codeSpecialities: "",
                                                   codeDays: "",
@@ -70,7 +78,7 @@ const ChooseTutorContent = ({user, userTutor, tutorForStudent, onChildOpenModal}
   const history = useHistory();
 
 	useEffect(()=>{
-    getTutors();
+     getTutors();
 	},[]);
 
   const openModal = (e) => {
@@ -91,48 +99,40 @@ const ChooseTutorContent = ({user, userTutor, tutorForStudent, onChildOpenModal}
 
 
   const getTutors = () => {
-    const filterPayload = {}
-          console.log("tutor get in student");
-          console.log(filterPayload);
-    userService.filterTutors(filterPayload)
+    getTutorsChoosed();
+    userService.filterTutors({})
         .then((response)=> {
-          
-            console.log("Response for get Tutor user");
+            console.log("Response for get All Tutor user");
             console.log(response.data);
             dispatch(shareTutorUser(response.data.users));
-            for(var i=0; i<response.data.users.length; i++){
-              if(response.data.users[i].students &&
-                 response.data.users[i].students.length != 0){
-                for(var j=0; j<response.data.users[i].students.length ; j++){
-                  if(response.data.users[i].students[j].id === user.currentUser.id){
-                     handleGetMyTutors(response.data.users[i]);
-                  }else{
-                    console.log("not equal tutor");
-                  }
-                }
-              }
-            }
         })
         .catch((error)=> {
-            console.log("Error Response for get Tutor user");
+            console.log("Error Response for get all Tutor user");
             console.log(error);
             dispatch(shareTutorUser(null));
         })
   }
 
-  const getMeetingByTutorId = () => {
-    meetingService.getMeetingByTutorIdOrStudentId(user&&user.currentUser.id)
-    .then((response)=>{
-        console.log("meeting by tutor");
-        console.log(response.data);
-    })
-    .catch((error)=>{
-       console.log("error meeting by tutor");
-        console.log(error);
-    })
-  }
+  const getTutorsChoosed = () => {
+     userService.filterTutors({studentsIds: [user.currentUser.id]})
+        .then((response)=> {
+            console.log("Response for get Tutor choose by student ");
+            console.log(response.data.users);
+            dispatch(shareTutorForStudent(response.data.users));
 
-  const getTutorByFilter = (f1,f2,f3) => {
+        })
+        .catch((error)=> {
+            console.log("Error Response for get Tutor choose by student");
+            console.log(error);
+            dispatch(shareTutorForStudent(null));
+        })
+  }
+  
+
+
+  
+
+   const getTutorByFilter = (f1,f2,f3) => {
   const filterPayload = {
                              specialities: [f1],
                              periodes: [f2],
@@ -147,15 +147,7 @@ const ChooseTutorContent = ({user, userTutor, tutorForStudent, onChildOpenModal}
         })
  }
 
-  const handleGetMyTutors = (tutor) => {
-      setPosts1([]);
-      setPosts1(posts1.push(tutor));
-      dispatch(shareTutorForStudent(posts1));
-  }
-
 const onChangeHour = (hours) =>{
-  console.log("my hours");
-  console.log(hours)
 }
 
 const ModalChooseTutor  = () => {
@@ -187,6 +179,22 @@ const ModalChooseTutor  = () => {
       getTutors();
       setDisplayAsk("none", setShowModalChooseTutor(false));
   }
+  const openModalChooseTutor= () => {
+        setDisplayAsk("flex", 
+            setShowModalChooseTutor(true), 
+            setShowModalConf(false),
+            setShowModalMeet(false),);
+    }
+
+
+
+ const openModalConf= (tutor) => {
+        setDataTutor(tutor);
+        setDisplayAsk("flex", 
+            setShowModalChooseTutor(false), 
+            setShowModalConf(true),
+            setShowModalMeet(false));
+    }
 
   const ModalProgramConf  = () => {
     return(
@@ -214,11 +222,51 @@ const ModalChooseTutor  = () => {
     )
   };
    const closeConfModal = () => {
-      getMeetingByTutorId();
+      getTutors();
       dispatch(authCreateSuccess(null));
       dispatch(authRegisterFailed(null));
-      getTutors();
-      setDisplayAsk("none", setShowModalConf(false));
+      setDisplayAsk("none", 
+            setShowModalConf(false),
+            setShowModalChooseTutor(false), 
+            setShowModalMeet(false));
+  }
+
+
+  const openModalMeet= (tutor) => {
+        setDisplayAsk("flex", 
+            setShowModalChooseTutor(false), 
+            setShowModalConf(false),
+            setShowModalMeet(true));   
+    }
+
+  const ModalMeet  = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+       <MeetProgramm      onChildCloseModal={closeConfModal}
+                          onchildOpenLoading={handleLoading} />  
+         
+      </div>
+    )
+  };
+   const closeModalMeet = () => {
+      dispatch(authCreateSuccess(null));
+      dispatch(authRegisterFailed(null));
+      setDisplayAsk("none", setShowModalMeet(false));
   }
 
 
@@ -310,13 +358,7 @@ const handleChooseTutor = (tutorId) => {
         })
     }
 
-    const openModalChooseTutor= () => {
-        setDisplayAsk("flex", setShowModalChooseTutor(true), setShowModalConf(false));
-    }
-     const openModalConf= (tutor) => {
-        setDataTutor(tutor);
-        setDisplayAsk("flex", setShowModalChooseTutor(false), setShowModalConf(true));
-    }
+    
 
   
   let data1 = [
@@ -348,6 +390,7 @@ const handleChooseTutor = (tutorId) => {
        {showModalChooseTutor? <ModalChooseTutor /> : ''}
        {showModalLoading? <ModalLoading />: ''}
        {showModalConf? <ModalProgramConf  />: ''}
+       {showModalMeet? <ModalMeet  />: ''}
 			 <GridContainer style={{fontSize:'100%'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
                             <div style={{display:'inline-block',color:'red',margin:'2%'}}>
@@ -371,7 +414,9 @@ const handleChooseTutor = (tutorId) => {
                         </GridItem>
                     </GridContainer>
                  {currentPosts1&&currentPosts1.map((post,index)=> {
-                  return(
+                    console.log(post);
+                    return(
+                        <>
                       <GridContainer key={index}>
                             <GridItem xs={12} sm={12} md={12}>
                               <div style={{
@@ -394,7 +439,9 @@ const handleChooseTutor = (tutorId) => {
 
                                 <GridItem xs={3} sm={3} md={3} style={{textAlign:'right'}}>
                                     <div style={{margin:'2% 0% 0% 2%'}}>
-                                      <img style={{cursor: 'pointer'}} src={tu1} onClick={()=>openModalConf(post)} width='30%'/>
+                                    {post&&post.horaires&&post.horaires.length != 0? 
+                                      <img style={{cursor: 'pointer'}} src={prog} onClick={()=>openModalConf(post)} width='30%'/>
+                                     : ""} 
                                     </div>
                                 </GridItem>
 
@@ -405,15 +452,19 @@ const handleChooseTutor = (tutorId) => {
                             </GridItem>
 
                       </GridContainer>
+                      </>
                     )
                       })}
                    <GridContainer>
-                      <GridItem xs={12} sm={12} md={12}>
-                        <Pagination 
+                      <GridItem xs={9} sm={9} md={9}>
+                        <PaginateMyTutor 
                           postsPerPage={postPerPage1} 
                           totalPosts={tutorForStudent&&tutorForStudent.length} 
                           paginate={paginate1}
                         />
+                      </GridItem>
+                      <GridItem xs={3} sm={3} md={3}>
+                        <img style={{cursor: 'pointer'}} src={meet} onClick={openModalMeet} width='25%'/>
                       </GridItem>
                     </GridContainer>
 
@@ -604,7 +655,7 @@ const mapStateToProps=(state)=>{
       isLoggedIn: state.authReducer.isLoggedIn,
       error: state.authReducer.error,
       userTutor: state.authReducer.userTutor, 
-      user: state.authReducer.user,   
+      user: state.authReducer.user,  
       tutorForStudent: state.authReducer.tutorForStudent,
   };
 };

@@ -8,6 +8,9 @@ class AbonnementService {
     getStudentAbonnement(studentId) {
         return http.get(`/abonnements/${studentId}`);
     }
+    getStudentAbonnementActive(studentId) {
+        return http.get(`/abonnements/${studentId}/active`);
+    }
     editAbonnementStatus(abonnementId,payload) {
         return http.patch(`/abonnements/${abonnementId}`, payload);
     }

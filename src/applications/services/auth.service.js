@@ -23,11 +23,9 @@ class AuthService {
     changePassword(id,payload) {
         return http.patch(`/auth/change-password/${id}`, payload);
     }
-    lockAccount(id) {
-        return http.patch(`/auth/lock-account/${id}`);
-    }
-    unLockAccount(id) {
-        return http.patch(`/auth/unlock-account/${id}`);
+
+    closeAccount(id) {
+        return http.patch(`/auth/close-account/${id}`);
     }
 
 }

@@ -38,6 +38,16 @@ class UsersServices {
     deleteUserPaymentCard(id) {
         return http.delete(`/users/paymentCards/${id}`);
     }
+    createTutorRatings(payload) {
+        return http.post(`/users/tutor-ratings`, payload);
+    }
+    getTutorRating(tutorId) {
+        return http.get(`/users/tutor-ratings/${tutorId}`);
+    }
+     deleteTutorRating(ratingId) {
+        return http.delete(`/users/tutor-ratings/${ratingId}`);
+    }
+
 
 }
 export default new UsersServices;

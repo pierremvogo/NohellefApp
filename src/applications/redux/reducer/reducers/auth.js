@@ -10,6 +10,7 @@ const INITIAL_STATE = user ?
                                 loading: false,
                                 isRestricted: true,
                                 tutorForStudent: [null],
+                                meetTutor: null,
                                 error: null,
                                 resetToken: null,
                                 meetingProgramm: null,
@@ -43,6 +44,7 @@ const INITIAL_STATE = user ?
                                 changesForm: null,
                                 paymentRessource: null,
                                 tutorForStudent: [null],
+                                meetTutor: null,
                                 meetingProgramm: null,
                                 error: null,
                                 courses: null,
@@ -313,6 +315,12 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 meetingProgramm: action.payload,
+                error: null,
+            };
+        case types.SHARE_MEET_TUTOR:
+            return {
+                ...state,
+                meetTutor: action.payload,
                 error: null,
             };
         default:

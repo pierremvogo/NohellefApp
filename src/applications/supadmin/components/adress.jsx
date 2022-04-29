@@ -190,8 +190,8 @@ const Adress = ({error,
 
                                                         >
                                                         <option value=""></option>
-                                                        <option value="0">Mac Adress</option>
-                                                        <option value="1">Email</option>
+                                                        <option value="0">CREDENTIALS</option>
+                                                        <option value="1">MAC_ADDRESS</option>
                                                         </select>:
                                                         <input 
                                                          type={type}

@@ -60,7 +60,7 @@ const AdminContent = ({userAdmin}) => {
     const [supAdminId, setSupAdminId] = useState("supadmin");
     const [room, setRoom] = useState(tutorId+supAdminId);
     const [statusConnection,setStatusConnection] = useState(false);
-    const [adminNamed,setAdminNamed] = useState("");
+    const [adminData,setAdminData] = useState({});
     const [isAdress, setIsAdress] = useState(false);
     const [displayLoading, setDisplayLoading] = useState("flex");
     const [showModalLoading, setShowModalLoading] = useState(false);
@@ -98,7 +98,7 @@ const AdminContent = ({userAdmin}) => {
     }
 
   function closeModal(){
-   
+      getAdmins();
       setDisplayAsk("none",setShowEditModal(false));
   }
   let data = [
@@ -134,11 +134,11 @@ const AdminContent = ({userAdmin}) => {
     
   
 
-  const openModal=(isAdress,nameAdmin)=> {
+  const openModal=(isAdress,adminData)  => {
      if(isAdress=="adress"){
-        setIsAdress(true)
+        setIsAdress(true,  setAdminData(adminData))
      }else{
-      setIsAdress(false, setAdminNamed(nameAdmin));
+      setIsAdress(false, setAdminData(adminData));
      }
     setShowEditModal(true,setDisplayAsk("flex"));
    
@@ -187,7 +187,7 @@ const AdminContent = ({userAdmin}) => {
 
    const handleLockAccount = (id) => {
         handleLoading(true);
-        authService.lockAccount(id)
+        adminService.lockAccount(id)
         .then((response)=>{
           handleLoading(false);
           console.log("Account Lock successfull");
@@ -214,7 +214,7 @@ const AdminContent = ({userAdmin}) => {
 
     const handleUnLockAccount = (id) => {
         handleLoading(true);
-        authService.unLockAccount(id)
+        adminService.unLockAccount(id)
         .then((response)=>{
           handleLoading(false);
           console.log("Account UnLock successfull");
@@ -359,7 +359,8 @@ const AdminContent = ({userAdmin}) => {
            
         {isAdress?
           <AffectRight 
-            adminName={adminNamed} 
+            adminData={adminData} 
+            onchildOpenLoading={handleLoading}
             onChildCloseModal={closeModal}/>:
           <AddAdmin 
               onChildCloseModal={closeModal} 
@@ -444,7 +445,7 @@ const AdminContent = ({userAdmin}) => {
                   <th>Picture</th>
                   <th>Nom</th>
                   <th>Adresse Mail</th>
-                  <th>Adresse de connexion</th>
+                  <th>Permissions</th>
                   <th>Activer / Desactiver</th>
                   <th>Affecter un droit</th>
                   <th>Chat</th>
@@ -464,7 +465,16 @@ const AdminContent = ({userAdmin}) => {
                           /></td>
                     <td>{post.firstName}</td>
                     <td>{post.email}      {post.emailConfirmed?<span>&#10003;</span>:""}</td>
-                    <td>{post.ipAddress}</td>
+                    <td>{post.permissions&&post.permissions.map((value,index)=>{
+                      return(
+                              <span>{value === '0'?"MANAGE_ADMIN":
+                                     value === '1'?"MANAGE_TUTOR":
+                                     value === '2'?"MANAGE_PARENT":
+                                     value === '3'?"MANAGE_ABONNEMENTS":
+                                     value === '4'?"MANAGE_PUB":
+                                     value === '5'?"LOGIN_IN_TUTOR_ACCOUNT":""},  </span>
+                        )
+                    })}</td>
                     <td><input 
                             style={{cursor:'pointer'}}
                             type='checkbox' 
@@ -473,8 +483,8 @@ const AdminContent = ({userAdmin}) => {
                             checked={post.status===1}
                             onChange={onChangeCheckbox}
                           /></td>
-                    <td onClick={()=>{openModal('adress',post.firstName)}}><img style={{cursor:'pointer'}} src={affect} width='15%'/></td>  
-                    <td onClick={()=>{openModal('chat',post.firstName)}}><img style={{cursor:'pointer'}} src={chat} width='60%'/></td>
+                    <td onClick={()=>{openModal('adress',post)}}><img style={{cursor:'pointer'}} src={affect} width='15%'/></td>  
+                    <td onClick={()=>{console.log("chat")}}><img style={{cursor:'pointer'}} src={chat} width='60%'/></td>
                   </tr>
                   )
               })}

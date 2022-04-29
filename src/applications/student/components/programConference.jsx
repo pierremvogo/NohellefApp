@@ -144,6 +144,7 @@ const ProgramConference = ({
             handleLoading(true);
             meetingService.createWebConference(ProgrammPayload)
                 .then((response)=>{
+                    console.log("web-conf response")
                     console.log(response.data)
                     dispatch(authSetRegisterForm(null));
                     dispatch(authRegisterFailed(null));
@@ -169,6 +170,7 @@ const ProgramConference = ({
                 	setSubmited(true);
                  meetingService.createWebConference(ProgrammPayload)
                 .then((response)=>{
+                    console.log("web-conf response")
                     console.log(response.data)
                     dispatch(authSetRegisterForm(null));
                     dispatch(authRegisterFailed(null));
@@ -344,7 +346,7 @@ const ProgramConference = ({
 
                                                                             tutorData.horaires.map((value,index)=>{
                                                                                 let day;
-                                                                                        if(value.day === "0"){
+                                                                                    if(value.day === "0"){
                                                                                             day = "Lundi";
                                                                                         }else if(value.day === "1"){
                                                                                             day = "Mardi";

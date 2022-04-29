@@ -2,6 +2,7 @@ import react from 'react';
 import GridItem from "../../../app/components/Grid/GridItem.js";
 import GridContainer from "../../../app/components/Grid/GridContainer.js";
 import Card from "../../../app/components/Card/Card.js";
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import {connect, useSelector, useDispatch} from 'react-redux';
 import CardHeader from "../../../app/components/Card/CardHeader.js";
 import CardBody from "../../../app/components/Card/CardBody.js";
@@ -20,6 +21,7 @@ import Avatar   from 'react-avatar';
 import Pagination from './pagination.jsx';
 import Switch from "react-switch";
 import edit from '../../../assets/images/dashboard/edit.png';
+import login from '../../../assets/images/dashboard/login.png';
 import affect from '../../../assets/images/dashboard/affect.png';
 import ip from '../../../assets/images/dashboard/ip.png';
 import im5 from '../../../assets/images/im5.png';
@@ -69,7 +71,7 @@ const TuteurContent = ({userTutor}) => {
     const [displayLoading, setDisplayLoading] = useState("flex");
     const [showModalLockUnLock, setShowModalLockUnLock] = useState(false);
     const dispatch = useDispatch();
-
+    const history = useHistory();
 
 	useEffect(()=>{
     getTutors();
@@ -99,9 +101,38 @@ const TuteurContent = ({userTutor}) => {
 	const handleChange = (checked) => {
 		setChecked(checked)
 	}
+
+const handleLoginIntoTutorAccount = (id) => {
+        handleLoading(true);
+        adminService.loginInTutorAccount(id)
+        .then((response)=>{
+          handleLoading(false);
+          console.log("Connect successfull");
+          response.data.redirect = "/tutor/dashboard";
+                                 
+          localStorage.setItem('user', JSON.stringify(response.data));
+          history.push(response.data.redirect);
+          window.location.reload();
+        })
+        .catch((error)=>{
+          console.log("Error lock account");
+          handleLoading(false);
+          if(error.response === undefined){
+                    dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                    openModalLockUnlock();
+                }else{
+                    dispatch(authRegisterFailed(error.response));
+                    openModalLockUnlock();
+                    console.log(error.response);
+                
+                }
+          console.log(error);
+        })
+    }
+
   const handleLockAccount = (id) => {
         handleLoading(true);
-        authService.lockAccount(id)
+        adminService.lockAccount(id)
         .then((response)=>{
           handleLoading(false);
           console.log("Account Lock successfull");
@@ -128,7 +159,7 @@ const TuteurContent = ({userTutor}) => {
 
     const handleUnLockAccount = (id) => {
         handleLoading(true);
-        authService.unLockAccount(id)
+        adminService.unLockAccount(id)
         .then((response)=>{
           handleLoading(false);
           console.log("Account UnLock successfull");
@@ -472,7 +503,7 @@ const TuteurContent = ({userTutor}) => {
                   <th>Picture</th>
                   <th>Nom</th>
                   <th>Adresse Mail</th>
-                  <th>Number</th>
+                  <th>Login</th>
                   <th>Activer / Desactiver</th>
                   <th>Mode de connexion</th>
                   <th>Modifier Mode de connexion</th>
@@ -493,7 +524,7 @@ const TuteurContent = ({userTutor}) => {
                           /></td>
                     <td>{post.firstName}</td>
                     <td>{post.email}    {post.emailConfirmed?<span>&#10003;</span>:""}</td>
-                    <td>{post.phoneNumber}</td>
+                    <td onClick={()=>{handleLoginIntoTutorAccount(post.id)}}><img style={{cursor:'pointer'}} src={login} width='50%'/></td>  
                     <td><input 
                             style={{cursor:'pointer'}}
                             type='checkbox'

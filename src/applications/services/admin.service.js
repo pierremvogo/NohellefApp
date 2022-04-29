@@ -2,6 +2,13 @@ import http from '../../http-common';
 
 class AdminService {
 
+    lockAccount(id) {
+        return http.patch(`/admin/lock-account/${id}`);
+    }
+    unLockAccount(id) {
+        return http.patch(`/admin/unlock-account/${id}`);
+    }
+
     login(payload) {
         return http.post("/admin/users/admin-tutor-login", payload);
     }
@@ -20,9 +27,7 @@ class AdminService {
     createUser(payload) {
         return http.post("/admin/users/create-user",payload);
     }
-    initTutorSpecialities(payload) {
-        return http.get("/admin/init-tutor-specialities",payload);
-    }
+    
     addSpecialitiesToTutor(tutorId,payload) {
         return http.post(`/admin/tutor-specialities/${tutorId}`,payload);
     }

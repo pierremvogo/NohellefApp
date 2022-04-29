@@ -34,11 +34,14 @@ class CourseService {
     getCommentByCourseNote(courseNoteId) {
         return http.get(`/course-notes/comments/${courseNoteId}`);
     }
-    editNoteComment(NoteCommentId) {
-        return http.patch(`/course-notes/comments/${NoteCommentId}`);
+    editNoteComment(noteCommentId) {
+        return http.patch(`/course-notes/comments/${noteCommentId}`);
     }
     deleteNoteComment(id) {
         return http.delete(`/course-notes/comments/${id}`);
+    }
+     filterCourseNoteComment(studentId,payload) {
+        return http.post(`/course-notes/${studentId}/comments/filter-comment`, payload);
     }
 
     //for course Exercices
@@ -62,6 +65,31 @@ class CourseService {
     deleteComment(id) {
         return http.delete(`/course-comments/${id}`);
     }
+
+
+    //for main Courses
+    createNewMainCourse(payload) {
+        return http.post(`/main-courses`, payload);
+    }
+    deleteMainCourse(mainCourseId) {
+        return http.delete(`/main-courses/${mainCourseId}`);
+    }
+    getMainCourseById(mainCourseId) {
+        return http.get(`/main-courses/${mainCourseId}`);
+    }
+    createNewChapter(payload) {
+        return http.post(`/main-courses/chapters`, payload);
+    }
+    deleteChapter(mainCourseChapterId) {
+        return http.delete(`/main-courses/chapters/${mainCourseChapterId}`);
+    }
+    filterChapter() {
+        return http.post(`/main-courses/chapters/filter`);
+    }
+    getChapterById(chapterId) {
+        return http.get(`/main-courses/chapters/${chapterId}`);
+    }
+
 
 
 
