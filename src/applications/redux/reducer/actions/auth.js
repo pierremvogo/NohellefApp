@@ -183,4 +183,9 @@ export const shareMeetTutor = (payload) => ({
     payload,
 })
 
+export const shareChapters = (payload) => ({
+    type: types.SHARE_CHAPTER,
+    payload,
+})
+
 

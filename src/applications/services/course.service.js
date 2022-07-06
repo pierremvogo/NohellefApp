@@ -77,6 +77,10 @@ class CourseService {
     getMainCourseById(mainCourseId) {
         return http.get(`/main-courses/${mainCourseId}`);
     }
+    filterMainCourse(payload) {
+        return http.post(`/main-courses/filter`, payload);
+    }
+
     createNewChapter(payload) {
         return http.post(`/main-courses/chapters`, payload);
     }

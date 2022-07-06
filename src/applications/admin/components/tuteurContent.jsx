@@ -20,6 +20,7 @@ import Avatar   from 'react-avatar';
 import Pagination from './pagination.jsx';
 import Switch from "react-switch";
 import add from '../../../assets/images/dashboard/add.png';
+import more from '../../../assets/images/dashboard/more.png';
 import edit from '../../../assets/images/dashboard/edit.png';
 import videoIcon from '../../../assets/icons/videoIcon.png';
 import pdfIcon from '../../../assets/icons/pdfIcon.png';
@@ -29,9 +30,14 @@ import {Table} from 'react-bootstrap';
 import Loader from 'react-loader-spinner';
 import trash from '../../../assets/images/dashboard/trash.png';
 import DeleteCourse from './askForDelete.jsx';
+import ChooseQuiz from './chooseQuiz.jsx';
+
 import AddCourse from './addCourse.jsx';
 import AddLesson from './addLesson.jsx';
 import AddQuiz from './addQuiz.jsx';
+import AddQro from './qro.jsx';
+import AddQuizImage from './addQuizImage.jsx';
+
 import adminService from '../../services/admin.service';
 import authService from '../../services/auth.service';
 import courseService from '../../services/course.service';
@@ -40,9 +46,11 @@ import {    authRegisterSuccess,
             authShowMessage, 
             authSetRegisterForm,
             authCreateSuccess,
-            shareCourses } from '../../redux/reducer/actions/auth';
+            shareCourses,
+            shareChapters } from '../../redux/reducer/actions/auth';
 
-const TuteurContent = ({courses}) => {
+const TuteurContent = ({
+                        courses,}) => {
 	const [posts, setPosts] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
   const [display, setDisplay] = useState("flex");
@@ -56,11 +64,20 @@ const TuteurContent = ({courses}) => {
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
 
-  const [showModalAddLesson, setShowModalAddLesson] = useState(false);
   const [showModalAddQuiz, setShowModalAddQuiz] = useState(false);
+  const [showModalAddQro, setShowModalAddQro] = useState(false);
+  const [showModalAddQuizImage, setShowModalAddQuizImage] = useState(false);
+
+  const [showModalAddLesson, setShowModalAddLesson] = useState(false);
+
+  const [showModalChooseQuiz, setShowModalChooseQuiz] = useState(false);
+  
+
+  
 
 	useEffect(()=>{
     getCourses();
+    getAllChapter();
 	},[])
 
 	const handleChange = (checked) => {
@@ -104,7 +121,49 @@ const TuteurContent = ({courses}) => {
     )
   };
 
-   const ModalAddQuiz  = () => {
+  const ModalChooseQuiz  = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            
+            display: display,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            //overflowY: "scroll",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+        
+          <ChooseQuiz
+                    onChildCloseModal={closeModal} 
+                    onChildOpenQuiz={openThis}
+                    courseData={courseData}
+          /> 
+              
+      
+      </div>
+    )
+  };
+
+  const openThis = (type) => {
+    if(type === "qcm"){
+      openModalQuiz();
+    }else if(type === "qro"){
+      openModalQro();
+    }else if(type === "qimage"){
+      openModalQuizImage();
+    }
+  }
+
+
+
+  const ModalAddQuiz  = () => {
     return(
       <div className="modal-content" id='cont'
         style={{
@@ -126,13 +185,91 @@ const TuteurContent = ({courses}) => {
           <AddQuiz
                       onChildCloseModal={closeModal} 
                       courseData={courseData}
-                      isAdd={isAdd}
                       onchildOpenLoading={handleLoading} /> 
               
       
       </div>
     )
   };
+
+  const ModalAddQro  = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            
+            display: display,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            //overflowY: "scroll",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+        
+          <AddQro
+                      onChildCloseModal={closeModal} 
+                      courseData={courseData}
+                      onchildOpenLoading={handleLoading} /> 
+              
+      
+      </div>
+    )
+  };
+
+  const ModalAddQuizImage  = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            
+            display: display,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            //overflowY: "scroll",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+        
+          <AddQuizImage
+                      onChildCloseModal={closeModal} 
+                      courseData={courseData}
+                      onchildOpenLoading={handleLoading} /> 
+              
+      
+      </div>
+    )
+  };
+  const openModalQuiz = () => {
+    setDisplay("flex",
+      setShowModalAddQuiz(true),
+      setShowModalAddQro(false),
+      setShowModalAddQuizImage(false),
+      setShowModalChooseQuiz(false));
+  }
+   const openModalQro = () => {
+    setDisplay("flex",
+      setShowModalAddQuiz(false),
+      setShowModalAddQro(true),
+      setShowModalAddQuizImage(false),
+      setShowModalChooseQuiz(false));
+  }
+   const openModalQuizImage = () => {
+    setDisplay("flex",
+      setShowModalAddQuiz(false),
+      setShowModalAddQro(false),
+      setShowModalAddQuizImage(true),
+      setShowModalChooseQuiz(false));
+  }
 
 
 	 const ModalContentEdit  = () => {
@@ -191,6 +328,7 @@ const TuteurContent = ({courses}) => {
     )
   };
 
+
   const openModalDelete = (id) => {
       setCourseId(id);
       setDisplay("flex",
@@ -198,12 +336,10 @@ const TuteurContent = ({courses}) => {
         setShowModalDelete(true));
     }
 
-  const handleAddQuiz = () => {
-    console.log("create quiz question");
-  }
+ 
 
-   const handleAddLesson = () => {
-     console.log("create Lesson for course");
+  const openModalDetails = () => {
+    console.log("details");
   }
 
 
@@ -228,14 +364,20 @@ const TuteurContent = ({courses}) => {
         setShowModalAddLesson(false),);
   }
 
-  const openModalQuiz = () => {
+  const openModalChooseQuiz = (post) => {
+    setCourseData(post);
     setDisplay("flex",
       setShowEditModal(false),
+      setShowModalChooseQuiz(true),
       setShowModalDelete(false),
-      setShowModalAddQuiz(true),
+      setShowModalAddQuiz(false),
+      setShowModalAddQro(false),
+      setShowModalAddQuizImage(false),
       setShowModalAddLesson(false),);
   }
-  const openModalLesson = () => {
+
+  const openModalLesson = (post) => {
+    setCourseData(post);
     setDisplay("flex",
       setShowEditModal(false),
       setShowModalDelete(false),
@@ -298,8 +440,24 @@ const TuteurContent = ({courses}) => {
     setShowModalLoading(isShow);
   }
 
+  const getAllChapter = () => {
+        courseService.filterChapter()
+        .then((response)=> {
+            console.log("Successfully get All chapter");
+            console.log(response.data);
+            dispatch(shareChapters(response.data.chapters));
+        })
+        .catch((error)=> {
+            console.log("Error for response all chapter");
+            console.log(error);
+            dispatch(shareChapters(null));
+        })
+    }
+
+
+
   const getCourses = () => {
-    const filterPayload = {
+           const filterPayload = {
                             specialitiesCode: [
                               "fr",
                               "eng",
@@ -322,20 +480,21 @@ const TuteurContent = ({courses}) => {
                               "1"
                             ]
                           }
-    courseService.filterCourses(filterPayload)
-        .then((response)=> {
-            console.log("Response for get Courses");
-            console.log(response.data.courses);
-            dispatch(shareCourses(response.data.courses));
-        })
-        .catch((error)=> {
-            console.log("Error Response for get Courses");
-            console.log(error);
-            dispatch(shareCourses(null));
-        })
+                courseService.filterCourses(filterPayload)
+                .then((response)=> {
+                    console.log("Response for get Courses");
+                    console.log(response.data);
+                    dispatch(shareCourses(response.data.courses));
+                })
+                .catch((error)=> {
+                    console.log("Error Response for get Courses");
+                    console.log(error);
+                    dispatch(shareCourses(null));
+                })  
 }
 
-const getCourseBySpecialities = (e) => {
+
+/*const getCourseByFilterForm = (f1,f2) => {
   console.log("My speciality code");
   console.log(e.target.value);
   const filterPayload = {
@@ -374,7 +533,10 @@ const getCourseBySpecialities = (e) => {
             console.log(error);
             dispatch(shareCourses(null));
         })
-}
+}*/
+
+
+
  const onChangeSearch = (record) => {
     let filter, table, tr, td, i,input, txtValue;
      filter = record.toUpperCase();
@@ -423,7 +585,10 @@ const getCourseBySpecialities = (e) => {
 			{showEditModal? <ModalContentEdit /> :'' } 
       {showModalDelete? <ModalDeleteCourse />: ''}
       {showModalAddQuiz? <ModalAddQuiz /> :'' } 
+      {showModalAddQro? <ModalAddQro /> :'' } 
+      {showModalAddQuizImage? <ModalAddQuizImage /> :'' }  
       {showModalAddLesson? <ModalAddLesson />: ''}
+      {showModalChooseQuiz? <ModalChooseQuiz />: ''}
 			 <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
 
                         <GridItem xs={12} sm={12} md={3}>
@@ -433,7 +598,7 @@ const getCourseBySpecialities = (e) => {
                             
                         </GridItem>
                         
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
+                        <GridItem xs={12} sm={12} md={6} style={{marginTop:'0%'}}>
                              <div style={{border:'2px solid #0069D9', width:'100%'}}>
                                  <ReactSearchBox
                                     placeholder="Search By Course Title"
@@ -443,7 +608,8 @@ const getCourseBySpecialities = (e) => {
                                   />
                             </div>
                         </GridItem>
-                        <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
+
+                       {/* <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
                             <div style={{width:'100%',fontSize:'1vw'}}>
                                <select 
                                   name="specialities" 
@@ -459,7 +625,9 @@ const getCourseBySpecialities = (e) => {
                                     <option value="6">Tle</option>
                                 </select>
                             </div>
-                        </GridItem>
+                        </GridItem> 
+
+
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'0%'}}>
                             <div style={{width:'100%',fontSize:'1vw'}}>
                                <select 
@@ -475,55 +643,9 @@ const getCourseBySpecialities = (e) => {
                                     <option value="ing">Science de l'ingénieur</option>
                                 </select>
                             </div>
-                        </GridItem>
+                        </GridItem>*/}
                     </GridContainer>
-                    <GridContainer>
-                                      <GridItem xs={12} sm={12} md={6}>
-                                          <div onClick={openModalLesson} style={{cursor:'pointer',
-                                          margin:'0% 0% 5% 0%',
-                                          textAlign:'center'}}>
-                                      <div style={{
-                                          backgroundColor: '#4b9960',
-                                          borderRadius: '15px',
-                                          borderBottom: '3px solid #002495',
-                                          borderRight:  '3px solid #002495',
-                                          borderTop: '1px solid #002495',
-                                          borderLeft:  '1px solid #002495',
-                                          height: '55px',
-                                          width: '100%',
-                                          cursor: 'pointer',
-                                          textAlign:'center',
-                                          paddingTop:'2%'
-                                        }}>
-                                
-                                        <span className="text" style={{fontSize:'100%',color:'white'}}>Add lesson</span>
-                                     </div>
-                                    </div>
-                                      </GridItem>
-
-                                       <GridItem xs={12} sm={12} md={6}>
-                                          <div onClick={openModalQuiz} style={{cursor:'pointer',
-                                          margin:'0% 0% 5% 0%',
-                                          textAlign:'center'}}>
-                                      <div style={{
-                                          backgroundColor: '#4b9960',
-                                          borderRadius: '15px',
-                                          borderBottom: '3px solid #002495',
-                                          borderRight:  '3px solid #002495',
-                                          borderTop: '1px solid #002495',
-                                          borderLeft:  '1px solid #002495',
-                                          height: '55px',
-                                          width: '100%',
-                                          cursor: 'pointer',
-                                          textAlign:'center',
-                                          paddingTop:'2%'
-                                        }}>
-                                
-                                        <span className="text" style={{fontSize:'100%',color:'white'}}>Add Quiz</span>
-                                     </div>
-                                    </div>
-                                      </GridItem>
-                                  </GridContainer>
+                   
 
                     <GridContainer>
                     	<GridItem xs={12} sm={12} md={12}>
@@ -559,12 +681,11 @@ const getCourseBySpecialities = (e) => {
                   <th>Titre</th>
                   <th>Spécialité</th>
                   <th>Niveau</th>
-                  <th>Nb.Leçon</th>
                   <th>Ajouter Leçon</th>
-                  <th>Type</th>
-                  {/*<th>Activé/Désactivé</th>*/}
+                  <th>Ajouter Quiz</th>
                   <th>Editer</th>
                   <th>Supprimer</th>
+                  <th>Détails</th>
                 </tr>
               </thead>
               <tbody>
@@ -573,17 +694,31 @@ const getCourseBySpecialities = (e) => {
                   <tr key={index}>
                     <td>{post.title}</td>
                     <td>{post.speciality.name}</td>
-                    <td>{post.levels.map((value,index) =>{return(<div key={index}>{value.level}</div>)})}</td>
-                     <td>{post.media?post.media.name.length <= 30? 
-                                post.media.name:post.media.name.substr(0,30)+"...":""}</td>
-                     <td>{post.levels.map((value,index) =>{return(<div key={index}>{value.level}</div>)})}</td>
-                    <td>{post.media&&post.media.extension==="pdf"?
-                        <img src={pdfIcon} width='45%'/>:
-                        post.media&&post.media.extension==="mp4"?
-                        <img src={videoIcon} width='45%'/>:""}
-                    </td>
+                    <td>{post.levels.map((value,index) =>{return(<span key={index}>{
+                      value.level === '0'? "6ième":
+                      value.level === '1'? "5ième":
+                      value.level === '2'? "4ième":
+                      value.level === '3'? "3ième":
+                      value.level === '4'? "2nde":
+                      value.level === '5'? "1ière":
+                      value.level === '6'? "Tle":""}, </span>)})}</td>
+                     {/*<td>{post.media?post.media.name.length <= 30? 
+                                post.media.name:post.media.name.substr(0,30)+"...":""}
+                      </td>*/}
+                      <td><img 
+                            onClick={openModalLesson}
+                            src={add} 
+                            width='25%' 
+                            style={{cursor:'pointer'}}
+                        /></td>
+                     
+                      <td><img 
+                            onClick={()=>openModalChooseQuiz(post)}
+                            src={add} 
+                            width='25%' 
+                            style={{cursor:'pointer'}}
+                        /></td>
 
-                    {/*<td><input type="checkbox" /></td>*/}
                     <td style={{cursor:'pointer'}} onClick={()=>openModal("yess",post)}><img src={edit} width='30%'/></td>
                     <td>
                         <img 
@@ -593,12 +728,20 @@ const getCourseBySpecialities = (e) => {
                             style={{cursor:'pointer'}}
                         />
                     </td>
+                    <td><img 
+                            onClick={()=>openModalDetails(post.id)}
+                            src={more} 
+                            width='50%' 
+                            style={{cursor:'pointer'}}
+                        /></td>
+
                   </tr>
                   )
               })}
               </tbody>
             </Table>
           </GridContainer>
+          
 
                     <GridContainer>
                     	<GridItem xs={12} sm={12} md={12}>
@@ -618,6 +761,7 @@ const mapStateToProps=(state)=>{
   return{
       error: state.authReducer.error,
       courses: state.authReducer.courses,   
+      chapters: state.authReducer.chapters
   };
 };
 export default connect(mapStateToProps)(TuteurContent);

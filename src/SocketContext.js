@@ -1,10 +1,10 @@
-import React, {useContext, createContext, useState, useRef, useEffect} from 'react';
-import io from 'socket.io-client';
+import React, {createContext, useState, useRef, useEffect} from 'react';
+import { io } from 'socket.io-client';
 import Peer from 'simple-peer';
 
 const SocketContext = createContext();
 
-const socket = io('http://localhost:3001');
+const socket = io('https://nohellefvideo.herokuapp.com/');
 
 const ContextProvider = ({ children }) => {
 
@@ -20,12 +20,13 @@ const ContextProvider = ({ children }) => {
   const connectionRef = useRef();
 
   useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+   /* navigator.mediaDevices.getUserMedia({ video: true, audio: true })
       .then((currentStream) => {
         setStream(currentStream);
-
-        myVideo.current.srcObject = currentStream;
-      });
+        if(myVideo&&myVideo.current){
+          myVideo.current.srcObject = currentStream;
+        }
+      });*/
 
     socket.on('me', (id) => setMe(id));
 
@@ -33,6 +34,16 @@ const ContextProvider = ({ children }) => {
       setCall({ isReceivingCall: true, from, name: callerName, signal });
     });
   }, []);
+
+  const  handleSetStream = () => {
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      .then((currentStream) => {
+        setStream(currentStream);
+        if(myVideo&&myVideo.current){
+          myVideo.current.srcObject = currentStream;
+        }
+      });
+  }
 
   const answerCall = () => {
     setCallAccepted(true);
@@ -77,7 +88,7 @@ const ContextProvider = ({ children }) => {
 
     connectionRef.current.destroy();
 
-    window.location.reload();
+   // window.location.reload();
   };
 
   return (
@@ -87,6 +98,7 @@ const ContextProvider = ({ children }) => {
       myVideo,
       userVideo,
       stream,
+      handleSetStream,
       name,
       setName,
       callEnded,

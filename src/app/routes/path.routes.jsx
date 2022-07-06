@@ -14,7 +14,7 @@ const ROUTES = {
     PARENT : "/parent/dashboard",
     ADMIN : "/admin/dashboard",
     SUP_ADMIN : "/admin/sup/dashboard",
-    VIDEO_CHAT: "/room/chat",
+    VIDEO_CHAT: "/live/video/rooms",
     CONTACT : "/contact",
     ABOUT : "/about",
     PAYMENT_PROCESS : "/process/payment",

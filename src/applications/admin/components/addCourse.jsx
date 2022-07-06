@@ -23,6 +23,7 @@ import Avatar   from 'react-avatar';
 import adminService from '../../services/admin.service';
 import authService from '../../services/auth.service';
 import mediaService from '../../services/media.service';
+import courseService from '../../services/course.service';
 
 import Loader from 'react-loader-spinner';
 import DatePicker from 'react-datepicker';
@@ -68,6 +69,7 @@ const AddCourse = ({error,
     const [phoneValue, setPhoneValue] = useState("");
     const [todoList,setTodoList] = useState({name: '', contentRaw: '', type: '', size: '' });
     const [fileDoc,setFileDoc] = useState(null); 
+    const [isFileError, setIsFileError] = useState(false);
     const history = useHistory()
     const dispatch= useDispatch()
 
@@ -349,11 +351,7 @@ const AddCourse = ({error,
         courseData.media = null;
         const reader = new FileReader();
         const file = e.target.files[0];
-        console.log("my file video");
-        console.log(file.name);
-        console.log(file.name.length);
         if(file && file.type === "video/mp4"){
-              console.log('myvideo file',file); 
               reader.readAsDataURL(file)
               reader.onloadend = () =>{
                 setTodoList({
@@ -363,11 +361,9 @@ const AddCourse = ({error,
                           size: file.size});
                 
               }
-              console.log("TODOLIST---",todoList)
 
 
         }else if(file &&  file.type === "application/pdf"){
-               console.log('mypdffile',file); 
                reader.readAsDataURL(file) 
                reader.onloadend = () =>{
                 setTodoList({
@@ -376,7 +372,6 @@ const AddCourse = ({error,
                             type: file.name.split('.').pop(),
                             size: file.size});
               }
-              console.log("TODOLIST---",todoList)
         }else{setFileDoc(null)}      
       }
 
@@ -425,94 +420,105 @@ const AddCourse = ({error,
           size: todoList.size,
           type: todoList.name.split('.').pop()==='pdf'?"0":"1"
         }
-
-        if(submited){
-            if(todoList.name != ""){
-                handleLoading(true);
-                console.log("form Course register");
-                console.log(registerCourseForm);
-                mediaService.createMedia(mediaData)
-                .then((response) => {
-                    console.log("Successful create Media");
-                   // dispatch(authMediaId(response.data.id))
-                    console.log(response.data);
-                    adminService.createCourse({
-                                          title: registerCourseForm.courseName,
-                                          description: registerCourseForm.courseDescription,
-                                          type: todoList.name.split('.').pop()==='pdf'?"0":"1",
-                                          specialityCode: registerCourseForm.courseSpeciality,
-                                          mediaId: response.data.id,
-                                          levels: registerCourseForm.courseLevel
-                                        })
-                .then((response) => {
-                        dispatch(authSetRegisterForm(null));
-                        dispatch(authRegisterFailed(null));
-                        dispatch(authCreateSuccess("Course Created Successfully"));
-                        console.log("Response register course success");
-                        console.log(response.data);
-                        handleLoading(false);
-                
-                })
-                .catch((error) => {
-                    handleLoading(false);
-                    console.log("Error  Register Course");
-                    if(error.response === undefined){
-                        dispatch(authRegisterFailed("Network Error, possible you are not connected"));
-                    }else{
-                        dispatch(authRegisterFailed(error.response));
-                        console.log(error.response);
-                    
-                    }
-                });
-                })
-                .catch((error) => {
-                   handleLoading(false);
-                        console.log("Error Register Media");
-                        if(error.response === undefined){
-                            dispatch(authRegisterFailed("Network Error, possible you are not connected"));
-                        }else{
-                            dispatch(authRegisterFailed(error.response));
-                            console.log(error.response);
-                        
-                        }
-                })
-
-                
-            }else{
-                dispatch(authRegisterFailed("You have to add lesson for this Course"));
-            }
+        console.log("My course register data---------------------");
+        console.log(registerCourseForm);
+        setFormErrors(validateForm(registerCourseForm));
+        if(Object.keys(formErrors).length != 0){
+            dispatch(authRegisterFailed("Veuillez remplir tous les champs"));
+        }else if(!submited){
+            dispatch(authRegisterFailed("Veuillez remplir tous les champs"));
         }else{
-            setFormErrors(validateForm(registerCourseForm));
-            if(Object.keys(formErrors).length === 0 && submited){
             if(todoList.name != ""){
                 handleLoading(true);
                 console.log("form Course register");
                 console.log(registerCourseForm);
+                setIsFileError(false);
 
-                mediaService.createMedia(mediaData)
-                .then((response) => {
-                    console.log("Successful create Media");
-                   // dispatch(authMediaId(response.data.id))
-                    console.log(response.data);
-                    adminService.createCourse({
+                    courseService.createNewMainCourse({
+                                                        title: registerCourseForm.courseName,
+                                                        levels: registerCourseForm.courseLevel
+                                                    })
+                    .then((response)=>{
+                         console.log("Successful create Main Course");
+                         console.log(response.data);
+
+                        courseService.createNewChapter({
+                                                      title: registerCourseForm.courseChapter,
+                                                      mainCourseId: response.data.id,
+                                                      levels: registerCourseForm.courseLevel
+
+                                                    })
+                        .then((responseChapter)=>{
+                            console.log("Successful create New Chapter");
+                            console.log(responseChapter.data);
+
+                            mediaService.createMedia(mediaData)
+                            .then((response)=>{
+                                console.log("Successful create Media");
+                                console.log(response.data);
+
+                                adminService.createCourse({
                                           title: registerCourseForm.courseName,
                                           description: registerCourseForm.courseDescription,
                                           type: todoList.name.split('.').pop()==='pdf'?"0":"1",
                                           specialityCode: registerCourseForm.courseSpeciality,
                                           mediaId: response.data.id,
+                                          chapterId: responseChapter.data.id,
                                           levels: registerCourseForm.courseLevel
                                         })
-                .then((response) => {
-                        dispatch(authSetRegisterForm(null));
-                        dispatch(authRegisterFailed(null));
-                        dispatch(authCreateSuccess("Course Created Successfully"));
-                        console.log("Response register course success");
-                        console.log(response.data);
+                                .then((response) =>{
+                                    dispatch(authSetRegisterForm(null));
+                                    dispatch(authRegisterFailed(null));
+                                    dispatch(authCreateSuccess("Course Created Successfully"));
+                                    console.log("Response register course success");
+                                    console.log(response.data);
+                                    handleLoading(false);
+
+                                })
+                                .catch((error)=>{
+                                    handleLoading(false);
+                                    console.log("Error  Create Course");
+                                    if(error.response === undefined){
+                                        dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                                    }else{
+                                        dispatch(authRegisterFailed(error.response));
+                                        console.log(error.response);
+                                    
+                                    }
+                                })
+
+
+                            })
+                            .catch((error)=>{
+                                handleLoading(false);
+                                console.log("Error Create Chapter Course");
+                                if(error.response === undefined){
+                                    dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                                }else{
+                                    dispatch(authRegisterFailed(error.response));
+                                    console.log(error.response);
+                                
+                                }
+                        
+                            })
+
+                                
+                                })
+                        .catch((error)=> {
+                            handleLoading(false);
+                            console.log("Error  Create Main Course");
+                            if(error.response === undefined){
+                                dispatch(authRegisterFailed("Network Error, possible you are not connected"));
+                            }else{
+                                dispatch(authRegisterFailed(error.response));
+                                console.log(error.response);
+                            
+                            }
+                        })
+
+                    })
+                    .catch((error)=>{
                         handleLoading(false);
-                
-                })
-                .catch((error) => {
-                    handleLoading(false);
                     console.log("Error  Register Course");
                     if(error.response === undefined){
                         dispatch(authRegisterFailed("Network Error, possible you are not connected"));
@@ -521,36 +527,18 @@ const AddCourse = ({error,
                         console.log(error.response);
                     
                     }
-                });
-                })
-                .catch((error) => {
-                   handleLoading(false);
-                        console.log("Error Register Media");
-                        if(error.response === undefined){
-                            dispatch(authRegisterFailed("Network Error, possible you are not connected"));
-                        }else{
-                            dispatch(authRegisterFailed(error.response));
-                            console.log(error.response);
-                        
-                        }
-                })
-
+                    })
+                
                 
             }else{
-                dispatch(authRegisterFailed("You have to add lesson for this Course"));
+                setIsFileError(true);
+                console.log("Error please choose file");
             }
-            }else{
-                setSubmited(false);
-                dispatch(authRegisterFailed(null));
-                handleLoading(false);
-                return;
-            }
-            
         }
-       
-       
-        
-       
+
+
+
+      
     }
 
     return(
@@ -784,13 +772,13 @@ const AddCourse = ({error,
                                         }}>
                                       
                                     <div>
-                                            <div  style={{borderRadius:"5px 5px 5px 5px",cursor:'pointer'}}>
+                                            <div  style={{borderRadius:"5px 5px 5px 5px"}}>
                                                 <div class="card-body">
-                                                    <div class="row no-gutters align-items-center">
+                                                    <div class="row no-gutters align-items-center" >
                                                        
                                                         <div>
-                                                                <div onClick={handleClickFileInput} class="text-xs font-weight-bold text-center" style={{fontSize:'100%',color:"blue"}}>
-                                                                 {isAdd? <u>Choisir un fichier</u>:<u>Modifier la Leçon</u>}
+                                                                <div onClick={handleClickFileInput}  class="text-xs font-weight-bold text-center" style={{fontSize:'100%',color:"blue"}}>
+                                                                 <span style={{cursor:'pointer'}}>{isAdd? <u>Choisir un fichier</u>:<u>Modifier la Leçon</u>}</span>
                                                                 <input 
                                                                   type="file" 
                                                                   accept="application/pdf, video/*"
@@ -822,16 +810,11 @@ const AddCourse = ({error,
                                             type="text";
                                             name="courseChapter";
                                             label="Titre du Chapitre"
-                                        }else if(input==="courseUnderChapter"){
-                                            id="courseUnderChapter";
-                                            type="text";
-                                            name="courseUnderChapter";
-                                            label="Titre du Sous Chapitre(Optionnel)";
                                         }else{return;}
                                     return(
                                             <>
-                                            {input==="courseChapter" || input==="courseUnderChapter"?
-                                            <GridItem xs={12} sm={6} md={6} key={index}>
+                                            {input==="courseChapter"?
+                                            <GridItem xs={12} sm={12} md={12} key={index}>
                                             <div>
                                                 {label}
                                                 <input 
@@ -844,7 +827,7 @@ const AddCourse = ({error,
                                                     style={{
                                                         border:`${
                                                             input==="courseChapter"&&formErrors.courseChapter?'2px solid #C84941':
-                                                            input==="courseUnderChapter"&&formErrors.courseUnderChapter?'2px solid #C84941':
+                                                           
                                                             '2px solid #002495'}`,
                                                         width:'100%',
                                                         height:'40px'}}/>
@@ -956,6 +939,10 @@ const AddCourse = ({error,
                                                 </div>)}
                                             </div>
                                         )}
+                                      {isFileError? <div className="alert alert-danger" style={{width:"50%",fontSize:'0.7em',margin:'0% 25% 0% 25%'}} role="alert">
+                                                        Veuillez Selectionner un fichier
+                                                    </div>: 
+                                        ""}
                                     </GridItem>
                                   </GridContainer>
                                   </form>

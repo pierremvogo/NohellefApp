@@ -34,7 +34,8 @@ const INITIAL_STATE = user ?
                                 isRegister: false,
                                 loginsForm: null,
                                 registersForm: null,
-                                user:user
+                                user:user,
+                                chapters: null,
                             }:
                             {
                                 isLoggedIn: false,
@@ -46,6 +47,7 @@ const INITIAL_STATE = user ?
                                 tutorForStudent: [null],
                                 meetTutor: null,
                                 meetingProgramm: null,
+                                chapters: null,
                                 error: null,
                                 courses: null,
                                 horaireUser: null,
@@ -321,6 +323,12 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 meetTutor: action.payload,
+                error: null,
+            };
+        case types.SHARE_CHAPTER:
+            return {
+                ...state,
+                chapters: action.payload,
                 error: null,
             };
         default:

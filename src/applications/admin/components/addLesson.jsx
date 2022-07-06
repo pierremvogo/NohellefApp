@@ -23,6 +23,7 @@ import Avatar   from 'react-avatar';
 import adminService from '../../services/admin.service';
 import authService from '../../services/auth.service';
 import mediaService from '../../services/media.service';
+import courseService from '../../services/course.service';
 
 import Loader from 'react-loader-spinner';
 import DatePicker from 'react-datepicker';
@@ -32,7 +33,8 @@ import {    authRegisterSuccess,
             authShowMessage, 
             authSetRegisterForm,
             authCreateSuccess,
-            authMediaId } from '../../redux/reducer/actions/auth';
+            authMediaId,
+            } from '../../redux/reducer/actions/auth';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 
@@ -42,6 +44,7 @@ const AddLesson = ({error,
                     registersForm,
                     media_Id,
                     courseData,
+                    chapters,
                     onChildCloseModal,
                     onchildOpenLoading,
                     createSuccessMessage}) => {
@@ -53,6 +56,7 @@ const AddLesson = ({error,
                             courseUnderChapter:courseData?courseData.underChapters:""
                          });
     const [errorMessage, setErrorMessage] = useState(false);
+    const [subChapter, setSubChapter] = useState([]);
     const [isLoginForm, setIsLoginForm] = useState(true);
     const [formErrors, setFormErrors] = useState({});
     const [isForgotPassword, setIsForgotPassword] = useState(false);
@@ -83,8 +87,6 @@ const AddLesson = ({error,
                         setSubmited(true);     
                    }
                 break;
-                default:
-                    break;
     }
     
     });
@@ -181,20 +183,20 @@ const AddLesson = ({error,
           size: todoList.size,
           type: todoList.name.split('.').pop()==='pdf'?"0":"1"
         }
-
-        if(submited){
             if(todoList.name != ""){
                 handleLoading(true);
-                console.log("form Course register");
+                console.log("form Lesson register");
                 console.log(registerLessonForm);
                 mediaService.createMedia(mediaData)
                 .then((response) => {
                     console.log("Successful create Media");
                     console.log(response.data);
-                   
+                    dispatch(authCreateSuccess("Lesson added Successfully"));
+                    handleLoading(false);
+
                 })
                 .catch((error) => {
-                   handleLoading(false);
+                        handleLoading(false);
                         console.log("Error Register Media");
                         if(error.response === undefined){
                             dispatch(authRegisterFailed("Network Error, possible you are not connected"));
@@ -209,42 +211,8 @@ const AddLesson = ({error,
             }else{
                 dispatch(authRegisterFailed("Please Choose file lesson"));
             }
-        }else{
-            setFormErrors(validateForm(registerLessonForm));
-            if(Object.keys(formErrors).length === 0 && submited){
-            if(todoList.name != ""){
-                handleLoading(true);
-                console.log("form Course register");
-                console.log(registerLessonForm);
-
-                mediaService.createMedia(mediaData)
-                .then((response) => {
-                    console.log("Successful create Media");
-                   // dispatch(authMediaId(response.data.id))
-                    console.log(response.data);
-                })
-                .catch((error) => {
-                   handleLoading(false);
-                        console.log("Error Register Media");
-                        if(error.response === undefined){
-                            dispatch(authRegisterFailed("Network Error, possible you are not connected"));
-                        }else{
-                            dispatch(authRegisterFailed(error.response));
-                            console.log(error.response);
-                        
-                        }
-                })
-            }else{
-                dispatch(authRegisterFailed("Please Choose file lesson"));
-            }
-            }else{
-                setSubmited(false);
-                dispatch(authRegisterFailed(null));
-                handleLoading(false);
-                return;
-            }
-            
-        } 
+        
+      
     }
 
     return(
@@ -309,10 +277,6 @@ const AddLesson = ({error,
                                   
 
                                   <form onSubmit={onSubmit}>
-                                  
-
-                             
-
                                   <GridContainer>
                                   {Object.keys(registerLessonForm).map((input,index)=>{
                                     console.log("my add input");
@@ -322,7 +286,7 @@ const AddLesson = ({error,
                                             id="courseChapter";
                                             type="text";
                                             name="courseChapter";
-                                            label="Titre du Chapitre"
+                                            label="Choisir un Chapitre"
                                         }else if(input==="courseUnderChapter"){
                                             id="courseUnderChapter";
                                             type="text";
@@ -332,6 +296,41 @@ const AddLesson = ({error,
                                     return(
                                             <>
                                             {input==="courseChapter" || input==="courseUnderChapter"?
+                                            input ==="courseChapter"?
+                                                <GridItem xs={12} sm={6} md={6} key={index}>
+                                                <div> {label}
+                                                                  <select 
+                                                                     name={name}
+                                                                     onChange={onChangeRegisterLesson}
+                                                                     value={registerLessonForm[input]}
+                                                                     id={id}
+
+                                                                     style={{
+                                                                        width:'100%',
+                                                                        height:'41px',
+                                                                        border:`${
+                                                                        input==="courseChapter"&&formErrors.courseChapter?'2px solid #C84941':
+                                                                        '2px solid #002495'}`
+                                                                        }}
+                                                                        >
+                                                                           {chapters&&chapters.map((value,index)=>{
+                                                                            return (
+                                                                                    <option key={index} value={value.title}>{value.title}</option>
+                                                                                )
+                                                                           })} 
+                                                                    </select>
+                                                                  {formErrors && (
+                                                                                <div>
+                                                                                    <div style={{color:"red",fontSize:"12px"}}>
+                                                                                     {
+                                                                                     input==="courseChapter"?formErrors.courseChapter:
+                                                                                     ""}
+                                                                                    </div>
+                                                                                </div>
+                                                                            )}
+                                                                </div>
+                                                                </GridItem>
+                                            : 
                                             <GridItem xs={12} sm={6} md={6} key={index}>
                                             <div>
                                                 {label}
@@ -344,7 +343,7 @@ const AddLesson = ({error,
 
                                                     style={{
                                                         border:`${
-                                                            input==="courseChapter"&&formErrors.courseChapter?'2px solid #C84941':
+                            
                                                             input==="courseUnderChapter"&&formErrors.courseUnderChapter?'2px solid #C84941':
                                                             '2px solid #002495'}`,
                                                         width:'100%',
@@ -353,7 +352,7 @@ const AddLesson = ({error,
                                                                     <div>
                                                                         <div style={{color:"red",fontSize:"12px"}}>
                                                                          {
-                                                                         input==="courseChapter"?formErrors.courseChapter:
+                                                                       
                                                                          input==="courseUnderChapter"?formErrors.courseUnderChapter:
                                                                          ""}
                                                                         </div>
@@ -503,7 +502,8 @@ const mapStateToProps=(state)=>{
       isShowMessage: state.authReducer.isShowMessage,
       registersForm: state.authReducer.registersForm,
       media_Id: state.authReducer.media_Id,
-      user: state.authReducer.user
+      user: state.authReducer.user,
+      chapters: state.authReducer.chapters
   };
 };
 export default connect(mapStateToProps)(AddLesson);

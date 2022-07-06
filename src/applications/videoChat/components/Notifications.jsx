@@ -9,11 +9,28 @@ const Notifications = () => {
   return (
     <>
       {call.isReceivingCall && !callAccepted && (
-        <div style={{ display: 'flex',position:"absolute",top:'0',left:'0', justifyContent: 'space-around' }}>
-          <h1>{call.name} is calling:</h1>
-          <Button variant="contained" color="primary" onClick={answerCall}>
-            Answer
-          </Button>
+        <div style={{ 
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                zIndex: "900000",
+                position: "absolute",
+                overflow: "hidden",
+                backgroundColor: "rgb(0, 0, 0)",
+                backgroundColor: "rgba(0, 0, 0, 0.6)",
+                top:"0px",
+                left:"0px",}}>
+                    <div className="container">
+                      <div className="row" style={{margin: "150px auto", width:"50%"}}>
+                        <div className="col-12">
+                          <span style={{color:"white"}}>{call.name} Demande d'invitation en cours  </span>
+                          <Button variant="contained" color="primary" onClick={answerCall}>
+                              Accepter
+                          </Button>
+                        </div>
+                      </div>
+                      
+                    </div>     
         </div>
       )}
     </>

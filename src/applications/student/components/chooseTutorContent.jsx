@@ -132,7 +132,7 @@ const ChooseTutorContent = ({user, userTutor,tutorForStudent, onChildOpenModal})
 
   
 
-   const getTutorByFilter = (f1,f2,f3) => {
+  const getTutorByFilter = (f1,f2,f3) => {
   const filterPayload = {
                              specialities: [f1],
                              periodes: [f2],

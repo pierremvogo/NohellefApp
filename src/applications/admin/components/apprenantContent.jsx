@@ -33,11 +33,14 @@ import add from '../../../assets/images/dashboard/add.png';
 import Chat from "../../../app/components/chat/chat.jsx"
 import LockUnlockAccount from "../../../app/components/lockUnlock/lockUnlockAccount.jsx"
 import Adress from './adress.jsx';
+import AddSpecilatie from './addSpecialitie.jsx';
+import DeleteSpecialitie from './askDeleteSpecialities.jsx';
 import Loader from 'react-loader-spinner';
 import adminService from '../../services/admin.service';
 import authService from '../../services/auth.service';
 import userService from '../../services/user.service';
 import PartialLogin from './partialLogin.jsx';
+import trash from '../../../assets/images/dashboard/trash.png';
 import {    authRegisterSuccess, 
             authRegisterFailed, 
             authShowMessage, 
@@ -73,8 +76,12 @@ const TuteurContent = ({userTutor,userSpecialities}) => {
     const [showModalLoading, setShowModalLoading] = useState(false);
     const [displayLoading, setDisplayLoading] = useState("flex");
     const [showModalLockUnLock, setShowModalLockUnLock] = useState(false);
+    const [showModalAddSpecialitie, setShowModalAddSpecialitie] = useState(false);
     const [tutorId, setTutorId] = useState("");
-    const dispatch = useDispatch();
+    const [showModalDelete, setShowModalDelete] = useState(false);
+    const [specialitieData, setSpecialitieData] = useState("");
+
+    const dispatch = useDispatch(); 
 
 
   useEffect(()=>{
@@ -144,6 +151,44 @@ const TuteurContent = ({userTutor,userSpecialities}) => {
       </div>
     )
   };
+
+
+  const ModalAddSpecialitie = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            display: displayAsk,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            bottom:'0px',
+            right:'0'
+            }}
+      >
+                    < AddSpecilatie 
+                            tutorId={tutorId}
+                            onChildCloseModal={closeModal}
+                            onChildOpenLoading={handleLoading}/>
+      </div>
+    )
+  };
+
+  const openModalSpecialitie = (id) => {
+    setTutorId(id);
+      setDisplayAsk("flex",
+          setShowEditModal(false),
+          setShowModalPartial(false),
+          setShowModalAddSpecialitie(true));
+  }
+
   const handleLockAccount = (id) => {
         handleLoading(true);
         authService.lockAccount(id)
@@ -197,7 +242,11 @@ const TuteurContent = ({userTutor,userSpecialities}) => {
 
     function closeModal(){
         getTutors();
-        setDisplay("none",setShowEditModal(false),setShowModalPartial(false));
+        setDisplay("none",
+          setShowEditModal(false),
+          setShowModalPartial(false),
+          setShowModalAddSpecialitie(false),
+          setShowModalDelete(false));
     }
 
 
@@ -207,7 +256,10 @@ const TuteurContent = ({userTutor,userSpecialities}) => {
     }else{
       setIsAdd(false,setTutorNamed(nameTutor),setTutorIds(idTutor));
     }
-      setShowEditModal(true,setDisplayAsk("flex"));
+      setShowEditModal(true,
+        setDisplayAsk("flex"),
+        setShowModalAddSpecialitie(false),
+        setShowModalPartial(false));
     }
 
     const ModalLoading = () => {
@@ -245,6 +297,42 @@ const TuteurContent = ({userTutor,userSpecialities}) => {
   };
   const handleLoading = (isShow) => {
     setShowModalLoading(isShow);
+  }
+
+
+
+   const ModalDeleteSpecialities  = () => {
+    return(
+      <div className="" id='cont'
+        style={{
+            width: "100%",
+            height:"100%",
+            justifyContent: "center",
+            display: display,
+            alignItems: "center",
+            zIndex: "300000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            top:"0px",
+            left:"0px",
+            }}
+      >
+                    
+        <DeleteSpecialitie onChildCloseModal={closeModal} 
+                           onChildOpenLoading={handleLoading}
+                           tutorData={specialitieData} /> 
+            
+      </div>
+    )
+  };
+   const openModalDelete = (data) => {
+    setSpecialitieData(data);
+      setDisplay("flex",
+        setShowEditModal(false),
+        setShowModalDelete(false),
+        setShowModalDelete(true),);
   }
 
   const ModalLockUnlock  = () => {
@@ -286,7 +374,9 @@ const TuteurContent = ({userTutor,userSpecialities}) => {
   }
 
   const openModalLockUnlock = () => {
-    setDisplayAsk("flex", setShowModalLockUnLock(true));
+    setDisplayAsk("flex", 
+      setShowModalLockUnLock(true), 
+      setShowModalAddSpecialitie(false));
   }
   const onChangeSearch = (record) => {
     let filter, table, tr, td, i,input, txtValue;
@@ -439,6 +529,8 @@ const TuteurContent = ({userTutor,userSpecialities}) => {
        {showEditModal? <ModalContentEdit /> :'' } 
        {showModalPartial? <ModalPartialLogin />: ''}
        {showChatModal? <ModalChat  />  : ''}
+       {showModalAddSpecialitie? <ModalAddSpecialitie  />  : ''}
+       {showModalDelete? <ModalDeleteSpecialities   /> : ''}
        <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
 
                         <GridItem xs={12} sm={12} md={3}>
@@ -483,13 +575,14 @@ const TuteurContent = ({userTutor,userSpecialities}) => {
         <Table striped bordered hover variant="secondary" id="tutorTable">
               <thead>
                 <tr>
-                  <th>Picture</th>
+                  
                   <th>Nom</th>
                   <th>Adresse Mail</th>
-                  <th>Spécialités</th>
                   <th>Nb.Apprenants</th>
                   <th>Mode de connexion</th>
-                  <th>Modifier Mode de connexion</th>
+                  <th>Spécialités</th>
+                  <th>Ajouter une Spécialité</th>
+                  <th>Supprimer une specialité</th>
                   <th>Chat</th>
                 </tr>
               </thead>
@@ -499,18 +592,14 @@ const TuteurContent = ({userTutor,userSpecialities}) => {
                 return(
                   <tr key={index}>
                     
-                    <td><Avatar 
-                            size="45"
-                            round={true}
-                            src={im5}
-                            name='logo'
-                          /></td>
+                    
                     <td>{post.firstName}</td>
                     <td>{post.email}    {post.emailConfirmed?<span>&#10003;</span>:""}</td>
-                    <td>{post.specialities.map((value,index) =>{return(<div key={index}>{value.name.toLowerCase()}</div>)})}</td>
-                    <td>{post.students.length != 0?post.students.length:<img onClick={()=>openModalPartial(post.id)} style={{cursor:'pointer'}} src={add} width='25px' />}</td> 
+                    <td>{post.students.length != 0?post.students.length:"0"}</td> 
                     <td>{post.connectionMode}</td>
-                    <td onClick={()=>{openModal('affect',post.firstName,post.id)}}><img style={{cursor:'pointer'}} src={ip} width='20%'/></td>  
+                    <td>{post.specialities.map((value,index) =>{return(<div key={index}>{value.name.toLowerCase()},  </div>)})}</td>
+                    <td><img onClick={()=>openModalSpecialitie(post.id)} style={{cursor:'pointer'}} src={add} width='25px' /></td> 
+                     <td><img onClick={()=>openModalDelete(post)} style={{cursor:'pointer'}} src={trash} width='15px' /></td>  
                     <td onClick={()=>console.log("tr")}><img style={{cursor:'pointer'}} src={chat} width='50%'/></td>
                   </tr>
                   )

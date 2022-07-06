@@ -6,7 +6,8 @@ import PublicRoute from './public.routes';
 import ProtectedRoute from './public.routes';
 import ROUTES from './path.routes';
 import LoadingApp from '../components/loadingApp/loading.jsx';
-//import { ContextProvider } from '../../SocketContext.js';
+import { ContextProvider } from '../../SocketContext';
+
 
 const Home = lazy(() => import('../../applications/home/pages/home.screen/home'));
 const StudentPage = lazy(() => import('../../applications/student/pages/dashboard.screen/dashboard.jsx'));
@@ -21,11 +22,11 @@ const ForgotPassword = lazy(() => import('../../applications/auth/pages/auth.scr
 const ResetPassword = lazy(() => import('../../applications/auth/pages/auth.screen/resetPassword.screen.jsx'));
 const ConfirmEmail = lazy(() => import('../../applications/auth/pages/auth.screen/confirmEmail.jsx'));
 const ConfirmChangeEmail = lazy(() => import('../../applications/auth/pages/auth.screen/confirmChangeEmail.jsx'));
-
+const VideoChat = lazy(() => import('../../applications/videoChat/pages/videoChat.screen/videoChat.screen.jsx'));
 const RegisterStudent = lazy(() => import('../../applications/auth/pages/auth.screen/registerStudent.jsx'));
 const RegisterParent = lazy(() => import('../../applications/auth/pages/auth.screen/registerParent.jsx'));
+//const VideoConf = lazy(() => import('../components/videoConference/app.jsx'));
 
-//import VideoChat from '../../applications/videoChat/pages/videoChat.screen/videoChat.screen.jsx';
 
 
 
@@ -40,9 +41,9 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
        
     useEffect(() => {
         if(user&&user.currentUser){
-            if(user.currentUser.type != 0 && urlpath===ROUTES.STUDENT){
+            {/*if(user.currentUser.type != 0 && urlpath===ROUTES.STUDENT){
                 history.push(ROUTES.HOME);
-            }else if(user.currentUser.type != 1 && urlpath===ROUTES.PARENT){
+            }else */}if(user.currentUser.type != 1 && urlpath===ROUTES.PARENT){
                 history.push(ROUTES.HOME);
             }else if(user.currentUser.type != 2 && urlpath===ROUTES.TUTOR){
                 history.push(ROUTES.HOME);
@@ -57,7 +58,7 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
             }
         }
         else{
-            if(urlpath===ROUTES.STUDENT||
+            if(
                 urlpath===ROUTES.PARENT||
                 urlpath===ROUTES.TUTOR||
                 urlpath===ROUTES.ADMIN||
@@ -74,13 +75,13 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
         <Suspense fallback={<LoadingApp isShow={'flex'} />}>
         <Switch>
          
-        {user&&user.accessToken&&user.currentUser.type==="0" &&(
+        {/*{user&&user.accessToken&&user.currentUser.type==="0" &&(*/}
             <Route 
                 exact
                 path={ROUTES.STUDENT}> 
                 <StudentPage />
             </Route>
-        )}
+        {/*)}*/}
 
         {user&&user.accessToken&&user.currentUser.type==="1" &&(
             <Route 
@@ -125,6 +126,7 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
                         component={LoginOthers}
                         path={ROUTES.LOGIN_OTHERS} 
                     />
+
 
                     <Route 
                         exact
@@ -173,13 +175,14 @@ const MainRoute = ({user,redirect,isRestricted = false}) =>{
                         component={ConfirmChangeEmail}
                         path={ROUTES.CONFIRM_CHANGE_EMAIL} 
                     />
-                    {/*<ContextProvider>
+                       <ContextProvider>
                         <Route 
                             exact
                             component={VideoChat}
                             path={ROUTES.VIDEO_CHAT} 
                         />
-                    </ContextProvider>*/}
+                        </ContextProvider>
+                    
           
         </Switch>
         </Suspense>

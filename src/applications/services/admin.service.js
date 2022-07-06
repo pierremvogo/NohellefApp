@@ -53,11 +53,11 @@ class AdminService {
     }
 
     createCourseExercice(payload) {
-        return http.post(`/admin/course-exercices`, payload);
+        return http.post(`/admin/course-exercises`, payload);
     }
 
     setCourseExercice(exerciseId,payload) {
-        return http.patch(`/admin/course-exercices/${exerciseId}`, payload);
+        return http.patch(`/admin/course-exercises/${exerciseId}`, payload);
     }
 
     addQuizQuestion(exerciseId,payload) {

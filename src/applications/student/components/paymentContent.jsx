@@ -17,7 +17,7 @@ import masterc from '../../../assets/images/dashboard/masterc.png';
 import checkok from '../../../assets/images/dashboard/checkok.png';
 import checknone from '../../../assets/images/dashboard/checknone.png';
 import visa from '../../../assets/images/dashboard/visa.png';
-
+import PaymentSystem from "./paymentSystem.jsx";
 import Pagination from './pagination.jsx';
 
 
@@ -26,13 +26,20 @@ const PaymentContent = ({onChildClickHandlerPay}) => {
 	const [loading, serLoading] = useState(false);
 	const [currentPage, setCurrentPage] = useState(2);
 	const [postPerPage, setPostPerPage] = useState(4);
+  const [displayPayment, setDisplayPayment] = useState("flex");
+  const [showModalPayment, setShowModalPayment] = useState(false);
+  const [formSystem, setFormSystem] = useState("");
+  const [mount, setMount] = useState(0);
+  const [mountBasic, setMountBasic] = useState(25.00);
+  const [mountChat, setMountChat] = useState(45.00);
+  const [mountConf, setMountConf] = useState(15.00);
 
  
 
-const [isBasic,setIsBasic] = useState(false);
-const [isChat,setIsChat] = useState(false);
-const [isWebConf,setIsWebConf] = useState(false);
-
+  const [isBasic,setIsBasic] = useState(false);
+  const [isChat,setIsChat] = useState(false);
+  const [isWebConf,setIsWebConf] = useState(false);
+  const [message, setMessage] = useState("");
 
 
 const clickHandlerPay = (e) => {
@@ -45,26 +52,94 @@ const clickHandlerPay = (e) => {
 function handleCheck(id){
   if(check1.checked){
     setIsBasic(true);
+    if(check2.checked&&check3.checked){
+      setMount(mountBasic+mountChat+mountConf);
+    }else if(check2.checked){
+      setMount(mountBasic+mountChat);
+    }else if(check3.checked){
+      setMount(mountBasic+mountConf);
+    }else{
+      setMount(mountBasic);
+    }
   }else{
-    setIsBasic(false)
+    setIsBasic(false);
+    
   }
   if(check2.checked){
     setIsChat(true);
+    if(check1.checked&&check3.checked){
+      setMount(mountChat+mountBasic+mountConf);
+    }else if(check1.checked){
+      setMount(mountChat+mountBasic);
+    }else if(check3.checked){
+      setMount(mountChat+mountConf);
+    }else{
+      setMount(mountChat);
+    }
   }else{
     setIsChat(false);
+    
   }
   if(check3.checked){
     setIsWebConf(true);
+     if(check1.checked&&check2.checked){
+      setMount(mountConf+mountChat+mountBasic);
+    }else if(check1.checked){
+      setMount(mountConf+mountBasic);
+    }else if(check2.checked){
+      setMount(mountConf+mountChat);
+    }else{
+      setMount(mountConf);
+    }
   }else{
     setIsWebConf(false);
+    
   }
 }
 
 
-
 	useEffect(()=>{
-		setPosts(data);
+    console.log(formSystem);
 	},[])
+
+  const handleForm = (value) => {
+    setFormSystem(value)
+    setMessage("");
+    console.log(value);
+  }
+
+
+  const ModalPayment = () => {
+    return(
+      <div className="modal-content" id='cont'
+        style={{
+            width: "100%",
+            height: "100%",
+            display: displayPayment,
+            zIndex: "900000",
+            position: "absolute",
+            overflow: "hidden",
+            backgroundColor: "rgb(0, 0, 0)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            top:"0px",
+            left:"0px",
+            right:"0px",
+            bottom:"0px",
+            }}
+      >
+            
+                <PaymentSystem systemChoose={formSystem} mount={mount} onChildCloseModal={handleOpenPayment} />
+
+          
+      </div>
+    )
+  };
+  const handleOpenPayment = (isShow) => {
+    if(formSystem===""){
+      setMessage("Veuillez choisir un mode de paiement");
+    }else{setShowModalPayment(isShow);}
+    
+  }
 
     let data = [
     {
@@ -102,6 +177,7 @@ function handleCheck(id){
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 	return(
 			<div className="container" style={{backgroundColor:'#eeeeee', paddingBottom:'5%'}}>
+      {showModalPayment? <ModalPayment />: ''}
 			              <GridContainer style={{textAlign:'left',fontSize:'100%'}}>
                         <GridItem xs={12} sm={12} md={3} style={{marginTop:'2%'}}>
                             <div style={{display:'inline-block',color:'#002495',margin:'2%'}}>
@@ -135,7 +211,7 @@ function handleCheck(id){
                           border:'1px solid #ffce52',
                           borderRadius:'25px 25px 25px 25px',
                           width:'70%',
-                          height:'350px',
+                          height:'370px',
                           backgroundColor:'#ffce52',
                           marginLeft:'15%'
                         }}>
@@ -192,7 +268,7 @@ function handleCheck(id){
 
                               <GridContainer>
                                 <GridItem xs={12} sm={12} md={12} >
-                                  <span style={{color:'#4d6bf4',margin:'0% 0% 2% 5%', }}><strong>Montant Total: 28$</strong></span>
+                                  <span style={{color:'#4d6bf4',margin:'0% 0% 2% 5%', }}><strong>Montant Total: {mount} EUR</strong></span>
                                 </GridItem>
                               </GridContainer>
 
@@ -208,14 +284,23 @@ function handleCheck(id){
                               <GridContainer>
                                 <GridItem xs={12} sm={12} md={12} >
                                 <div style={{margin:'0% 5% 2% 5%',fontSize:'100%'}}>
-                                  <select name="pets" id="pet-select">
-                                    <option value="">Moyen de paiement</option>
-                                    <option value="dog">VISA</option>
-                                    <option value="cat">MASTERCARD</option>
-                                    <option value="hamster">VISA</option>
-                                    <option value="parrot">MASTERCARD</option>
-                                    
-                                </select>
+                                
+                                    <select 
+                                            name="payment" 
+                                            id="payment"
+                                            value={formSystem}
+                                            onChange={(e)=>handleForm(e.target.value)}
+
+                                            style={{border:`${formSystem === ""?'2px solid #C84941':'2px solid #002495'}`}}>
+                                        <option value="">Moyen de paiement</option>
+                                        <option value=""></option>
+                                        <option value="paypal">PAYPAL</option>
+                                        <option value="visa_mastercard">VISA / MASTERCARD</option>
+                                    }
+                                    </select>
+                                        {message!=""?<span style={{color:"red"}}>{message}</span>:""}
+                               
+                                  
                                 </div>
                                   
                                 </GridItem>
@@ -223,7 +308,7 @@ function handleCheck(id){
 
                               <GridContainer>
                                 <GridItem xs={12} sm={12} md={12} >
-                                   <div style={{cursor:'pointer',
+                                   <div onClick={()=>handleOpenPayment(true)} style={{cursor:'pointer',
                                           margin:'2% 5% 5% 5%',
                                           textAlign:'center'}}>
                                       <div style={{

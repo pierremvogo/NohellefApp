@@ -39,7 +39,7 @@ import {    authRegisterSuccess,
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 
-const AddQuiz = ({error,
+const AddQuizImage = ({error,
                     onChildGetAdminUser,
                     isAdd,
                     registersForm,
@@ -53,9 +53,20 @@ const AddQuiz = ({error,
     const [isPreviewQuestion, setIsPreviewQuestion] = useState("");
     const [registerQuizForm, setRegisterQuizForm] = useState(registersForm?registersForm:[
                                             {
-                                                
-                                                questionText:"",
-                                                answers: [{answerText: "", correct: false}]
+                                                question:"",
+                                                reponses: [{reponse: "", isReponse: false}]
+                                            },
+                                            {
+                                                question:"",
+                                                reponses: [{reponse: "", isReponse: false}]
+                                            },
+                                            {
+                                                question:"",
+                                                reponses: [{reponse: "", isReponse: false}]
+                                            },
+                                            {
+                                                question:"",
+                                                reponses: [{reponse: "", isReponse: false}]
                                             },
                                             ]);
 
@@ -200,11 +211,11 @@ const AddQuiz = ({error,
     const onChangeRegisterQuiz = (e) => {
             for(var i=0; i<registerQuizForm.length; i++){
                  if(e.target.name===`question${e.target.id}`){
-                  registerQuizForm[e.target.id].questionText = e.target.value;
+                  registerQuizForm[e.target.id].question = e.target.value;
                  }else if(e.target.name === `reponse-${e.target.id.split("-")[0]}-${e.target.id.split("-")[1]}`){
-                        registerQuizForm[e.target.id.split("-")[0]].answers[e.target.id.split("-")[1]].answerText = e.target.value;
+                        registerQuizForm[e.target.id.split("-")[0]].reponses[e.target.id.split("-")[1]].reponse = e.target.value;
                     }else if(e.target.name === `check-${e.target.id.split("-")[0]}-${e.target.id.split("-")[1]}`){
-                        registerQuizForm[e.target.id.split("-")[0]].answers[e.target.id.split("-")[1]].correct = e.target.checked;
+                        registerQuizForm[e.target.id.split("-")[0]].reponses[e.target.id.split("-")[1]].isReponse = e.target.checked;
                     }
                 }
         setFormErrors(validateForm(registerQuizForm));
@@ -218,74 +229,82 @@ const AddQuiz = ({error,
         setFormErrors(null)
     }
 
-     const handleAddQuestion = (id) => {
-            setRegisterQuizForm(registerQuizForm.concat(
+     const handleAddQuestion = () => {
+
+             setRegisterQuizForm(registerQuizForm.concat(
             {
-            
-                questionText:"",
-                answers: [
-                          {
-                            answerText: "", correct: false
-                          }
-                         ]
+                question:"", 
+                reponses:
+                        [
+                            {
+                                reponse:"", isReponse: false
+                            }
+                        ]
             }
             ));
+         
+        console.log("My FINAL INPUT");
+        console.log(registerQuizForm);
     }
 
-    const handleAddResponse = (id,id1) => {
-        console.log(registerQuizForm[id].answers.length+1)
-        registerQuizForm[id].answers = registerQuizForm[id].answers.concat([
-                          {
-                            answerText: "", correct: false
-                          }
-                         ])
-        setRegisterQuizForm([...registerQuizForm])
+    const handleAddResponse = (id) => {
+        console.log("add Response TO >>>>>");
+        console.log(registerQuizForm[id].reponses);
+
+        registerQuizForm[id].reponses = registerQuizForm[id].reponses.concat([
+                            {
+                                reponse:"", isReponse: false
+                            }
+                        ])
+
+        handleAddQuestion();
     }
 
     const handleDeleteQuestion = (id) => {
+        console.log(id);
+        console.log(registerQuizForm);
         registerQuizForm.splice(id, 1)
-        setRegisterQuizForm([...registerQuizForm])
+        setRegisterQuizForm([...registerQuizForm]);
 
     }
-    const handleDeleteResponse = (id,id1) => {
-        registerQuizForm[id].answers.splice(id1, 1);
-        setRegisterQuizForm([...registerQuizForm])
+
+    const handleDeleteResponse = (id) => {
+        registerQuizForm[id].reponses.splice(id, 1);
+        setRegisterQuizForm(registerQuizForm);
     }
 
-   
-/*function removeDuplicateObjectFromArray(array, key) {
-  var check = new Set();
-  return array.filter(obj => !check.has(obj[key]) && check.add(obj[key]));
-}*/
+
+
     const onSubmit = (e) => {
        e.preventDefault();
-       let quizPayload =  {
-              title: "QuizQCM-"+courseData.title,
-              duration: 0,
-              levels: 
-                courseData.levels.map((value,index)=>{return(value.level)})
-              ,
-              coursesIds: [
-                courseData.id
-              ],
-              type: courseData.type,
-              questions: registerQuizForm
-
-        } 
-        console.log("My register Quiz form");
-        console.log(quizPayload); 
-        handleLoading(true);
-        adminService.createCourseExercice(quizPayload)
-        .then((response)=>{
-            console.log("Create Quiz QCM successfully")
-            console.log(response.data);
-            handleLoading(false);
-        })
-        .catch((error)=>{
-            console.log("Error create quiz QCM")
-            console.log(error)
-            handleLoading(false);
-        })
+   let quizPayload =  {
+          title: "",
+          duration: 0,
+          levels: [
+            null
+          ],
+          coursesIds: [
+            ""
+          ],
+          type: "0",
+          questions: [
+            {
+              id: "",
+              questionText: "",
+              answers: [
+                {
+                  id: "",
+                  answerText: "",
+                  correct: true
+        }
+      ]
+    }
+  ]
+}
+       console.log("Submit Quiz");
+       console.log(registerQuizForm);
+       
+   
 }
        
     return(
@@ -331,14 +350,14 @@ const AddQuiz = ({error,
                                   </GridItem>
                                 </GridContainer>
                                 <GridContainer>
-                                    <GridItem xs={8} sm={8} md={8}>
+                                    <GridItem xs={12} sm={12} md={12}>
                                       
                                      <div style={{margin:'2% 0% 1% 0%'}}>
                                          <div>
                                             <div style={{
                                                 margin:'2% 2% 0% 0%',
                                                 color:'black',
-                                                fontSize:'100%'}}><strong style={{marginRight:'2%'}}>Nouveau Quiz QCM</strong> 
+                                                fontSize:'100%'}}><strong style={{marginRight:'2%'}}>Nouveau Quiz IMAGE</strong> 
                                                 <img src={ins2} width='10%'/>
                                             </div>
                                         
@@ -346,10 +365,29 @@ const AddQuiz = ({error,
                                      </div>
                                     </GridItem>
 
-                                      <GridItem xs={4} sm={4} md={4}>
+                                    {/*  <GridItem xs={4} sm={4} md={4}>
                                       
-                                    
-                                     </GridItem>
+                                     <div onClick={()=>handleAddQuestion(false)} style={{cursor:'pointer',
+                                          margin:'0% 0% 5% 0%',
+                                          textAlign:'center'}}>
+                                      <div style={{
+                                          backgroundColor: '#4b9960',
+                                          borderRadius: '10px',
+                                          borderBottom: '1px solid #002495',
+                                          borderRight:  '1px solid #002495',
+                                          borderTop: '1px solid #002495',
+                                          borderLeft:  '1px solid #002495',
+                                          height: '45px',
+                                          width: '80%',
+                                          cursor: 'pointer',
+                                          textAlign:'center',
+                                          paddingTop:'5%'
+                                        }}>
+                                
+                                        <span className="text" style={{fontSize:'100%',color:'white'}}>Ajouter</span>
+                                     </div>
+                                    </div>
+                                    </GridItem>*/}
 
                                   </GridContainer>
 
@@ -366,20 +404,20 @@ const AddQuiz = ({error,
                                               <GridContainer>
                                                   <GridItem xs={12} sm={12} md={12}>
                                                         {Object.keys(registerQuizForm).map((input,index)=>{
-                                                          
+                                                           
                                                             return(
-                                                            
+                                                                 
                                                                     <GridContainer key={index}>
                                                                         <GridItem xs={12} sm={12} md={12} style={{margin:'2%'}}>
                                                                             <GridContainer>
-                                                                                <GridItem xs={10} sm={10} md={10}>
+                                                                                <GridItem xs={11} sm={11} md={11}>
                                                                                     <textarea
                                                                                         type={"text"}
                                                                                         id={index}
                                                                                         name={`question${index}`}
                                                                                         placeholder="Question"
                                                                                         onChange={onChangeRegisterQuiz}
-                                                                                        value={registerQuizForm[input].questionText}   
+                                                                                        value={registerQuizForm[input].question}   
 
                                                                                         style={{
                                                                                             width:'100%',
@@ -387,16 +425,14 @@ const AddQuiz = ({error,
                                                                                                 
                                                                                     </textarea>
                                                                                 </GridItem>
-                                                                                <GridItem xs={1} sm={1} md={1} style={{marginTop:"2%"}} onClick={()=>handleAddQuestion(index)}>
-                                                                                         <img style={{cursor:'pointer'}} src={add} width="90%" />
-                                                                                </GridItem>
                                                                                 <GridItem xs={1} sm={1} md={1} style={{marginTop:"2%"}} onClick={()=>handleDeleteQuestion(index)}>
-                                                                                         {index != 0? <img style={{cursor:'pointer'}} src={trash} width="50%" /> : ""}
+                                                                                           {/* {index != 0 && index != 1 && index != 2 && index != 3? <img style={{cursor:'pointer'}} src={trash} width="50%" /> : ""} */}
                                                                                 </GridItem>
 
                                                                             </GridContainer>
-                                                                            {Object.keys(registerQuizForm[input].answers).map((input1,index1)=>{
-                                                                            return(
+                                                                            {Object.keys(registerQuizForm[input].reponses).map((input1,index1)=>{
+                                                                                console.log("////////*********  "+ JSON.stringify(registerQuizForm[input].reponses[input1]));
+                                                                                return(
                                                                                 <GridContainer>
                                                                                 <GridItem xs={12} sm={12} md={12}>
                                                                                     <GridContainer>
@@ -407,7 +443,7 @@ const AddQuiz = ({error,
                                                                                                 name={`reponse-${index}-${index1}`}
                                                                                                 placeholder="Réponse"
                                                                                                 onChange={onChangeRegisterQuiz}
-                                                                                                value={registerQuizForm[input].answers[input1].answerText}   
+                                                                                                value={registerQuizForm[input].reponses[input1].reponse}   
 
                                                                                                 style={{
                                                                                                 width:'90%',
@@ -424,12 +460,12 @@ const AddQuiz = ({error,
                                                                                                 
                                                                                               />
                                                                                         </GridItem>
-                                                                                            <GridItem xs={3} sm={3} md={3} style={{textAlign:"right", marginTop:"2%"}} onClick={()=>handleAddResponse(index,index1)}>
+                                                                                            <GridItem xs={3} sm={3} md={3} style={{textAlign:"right", marginTop:"2%"}} onClick={()=>handleAddResponse(index)}>
                                                                                                 <img style={{cursor:'pointer'}} src={add} width="18%" />
                                                                                             </GridItem>
 
-                                                                                            <GridItem xs={3} sm={3} md={3} style={{marginTop:"2%"}} onClick={()=>handleDeleteResponse(index,index1)}>
-                                                                                                {index1 != 0 ?<img style={{cursor:'pointer'}} src={trash} width="10%" />: ""}
+                                                                                            <GridItem xs={3} sm={3} md={3} style={{marginTop:"2%"}} onClick={()=>handleDeleteResponse(index)}>
+                                                                                                {/* {index1 != 0 ?<img style={{cursor:'pointer'}} src={trash} width="10%" />: ""} */}
                                                                                             </GridItem>
 
                                                                                     </GridContainer>
@@ -523,4 +559,4 @@ const mapStateToProps=(state)=>{
       user: state.authReducer.user
   };
 };
-export default connect(mapStateToProps)(AddQuiz);
+export default connect(mapStateToProps)(AddQuizImage);

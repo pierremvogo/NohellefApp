@@ -318,7 +318,7 @@ const ModalLoading = () => {
 
                     </GridContainer>
                     <div className="row" style={{marginTop:"120px"}}>
-                        <Footer />
+                        <Footer /> 
                     </div>
 			 </div>
 		)

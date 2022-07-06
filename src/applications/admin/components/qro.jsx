@@ -39,7 +39,7 @@ import {    authRegisterSuccess,
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 
-const AddQuiz = ({error,
+const AddQro = ({error,
                     onChildGetAdminUser,
                     isAdd,
                     registersForm,
@@ -53,9 +53,9 @@ const AddQuiz = ({error,
     const [isPreviewQuestion, setIsPreviewQuestion] = useState("");
     const [registerQuizForm, setRegisterQuizForm] = useState(registersForm?registersForm:[
                                             {
-                                                
+                                                id: "1",
                                                 questionText:"",
-                                                answers: [{answerText: "", correct: false}]
+                                                answers: [{id: "1",answerText: "", correct: false}]
                                             },
                                             ]);
 
@@ -221,11 +221,11 @@ const AddQuiz = ({error,
      const handleAddQuestion = (id) => {
             setRegisterQuizForm(registerQuizForm.concat(
             {
-            
+                id: (registerQuizForm.length+1).toString(),
                 questionText:"",
                 answers: [
                           {
-                            answerText: "", correct: false
+                            id: "1",answerText: "", correct: false
                           }
                          ]
             }
@@ -236,7 +236,7 @@ const AddQuiz = ({error,
         console.log(registerQuizForm[id].answers.length+1)
         registerQuizForm[id].answers = registerQuizForm[id].answers.concat([
                           {
-                            answerText: "", correct: false
+                            id: (registerQuizForm[id].answers.length+1).toString(),answerText: "", correct: false
                           }
                          ])
         setRegisterQuizForm([...registerQuizForm])
@@ -338,7 +338,7 @@ const AddQuiz = ({error,
                                             <div style={{
                                                 margin:'2% 2% 0% 0%',
                                                 color:'black',
-                                                fontSize:'100%'}}><strong style={{marginRight:'2%'}}>Nouveau Quiz QCM</strong> 
+                                                fontSize:'100%'}}><strong style={{marginRight:'2%'}}>Nouveau Quiz QRO</strong> 
                                                 <img src={ins2} width='10%'/>
                                             </div>
                                         
@@ -425,11 +425,11 @@ const AddQuiz = ({error,
                                                                                               />
                                                                                         </GridItem>
                                                                                             <GridItem xs={3} sm={3} md={3} style={{textAlign:"right", marginTop:"2%"}} onClick={()=>handleAddResponse(index,index1)}>
-                                                                                                <img style={{cursor:'pointer'}} src={add} width="18%" />
+                                                                                                
                                                                                             </GridItem>
 
                                                                                             <GridItem xs={3} sm={3} md={3} style={{marginTop:"2%"}} onClick={()=>handleDeleteResponse(index,index1)}>
-                                                                                                {index1 != 0 ?<img style={{cursor:'pointer'}} src={trash} width="10%" />: ""}
+                                                                                                
                                                                                             </GridItem>
 
                                                                                     </GridContainer>
@@ -523,4 +523,4 @@ const mapStateToProps=(state)=>{
       user: state.authReducer.user
   };
 };
-export default connect(mapStateToProps)(AddQuiz);
+export default connect(mapStateToProps)(AddQro);
