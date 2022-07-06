@@ -1,0 +1,58 @@
+.navbar{
+    z-index: 1000;
+    height: 50px;
+    width: 100%;
+    top: 0px;
+    margin-bottom: 20px;}
+    .active{
+        background-color: black;
+        color: black;
+    }
+    .navbar-nav{
+        color: #000;
+        align-items: flex-start;
+        font-family:"Grand Hotel", serif;
+        width: 100%;}
+
+        .dark-blue-text{
+            color: #0A38F5;
+        }
+        .nav-menu{
+            float: left;
+            margin: 3% 2% 2% 1%;
+            cursor: pointer;
+            font-size: 90%;
+            display: inline-block;}
+    
+
+            .nav-menu:last-child{
+             
+            }  
+            .active1{
+                color: blue;
+                margin: 50%;
+            }
+
+.dash-navitem:hover{
+    border-radius: 3px 3px 3px 3px;
+    border: 2px solid #DD1B16;
+    padding: '1px';
+}
+
+@media screen and (max-width: 739px) {
+    /* rules for small screens */
+    .displayNavItem{
+    display: "none";
+   }
+}
+@media screen and (min-width: 740px) {
+   .displayNavItem{
+    display: "flex";
+   }
+}
+    
+        
+    
+
+
+

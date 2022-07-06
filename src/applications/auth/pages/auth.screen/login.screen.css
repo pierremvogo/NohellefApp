@@ -1,0 +1,149 @@
+.auth-container {
+    height: 30%;
+    display: grid;
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    }
+
+    @media screen and (min-width: 500px) {
+            border: none;
+        }
+    .auth-container__card {
+        padding: 20px 25px;
+        border-radius: 20px;
+        text-align: center;
+        padding: 5px auto;
+        width: 10%;
+        margin-left: 10%;
+        justify-content: center;
+        font-size: 1.3vw;
+        margin-top: 35px;
+        }
+        .auth-text{
+            font-size: 1vw;
+        }
+        .auth-container__title {
+            color: $primary;
+            font-family: "Poppins Medium", sans-serif;
+            font-size: 1.2vw;
+            text-align: center;
+            padding: 10px 30px;
+            padding-top: 0;
+            font-weight: 500;
+        }
+        .auth-container__logo {
+            display: block;
+            margin: 0 auto;
+            width: 9rem;
+            height: 9rem;
+        }
+
+        select:focus, select:active {
+            box-shadow: none !important;
+            outline: none !important;
+            border-color: $grey-100 !important;
+        }
+        .label {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: $grey-400;
+            display: block;
+        }
+
+        .auth-container__input-container {
+            display:grid;
+            position: relative;
+            }
+            svg {
+                display: block;
+                margin: 26px 20px;
+                position: absolute;
+            }
+
+            .auth-container__input {
+                margin: 5px 0;
+                width: 100%;
+                height: 120%;
+                border-radius: 15px 15px 15px 15px;}
+
+                @media screen and (max-width: 400px) {
+                    width: 245px;
+                }
+            
+
+            svg {
+                cursor: pointer;
+                right: 0;
+            }
+        
+
+
+        .auth-container__line-element {
+            margin-top: 20px;
+            opacity: 0.8;}
+
+            .auth-container__line-text {
+                display: block;
+                width: 10ch;
+                text-align: center;
+                margin: 0 auto;
+                margin-top: -0.8rem;
+                color: $grey-500;
+                font-size: 15px;
+                font-family: "Poppins Regular", sans-serif;
+            }
+            .auth-text {
+                color: $primary;
+                font-size: 1.45rem;
+                cursor: pointer;
+                text-decoration: underline;
+                font-weight: 600;
+                text-align: center;
+                margin-top: 25px;
+                font-family: "Poppins Regular", sans-serif;
+            }
+
+            .back-home-text {
+                display: block;
+                margin-top: 40px;
+                cursor: pointer;
+                font-size: 1.25rem;
+                text-align: center;
+                text-decoration: underline;
+            }
+        
+        .error-box {
+            margin-top: 20px;}
+            .error-text {
+                color: $danger;
+                font-size: 15px;
+                text-align: center;
+            }
+        
+        
+    
+
+.mline{
+    margin-top: 50%;
+    text-align:center;
+}
+.border_profile{
+    border: transparent;
+    text-decoration: none;
+
+}
+label{
+    
+    font-size: 1em;
+}
+.proI{
+    width: 45vh;
+    font-size: 1rem;
+}
+.remember{
+    margin: 3px 0;
+    width: 310px;
+}
